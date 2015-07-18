@@ -1,13 +1,61 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <title>Welkom bij Gymnastiek Vereniging Donar Den Haag</title>
+        {% block stylesheets %}
+            <link href="{{ asset('css/main.css') }}" rel="stylesheet" />
+        {% endblock %}
+        <link rel="shortcut icon" type="image/png" href="{{ asset('images/donarlogo.png') }}" />
     </head>
     <body>
-        {% block body %}{% endblock %}
+    <div id="header">
+        <a href="/">
+            {% block header %}
+                <img width="980" src="{{ asset('images/headers/bannerhome1.jpg') }}" />
+            {% endblock %}
+        </a>
+    </div>
+    <div id="navigator">
+        <a href="{{ path('getNieuwsPage') }}">Nieuws</a>
+        <a href="{{ path('getDonarPage') }}">Donar</a>
+        <a href="{{ path('getLessenPage') }}">Lessen</a>
+        <a href="{{ path('getWedstrijdturnenPage') }}">Wedstrijdturnen</a>
+        <a href="{{ path('getLidmaatschapPage') }}">Lidmaatschap</a>
+        <a href="{{ path('getFotofilmPage') }}">Foto/Film</a>
+        <a href="{{ path('getVrijwilligersPage') }}">Vrijwilligers</a>
+        <a href="{{ path('getContactPage') }}">Contact</a>
+        <a href="{{ path('getInloggenPage') }}">Inloggen</a>
+    </div>
+    <div class="line2" style="width:980px;margin-left:auto;margin-right:auto;margin-top:20px;margin-bottom:20px;"></div>
+    <div id="article">
+        <div id="menu">
+            {% block menu %}{% endblock %}
+        </div>
+        <div id="page">
+            {% block body %}
+
+            {% endblock %}
+        </div>
+        <div id="agenda">
+            <h2>Agenda</h2>(data onder voorbehoud)
+            <div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+            {% for item in calendarItems %}
+                <b><a href="">{{ item.datum }}</a></b>
+                <br /><a href="">
+                <span style="font-weight:normal;">{{ item.activiteit }}</span>
+            </a><div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+            {% endfor %}
+        </div>
+    </div>
         {% block javascripts %}{% endblock %}
     </body>
 </html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+    <div id="items">
+        <a href="{{ path('getLidmaatschapPage', { 'page': 'contributie' }) }}">Contributie</a>
+        <a href="{{ path('getLidmaatschapPage', { 'page': 'formulieren' }) }}">Formulieren</a>
+        <a href="{{ path('getLidmaatschapPage', { 'page': 'ooievaarspas' }) }}">Ooievaarspas</a>
+    </div>
+{% endblock %}

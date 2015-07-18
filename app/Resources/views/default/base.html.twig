@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+    <p><a href="http://www.facebook.com/profile.php?id=1271330556" target="blank"><img src="/images/facebook.png" width="43" /></a>
+    <img src="/images/twitter.jpg" width="43" /></p>
+    <div id="items">
+        <a href="{{ path('getNieuwsPage', { 'page': 'vakanties' }) }}">Vakanties</a>
+        <a href="{{ path('getNieuwsPage', { 'page': 'clubblad' }) }}">Clubblad</a>
+        <a href="{{ path('getNieuwsPage', { 'page': 'archief' }) }}">Archief</a>
+        <a href="http://www.gymfeestje.nl" target="blank">Donar Gymfeestje</a>
+    </div>
+{% endblock %}

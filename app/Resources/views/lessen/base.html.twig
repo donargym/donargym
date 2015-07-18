@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+    <div id="items">
+        <a href="{{ path('getLessenPage', { 'page': 'lesrooster' }) }}">Lesrooster</a>
+        <a href="{{ path('getLessenPage', { 'page': 'peuterenkleutergym' }) }}">Peuter & Kleutergym</a>
+        <a href="{{ path('getLessenPage', { 'page': 'gymnastiekenrecreatiefturnen' }) }}">Recreatief Turnen</a>
+        <a href="{{ path('getLessenPage', { 'page': '50plusgymenconditie' }) }}">50+ Gym & Conditie</a>
+        <a href="{{ path('getLessenPage', { 'page': 'aerobicsenbodyshape' }) }}">Aerobics & Bodyshape</a>
+        <a href="{{ path('getLessenPage', { 'page': 'badmintonenvolleybal' }) }}">Badminton & Volleybal</a>
+    </div>
+{% endblock %}

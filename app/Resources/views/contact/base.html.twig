@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+    <div id="items">
+        <a href="{{ path('getContactPage', { 'page': 'contact' }) }}">Contactgegevens</a>
+        <a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Veelgestelde vragen</a>
+    </div>
+{% endblock %}
