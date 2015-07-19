@@ -2,15 +2,8 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use AppBundle\Entity\Content;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception;
-
 
 class GetContentController extends BaseController
 {
@@ -27,11 +20,7 @@ class GetContentController extends BaseController
      */
     public function indexAction()
     {
-        $this->calendarItems = $this->getCalendarItems();
-        return $this->render('default/index.html.twig', array(
-            //'content' => $content->getContent(),
-            'calendarItems' => $this->calendarItems
-        ));
+        return($this->getNieuwsPageAction('index'));
     }
 
     /**
@@ -47,16 +36,17 @@ class GetContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT content
-                FROM AppBundle:Content content
-                WHERE content.pagina = :page
-                ORDER BY content.gewijzigd DESC')
+            FROM AppBundle:Content content
+            WHERE content.pagina = :page
+            ORDER BY content.gewijzigd DESC')
                 ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if(count($content) > 0)
             {
                 return $this->render('donar/index.html.twig', array(
                     'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
+                    'calendarItems' => $this->calendarItems,
+                    'inlogRole' => $this->inlogRole
                 ));
             }
             else
@@ -84,28 +74,21 @@ class GetContentController extends BaseController
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('index', 'vakanties', 'clubblad', 'archief')))
         {
-            /*$em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT content
-                FROM AppBundle:Content content
-                WHERE content.pagina = :page
-                ORDER BY content.gewijzigd DESC')
-                ->setParameter('page', $page);
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if(count($content) > 0)
-            {*/
-                return $this->render('default/index.html.twig', array(
-                    //'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
-                ));
-            /*}
-            else
+            switch($page)
             {
-                return $this->render('error/pageNotFound.html.twig', array(
-                    'calendarItems' => $this->calendarItems
-                ));
-            }*/
-
+                case 'index':
+                    return $this->getNieuwsIndexPage();
+                    break;
+                case 'vakanties':
+                    return $this->getNieuwsVakantiesPage();
+                    break;
+                case 'clubblad':
+                    return $this->getNieuwsClubbladPage();
+                    break;
+                case 'archief':
+                    return $this->getNieuwsArchiefPage();
+                    break;
+            }
         }
         else
         {
@@ -113,6 +96,31 @@ class GetContentController extends BaseController
                 'calendarItems' => $this->calendarItems
             ));
         }
+    }
+
+    protected function getNieuwsIndexPage()
+    {
+        $content = 'hoi';
+        return $this->render('donar/index.html.twig', array(
+            'content' => $content,
+            'calendarItems' => $this->calendarItems,
+            'inlogRole' => $this->inlogRole
+        ));
+    }
+
+    protected function getNieuwsVakantiesPage()
+    {
+
+    }
+
+    protected function getNieuwsClubbladPage()
+    {
+
+    }
+
+    protected function getNieuwsArchiefPage()
+    {
+
     }
 
     /**
@@ -136,7 +144,8 @@ class GetContentController extends BaseController
             {
                 return $this->render('lessen/index.html.twig', array(
                     'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
+                    'calendarItems' => $this->calendarItems,
+                    'inlogRole' => $this->inlogRole
                 ));
             }
             else
@@ -176,7 +185,8 @@ class GetContentController extends BaseController
             {
                 return $this->render('wedstrijdturnen/index.html.twig', array(
                     'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
+                    'calendarItems' => $this->calendarItems,
+                    'inlogRole' => $this->inlogRole
                 ));
             }
             else
@@ -216,7 +226,8 @@ class GetContentController extends BaseController
             {
                 return $this->render('lidmaatschap/index.html.twig', array(
                     'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
+                    'calendarItems' => $this->calendarItems,
+                    'inlogRole' => $this->inlogRole
                 ));
             }
             else
@@ -256,7 +267,8 @@ class GetContentController extends BaseController
             {
                 return $this->render('fotofilm/index.html.twig', array(
                     'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
+                    'calendarItems' => $this->calendarItems,
+                    'inlogRole' => $this->inlogRole
                 ));
             }
             else
@@ -296,7 +308,8 @@ class GetContentController extends BaseController
             {
                 return $this->render('vrijwilligers/index.html.twig', array(
                     'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
+                    'calendarItems' => $this->calendarItems,
+                    'inlogRole' => $this->inlogRole
                 ));
             }
             else
@@ -336,7 +349,8 @@ class GetContentController extends BaseController
             {
                 return $this->render('contact/index.html.twig', array(
                     'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
+                    'calendarItems' => $this->calendarItems,
+                    'inlogRole' => $this->inlogRole
                 ));
             }
             else
@@ -376,7 +390,8 @@ class GetContentController extends BaseController
             {
                 return $this->render('inloggen/index.html.twig', array(
                     'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems
+                    'calendarItems' => $this->calendarItems,
+                    'inlogRole' => $this->inlogRole
                 ));
             }
             else
