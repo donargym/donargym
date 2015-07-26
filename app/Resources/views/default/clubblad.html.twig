@@ -1,0 +1,18 @@
+{% extends 'default/base.html.twig' %}
+{% set DateVan = "now"|date("Y")-2 %}
+{% block body %}
+    <h1>Clubblad</h1>
+    <p>Hieronder kun je clubbladen bekijken van {{ DateVan }} - {{ "now"|date("Y") }}</p>
+    {% for items in clubbladItems %}
+        <p><h2>{{ items.0.jaar }}</h2><table><tr>
+            {% for item in items %}
+                <td style="text-align:center;"><a href="{{ item.locatie }}" target="blank"><img src="{{ asset('images/donarlogo.jpg') }}" width="85" /></a></td>
+            {% endfor %}
+            </tr><tr>
+            {% for item in items %}
+            <td style="text-align:center;"><u><a href="{{ item.locatie }}" target="blank">{{ item.maandJaar }}</a></u></td>
+            {% endfor %}
+        </tr></table></p>
+    {% endfor %}
+
+{% endblock %}

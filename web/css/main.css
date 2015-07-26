@@ -6,7 +6,7 @@ body b {font-weight:bold;}
 body img {border:0;}
 body a {text-decoration:none;color:#19007D;font-weight:bold;}
 body div.line {height:1px;background:#000000;}
-body div.line2 {height:12px;background-image:url("http://localhost/donargym/web/images/lijn.jpg");}
+body div.line2 {height:12px;background-image:url("/donargym/web/images/lijn.jpg");}
 body #post-title {font-size:13px;margin:0px;background:lightyellow;}
 body #blog-post-content {margin-bottom:15px;}
 body #post-content {margin-bottom:30px;}
@@ -17,7 +17,7 @@ body #navigator {width:980px;margin-left:auto;margin-right:auto;}
 body #navigator a {font-size:16px;padding:8px;font-weight:normal;}
 body #article {width:980px;margin-left:auto;margin-right:auto;}
 body #article #menu {width:175px;float:left;}
-body #article #menu #items a {width:167px;height:17px;line-height:17px;display:block;background:url("http://localhost/donargym/web/images/button.png") 0px 0px no-repeat;margin-right:8px;margin-bottom:8px;color:black;padding:4px;font-size:12px;font-weight:normal;}
+body #article #menu #items a {width:167px;height:17px;line-height:17px;display:block;background:url("/donargym/web/images/button.png") 0px 0px no-repeat;margin-right:8px;margin-bottom:8px;color:black;padding:4px;font-size:12px;font-weight:normal;}
 body #article #page {width:597px;float:left;background:#FFF;margin-left:5px;padding:14px;background-color:lightyellow}
 body #article #page #formulier {width:597px;float:left;background:#FFF;margin-left:0px;padding:0px;background-color:lightyellow}
 body #article #page #formulier #left{width:293px;float:left;background:#FFF;margin-left:0px;padding:0px;background-color:lightyellow}

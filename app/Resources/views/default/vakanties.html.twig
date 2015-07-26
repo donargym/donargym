@@ -1,0 +1,16 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+    <h1>Vakanties en feestdagen</h1>
+    <p><table>
+    {% for item in vakantieItems %}
+        <tr>
+            <td><b>{{ item.naam }}</b></td>
+            <td>{{ item.van }}</td>
+            <td>t/m</td>
+            <td>{{ item.tot }}</td>
+            <td></td>
+        </tr>
+    {% endfor %}
+    </table></p>
+{% endblock %}

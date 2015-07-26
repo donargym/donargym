@@ -12,7 +12,7 @@
     <div id="header">
         <a href="/">
             {% block header %}
-                <img width="980" src="{{ asset('images/headers/bannerhome1.jpg') }}" />
+                <img width="980" src="{{ asset('images/headers/'~ header ~'.jpg') }}" />
             {% endblock %}
         </a>
     </div>
@@ -23,7 +23,7 @@
         <a href="{{ path('getWedstrijdturnenPage') }}">Wedstrijdturnen</a>
         <a href="{{ path('getLidmaatschapPage') }}">Lidmaatschap</a>
         <a href="{{ path('getFotofilmPage') }}">Foto/Film</a>
-        <a href="{{ path('getVrijwilligersPage') }}">Vrijwilligers</a>
+        {# <a href="{{ path('getVrijwilligersPage') }}">Vrijwilligers</a> #}
         <a href="{{ path('getContactPage') }}">Contact</a>
         <a href="{{ path('getInloggenPage') }}">Inloggen</a>
     </div>

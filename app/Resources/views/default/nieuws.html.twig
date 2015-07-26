@@ -1,5 +1,10 @@
 {% extends 'default/base.html.twig' %}
 
 {% block body %}
-
+{% for item in nieuwsItems %}
+    <div id="post-title"><em>{{ item.datumtijd }}</em></div>
+    <div class="line" style="width:597px;margin-left:auto;margin-right:auto;margin-top:0px;margin-bottom:10px;"></div>
+    <div id="post-content"><h1>{{ item.titel }}</h1>
+    <p>{{ item.bericht|raw }}</p></div>
+{% endfor %}
 {% endblock %}
