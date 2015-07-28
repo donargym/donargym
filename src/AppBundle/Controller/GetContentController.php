@@ -273,14 +273,15 @@ class GetContentController extends BaseController
     }
 
     /**
-     * @Route("/wedstrijdturnen/{page}/", defaults={"page" = "wedstrijdturnen"}, name="getWedstrijdturnenPage")
+     * @Route("/wedstrijdturnen/{page}/{view}/{id}",
+     * defaults={"page" = "wedstrijdturnen", "view" = null, "id" = null}, name="getWedstrijdturnenPage")
      * @Method("GET")
      */
     public function getWedstrijdturnenPageAction($page)
     {
         $this->header = 'wedstrijdturnen'.rand(1,11);
         $this->calendarItems = $this->getCalendarItems();
-        if(in_array($page, array('wedstrijdturnen', 'voorselectiedenhaag', 'voorselectieleidschendam', 'aselectiedenhaag', 'aselectieleidschendam', 'bselectiedenhaag')))
+        if(in_array($page, array('wedstrijdturnen')))
         {
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -306,6 +307,10 @@ class GetContentController extends BaseController
                     'header' => $this->header
                 ));
             }
+
+        }
+        elseif(in_array($page, array('voorselectiedenhaag', 'voorselectieleidschendam', 'aselectiedenhaag', 'aselectieleidschendam', 'bselectiedenhaag')))
+        {
 
         }
         else
