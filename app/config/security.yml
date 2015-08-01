@@ -6,7 +6,6 @@ security:
         db_provider:
             entity:
                 class: AppBundle:User
-                property: username
 
     firewalls:
         dev:
@@ -15,8 +14,12 @@ security:
 
         main:
             pattern: ^/
+            http_basic: ~
             provider: db_provider
             anonymous:  true
+            form_login:
+                login_path: /login
+                check_path: /login_check
 
 
 

@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * User
  *
  * @ORM\Table(name="user")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -30,14 +30,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
-     */
-    private $email;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email2", type="string", length=255, nullable=true)
+     * @ORM\Column(name="email2", type="string", length=60, unique=true, nullable=true)
      */
     private $email2;
 
@@ -82,29 +75,6 @@ class User implements AdvancedUserInterface, \Serializable
         // you *may* need a real salt depending on your encoder
         // see section on salt below
         return null;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string 
-     */
-    public function getEmail()
-    {
-        return $this->email;
     }
 
     /**
