@@ -1,7 +1,12 @@
 security:
+    encoders:
+        AppBundle\Entity\User:
+            algorithm: bcrypt
     providers:
-        in_memory:
-            memory: ~
+        db_provider:
+            entity:
+                class: AppBundle:User
+                property: username
 
     firewalls:
         dev:
@@ -9,8 +14,9 @@ security:
             security: false
 
         main:
-            anonymous: ~
-
+            pattern: ^/
+            provider: db_provider
+            anonymous:  true
 
 
 

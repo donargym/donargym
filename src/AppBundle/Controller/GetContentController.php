@@ -49,7 +49,6 @@ class GetContentController extends BaseController
                 return $this->render('donar/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'inlogRole' => $this->inlogRole,
                     'header' => $this->header
                 ));
             }
@@ -122,7 +121,6 @@ class GetContentController extends BaseController
         return $this->render('default/nieuws.html.twig', array(
             'nieuwsItems' => $nieuwsItems,
             'calendarItems' => $this->calendarItems,
-            'inlogRole' => $this->inlogRole,
             'header' => $this->header
         ));
     }
@@ -145,7 +143,6 @@ class GetContentController extends BaseController
         return $this->render('default/vakanties.html.twig', array(
             'vakantieItems' => $vakantieItems,
             'calendarItems' => $this->calendarItems,
-            'inlogRole' => $this->inlogRole,
             'header' => $this->header
         ));
     }
@@ -176,7 +173,6 @@ class GetContentController extends BaseController
         return $this->render('default/clubblad.html.twig', array(
             'clubbladItems' => $clubbladItems,
             'calendarItems' => $this->calendarItems,
-            'inlogRole' => $this->inlogRole,
             'header' => $this->header
         ));
     }
@@ -201,7 +197,6 @@ class GetContentController extends BaseController
             return $this->render('default/nieuws.html.twig', array(
                 'nieuwsItems' => $nieuwsItems,
                 'calendarItems' => $this->calendarItems,
-                'inlogRole' => $this->inlogRole,
                 'header' => $this->header
             ));
         }
@@ -221,7 +216,6 @@ class GetContentController extends BaseController
             return $this->render('default/archief_index.html.twig', array(
                 'jaren' => $jaren,
                 'calendarItems' => $this->calendarItems,
-                'inlogRole' => $this->inlogRole,
                 'header' => $this->header
             ));
         }
@@ -250,7 +244,6 @@ class GetContentController extends BaseController
                 return $this->render('lessen/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'inlogRole' => $this->inlogRole,
                     'header' => $this->header
                 ));
             }
@@ -296,7 +289,6 @@ class GetContentController extends BaseController
                 return $this->render('wedstrijdturnen/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'inlogRole' => $this->inlogRole,
                     'header' => $this->header
                 ));
             }
@@ -345,7 +337,6 @@ class GetContentController extends BaseController
                 return $this->render('lidmaatschap/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'inlogRole' => $this->inlogRole,
                     'header' => $this->header
                 ));
             }
@@ -390,7 +381,6 @@ class GetContentController extends BaseController
                 return $this->render('fotofilm/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'inlogRole' => $this->inlogRole,
                     'header' => $this->header
                 ));
             }
@@ -435,7 +425,6 @@ class GetContentController extends BaseController
                 return $this->render('vrijwilligers/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'inlogRole' => $this->inlogRole,
                     'header' => $this->header
                 ));
             }
@@ -480,7 +469,6 @@ class GetContentController extends BaseController
                 return $this->render('contact/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'inlogRole' => $this->inlogRole,
                     'header' => $this->header
                 ));
             }
@@ -525,7 +513,6 @@ class GetContentController extends BaseController
                 return $this->render('inloggen/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'inlogRole' => $this->inlogRole,
                     'header' => $this->header
                 ));
             }

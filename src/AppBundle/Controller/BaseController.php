@@ -16,13 +16,9 @@ use Symfony\Component\HttpKernel\Exception;
 
 class BaseController extends Controller
 {
-    protected $session;
-    protected $inlogRole;
 
     public function __construct()
     {
-        $this->session = new Session();
-        $this->inlogRole = $this->getInlogRole();
     }
 
     public function getCalendarItems()
@@ -41,18 +37,6 @@ class BaseController extends Controller
             $calendarItems[$i] = $calendar[$i]->getAll();
         }
         return $calendarItems;
-    }
-
-    public function getInlogRole()
-    {
-        if($this->session->get('inlogRole'))
-        {
-            return $this->session->get('inlogRole');
-        }
-        else
-        {
-            return "visitor";
-        }
     }
 
     public function maand($maandNummer)
