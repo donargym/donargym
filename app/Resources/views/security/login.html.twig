@@ -1,0 +1,26 @@
+{% extends 'inloggen/base.html.twig' %}
+
+{% block body %}
+    <h1>Inloggen</h1>
+    {% if error %}
+        <div><span style="color:red;">{{ error.messageKey|trans(error.messageData, 'security') }}</span></div>
+    {% endif %}
+
+    <form action="{{ path('login_check') }}" method="post">
+        <table>
+            <tr>
+                <td>Inlognaam:</td>
+                <td><input type="text" id="username" name="_username" placeholder="Inlognaam" value="{{ last_username }}" /></td>
+            </tr>
+            <tr>
+                <td>Wachtwoord:</td>
+                <td><input type="password" id="password" placeholder="Wachtwoord" name="_password" />
+                    <input type="hidden" name="_target_path" value="/inloggen/inloggen" />
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                </td>
+            </tr>
+        </table>
+        <button type="submit">Inloggen</button>
+    </form>
+    <button type="button">Wachtwoord vergeten</button>
+{% endblock %}

@@ -7,6 +7,14 @@ security:
             entity:
                 class: AppBundle:User
 
+    role_hierarchy:
+        ROLE_TURNSTER:    [ROLE_USER]
+        ROLE_ASSISTENT:   [ROLE_TURNSTER]
+        ROLE_TRAINER:     [ROLE_ASSISTENT]
+        ROLE_SELECTIE:    [ROLE_USER]
+        ROLE_ADMIN:       [ROLE_USER]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_SELECTIE, ROLE_TURNSTER, ROLE_TRAINER]
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -20,6 +28,7 @@ security:
             form_login:
                 login_path: /login
                 check_path: /login_check
+                csrf_provider: security.csrf.token_manager
 
 
 

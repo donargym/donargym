@@ -28,6 +28,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $username;
 
     /**
+     * @ORM\COLUMN(type="string", length=60)
+     */
+    private $role;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="email2", type="string", length=60, unique=true, nullable=true)
@@ -123,9 +128,26 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->password;
     }
 
+    /**
+     * Set roles
+     *
+     * @param string $role
+     * @return User
+     */
+    public function setRoles($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return \Symfony\Component\Security\Core\Role\Role[]
+     */
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return array($this->role);
+        //return array('ROLE_USER');
     }
 
     /**
