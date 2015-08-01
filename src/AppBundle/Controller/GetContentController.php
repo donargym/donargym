@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class GetContentController extends BaseController
 {
@@ -491,14 +492,17 @@ class GetContentController extends BaseController
     }
 
     /**
-     * @Route("/inloggen/{page}/", defaults={"page" = "inloggen"}, name="getInloggenPage")
+     * @Route("/inloggen/{page}/", defaults={"page" = "index"}, name="getInloggenPage")
+     *
+     * @Security("has_role('ROLE_INGELOGD')")
+     *
      * @Method("GET")
      */
     public function getInloggenPageAction($page)
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
-        if(in_array($page, array('inloggen')))
+        if(in_array($page, array('index')))
         {
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -531,36 +535,6 @@ class GetContentController extends BaseController
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header
             ));
-        }
-    }
-
-    /**
-     * @Route("/donar/{page}/", name="setDonarPage")
-     * @Method("POST")
-     */
-    public function updatePageAction($page, Request $request)
-    {
-        if($this->session->get("inlog") === "admin")
-        {
-            if(in_array($page,array('informatie', 'locatie', 'sponsors', 'reglementen', 'contact', 'zaterdag', 'zondag', 'fotos')))
-            {
-                $content = new Content();
-                $content->setGewijzigd(new \DateTime("now"));
-                $content->setPagina($page);
-                $content->setContent($request->request->get('content'));
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($content);
-                $em->flush();
-                return $this->render('default/index.html.twig');
-            }
-            else
-            {
-                $this->session->getFlashBag()->add('Error', 'De pagina kan niet gevonden worden');
-            }
-        }
-        else
-        {
-            $this->session->getFlashBag()->add('Error', 'Niet ingelogd als admin');
         }
     }
 }
