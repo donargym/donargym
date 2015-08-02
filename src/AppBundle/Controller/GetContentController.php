@@ -14,7 +14,6 @@ class GetContentController extends BaseController
 
     public function __construct()
     {
-        Parent::__construct();
     }
 
     /**
@@ -500,20 +499,18 @@ class GetContentController extends BaseController
      */
     public function getInloggenPageAction()
     {
-        $this->header = 'bannerhome'.rand(1,2);
-        $this->calendarItems = $this->getCalendarItems();
         $user = $this->getUser();
         switch ($user->getRoles()[0])
         {
             case 'ROLE_ADMIN':
-                return $this->redirectToRoute('admin', array('index'));
+                return $this->redirectToRoute('getAdminIndexPage');
                 break;
             case 'ROLE_TRAINER':
             case 'ROLE_TURNSTER':
-                return $this->redirectToRoute('selectie', array('index'));
+                return $this->redirectToRoute('getSelectieIndexPage');
                 break;
             case 'ROLE_SELECTIE':
-                return $this->redirectToRoute('selectieBeheer', array('index'));
+                return $this->redirectToRoute('getSelectieBeheerIndexPage');
                 break;
             default:
                 return $this->render('error/pageNotFound.html.twig', array(

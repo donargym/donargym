@@ -41,7 +41,5 @@ class SecurityController extends BaseController
      */
     public function loginCheckAction()
     {
-        // this controller will not be executed,
-        // as the route is handled by the Security system
     }
 }

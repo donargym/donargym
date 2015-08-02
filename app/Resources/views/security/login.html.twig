@@ -15,7 +15,6 @@
             <tr>
                 <td>Wachtwoord:</td>
                 <td><input type="password" id="password" placeholder="Wachtwoord" name="_password" />
-                    <input type="hidden" name="_target_path" value="/inloggen/inloggen" />
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 </td>
             </tr>
