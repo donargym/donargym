@@ -492,49 +492,34 @@ class GetContentController extends BaseController
     }
 
     /**
-     * @Route("/inloggen/{page}/", defaults={"page" = "index"}, name="getInloggenPage")
+     * @Route("/inloggen/", name="getInloggenPage")
      *
      * @Security("has_role('ROLE_INGELOGD')")
      *
      * @Method("GET")
      */
-    public function getInloggenPageAction($page)
+    public function getInloggenPageAction()
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
-        if(in_array($page, array('index')))
+        $user = $this->getUser();
+        switch ($user->getRoles()[0])
         {
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT content
-                FROM AppBundle:Content content
-                WHERE content.pagina = :page
-                ORDER BY content.gewijzigd DESC')
-                ->setParameter('page', $page);
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if(count($content) > 0)
-            {
-                return $this->render('inloggen/index.html.twig', array(
-                    'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
-                ));
-            }
-            else
-            {
+            case 'ROLE_ADMIN':
+                return $this->redirectToRoute('admin', array('index'));
+                break;
+            case 'ROLE_TRAINER':
+            case 'ROLE_TURNSTER':
+                return $this->redirectToRoute('selectie', array('index'));
+                break;
+            case 'ROLE_SELECTIE':
+                return $this->redirectToRoute('selectieBeheer', array('index'));
+                break;
+            default:
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header
                 ));
-            }
-
-        }
-        else
-        {
-            return $this->render('error/pageNotFound.html.twig', array(
-                'calendarItems' => $this->calendarItems,
-                'header' => $this->header
-            ));
         }
     }
 }
