@@ -1,16 +1,17 @@
 {% extends 'inloggen/base.html.twig' %}
 
-{% block breadcrumb %}
-        <a href="#">{{ ('SSH public keys') }}</a>
-        > blabla
-{% endblock %}
-
 {% block menu %}
     <div id="items">
-        <a href="{{ path('getNieuwsPage', { 'page': 'index' }) }}">Anne-Sophie van Leeuwen</a>
+        <a href="{{ path('getAdminIndexPage') }}">Admin dingen</a>
+        <a href="{{ path('logout') }}">Uitloggen</a>
     </div>
 {% endblock %}
 
 {% block body %}
+    <div class="inlognavigation">
+        Index
+        {#> <a href="#">{{ ('SSH public keys') }}</a>#}
+    </div>
+
     Hallo Admin!
 {% endblock %}

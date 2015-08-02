@@ -24,3 +24,12 @@ body #article #page #formulier #left{width:293px;float:left;background:#FFF;marg
 body #article #page #formulier #right{width:293px;float:right;background:#FFF;margin-left:10px;padding:0px;background-color:lightyellow}
 body #article #page #wizardmenu {height:50px;line-height:50px;}
 body #article #agenda {width:175px;float:right;background:#F0F0CC;}
+.inlognavigation {
+    width:585px;
+    float:left;
+    margin-top:0px;
+    margin-bottom:0px;
+    margin-left:0px;
+    padding:5px;
+    background-color: ThreeDHighlight;
+}
