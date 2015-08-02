@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block fotofilm %}
+    <a href="{{ path('getFotofilmPage') }}"><b>Foto/Film</b></a>
+{% endblock %}
+
 {% block menu %}
     <div id="items">
         <a href="{{ path('getFotofilmPage', { 'page': 'foto' }) }}">Foto</a>

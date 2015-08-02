@@ -1,8 +1,5 @@
 {% extends 'donar/base.html.twig' %}
 
 {% block body %}
-    {% if inlogRole == 'Admin' %}
-        <p><a href="/"><img src="/images/edit.png" /></a></p>
-    {% endif %}
     {{ content|raw }}
 {% endblock %}

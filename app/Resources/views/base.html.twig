@@ -17,15 +17,33 @@
         </a>
     </div>
     <div id="navigator">
-        <a href="{{ path('getNieuwsPage') }}">Nieuws</a>
-        <a href="{{ path('getDonarPage') }}">Donar</a>
-        <a href="{{ path('getLessenPage') }}">Lessen</a>
-        <a href="{{ path('getWedstrijdturnenPage') }}">Wedstrijdturnen</a>
-        <a href="{{ path('getLidmaatschapPage') }}">Lidmaatschap</a>
-        <a href="{{ path('getFotofilmPage') }}">Foto/Film</a>
-        {# <a href="{{ path('getVrijwilligersPage') }}">Vrijwilligers</a> #}
-        <a href="{{ path('getContactPage') }}">Contact</a>
-        <a href="{{ path('getInloggenPage') }}">Inloggen</a>
+        {% block nieuws %}
+            <a href="{{ path('getNieuwsPage') }}">Nieuws</a>
+        {% endblock %}
+        {% block donar %}
+            <a href="{{ path('getDonarPage') }}">Donar</a>
+        {% endblock %}
+        {% block lessen %}
+            <a href="{{ path('getLessenPage') }}">Lessen</a>
+        {% endblock %}
+        {% block wedstrijdturnen %}
+            <a href="{{ path('getWedstrijdturnenPage') }}">Wedstrijdturnen</a>
+        {% endblock %}
+        {% block lidmaatschap %}
+            <a href="{{ path('getLidmaatschapPage') }}">Lidmaatschap</a>
+        {% endblock %}
+        {% block fotofilm %}
+            <a href="{{ path('getFotofilmPage') }}">Foto/Film</a>
+        {% endblock %}
+        {% block vrijwilligers %}
+            {# <a href="{{ path('getVrijwilligersPage') }}">Vrijwilligers</a> #}
+        {% endblock %}
+        {% block contact %}
+            <a href="{{ path('getContactPage') }}">Contact</a>
+        {% endblock %}
+        {% block inloggen %}
+            <a href="{{ path('getInloggenPage') }}">Inloggen</a>
+        {% endblock %}
     </div>
     <div class="line2" style="width:980px;margin-left:auto;margin-right:auto;margin-top:20px;margin-bottom:20px;"></div>
     <div id="article">
@@ -33,6 +51,10 @@
             {% block menu %}{% endblock %}
         </div>
         <div id="page">
+            <div>
+                {% block breadcrumb %}{% endblock %}
+                <br /><br />
+            </div>
             {% block body %}
 
             {% endblock %}

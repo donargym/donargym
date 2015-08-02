@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block nieuws %}
+    <a href="{{ path('getNieuwsPage') }}"><b>Nieuws</b></a>
+{% endblock %}
+
 {% block menu %}
     <p><a href="http://www.facebook.com/profile.php?id=1271330556" target="blank"><img src="{{ asset('images/facebook.png') }}" width="43" /></a>
     <img src="{{ asset('images/twitter.jpg') }}" width="43" /></p>

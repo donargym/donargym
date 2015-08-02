@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block donar %}
+    <a href="{{ path('getDonarPage') }}"><b>Donar</b></a>
+{% endblock %}
+
 {% block menu %}
     <div id="items">
         <a href="{{ path('getDonarPage', { 'page': 'geschiedenis' }) }}">Geschiedenis</a>

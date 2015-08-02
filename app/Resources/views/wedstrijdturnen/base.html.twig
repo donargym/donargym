@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block wedstrijdturnen %}
+    <a href="{{ path('getWedstrijdturnenPage') }}"><b>Wedstrijdturnen</b></a>
+{% endblock %}
+
 {% block menu %}
     <div id="items">
         <a href="{{ path('getWedstrijdturnenPage', { 'page': 'voorselectiedenhaag' }) }}">Voorselectie Dames</a>

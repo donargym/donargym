@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block lessen %}
+    <a href="{{ path('getLessenPage') }}"><b>Lessen</b></a>
+{% endblock %}
+
 {% block menu %}
     <div id="items">
         <a href="{{ path('getLessenPage', { 'page': 'lesrooster' }) }}">Lesrooster</a>

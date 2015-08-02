@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block inloggen %}
+    <a href="{{ path('getInloggenPage') }}"><b>Inloggen</b></a>
+{% endblock %}
+
 {% block menu %}
     <div id="items">
         <a href="{{ path('getNieuwsPage', { 'page': 'index' }) }}">Home</a>
