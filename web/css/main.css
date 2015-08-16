@@ -24,6 +24,7 @@ body #article #page #formulier #left{width:293px;float:left;background:#FFF;marg
 body #article #page #formulier #right{width:293px;float:right;background:#FFF;margin-left:10px;padding:0px;background-color:lightyellow}
 body #article #page #wizardmenu {height:50px;line-height:50px;}
 body #article #agenda {width:175px;float:right;background:#F0F0CC;}
+body #article #agenda #text{padding: 5px;}
 .inlognavigation {
     width:585px;
     float:left;
@@ -31,5 +32,5 @@ body #article #agenda {width:175px;float:right;background:#F0F0CC;}
     margin-bottom:0px;
     margin-left:0px;
     padding:5px;
-    background-color: ThreeDHighlight;
+    background-color: #F0F0CC;
 }

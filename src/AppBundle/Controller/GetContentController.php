@@ -266,8 +266,7 @@ class GetContentController extends BaseController
     }
 
     /**
-     * @Route("/wedstrijdturnen/{page}/{view}/{id}",
-     * defaults={"page" = "wedstrijdturnen", "view" = null, "id" = null}, name="getWedstrijdturnenPage")
+     * @Route("/wedstrijdturnen/{page}/{view}/{id}", defaults={"page" = "wedstrijdturnen", "view" = null, "id" = null}, name="getWedstrijdturnenPage")
      * @Method("GET")
      */
     public function getWedstrijdturnenPageAction($page)

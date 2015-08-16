@@ -14,8 +14,15 @@
             </tr>
             <tr>
                 <td>Wachtwoord:</td>
-                <td><input type="password" id="password" placeholder="Wachtwoord" name="_password" />
+                <td>
+                    <input type="password" id="password" placeholder="Wachtwoord" name="_password" />
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="checkbox" id="remember_me" name="_remember_me" />
+                    <label for="remember_me">Ingelogd blijven</label>
                 </td>
             </tr>
         </table>

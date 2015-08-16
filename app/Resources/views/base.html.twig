@@ -56,14 +56,16 @@
             {% endblock %}
         </div>
         <div id="agenda">
-            <h2>Agenda</h2>(data onder voorbehoud)
-            <div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
-            {% for item in calendarItems %}
-                <b><a href="">{{ item.datum }}</a></b>
-                <br /><a href="">
-                <span style="font-weight:normal;">{{ item.activiteit }}</span>
-            </a><div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+            <div id="text">
+                <h2>Agenda</h2>(data onder voorbehoud)
+                <div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+                {% for item in calendarItems %}
+                    <b><a href="">{{ item.datum }}</a></b>
+                    <br /><a href="">
+                    <span style="font-weight:normal;">{{ item.activiteit }}</span>
+                </a><div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
             {% endfor %}
+            </div>
         </div>
     </div>
         {% block javascripts %}{% endblock %}
