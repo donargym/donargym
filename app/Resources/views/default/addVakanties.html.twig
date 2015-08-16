@@ -1,0 +1,39 @@
+{% extends 'default/vakanties.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <h1>Vakantie toevoegen/wijzigen</h1>
+        <a href="{{ path('getNieuwsPage', { 'page': 'vakanties' }) }}">Annuleer</a>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <table>
+            <tr>
+                <td colspan="2">{{ form_errors(form.naam) }}</td>
+            </tr>
+            <tr>
+                <td>Naam vakantie/feestdag</td>
+                <td>{{ form_widget(form.naam) }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">{{ form_errors(form.van) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form_label(form.van) }}</td>
+                <td>{{ form_widget(form.van) }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">{{ form_errors(form.tot) }}</td>
+            </tr>
+            <tr>
+                <td>T/m</td>
+                <td>{{ form_widget(form.tot) }}</td>
+            </tr>
+
+        </table>
+        {{ form_widget(form.Verstuur) }}
+        {{ form_end(form) }}<br>
+    {% endif %}
+    {{ parent() }}
+{% endblock %}

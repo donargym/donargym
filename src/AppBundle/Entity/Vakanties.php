@@ -95,7 +95,14 @@ class Vakanties
      */
     public function getVan()
     {
-        return $this->van->format('d-m-Y');
+        if($this->van)
+        {
+            return $this->van;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     /**
@@ -118,6 +125,6 @@ class Vakanties
      */
     public function getTot()
     {
-        return $this->tot->format('d-m-Y');
+        return $this->tot;
     }
 }

@@ -2,7 +2,7 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <h1>Nieuwe activiteit plaatsen</h1>
+        <h1>Nieuwe activiteit plaatsen/Activiteit wijzigen</h1>
         <a href="{{ path('getNieuwsPage') }}">Annuleer</a>
         {{ form_start(form) }}
         {{ form_errors(form) }}

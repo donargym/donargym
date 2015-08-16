@@ -4,9 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Calendar;
 use AppBundle\Entity\Nieuwsbericht;
+use AppBundle\Entity\Vakanties;
 use AppBundle\Form\Type\CalendarType;
 use AppBundle\Form\Type\ContentType;
 use AppBundle\Form\Type\NieuwsberichtType;
+use AppBundle\Form\Type\VakantiesType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -708,6 +710,171 @@ class EditContentController extends BaseController
             $em->remove($nieuwsbericht);
             $em->flush();
             return $this->redirectToRoute('getNieuwsPage');
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Route("/nieuws/vakanties/add/", name="addVakantiesPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addVakantiesPage(Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT vakanties
+            FROM AppBundle:Vakanties vakanties
+            WHERE vakanties.tot >= :datum
+            ORDER BY vakanties.van')
+            ->setParameter('datum', date('Y-m-d',time()));
+        $content = $query->getResult();
+        $vakantieItems = array();
+        for($i=0;$i<count($content);$i++)
+        {
+            $vakantieItems[$i] = $content[$i]->getAll();
+        }
+        $vakanties = new Vakanties();
+        $form = $this->createForm(new VakantiesType(), $vakanties);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($vakanties);
+            $em->flush();
+            return $this->redirectToRoute('getNieuwsPage', array('page' => 'vakanties'));
+        }
+        else {
+            return $this->render('default/addVakanties.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView(),
+                'vakantieItems' => $vakantieItems
+            ));
+        }
+    }
+
+    /**
+     * @Route("/nieuws/vakanties/edit/{id}/", name="editVakantiesPage")
+     * @Method({"GET", "POST"})
+     */
+    public function editVakantiesPage($id, Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT vakanties
+            FROM AppBundle:Vakanties vakanties
+            WHERE vakanties.tot >= :datum
+            ORDER BY vakanties.van')
+            ->setParameter('datum', date('Y-m-d',time()));
+        $content = $query->getResult();
+        $vakantieItems = array();
+        for($i=0;$i<count($content);$i++)
+        {
+            $vakantieItems[$i] = $content[$i]->getAll();
+        }
+        $query = $em->createQuery(
+            'SELECT vakanties
+                FROM AppBundle:Vakanties vakanties
+                WHERE vakanties.id = :id')
+            ->setParameter('id', $id);
+        $vakanties = $query->setMaxResults(1)->getOneOrNullResult();
+        if(count($vakanties) > 0)
+        {
+            $form = $this->createForm(new VakantiesType(), $vakanties);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($vakanties);
+                $em->flush();
+                return $this->redirectToRoute('getNieuwsPage', array('page' => 'vakanties'));
+            }
+            else {
+                return $this->render('default/addVakanties.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'form' => $form->createView(),
+                    'vakantieItems' => $vakantieItems
+                ));
+            }
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Route("/nieuws/vakanties/remove/{id}/", name="removeVakantiesPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeVakantiesPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->header = 'bannerhome'.rand(1,2);
+            $this->calendarItems = $this->getCalendarItems();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT vakanties
+            FROM AppBundle:Vakanties vakanties
+            WHERE vakanties.tot >= :datum
+            ORDER BY vakanties.van')
+                ->setParameter('datum', date('Y-m-d',time()));
+            $content = $query->getResult();
+            $vakantieItems = array();
+            for($i=0;$i<count($content);$i++)
+            {
+                $vakantieItems[$i] = $content[$i]->getAll();
+            }
+            $query = $em->createQuery(
+                'SELECT vakanties
+                FROM AppBundle:Vakanties vakanties
+                WHERE vakanties.id = :id')
+                ->setParameter('id', $id);
+            $vakanties = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($vakanties) > 0)
+            {
+                return $this->render('default/removeVakanties.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'content' => $vakanties->getAll(),
+                    'vakantieItems' => $vakantieItems
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT vakanties
+                FROM AppBundle:Vakanties vakanties
+                WHERE vakanties.id = :id')
+                ->setParameter('id', $id);
+            $vakanties = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($vakanties);
+            $em->flush();
+            return $this->redirectToRoute('getNieuwsPage', array('page' => 'vakanties'));
         }
         else
         {
