@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Calendar;
+use AppBundle\Entity\Nieuwsbericht;
 use AppBundle\Form\Type\CalendarType;
 use AppBundle\Form\Type\ContentType;
+use AppBundle\Form\Type\NieuwsberichtType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -532,28 +534,186 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/agenda/remove/{id}", name="removeAgendaPage")
+     * @Route("/agenda/remove/{id}/", name="removeAgendaPage")
      * @Method({"GET", "POST"})
      */
     public function removeAgendaPage($id, Request $request)
     {
+        if($request->getMethod() == 'GET')
+        {
+            $this->header = 'bannerhome'.rand(1,2);
+            $this->calendarItems = $this->getCalendarItems();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT calendar
+                FROM AppBundle:Calendar calendar
+                WHERE calendar.id = :id')
+                ->setParameter('id', $id);
+            $agenda = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($agenda) > 0)
+            {
+                return $this->render('default/removeCalendar.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'content' => $agenda->getAll()
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT calendar
+                FROM AppBundle:Calendar calendar
+                WHERE calendar.id = :id')
+                ->setParameter('id', $id);
+            $agenda = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($agenda);
+            $em->flush();
+            return $this->redirectToRoute('getNieuwsPage');
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Route("/nieuws/index/add/", name="addNieuwsPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addNieuwsPage(Request $request)
+    {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
-        $agenda = new Calendar();
-        $form = $this->createForm(new CalendarType(), $agenda);
+        $nieuwsbericht = new Nieuwsbericht();
+        $form = $this->createForm(new NieuwsberichtType(), $nieuwsbericht);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $nieuwsbericht->setDatumtijd(date('d-m-Y: H:i', time()));
+            $nieuwsbericht->setJaar(date('Y', time()));
+            $nieuwsbericht->setBericht(str_replace("\n","<br />",$nieuwsbericht->getBericht()));
             $em = $this->getDoctrine()->getManager();
-            $em->persist($agenda);
+            $em->persist($nieuwsbericht);
             $em->flush();
             return $this->redirectToRoute('getNieuwsPage');
         }
         else {
-            return $this->render('default/addCalendar.html.twig', array(
+            return $this->render('default/addNieuwsbericht.html.twig', array(
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView()
+            ));
+        }
+    }
+
+    /**
+     * @Route("/nieuws/index/edit/{id}/", name="editNieuwsberichtPage")
+     * @Method({"GET", "POST"})
+     */
+    public function editNieuwsberichtPage($id, Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT nieuwsbericht
+                FROM AppBundle:Nieuwsbericht nieuwsbericht
+                WHERE nieuwsbericht.id = :id')
+            ->setParameter('id', $id);
+        $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
+        $nieuwsbericht->setBericht(str_replace("<br />","\n",$nieuwsbericht->getBericht()));
+        if(count($nieuwsbericht) > 0)
+        {
+            $form = $this->createForm(new NieuwsberichtType(), $nieuwsbericht);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $nieuwsbericht->setBericht(str_replace("\n","<br />",$nieuwsbericht->getBericht()));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($nieuwsbericht);
+                $em->flush();
+                return $this->redirectToRoute('getNieuwsPage');
+            }
+            else {
+                return $this->render('default/addNieuwsbericht.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'form' => $form->createView()
+                ));
+            }
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Route("/nieuws/index/remove/{id}/", name="removeNieuwsberichtPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeNieuwsberichtPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->header = 'bannerhome'.rand(1,2);
+            $this->calendarItems = $this->getCalendarItems();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT nieuwsbericht
+                FROM AppBundle:Nieuwsbericht nieuwsbericht
+                WHERE nieuwsbericht.id = :id')
+                ->setParameter('id', $id);
+            $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($nieuwsbericht) > 0)
+            {
+                return $this->render('default/removeNieuwsbericht.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'content' => $nieuwsbericht->getAll()
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT nieuwsbericht
+                FROM AppBundle:Nieuwsbericht nieuwsbericht
+                WHERE nieuwsbericht.id = :id')
+                ->setParameter('id', $id);
+            $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($nieuwsbericht);
+            $em->flush();
+            return $this->redirectToRoute('getNieuwsPage');
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
             ));
         }
     }
