@@ -8,6 +8,7 @@
     <p><a href="http://www.facebook.com/profile.php?id=1271330556" target="blank"><img src="{{ asset('images/facebook.png') }}" width="43" /></a>
     <img src="{{ asset('images/twitter.jpg') }}" width="43" /></p>
     <div id="items">
+        <a href="{{ path('getNieuwsPage') }}">Laatste nieuws</a>
         <a href="{{ path('getNieuwsPage', { 'page': 'vakanties' }) }}">Vakanties</a>
         <a href="{{ path('getNieuwsPage', { 'page': 'clubblad' }) }}">Clubblad</a>
         <a href="{{ path('getNieuwsPage', { 'page': 'archief' }) }}">Archief</a>

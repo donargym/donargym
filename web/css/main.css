@@ -1,36 +1,187 @@
-body {background-color: lightyellow;}
-body {font-family:Calibri;font-size:15px;margin:0px;}
-body h1 {margin:0px;font-size:20px;}
-body h2 {margin-bottom:3px;font-size:18px;}
-body b {font-weight:bold;}
-body img {border:0;}
-body a {text-decoration:none;color:#19007D;font-weight:bold;}
-body div.line {height:1px;background:#000000;}
-body div.line2 {height:12px;background-image:url("/donargym/web/images/lijn.jpg");}
-body #post-title {font-size:13px;margin:0px;background:lightyellow;}
-body #blog-post-content {margin-bottom:15px;}
-body #post-content {margin-bottom:30px;}
-body #header {width:980px;height:380px;margin-left:auto;margin-right:auto;}
-body #header #title {height:210px;line-height:210px;color:black;font-size:60px;}
-body #header #logo {float:right;}
-body #navigator {width:980px;margin-left:auto;margin-right:auto;}
-body #navigator a {font-size:16px;padding:8px;font-weight:normal;}
-body #article {width:980px;margin-left:auto;margin-right:auto;}
-body #article #menu {width:175px;float:left;}
-body #article #menu #items a {width:167px;height:17px;line-height:17px;display:block;background:url("/donargym/web/images/button.png") 0px 0px no-repeat;margin-right:8px;margin-bottom:8px;color:black;padding:4px;font-size:12px;font-weight:normal;}
-body #article #page {width:597px;float:left;background:#FFF;margin-left:5px;padding:14px;background-color:lightyellow}
-body #article #page #formulier {width:597px;float:left;background:#FFF;margin-left:0px;padding:0px;background-color:lightyellow}
-body #article #page #formulier #left{width:293px;float:left;background:#FFF;margin-left:0px;padding:0px;background-color:lightyellow}
-body #article #page #formulier #right{width:293px;float:right;background:#FFF;margin-left:10px;padding:0px;background-color:lightyellow}
-body #article #page #wizardmenu {height:50px;line-height:50px;}
-body #article #agenda {width:175px;float:right;background:#F0F0CC;}
-body #article #agenda #text{padding: 5px;}
+body {
+    background-color: lightyellow;
+}
+
+body {
+    font-family: Calibri;
+    font-size: 15px;
+    margin: 0px;
+}
+
+body h1 {
+    margin: 0px;
+    font-size: 20px;
+}
+
+body h2 {
+    margin-bottom: 3px;
+    font-size: 18px;
+}
+
+body b {
+    font-weight: bold;
+}
+
+body img {
+    border: 0;
+}
+
+body a {
+    text-decoration: none;
+    color: #19007D;
+    font-weight: bold;
+}
+
+body div.line {
+    height: 1px;
+    background: #000000;
+}
+
+body div.line2 {
+    height: 12px;
+    background-image: url("/donargym/web/images/lijn.jpg");
+}
+
+body #post-title {
+    font-size: 13px;
+    margin: 0px;
+    background: lightyellow;
+}
+
+body #blog-post-content {
+    margin-bottom: 15px;
+}
+
+body #post-content {
+    margin-bottom: 30px;
+}
+
+body #header {
+    width: 980px;
+    height: 380px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body #header #title {
+    height: 210px;
+    line-height: 210px;
+    color: black;
+    font-size: 60px;
+}
+
+body #header #logo {
+    float: right;
+}
+
+body #navigator {
+    width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body #navigator a {
+    font-size: 16px;
+    padding: 8px;
+    font-weight: normal;
+}
+
+body #article {
+    width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body #article #menu {
+    width: 175px;
+    float: left;
+}
+
+body #article #menu #items a {
+    width: 167px;
+    height: 17px;
+    line-height: 17px;
+    display: block;
+    background: url("/donargym/web/images/button.png") 0px 0px no-repeat;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    color: black;
+    padding: 4px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.currentLink {
+    width: 167px;
+    height: 17px;
+    line-height: 17px;
+    display: block;
+    background: url("/donargym/web/images/button.png") 0px 0px no-repeat;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    color: black;
+    padding: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+body #article #page {
+    width: 597px;
+    float: left;
+    background: #FFF;
+    margin-left: 5px;
+    padding: 14px;
+    background-color: lightyellow
+}
+
+body #article #page #formulier {
+    width: 597px;
+    float: left;
+    background: #FFF;
+    margin-left: 0px;
+    padding: 0px;
+    background-color: lightyellow
+}
+
+body #article #page #formulier #left {
+    width: 293px;
+    float: left;
+    background: #FFF;
+    margin-left: 0px;
+    padding: 0px;
+    background-color: lightyellow
+}
+
+body #article #page #formulier #right {
+    width: 293px;
+    float: right;
+    background: #FFF;
+    margin-left: 10px;
+    padding: 0px;
+    background-color: lightyellow
+}
+
+body #article #page #wizardmenu {
+    height: 50px;
+    line-height: 50px;
+}
+
+body #article #agenda {
+    width: 175px;
+    float: right;
+    background: #F0F0CC;
+}
+
+body #article #agenda #text {
+    padding: 5px;
+}
+
 .inlognavigation {
-    width:585px;
-    float:left;
-    margin-top:0px;
-    margin-bottom:0px;
-    margin-left:0px;
-    padding:5px;
+    width: 585px;
+    float: left;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    padding: 5px;
     background-color: #F0F0CC;
 }
