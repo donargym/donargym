@@ -57,13 +57,24 @@
         </div>
         <div id="agenda">
             <div id="text">
-                <h2>Agenda</h2>(data onder voorbehoud)
+                <h2>Agenda
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('addAgendaPage') }}"><img src="{{ asset('images/add.png') }}" width="18px" /></a>
+                    {% endif %}
+                </h2>
+                (data onder voorbehoud)
                 <div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
                 {% for item in calendarItems %}
-                    <b><a href="">{{ item.datum }}</a></b>
-                    <br /><a href="">
-                    <span style="font-weight:normal;">{{ item.activiteit }}</span>
-                </a><div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+                    <b><a href="{{ path('getAgendaPage', { 'id': item.id }) }}">{{ item.datum }}</a></b>
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('editAgendaPage', { 'id': item.id }) }}"><img src="{{ asset('images/edit.png') }}" width="18px" /></a>
+                        <a href="{{ path('removeAgendaPage', { 'id': item.id }) }}"><img src="{{ asset('images/remove.png') }}" width="18px" /></a>
+                    {% endif %}
+                    <br />
+                    <a href="{{ path('getAgendaPage', { 'id': item.id }) }}">
+                        <span style="font-weight:normal;">{{ item.activiteit }}</span>
+                    </a>
+                    <div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
             {% endfor %}
             </div>
         </div>
@@ -71,11 +82,3 @@
         {% block javascripts %}{% endblock %}
     </body>
 </html>
-
-
-
-
-
-
-
-

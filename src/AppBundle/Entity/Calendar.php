@@ -28,12 +28,12 @@ class Calendar
     protected $activiteit;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $locatie;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $tijd;
 
@@ -78,7 +78,14 @@ class Calendar
      */
     public function getDatum()
     {
-        return $this->datum->format('d-m-Y');
+        if($this->datum)
+        {
+            return $this->datum;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     /**

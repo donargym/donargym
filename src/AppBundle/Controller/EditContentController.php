@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Calendar;
+use AppBundle\Form\Type\CalendarType;
 use AppBundle\Form\Type\ContentType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
@@ -455,6 +457,103 @@ class EditContentController extends BaseController
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Route("/agenda/add/", name="addAgendaPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addAgendaPage(Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $agenda = new Calendar();
+        $form = $this->createForm(new CalendarType(), $agenda);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($agenda);
+            $em->flush();
+            return $this->redirectToRoute('getNieuwsPage');
+        }
+        else {
+            return $this->render('default/addCalendar.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView()
+            ));
+        }
+    }
+
+    /**
+     * @Route("/agenda/edit/{id}/", name="editAgendaPage")
+     * @Method({"GET", "POST"})
+     */
+    public function editAgendaPage($id, Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT calendar
+                FROM AppBundle:Calendar calendar
+                WHERE calendar.id = :id')
+            ->setParameter('id', $id);
+        $agenda = $query->setMaxResults(1)->getOneOrNullResult();
+        if(count($agenda) > 0)
+        {
+            $form = $this->createForm(new CalendarType(), $agenda);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($agenda);
+                $em->flush();
+                return $this->redirectToRoute('getNieuwsPage');
+            }
+            else {
+                return $this->render('default/addCalendar.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'form' => $form->createView()
+                ));
+            }
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Route("/agenda/remove/{id}", name="removeAgendaPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeAgendaPage($id, Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $agenda = new Calendar();
+        $form = $this->createForm(new CalendarType(), $agenda);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($agenda);
+            $em->flush();
+            return $this->redirectToRoute('getNieuwsPage');
+        }
+        else {
+            return $this->render('default/addCalendar.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView()
             ));
         }
     }

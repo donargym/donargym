@@ -518,4 +518,37 @@ class GetContentController extends BaseController
                 ));
         }
     }
+
+    /**
+     * @Route("/agenda/view/{id}/", name="getAgendaPage")
+     * @Method("GET")
+     */
+    public function getAgendaPageAction($id)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT calendar
+                FROM AppBundle:Calendar calendar
+                WHERE calendar.id = :id')
+            ->setParameter('id', $id);
+        $content = $query->setMaxResults(1)->getOneOrNullResult();
+        if(count($content) > 0)
+        {
+            return $this->render('default/viewCalendar.html.twig', array(
+                'content' => $content->getAll(),
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
 }
