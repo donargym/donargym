@@ -30,7 +30,7 @@ class EditContentController extends BaseController
      * @Route("/donar/{page}/edit/", defaults={"page" = "geschiedenis"}, name="editDonarPage")
      * @Method({"GET", "POST"})
      */
-    public function getDonarPageAction($page)
+    public function editDonarPageAction($page, Request $request)
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
@@ -47,11 +47,28 @@ class EditContentController extends BaseController
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if(count($content) > 0)
             {
-                return $this->render('donar/index.html.twig', array(
-                    'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
-                ));
+                $form = $this->createForm(new ContentType(), $content);
+                $form->handleRequest($request);
+
+                if ($form->isValid()) {
+                    $editedContent = new Content();
+                    $editedContent->setGewijzigd(new \DateTime('NOW'));
+                    $editedContent->setPagina($page);
+                    $editedContent->setContent($content->getContent());
+                    $editedContent->setContent($content->getContent());
+                    $em->detach($content);
+                    $em->persist($editedContent);
+                    $em->flush();
+                    return $this->redirectToRoute('getDonarPage', array('page' => $page));
+                }
+                else {
+                    return $this->render('donar/editIndex.html.twig', array(
+                        'content' => $content->getContent(),
+                        'calendarItems' => $this->calendarItems,
+                        'header' => $this->header,
+                        'form' => $form->createView()
+                    ));
+                }
             }
             else
             {
@@ -75,7 +92,7 @@ class EditContentController extends BaseController
      * @Route("/lessen/{page}/edit/", defaults={"page" = "lesrooster"}, name="editLessenPage")
      * @Method({"GET", "POST"})
      */
-    public function getLessenPageAction($page)
+    public function editLessenPageAction($page, Request $request)
     {
         $this->header = 'bannerrecreatie'.rand(1,5);
         $this->calendarItems = $this->getCalendarItems();
@@ -91,11 +108,28 @@ class EditContentController extends BaseController
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if(count($content) > 0)
             {
-                return $this->render('lessen/index.html.twig', array(
-                    'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
-                ));
+                $form = $this->createForm(new ContentType(), $content);
+                $form->handleRequest($request);
+
+                if ($form->isValid()) {
+                    $editedContent = new Content();
+                    $editedContent->setGewijzigd(new \DateTime('NOW'));
+                    $editedContent->setPagina($page);
+                    $editedContent->setContent($content->getContent());
+                    $editedContent->setContent($content->getContent());
+                    $em->detach($content);
+                    $em->persist($editedContent);
+                    $em->flush();
+                    return $this->redirectToRoute('getLessenPage', array('page' => $page));
+                }
+                else {
+                    return $this->render('lessen/editIndex.html.twig', array(
+                        'content' => $content->getContent(),
+                        'calendarItems' => $this->calendarItems,
+                        'header' => $this->header,
+                        'form' => $form->createView()
+                    ));
+                }
             }
             else
             {
@@ -120,7 +154,7 @@ class EditContentController extends BaseController
      * defaults={"page" = "wedstrijdturnen"}, name="editWedstrijdturnenPage")
      * @Method({"GET", "POST"})
      */
-    public function getWedstrijdturnenPageAction($page)
+    public function editWedstrijdturnenPageAction($page, Request $request)
     {
         $this->header = 'wedstrijdturnen'.rand(1,11);
         $this->calendarItems = $this->getCalendarItems();
@@ -136,11 +170,28 @@ class EditContentController extends BaseController
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if(count($content) > 0)
             {
-                return $this->render('wedstrijdturnen/index.html.twig', array(
-                    'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
-                ));
+                $form = $this->createForm(new ContentType(), $content);
+                $form->handleRequest($request);
+
+                if ($form->isValid()) {
+                    $editedContent = new Content();
+                    $editedContent->setGewijzigd(new \DateTime('NOW'));
+                    $editedContent->setPagina($page);
+                    $editedContent->setContent($content->getContent());
+                    $editedContent->setContent($content->getContent());
+                    $em->detach($content);
+                    $em->persist($editedContent);
+                    $em->flush();
+                    return $this->redirectToRoute('getWedstrijdturnenPage', array('page' => $page));
+                }
+                else {
+                    return $this->render('wedstrijdturnen/editIndex.html.twig', array(
+                        'content' => $content->getContent(),
+                        'calendarItems' => $this->calendarItems,
+                        'header' => $this->header,
+                        'form' => $form->createView()
+                    ));
+                }
             }
             else
             {
@@ -168,7 +219,7 @@ class EditContentController extends BaseController
      * @Route("/lidmaatschap/{page}/edit/", defaults={"page" = "lidmaatschap"}, name="editLidmaatschapPage")
      * @Method({"GET", "POST"})
      */
-    public function getLidmaatschapPageAction($page)
+    public function editLidmaatschapPageAction($page, Request $request)
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
@@ -184,11 +235,28 @@ class EditContentController extends BaseController
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if(count($content) > 0)
             {
-                return $this->render('lidmaatschap/index.html.twig', array(
-                    'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
-                ));
+                $form = $this->createForm(new ContentType(), $content);
+                $form->handleRequest($request);
+
+                if ($form->isValid()) {
+                    $editedContent = new Content();
+                    $editedContent->setGewijzigd(new \DateTime('NOW'));
+                    $editedContent->setPagina($page);
+                    $editedContent->setContent($content->getContent());
+                    $editedContent->setContent($content->getContent());
+                    $em->detach($content);
+                    $em->persist($editedContent);
+                    $em->flush();
+                    return $this->redirectToRoute('getLidmaatschapPage', array('page' => $page));
+                }
+                else {
+                    return $this->render('lidmaatschap/editIndex.html.twig', array(
+                        'content' => $content->getContent(),
+                        'calendarItems' => $this->calendarItems,
+                        'header' => $this->header,
+                        'form' => $form->createView()
+                    ));
+                }
             }
             else
             {
@@ -212,7 +280,7 @@ class EditContentController extends BaseController
      * @Route("/fotofilm/{page}/edit/", defaults={"page" = "fotoenfilm"}, name="editFotofilmPage")
      * @Method({"GET", "POST"})
      */
-    public function getFotofilmPageAction($page)
+    public function editFotofilmPageAction($page, Request $request)
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
@@ -228,11 +296,28 @@ class EditContentController extends BaseController
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if(count($content) > 0)
             {
-                return $this->render('fotofilm/index.html.twig', array(
-                    'content' => $content->getContent(),
-                    'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
-                ));
+                $form = $this->createForm(new ContentType(), $content);
+                $form->handleRequest($request);
+
+                if ($form->isValid()) {
+                    $editedContent = new Content();
+                    $editedContent->setGewijzigd(new \DateTime('NOW'));
+                    $editedContent->setPagina($page);
+                    $editedContent->setContent($content->getContent());
+                    $editedContent->setContent($content->getContent());
+                    $em->detach($content);
+                    $em->persist($editedContent);
+                    $em->flush();
+                    return $this->redirectToRoute('getFotofilmPage', array('page' => $page));
+                }
+                else {
+                    return $this->render('fotofilm/editIndex.html.twig', array(
+                        'content' => $content->getContent(),
+                        'calendarItems' => $this->calendarItems,
+                        'header' => $this->header,
+                        'form' => $form->createView()
+                    ));
+                }
             }
             else
             {
