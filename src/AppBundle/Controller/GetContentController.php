@@ -160,14 +160,14 @@ class GetContentController extends BaseController
         $clubbladItems = array();$j=0;$k=0;
         for($i=0;$i<count($content);$i++)
         {
-            if(date('Y', time()) - date('Y', strtotime($content[$i]->getDatum())) != $k)
+            if(date('Y', time()) - date('Y', strtotime($content[$i]->getDatumFormat())) != $k)
             {
                 $j=0;
             }
-            $k = (date('Y', time()) - date('Y', strtotime($content[$i]->getDatum())));
+            $k = (date('Y', time()) - date('Y', strtotime($content[$i]->getDatumFormat())));
             $clubbladItems[$k][$j] = $content[$i]->getAll();
-            $clubbladItems[$k][$j]->jaar = date('Y', strtotime($content[$i]->getDatum()));
-            $clubbladItems[$k][$j]->maandJaar = $this->maand(date('m', strtotime($content[$i]->getDatum()))).' '.date('Y', strtotime($content[$i]->getDatum()));
+            $clubbladItems[$k][$j]->jaar = date('Y', strtotime($content[$i]->getDatumFormat()));
+            $clubbladItems[$k][$j]->maandJaar = $this->maand(date('m', strtotime($content[$i]->getDatumFormat()))).' '.date('Y', strtotime($content[$i]->getDatumFormat()));
             $j++;
         }
         return $this->render('default/clubblad.html.twig', array(

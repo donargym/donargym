@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Calendar;
+use AppBundle\Entity\Clubblad;
 use AppBundle\Entity\Nieuwsbericht;
 use AppBundle\Entity\Vakanties;
 use AppBundle\Form\Type\CalendarType;
@@ -19,6 +20,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 
 /**
  * @Security("has_role('ROLE_ADMIN')")
@@ -881,6 +884,40 @@ class EditContentController extends BaseController
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Template()
+     * @Route("/nieuws/clubblad/add/", name="addClubbladPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addClubbladPageAction(Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $clubblad = new Clubblad();
+        $form = $this->createFormBuilder($clubblad)
+            ->add('datum', 'date', array(
+                'widget' => 'single_text',
+            ))
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($clubblad);
+            $em->flush();
+            return $this->redirectToRoute('getNieuwsPage', array('page' => 'clubblad'));
+        }
+        else {
+            return $this->render('default/addClubblad.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView(),
             ));
         }
     }
