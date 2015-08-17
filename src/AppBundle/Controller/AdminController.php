@@ -38,4 +38,46 @@ class AdminController extends BaseController
             'header' => $this->header
         ));
     }
+    
+    /**
+     * @Route("/admin/foto/", name="getAdminFotoPage")
+     * @Method("GET")
+     */
+    public function getAdminFotoPage()
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        return $this->render('inloggen/adminFotos.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header
+        ));
+    }
+
+    /**
+     * @Route("/admin/bestanden/", name="getAdminBestandenPage")
+     * @Method("GET")
+     */
+    public function getAdminBestandenPage()
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        return $this->render('inloggen/adminUploads.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header
+        ));
+    }
+
+    /**
+     * @Route("/admin/selectie/", name="getAdminSelectiePage")
+     * @Method("GET")
+     */
+    public function getAdminSelectiePage()
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        return $this->render('inloggen/adminSelectie.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header
+        ));
+    }
 }
