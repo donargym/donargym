@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\FotoUpload;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,6 +12,7 @@ use AppBundle\Entity\Content;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 
 /**
@@ -38,7 +40,7 @@ class AdminController extends BaseController
             'header' => $this->header
         ));
     }
-    
+
     /**
      * @Route("/admin/foto/", name="getAdminFotoPage")
      * @Method("GET")
@@ -47,10 +49,110 @@ class AdminController extends BaseController
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT fotoupload
+                FROM AppBundle:FotoUpload fotoupload
+                ORDER BY fotoupload.naam');
+        $content = $query->getResult();
+        $contentItems = array();
+        for($i=0;$i<count($content);$i++)
+        {
+            $contentItems[$i] = $content[$i]->getAll();
+        }
         return $this->render('inloggen/adminFotos.html.twig', array(
+            'contentItems' => $contentItems,
             'calendarItems' => $this->calendarItems,
             'header' => $this->header
         ));
+    }
+
+    /**
+     * @Template()
+     * @Route("/admin/foto/add/", name="addAdminFotoPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addAdminFotoPageAction(Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $foto = new FotoUpload();
+        $form = $this->createFormBuilder($foto)
+            ->add('naam')
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($foto);
+            $em->flush();
+            $this->get('helper.imageresizer')->resizeImage($foto->getAbsolutePath(), $foto->getUploadRootDir()."/" , null, $width=597);
+            return $this->redirectToRoute('getAdminFotoPage');
+        }
+        else {
+            return $this->render('inloggen/addAdminFotos.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @Route("/admin/foto/remove/{id}/", name="removeAdminFotoPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeAdminFotoPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->header = 'bannerhome'.rand(1,2);
+            $this->calendarItems = $this->getCalendarItems();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT fotoupload
+                FROM AppBundle:FotoUpload fotoupload
+                WHERE fotoupload.id = :id')
+                ->setParameter('id', $id);
+            $foto = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($foto) > 0)
+            {
+                return $this->render('inloggen/removeAdminFotos.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'content' => $foto->getAll(),
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT fotoupload
+                FROM AppBundle:FotoUpload fotoupload
+                WHERE fotoupload.id = :id')
+                ->setParameter('id', $id);
+            $foto = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($foto);
+            $em->flush();
+            return $this->redirectToRoute('getAdminFotoPage');
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
     }
 
     /**
