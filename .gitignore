@@ -14,5 +14,6 @@
 /web/images/headers/*
 /web/images/Selectie/*
 /web/adminuploads/*
+/web/uploads/*
 /web/nieuws/*
 /src/AppBundle/DataFixtures/ORM/LoadUserData.php
