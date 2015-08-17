@@ -2,15 +2,22 @@
 
 {% block menu %}
     <div id="items">
-        <a href="{{ path('getAdminIndexPage') }}">Admin dingen</a>
+        <a href="{{ path('getAdminIndexPage') }}">Index</a>
+        <a href="{{ path('getAdminIndexPage') }}">Foto's</a>
+        <a href="{{ path('getAdminIndexPage') }}">Andere bestanden</a>
+        <a href="{{ path('getAdminIndexPage') }}">Selectie</a>
         <a href="{{ path('logout') }}">Uitloggen</a>
     </div>
 {% endblock %}
 
-{% block body %}
-    <div class="inlognavigation">
-        Index
-    </div>
+{% block inlogNavigation %}
+        <b><i>Index</i></b>
+{% endblock %}
 
-    Hallo Admin!
+{% block pageHeader %}
+    <h1>Inloggen</h1>
+{% endblock %}
+
+{% block body %}
+    <i>Ingelogd als Admin</i>
 {% endblock %}

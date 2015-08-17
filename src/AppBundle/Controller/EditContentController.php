@@ -921,4 +921,59 @@ class EditContentController extends BaseController
             ));
         }
     }
+
+    /**
+     * @Route("/nieuws/clubblad/remove/{id}/", name="removeClubbladPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeClubbladPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->header = 'bannerhome'.rand(1,2);
+            $this->calendarItems = $this->getCalendarItems();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT clubblad
+                FROM AppBundle:Clubblad clubblad
+                WHERE clubblad.id = :id')
+                ->setParameter('id', $id);
+            $clubblad = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($clubblad) > 0)
+            {
+                return $this->render('default/removeClubblad.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'content' => $clubblad->getAll(),
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT clubblad
+                FROM AppBundle:Clubblad clubblad
+                WHERE clubblad.id = :id')
+                ->setParameter('id', $id);
+            $clubblad = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($clubblad);
+            $em->flush();
+            return $this->redirectToRoute('getNieuwsPage', array('page' => 'clubblad'));
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
 }
