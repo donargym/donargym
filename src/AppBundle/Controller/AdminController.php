@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\FileUpload;
 use AppBundle\Entity\FotoUpload;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
@@ -163,10 +164,109 @@ class AdminController extends BaseController
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT fileupload
+                FROM AppBundle:FileUpload fileupload
+                ORDER BY fileupload.naam');
+        $content = $query->getResult();
+        $contentItems = array();
+        for($i=0;$i<count($content);$i++)
+        {
+            $contentItems[$i] = $content[$i]->getAll();
+        }
         return $this->render('inloggen/adminUploads.html.twig', array(
+            'contentItems' => $contentItems,
             'calendarItems' => $this->calendarItems,
             'header' => $this->header
         ));
+    }
+
+    /**
+     * @Template()
+     * @Route("/admin/bestanden/add/", name="addAdminBestandenPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addAdminBestandenPageAction(Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $file = new FileUpload();
+        $form = $this->createFormBuilder($file)
+            ->add('naam')
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($file);
+            $em->flush();
+            return $this->redirectToRoute('getAdminBestandenPage');
+        }
+        else {
+            return $this->render('inloggen/addAdminUploads.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @Route("/admin/bestanden/remove/{id}/", name="removeAdminBestandenPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeAdminBestandenPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->header = 'bannerhome'.rand(1,2);
+            $this->calendarItems = $this->getCalendarItems();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT fileupload
+                FROM AppBundle:FileUpload fileupload
+                WHERE fileupload.id = :id')
+                ->setParameter('id', $id);
+            $file = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($file) > 0)
+            {
+                return $this->render('inloggen/removeAdminUploads.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'content' => $file->getAll(),
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT fileupload
+                FROM AppBundle:FileUpload fileupload
+                WHERE fileupload.id = :id')
+                ->setParameter('id', $id);
+            $file = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($file);
+            $em->flush();
+            return $this->redirectToRoute('getAdminBestandenPage');
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
     }
 
     /**

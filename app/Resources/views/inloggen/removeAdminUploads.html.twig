@@ -1,0 +1,30 @@
+{% extends 'inloggen/adminIndex.html.twig' %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <a href="{{ path('getAdminBestandenPage') }}">Overige Bestanden</a>
+        > <b><i>Bestand verwijderen</i></b>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Bestand verwijderen</h1>
+{% endblock %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <span style="color:red;">Weet u zeker dat u <b>"{{ content.naam }}"</b> wilt verwijderen?</span>
+        <table>
+            <tr>
+                <td>
+                    <form method="post" action="{{ path('removeAdminBestandenPage', { id: app.request.get('id') }) }}">
+                        <input name="bevestig" type="submit" value="Bevestig">
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ path('getAdminBestandenPage') }}"><input type="button" value="Annuleren"></a>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+{% endblock %}

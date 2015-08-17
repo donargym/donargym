@@ -1,0 +1,39 @@
+{% extends 'inloggen/adminIndex.html.twig' %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <a href="{{ path('getAdminBestandenPage') }}">Overige Bestanden</a>
+        > <b><i>Bestand uploaden</i></b>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Bestand uploaden</h1>
+{% endblock %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('getAdminBestandenPage') }}">Annuleer</a>
+        <p>Let op: het bestand mag maximaal 10 Mb zijn!</p>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <table>
+            <tr>
+                <td colspan="2">{{ form_errors(form.file) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form_label(form.file) }}</td>
+                <td>{{ form_widget(form.file) }}</td>
+            </tr>
+            <tr>
+                <td colspan="2">{{ form_errors(form.naam) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form_label(form.naam) }}</td>
+                <td>{{ form_widget(form.naam) }}</td>
+            </tr>
+        </table>
+        {{ form_widget(form.uploadBestand) }}
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}
