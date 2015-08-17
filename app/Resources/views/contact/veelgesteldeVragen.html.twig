@@ -1,0 +1,23 @@
+{% extends 'contact/base.html.twig' %}
+
+{% block body %}
+    <h1>Veelgestelde vragen</h1>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('addVeelgesteldeVragenPage') }}">Nieuwe vraag toevoegen: <img src="{{ asset('images/add.png') }}" width="18px" /></a>
+    {% endif %}
+    <ul>
+        {% for item in contentItems %}
+            <li onclick="showDetails(this.id)" id="{{ item.id }}" style="text-decoration: none;color: #19007D;font-weight: bold;">
+                    {{ item.vraag }}
+                {% if app.user and is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('editVeelgesteldeVragenPage', { 'id': item.id }) }}"><img src="{{ asset('images/edit.png') }}" width="18px" /></a>
+                    <a href="{{ path('removeVeelgesteldeVragenPage', { 'id': item.id }) }}"><img src="{{ asset('images/remove.png') }}" width="18px" /></a>
+                {% endif %}
+            </li>
+            <div style="display: none;" id="{{ item.id }}hidden">
+                {{ item.antwoord|raw }}
+            </div>
+        {% endfor %}
+    </ul>
+{% endblock %}
+

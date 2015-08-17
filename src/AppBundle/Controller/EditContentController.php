@@ -4,12 +4,15 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Calendar;
 use AppBundle\Entity\Clubblad;
+use AppBundle\Entity\Formulieren;
 use AppBundle\Entity\Nieuwsbericht;
 use AppBundle\Entity\Vakanties;
+use AppBundle\Entity\VeelgesteldeVragen;
 use AppBundle\Form\Type\CalendarType;
 use AppBundle\Form\Type\ContentType;
 use AppBundle\Form\Type\NieuwsberichtType;
 use AppBundle\Form\Type\VakantiesType;
+use AppBundle\Form\Type\VeelgesteldeVragenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -967,6 +970,218 @@ class EditContentController extends BaseController
             $em->remove($clubblad);
             $em->flush();
             return $this->redirectToRoute('getNieuwsPage', array('page' => 'clubblad'));
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Template()
+     * @Route("/lidmaatschap/formulieren/add/", name="addFormulierenPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addFormulierenPageAction(Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $formulier = new Formulieren();
+        $form = $this->createFormBuilder($formulier)
+            ->add('naam')
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($formulier);
+            $em->flush();
+            return $this->redirectToRoute('getLidmaatschapPage', array('page' => 'formulieren'));
+        }
+        else {
+            return $this->render('lidmaatschap/addFormulieren.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView(),
+            ));
+        }
+    }
+
+    /**
+     * @Route("/lidmaatschap/formulieren/remove/{id}/", name="removeFormulierenPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeFormulierenPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->header = 'bannerhome'.rand(1,2);
+            $this->calendarItems = $this->getCalendarItems();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT formulieren
+                FROM AppBundle:Formulieren formulieren
+                WHERE formulieren.id = :id')
+                ->setParameter('id', $id);
+            $formulier = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($formulier) > 0)
+            {
+                return $this->render('lidmaatschap/removeFormulieren.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'content' => $formulier->getAll(),
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT formulieren
+                FROM AppBundle:Formulieren formulieren
+                WHERE formulieren.id = :id')
+                ->setParameter('id', $id);
+            $formulier = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($formulier);
+            $em->flush();
+            return $this->redirectToRoute('getLidmaatschapPage', array('page' => 'formulieren'));
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Route("/contact/veelgesteldevragen/add/", name="addVeelgesteldeVragenPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addVeelgesteldeVragenPage(Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $vraag = new VeelgesteldeVragen();
+        $form = $this->createForm(new VeelgesteldeVragenType(), $vraag);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($vraag);
+            $em->flush();
+            return $this->redirectToRoute('getContactPage', array('page' => 'veelgesteldevragen'));
+        }
+        else {
+            return $this->render('contact/addVeelgesteldeVragen.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView()
+            ));
+        }
+    }
+
+    /**
+     * @Route("/contact/veelgesteldevragen/edit/{id}/", name="editVeelgesteldeVragenPage")
+     * @Method({"GET", "POST"})
+     */
+    public function editVeelgesteldeVragenPage($id, Request $request)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT veelgesteldevragen
+                FROM AppBundle:VeelgesteldeVragen veelgesteldevragen
+                WHERE veelgesteldevragen.id = :id')
+            ->setParameter('id', $id);
+        $vraag = $query->setMaxResults(1)->getOneOrNullResult();
+        if(count($vraag) > 0)
+        {
+            $form = $this->createForm(new VeelgesteldeVragenType(), $vraag);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($vraag);
+                $em->flush();
+                return $this->redirectToRoute('getContactPage', array('page' => 'veelgesteldevragen'));
+            }
+            else {
+                return $this->render('contact/addVeelgesteldeVragen.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'form' => $form->createView()
+                ));
+            }
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
+        }
+    }
+
+    /**
+     * @Route("/contact/veelgesteldevragen/remove/{id}/", name="removeVeelgesteldeVragenPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeVeelgesteldeVragenPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->header = 'bannerhome'.rand(1,2);
+            $this->calendarItems = $this->getCalendarItems();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT veelgesteldevragen
+                FROM AppBundle:VeelgesteldeVragen veelgesteldevragen
+                WHERE veelgesteldevragen.id = :id')
+                ->setParameter('id', $id);
+            $vraag = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($vraag) > 0)
+            {
+                return $this->render('contact/removeVeelgesteldeVragen.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'content' => $vraag->getAll()
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT veelgesteldevragen
+                FROM AppBundle:VeelgesteldeVragen veelgesteldevragen
+                WHERE veelgesteldevragen.id = :id')
+                ->setParameter('id', $id);
+            $vraag = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($vraag);
+            $em->flush();
+            return $this->redirectToRoute('getContactPage', array('page' => 'veelgesteldevragen'));
         }
         else
         {

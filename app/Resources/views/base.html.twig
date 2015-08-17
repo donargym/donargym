@@ -51,11 +51,9 @@
             {% block menu %}{% endblock %}
         </div>
         <div id="page">
-            <div class="inlognavigation">
-                {% block inlogNavigation %}
+            {% block inlogNavigation %}
 
-                {% endblock %}
-            </div>
+            {% endblock %}
             {% block pageHeader %}
 
             {% endblock %}
@@ -87,6 +85,8 @@
             </div>
         </div>
     </div>
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            <script src="/donargym/web/js/showvoortgang.js"></script>
+        {% endblock %}
     </body>
 </html>

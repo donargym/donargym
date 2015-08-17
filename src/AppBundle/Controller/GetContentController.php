@@ -321,7 +321,7 @@ class GetContentController extends BaseController
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
-        if(in_array($page, array('lidmaatschap', 'contributie', 'formulieren', 'ooievaarspas')))
+        if(in_array($page, array('lidmaatschap', 'contributie', 'ooievaarspas')))
         {
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -347,6 +347,25 @@ class GetContentController extends BaseController
                 ));
             }
 
+        }
+        elseif($page =  'formulieren')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT formulieren
+                FROM AppBundle:Formulieren formulieren
+                ORDER BY formulieren.id');
+            $content = $query->getResult();
+            $contentItems = array();
+            for($i=0;$i<count($content);$i++)
+            {
+                $contentItems[$i] = $content[$i]->getAll();
+            }
+            return $this->render('lidmaatschap/formulieren.html.twig', array(
+                'contentItems' => $contentItems,
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
         }
         else
         {
@@ -453,7 +472,7 @@ class GetContentController extends BaseController
     {
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
-        if(in_array($page, array('contact', 'veelgesteldevragen')))
+        if(in_array($page, array('contact')))
         {
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -479,6 +498,25 @@ class GetContentController extends BaseController
                 ));
             }
 
+        }
+        elseif($pagina = 'veelgesteldevragen')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT veelgesteldevragen
+                FROM AppBundle:VeelgesteldeVragen veelgesteldevragen
+                ORDER BY veelgesteldevragen.id');
+            $content = $query->getResult();
+            $contentItems = array();
+            for($i=0;$i<count($content);$i++)
+            {
+                $contentItems[$i] = $content[$i]->getAll();
+            }
+            return $this->render('contact/veelgesteldeVragen.html.twig', array(
+                'contentItems' => $contentItems,
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header
+            ));
         }
         else
         {
