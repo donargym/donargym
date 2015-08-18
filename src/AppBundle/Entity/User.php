@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * User
@@ -53,8 +54,57 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="straatnr", type="string", length=255)
+     */
+    private $straatnr;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="postcode", type="string", length=255)
+     */
+    private $postcode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="plaats", type="string", length=255)
+     */
+    private $plaats;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel1", type="string", length=255)
+     */
+    private $tel1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel2", type="string", length=255, nullable=true)
+     */
+    private $tel2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel3", type="string", length=255, nullable=true)
+     */
+    private $tel3;
+
+    /**
+     * @ORM\OneToMany(targetEntity="persoon", mappedBy="user")
+     *
+     */
+    private $persoon;
+
     public function __construct()
     {
+        $this->persoon = new ArrayCollection();
         $this->isActive = true;
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid(null, true));
@@ -235,5 +285,199 @@ class User implements AdvancedUserInterface, \Serializable
         $this->username = $username;
 
         return $this;
+    }
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     * @return User
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return string 
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * Set straatnr
+     *
+     * @param string $straatnr
+     * @return User
+     */
+    public function setStraatnr($straatnr)
+    {
+        $this->straatnr = $straatnr;
+
+        return $this;
+    }
+
+    /**
+     * Get straatnr
+     *
+     * @return string 
+     */
+    public function getStraatnr()
+    {
+        return $this->straatnr;
+    }
+
+    /**
+     * Set postcode
+     *
+     * @param string $postcode
+     * @return User
+     */
+    public function setPostcode($postcode)
+    {
+        $this->postcode = $postcode;
+
+        return $this;
+    }
+
+    /**
+     * Get postcode
+     *
+     * @return string 
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * Set plaats
+     *
+     * @param string $plaats
+     * @return User
+     */
+    public function setPlaats($plaats)
+    {
+        $this->plaats = $plaats;
+
+        return $this;
+    }
+
+    /**
+     * Get plaats
+     *
+     * @return string 
+     */
+    public function getPlaats()
+    {
+        return $this->plaats;
+    }
+
+    /**
+     * Set tel1
+     *
+     * @param string $tel1
+     * @return User
+     */
+    public function setTel1($tel1)
+    {
+        $this->tel1 = $tel1;
+
+        return $this;
+    }
+
+    /**
+     * Get tel1
+     *
+     * @return string 
+     */
+    public function getTel1()
+    {
+        return $this->tel1;
+    }
+
+    /**
+     * Set tel2
+     *
+     * @param string $tel2
+     * @return User
+     */
+    public function setTel2($tel2)
+    {
+        $this->tel2 = $tel2;
+
+        return $this;
+    }
+
+    /**
+     * Get tel2
+     *
+     * @return string 
+     */
+    public function getTel2()
+    {
+        return $this->tel2;
+    }
+
+    /**
+     * Set tel3
+     *
+     * @param string $tel3
+     * @return User
+     */
+    public function setTel3($tel3)
+    {
+        $this->tel3 = $tel3;
+
+        return $this;
+    }
+
+    /**
+     * Get tel3
+     *
+     * @return string 
+     */
+    public function getTel3()
+    {
+        return $this->tel3;
+    }
+
+    /**
+     * Add persoon
+     *
+     * @param \AppBundle\Entity\persoon $persoon
+     * @return User
+     */
+    public function addPersoon(\AppBundle\Entity\persoon $persoon)
+    {
+        $this->persoon[] = $persoon;
+
+        return $this;
+    }
+
+    /**
+     * Remove persoon
+     *
+     * @param \AppBundle\Entity\persoon $persoon
+     */
+    public function removePersoon(\AppBundle\Entity\persoon $persoon)
+    {
+        $this->persoon->removeElement($persoon);
+    }
+
+    /**
+     * Get persoon
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPersoon()
+    {
+        return $this->persoon;
     }
 }
