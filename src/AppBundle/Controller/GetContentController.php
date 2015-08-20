@@ -537,7 +537,8 @@ class GetContentController extends BaseController
     public function getInloggenPageAction()
     {
         $user = $this->getUser();
-        switch ($user->getRoles()[0])
+        $roles = $user->getRoles();
+        switch ($roles[0])
         {
             case 'ROLE_ADMIN':
                 return $this->redirectToRoute('getAdminIndexPage');
