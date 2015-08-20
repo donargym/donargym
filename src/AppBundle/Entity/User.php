@@ -97,7 +97,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $tel3;
 
     /**
-     * @ORM\OneToMany(targetEntity="persoon", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Persoon", mappedBy="user")
      *
      */
     private $persoon;
