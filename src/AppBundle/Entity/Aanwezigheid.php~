@@ -90,27 +90,4 @@ class Aanwezigheid
         return $this->persoon;
     }
 
-
-    /**
-     * Set trainingsdata
-     *
-     * @param \AppBundle\Entity\Trainingsdata $trainingsdata
-     * @return Aanwezigheid
-     */
-    public function setTrainingsdata(\AppBundle\Entity\Trainingsdata $trainingsdata)
-    {
-        $this->trainingsdata = $trainingsdata;
-
-        return $this;
-    }
-
-    /**
-     * Get trainingsdata
-     *
-     * @return \AppBundle\Entity\Trainingsdata 
-     */
-    public function getTrainingsdata()
-    {
-        return $this->trainingsdata;
-    }
 }

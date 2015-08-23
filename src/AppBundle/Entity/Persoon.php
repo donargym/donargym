@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * @ORM\Entity
@@ -34,22 +36,59 @@ class Persoon
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="geboortedatum", type="date")
+     * @ORM\Column(name="geboortedatum", type="string", length=255)
      */
     private $geboortedatum;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="foto", type="string", length=255)
-     */
+     * @ORM\OneToOne(targetEntity="SelectieFoto")
+     * @ORM\JoinColumn(name="foto_id", referencedColumnName="id")
+     **/
     private $foto;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="Persoon")
-     * @ORM\JoinColumn(name="User_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="persoon")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=FALSE)
      **/
     private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Functie", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $functie;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SeizoensDoelen", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $seizoensdoelen;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SubDoelen", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $subdoelen;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Trainingen", mappedBy="persoon")
+     **/
+    private $trainingen;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Aanwezigheid", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $aanwezigheid;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Stukje")
+     * @ORM\JoinColumn(name="stukje_id", referencedColumnName="id")
+     **/
+    private $stukje;
+
+    public function __construct()
+    {
+        $this->functie = new ArrayCollection();
+        $this->doelen = new ArrayCollection();
+        $this->aanwezigheid = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -108,35 +147,12 @@ class Persoon
     }
 
     /**
-     * Set geboortedatum
-     *
-     * @param \DateTime $geboortedatum
-     * @return Persoon
-     */
-    public function setGeboortedatum($geboortedatum)
-    {
-        $this->geboortedatum = $geboortedatum;
-
-        return $this;
-    }
-
-    /**
-     * Get geboortedatum
-     *
-     * @return \DateTime 
-     */
-    public function getGeboortedatum()
-    {
-        return $this->geboortedatum;
-    }
-
-    /**
      * Set foto
      *
-     * @param string $foto
+     * @param \AppBundle\Entity\SelectieFoto $foto
      * @return Persoon
      */
-    public function setFoto($foto)
+    public function setFoto(\AppBundle\Entity\SelectieFoto $foto = null)
     {
         $this->foto = $foto;
 
@@ -146,7 +162,7 @@ class Persoon
     /**
      * Get foto
      *
-     * @return string 
+     * @return \AppBundle\Entity\SelectieFoto 
      */
     public function getFoto()
     {
@@ -174,5 +190,224 @@ class Persoon
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function addFunctie(Functie $functie)
+    {
+        if (!$this->functie->contains($functie)) {
+            $this->functie->add($functie);
+            $functie->setPersoon($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFunctie(Functie $functie)
+    {
+        if ($this->functie->contains($functie)) {
+            $this->functie->removeElement($functie);
+            $functie->setPerson(null);
+        }
+
+        return $this;
+    }
+
+    public function getGroepen()
+    {
+        return array_map(
+            function ($functie) {
+                return $functie->getGroep();
+            },
+            $this->functie->toArray()
+        );
+    }
+
+    /**
+     * Get functie
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFunctie()
+    {
+        return $this->functie;
+    }
+
+    /**
+     * Set stukje
+     *
+     * @param \AppBundle\Entity\Stukje $stukje
+     * @return Persoon
+     */
+    public function setStukje(\AppBundle\Entity\Stukje $stukje = null)
+    {
+        $this->stukje = $stukje;
+
+        return $this;
+    }
+
+    /**
+     * Get stukje
+     *
+     * @return \AppBundle\Entity\Stukje 
+     */
+    public function getStukje()
+    {
+        return $this->stukje;
+    }
+
+    /**
+     * Add aanwezigheid
+     *
+     * @param \AppBundle\Entity\Aanwezigheid $aanwezigheid
+     * @return Persoon
+     */
+    public function addAanwezigheid(\AppBundle\Entity\Aanwezigheid $aanwezigheid)
+    {
+        $this->aanwezigheid[] = $aanwezigheid;
+
+        return $this;
+    }
+
+    /**
+     * Remove aanwezigheid
+     *
+     * @param \AppBundle\Entity\Aanwezigheid $aanwezigheid
+     */
+    public function removeAanwezigheid(\AppBundle\Entity\Aanwezigheid $aanwezigheid)
+    {
+        $this->aanwezigheid->removeElement($aanwezigheid);
+    }
+
+    /**
+     * Get aanwezigheid
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAanwezigheid()
+    {
+        return $this->aanwezigheid;
+    }
+
+    /**
+     * Add seizoensdoelen
+     *
+     * @param \AppBundle\Entity\SeizoensDoelen $seizoensdoelen
+     * @return Persoon
+     */
+    public function addSeizoensdoelen(\AppBundle\Entity\SeizoensDoelen $seizoensdoelen)
+    {
+        $this->seizoensdoelen[] = $seizoensdoelen;
+
+        return $this;
+    }
+
+    /**
+     * Remove seizoensdoelen
+     *
+     * @param \AppBundle\Entity\SeizoensDoelen $seizoensdoelen
+     */
+    public function removeSeizoensdoelen(\AppBundle\Entity\SeizoensDoelen $seizoensdoelen)
+    {
+        $this->seizoensdoelen->removeElement($seizoensdoelen);
+    }
+
+    /**
+     * Get seizoensdoelen
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSeizoensdoelen()
+    {
+        return $this->seizoensdoelen;
+    }
+
+    /**
+     * Add subdoelen
+     *
+     * @param \AppBundle\Entity\SubDoelen $subdoelen
+     * @return Persoon
+     */
+    public function addSubdoelen(\AppBundle\Entity\SubDoelen $subdoelen)
+    {
+        $this->subdoelen[] = $subdoelen;
+
+        return $this;
+    }
+
+    /**
+     * Remove subdoelen
+     *
+     * @param \AppBundle\Entity\SubDoelen $subdoelen
+     */
+    public function removeSubdoelen(\AppBundle\Entity\SubDoelen $subdoelen)
+    {
+        $this->subdoelen->removeElement($subdoelen);
+    }
+
+    /**
+     * Get subdoelen
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSubdoelen()
+    {
+        return $this->subdoelen;
+    }
+
+    /**
+     * Add trainingen
+     *
+     * @param \AppBundle\Entity\Trainingen $trainingen
+     * @return Persoon
+     */
+    public function addTrainingen(\AppBundle\Entity\Trainingen $trainingen)
+    {
+        $trainingen->addPersoon($this);
+        $this->trainingen[] = $trainingen;
+
+        return $this;
+    }
+
+    /**
+     * Remove trainingen
+     *
+     * @param \AppBundle\Entity\Trainingen $trainingen
+     */
+    public function removeTrainingen(\AppBundle\Entity\Trainingen $trainingen)
+    {
+        $this->trainingen->removeElement($trainingen);
+    }
+
+    /**
+     * Get trainingen
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTrainingen()
+    {
+        return $this->trainingen;
+    }
+
+    /**
+     * Set geboortedatum
+     *
+     * @param string $geboortedatum
+     * @return Persoon
+     */
+    public function setGeboortedatum($geboortedatum)
+    {
+        $this->geboortedatum = $geboortedatum;
+
+        return $this;
+    }
+
+    /**
+     * Get geboortedatum
+     *
+     * @return string 
+     */
+    public function getGeboortedatum()
+    {
+        return $this->geboortedatum;
     }
 }

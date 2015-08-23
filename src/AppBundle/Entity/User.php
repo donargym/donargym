@@ -106,8 +106,6 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->persoon = new ArrayCollection();
         $this->isActive = true;
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid(null, true));
     }
 
     public function getUsername()
@@ -127,8 +125,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function getSalt()
     {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
         return null;
     }
 
@@ -197,7 +193,6 @@ class User implements AdvancedUserInterface, \Serializable
     public function getRoles()
     {
         return array($this->role);
-        //return array('ROLE_USER');
     }
 
     /**
@@ -256,8 +251,6 @@ class User implements AdvancedUserInterface, \Serializable
             $this->username,
             $this->password,
             $this->isActive
-            // see section on salt below
-            // $this->salt,
         ));
     }
 
@@ -269,8 +262,6 @@ class User implements AdvancedUserInterface, \Serializable
             $this->username,
             $this->password,
             $this->isActive
-            // see section on salt below
-            // $this->salt
             ) = unserialize($serialized);
     }
 

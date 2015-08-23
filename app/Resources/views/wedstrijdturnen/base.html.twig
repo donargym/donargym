@@ -6,11 +6,9 @@
 
 {% block menu %}
     <div id="items">
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'voorselectiedenhaag' }) }}">Voorselectie Dames</a>
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'voorselectieleidschendam' }) }}">Voorselectie Dames L'dam</a>
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'aselectiedenhaag' }) }}">A-selectie Dames</a>
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'aselectieleidschendam' }) }}">A-selectie Dames L'dam</a>
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'bselectiedenhaag' }) }}">B-selectie Dames</a>
-        <a href="http://www.donargym.nl/topturnen/" target="_blank">Topturnen Heren</a>
+        {% for groep in groepen %}
+            <a href="http://www.donargym.nl/wedstrijdturnen/{{ groep.id }}" target="_blank">{{ groep.name }}</a>
+        {% endfor %}
+        <a href="http://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a>
     </div>
 {% endblock %}

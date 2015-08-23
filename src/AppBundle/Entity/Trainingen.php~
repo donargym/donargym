@@ -193,37 +193,4 @@ class Trainingen
     {
         return $this->trainingsdata;
     }
-
-    /**
-     * Add persoon
-     *
-     * @param \AppBundle\Entity\Persoon $persoon
-     * @return Trainingen
-     */
-    public function addPersoon(\AppBundle\Entity\Persoon $persoon)
-    {
-        $this->persoon[] = $persoon;
-
-        return $this;
-    }
-
-    /**
-     * Remove persoon
-     *
-     * @param \AppBundle\Entity\Persoon $persoon
-     */
-    public function removePersoon(\AppBundle\Entity\Persoon $persoon)
-    {
-        $this->persoon->removeElement($persoon);
-    }
-
-    /**
-     * Get persoon
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getPersoon()
-    {
-        return $this->persoon;
-    }
 }

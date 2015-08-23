@@ -9,23 +9,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="selectiefoto")
+ * @ORM\Table(name="wedstrijduitslagen")
  */
-class SelectieFoto
+class Wedstrijduitslagen
 {
     private $temp;
 
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue
      */
     protected $id;
-
-    /**
-     * @ORM\Column(length=300)
-     */
-    protected $naam;
 
     /**
      * @ORM\Column(length=300)
@@ -33,23 +28,25 @@ class SelectieFoto
     protected $locatie;
 
     /**
-     * @Assert\File(
-     *      maxSize="10M",
-     *      mimeTypes = {"image/gif", "image/jpeg", "image/pjpeg", "image/png"},
-     *      mimeTypesMessage = "Please upload a valid image: gif, jpg or png"
-     *      )
+     * @Assert\File(maxSize="6000000")
      */
     private $file;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Groepen", inversedBy="wedstrijduitslagen")
+     * @ORM\JoinColumn(name="groepen_id", referencedColumnName="id", nullable=FALSE)
+     */
+    protected $groep;
 
-    public function getAll()
-    {
-        $items = new \stdClass();
-        $items->id = $this->id;
-        $items->naam = $this->naam;
-        $items->locatie = $this->locatie;
-        return $items;
-    }
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $datum;
+
+    /**
+     * @ORM\Column(name="naam", type="string", length=255))
+     */
+    protected $naam;
 
     public function getAbsolutePath()
     {
@@ -65,7 +62,7 @@ class SelectieFoto
             : $this->getUploadDir().'/'.$this->locatie;
     }
 
-    public function getUploadRootDir()
+    protected function getUploadRootDir()
     {
         // the absolute directory path where uploaded
         // documents should be saved
@@ -76,63 +73,7 @@ class SelectieFoto
     {
         // get rid of the __DIR__ so it doesn't screw up
         // when displaying uploaded doc/image in the view.
-        return 'uploads/selectiefotos';
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set naam
-     *
-     * @param string $naam
-     * @return Clubblad
-     */
-    public function setNaam($naam)
-    {
-        $this->naam = $naam;
-
-        return $this;
-    }
-
-    /**
-     * Get naam
-     *
-     * @return string
-     */
-    public function getNaam()
-    {
-        return $this->naam;
-    }
-
-    /**
-     * Set locatie
-     *
-     * @param string $locatie
-     * @return Clubblad
-     */
-    public function setLocatie($locatie)
-    {
-        $this->locatie = $locatie;
-
-        return $this;
-    }
-
-    /**
-     * Get locatie
-     *
-     * @return string
-     */
-    public function getLocatie()
-    {
-        return $this->locatie;
+        return 'uploads/wedstrijduitslagen';
     }
 
     /**

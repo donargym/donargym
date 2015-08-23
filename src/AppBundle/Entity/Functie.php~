@@ -25,7 +25,7 @@ class Functie
 
     /**
      * @ORM\ManyToOne(targetEntity="Groepen", inversedBy="functie")
-     * @ORM\JoinColumn(name="groepen_id", referencedColumnName="id", nullable=FALSE)
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=FALSE)
      */
     protected $groep;
 
@@ -33,6 +33,11 @@ class Functie
      * @ORM\Column(name="functie", type="string", length=255))
      */
     protected $functie;
+//
+//    /**
+//     * @ORM\Column(type="integer", name="monthly_salary")
+//     */
+//    protected $monthlySalary;
 
     public function getId()
     {
@@ -59,28 +64,5 @@ class Functie
     {
         $this->groep = $groep;
         return $this;
-    }
-
-    /**
-     * Set functie
-     *
-     * @param string $functie
-     * @return Functie
-     */
-    public function setFunctie($functie)
-    {
-        $this->functie = $functie;
-
-        return $this;
-    }
-
-    /**
-     * Get functie
-     *
-     * @return string 
-     */
-    public function getFunctie()
-    {
-        return $this->functie;
     }
 }

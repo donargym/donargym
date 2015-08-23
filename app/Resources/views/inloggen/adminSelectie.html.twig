@@ -6,6 +6,27 @@
     </div>
 {% endblock %}
 
+{% block pageHeader %}
+    <h1>Selectie beheer</h1>
+{% endblock %}
+
 {% block body %}
-    <i>Ingelogd als Admin</i>
+
+<h2>Trainers <a href="{{ path('addAdminTrainerPage') }}"><img src="{{ asset('images/add.png') }}" width="18px" /></a></h2>
+    <br>
+    {% for persoon in personen %}
+        {{ persoon.voornaam }} {{ persoon.achternaam }}
+        <a href="">
+            <img src="{{ asset('images/edit.png') }}" width="18px" />
+        </a>
+        <a href="{{ path('removeAdminTrainerPage', { 'id': persoon.id }) }}">
+            <img src="{{ asset('images/remove.png') }}" width="18px" /><br>
+        </a>
+    {% endfor %}
+
+    {#Selectiegroep toevoegen#}
+    {#Selectiegroep wijzigen#}
+    {#Selectiegroep verwijderen#}
+
+
 {% endblock %}

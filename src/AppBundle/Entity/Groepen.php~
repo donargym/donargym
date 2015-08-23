@@ -197,37 +197,4 @@ class Groepen
 
         return $this;
     }
-
-    /**
-     * Add seizoensdoelen
-     *
-     * @param \AppBundle\Entity\SeizoensDoelen $seizoensdoelen
-     * @return Groepen
-     */
-    public function addSeizoensdoelen(\AppBundle\Entity\SeizoensDoelen $seizoensdoelen)
-    {
-        $this->seizoensdoelen[] = $seizoensdoelen;
-
-        return $this;
-    }
-
-    /**
-     * Remove seizoensdoelen
-     *
-     * @param \AppBundle\Entity\SeizoensDoelen $seizoensdoelen
-     */
-    public function removeSeizoensdoelen(\AppBundle\Entity\SeizoensDoelen $seizoensdoelen)
-    {
-        $this->seizoensdoelen->removeElement($seizoensdoelen);
-    }
-
-    /**
-     * Get seizoensdoelen
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSeizoensdoelen()
-    {
-        return $this->seizoensdoelen;
-    }
 }

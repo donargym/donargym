@@ -273,6 +273,17 @@ class GetContentController extends BaseController
     {
         $this->header = 'wedstrijdturnen'.rand(1,11);
         $this->calendarItems = $this->getCalendarItems();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT groepen
+                FROM AppBundle:Groepen groepen
+                ORDER BY groepen.id ASC');
+        $groepen = $query->getResult();
+        $groepItems = array();
+        for($i=0;$i<count($groepen);$i++)
+        {
+            $groepItems[$i] = $groepen[$i]->getIdName();
+        }
         if(in_array($page, array('wedstrijdturnen')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -288,7 +299,8 @@ class GetContentController extends BaseController
                 return $this->render('wedstrijdturnen/index.html.twig', array(
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'groepen' =>$groepItems
                 ));
             }
             else
