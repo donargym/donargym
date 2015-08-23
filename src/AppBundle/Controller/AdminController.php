@@ -441,30 +441,15 @@ class AdminController extends BaseController
             $em->persist($persoon);
             $em->flush();
 
-            /*$to='markmeijerman@hotmail.com';
-            $subject='Inloggegevens website Donar';
-            $message = 'Beste (ouders van) blahj,
-
-Er zijn inloggegevens voor je aangemaakt waarmee je kunt inloggen op de website van Donar:
-
-Inlognaam:
-Wachtwoord: lkll;
-
-Met vriendelijke groet,
-Gymnastiek Vereniging Donar Den Haag';
-
-            $headers='From: mark@donargym.nl';
-            mail($to, $subject, $message, $headers);*/
-
             $message = \Swift_Message::newInstance()
                 ->setSubject('Inloggegevens website Donar')
                 ->setFrom('webmaster@donargym.nl')
-                ->setTo($user->getEmail2(),$user->getUsername())
+                ->setTo($user->getUsername())
                 ->setBody(
                     $this->renderView(
                         'mails/new_user.txt.twig',
                         array(
-                            'naam' => $persoon->getVoornaam(),
+                            'voornaam' => $persoon->getVoornaam(),
                             'email1' => $user->getUsername(),
                             'email2' =>$user->getEmail2(),
                             'password' => $password
@@ -475,6 +460,30 @@ Gymnastiek Vereniging Donar Den Haag';
             try{$this->get('mailer')->send($message);}
             catch(\Exception $e){
                 var_dump($e->getMessage());die;
+            }
+
+            if($user->getEmail2())
+            {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Inloggegevens website Donar')
+                    ->setFrom('webmaster@donargym.nl')
+                    ->setTo($user->getEmail2())
+                    ->setBody(
+                        $this->renderView(
+                            'mails/new_user.txt.twig',
+                            array(
+                                'voornaam' => $persoon->getVoornaam(),
+                                'email1' => $user->getUsername(),
+                                'email2' =>$user->getEmail2(),
+                                'password' => $password
+                            )
+                        ),
+                        'text/plain'
+                    );
+                try{$this->get('mailer')->send($message);}
+                catch(\Exception $e){
+                    var_dump($e->getMessage());die;
+                }
             }
 
             return $this->redirectToRoute('getAdminSelectiePage');
