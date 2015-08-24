@@ -571,6 +571,90 @@ class GetContentController extends BaseController
     }
 
     /**
+     * @Route("/inloggen/new_pass/", name="getNewPassPage")
+     * @Method({"GET", "POST"})
+     */
+    public function getNewPassPageAction(Request $request)
+    {
+        $error = "";
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+
+        if($request->getMethod() == 'POST')
+        {
+            $email = $this->get('request')->request->get('email');
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT user
+                    FROM AppBundle:User user
+                    WHERE user.username = :email
+                    OR user.email2 = :email')
+                    ->setParameter('email', $email);
+            $user = $query->setMaxResults(1)->getOneOrNullResult();
+            if (count($user) == 0) {
+                $error = 'Dit Emailadres komt niet voor in de database';
+            }
+            else {
+                $password = $this->generatePassword();
+                $encoder = $this->container
+                    ->get('security.encoder_factory')
+                    ->getEncoder($user);
+                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                $em->flush();
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Inloggegevens website Donar')
+                    ->setFrom('webmaster@donargym.nl')
+                    ->setTo($user->getUsername())
+                    ->setBody(
+                        $this->renderView(
+                            'mails/new_password.txt.twig',
+                            array(
+                                'email1' => $user->getUsername(),
+                                'email2' =>$user->getEmail2(),
+                                'password' => $password
+                            )
+                        ),
+                        'text/plain'
+                    );
+                try{$this->get('mailer')->send($message);}
+                catch(\Exception $e){
+                    var_dump($e->getMessage());die;
+                }
+
+                if($user->getEmail2())
+                {
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('Inloggegevens website Donar')
+                        ->setFrom('webmaster@donargym.nl')
+                        ->setTo($user->getEmail2())
+                        ->setBody(
+                            $this->renderView(
+                                'mails/new_password.txt.twig',
+                                array(
+                                    'email1' => $user->getUsername(),
+                                    'email2' =>$user->getEmail2(),
+                                    'password' => $password
+                                )
+                            ),
+                            'text/plain'
+                        );
+                    try{$this->get('mailer')->send($message);}
+                    catch(\Exception $e){
+                        var_dump($e->getMessage());die;
+                    }
+                }
+                $error = 'Een nieuw wachtwoord is gemaild';
+            }
+        }
+
+        return $this->render('security/newPass.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'error' => $error
+        ));
+    }
+
+    /**
      * @Route("/agenda/view/{id}/", name="getAgendaPage")
      * @Method("GET")
      */
