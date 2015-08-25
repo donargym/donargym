@@ -539,8 +539,28 @@ class AdminController extends BaseController
                 WHERE persoon.id = :id')
                 ->setParameter('id', $id);
             $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+            $user = $persoon->getUser();
+            $personen = $user->getPersoon();
             $em->remove($persoon);
             $em->flush();
+            $role = 'ROLE_TURNSTER';
+            if(count($personen) == 0) {
+                $em->remove($user);
+                $em->flush();
+            }
+            else {
+                foreach($personen as $persoonItem) {
+                    $functie = $persoonItem->getFunctie();
+                    if($functie[0]->getFunctie() == 'Trainer') {
+                        $role = 'ROLE_TRAINER';
+                    }
+                    elseif($functie[0]->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
+                        $role = 'ROLE_ASSISTENT';
+                    }
+                }
+                $user->setRole($role);
+                $em->flush();
+            }
             return $this->redirectToRoute('getAdminSelectiePage');
         }
         else
