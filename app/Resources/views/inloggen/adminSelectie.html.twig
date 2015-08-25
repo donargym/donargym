@@ -16,7 +16,7 @@
     <br>
     {% for persoon in personen %}
         {{ persoon.voornaam }} {{ persoon.achternaam }}
-        <a href="">
+        <a href="{{ path('editAdminTrainerPage', { 'id': persoon.id }) }}">
             <img src="{{ asset('images/edit.png') }}" width="18px" />
         </a>
         <a href="{{ path('removeAdminTrainerPage', { 'id': persoon.id }) }}">
