@@ -510,35 +510,36 @@ class AdminController extends BaseController
                 WHERE persoon.id = :id')
             ->setParameter('id', $id);
         $result = $query->setMaxResults(1)->getOneOrNullResult();
-        $persoon = new \stdClass();
-        $persoon->voornaam = $result->getVoornaam();
-        $persoon->achternaam = $result->getAchternaam();
-        $persoon->geboortedatum = $result->getGeboortedatum();
+        $persoonEdit = new \stdClass();
+        $persoonEdit->voornaam = $result->getVoornaam();
+        $persoonEdit->achternaam = $result->getAchternaam();
+        $persoonEdit->geboortedatum = $result->getGeboortedatum();
         $user = $result->getUser();
-        $persoon->username = $user->getUsername();
-        $persoon->email2 = $user->getEmail2();
-        $persoon->straatnr = $user->getStraatnr();
-        $persoon->postcode = $user->getPostcode();
-        $persoon->plaats = $user->getPlaats();
-        $persoon->tel1 = $user->getTel1();
-        $persoon->tel2 = $user->getTel2();
-        $persoon->tel3 = $user->getTel3();
+        $persoonEdit->username = $user->getUsername();
+        $persoonEdit->email2 = $user->getEmail2();
+        $persoonEdit->userId = $user->getId();
+        $persoonEdit->straatnr = $user->getStraatnr();
+        $persoonEdit->postcode = $user->getPostcode();
+        $persoonEdit->plaats = $user->getPlaats();
+        $persoonEdit->tel1 = $user->getTel1();
+        $persoonEdit->tel2 = $user->getTel2();
+        $persoonEdit->tel3 = $user->getTel3();
         $functies = $result->getFunctie();
-        $persoon->functie = array();
+        $persoonEdit->functie = array();
         for($i=0;$i<count($functies);$i++) {
-            $persoon->functie[$i] = new \stdClass();
-            $persoon->functie[$i]->functie = $functies[$i]->getFunctie();
+            $persoonEdit->functie[$i] = new \stdClass();
+            $persoonEdit->functie[$i]->functie = $functies[$i]->getFunctie();
             $groep = $functies[$i]->getGroep();
-            $persoon->functie[$i]->groepNaam = $groep->getName();
-            $persoon->functie[$i]->groepId = $groep->getId();
+            $persoonEdit->functie[$i]->groepNaam = $groep->getName();
+            $persoonEdit->functie[$i]->groepId = $groep->getId();
             $trainingen = $groep->getTrainingen();
-            $persoon->functie[$i]->trainingen = array();
+            $persoonEdit->functie[$i]->trainingen = array();
             for($j=0;$j<count($trainingen);$j++) {
                 $persoonTrainingen = $result->getTrainingen();
                 for($k=0;$k<count($persoonTrainingen);$k++) {
                     if($trainingen[$j]->getId() == $persoonTrainingen[$k]->getId()) {
-                        $persoon->functie[$i]->trainingen[$k] = new \stdClass();
-                        $persoon->functie[$i]->trainingen[$k]->trainingId = $persoonTrainingen[$k]->getId();
+                        $persoonEdit->functie[$i]->trainingen[$k] = new \stdClass();
+                        $persoonEdit->functie[$i]->trainingen[$k]->trainingId = $persoonTrainingen[$k]->getId();
                     }
                 }
             }
@@ -573,13 +574,11 @@ class AdminController extends BaseController
             }
         }
         if($request->getMethod() == 'POST') {
-            $role = 'ROLE_ASSISTENT';
             $query = $em->createQuery(
                 'SELECT user
                 FROM AppBundle:User user
-                WHERE user.username = :email
-                OR user.email2 = :email')
-                ->setParameter('email', $this->get('request')->request->get('username'));
+                WHERE user.id = :id')
+                ->setParameter('id', $this->get('request')->request->get('username'));
             $user = $query->setMaxResults(1)->getOneOrNullResult();
             if (count($user) == 0) {
                 $query = $em->createQuery(
