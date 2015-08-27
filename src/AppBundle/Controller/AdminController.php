@@ -457,10 +457,7 @@ class AdminController extends BaseController
                     ),
                     'text/plain'
                 );
-            try{$this->get('mailer')->send($message);}
-            catch(\Exception $e){
-                var_dump($e->getMessage());die;
-            }
+            $this->get('mailer')->send($message);
 
             if($user->getEmail2())
             {
@@ -480,10 +477,7 @@ class AdminController extends BaseController
                         ),
                         'text/plain'
                     );
-                try{$this->get('mailer')->send($message);}
-                catch(\Exception $e){
-                    var_dump($e->getMessage());die;
-                }
+                $this->get('mailer')->send($message);
             }
 
             return $this->redirectToRoute('getAdminSelectiePage');
@@ -673,7 +667,7 @@ class AdminController extends BaseController
             //Todo: Update Role!!!! (Uit delete action halen)
             //TODO: Trainingen worden niet verwijderd uit de database, wel uit het object
             $em->persist($persoon);
-            var_dump(count($persoon->getTrainingen()));die;
+            //var_dump(count($persoon->getTrainingen()));die;
             $em->flush();
 
             return $this->redirectToRoute('getAdminSelectiePage');

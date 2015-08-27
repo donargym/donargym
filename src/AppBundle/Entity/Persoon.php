@@ -477,6 +477,7 @@ class Persoon
     public function removeTrainingen(\AppBundle\Entity\Trainingen $trainingen)
     {
         $this->trainingen->removeElement($trainingen);
+        $trainingen->removePersoon($this);
     }
 
     /**
