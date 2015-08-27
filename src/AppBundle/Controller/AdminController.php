@@ -664,10 +664,23 @@ class AdminController extends BaseController
                 }
             }
 
-            //Todo: Update Role!!!! (Uit delete action halen)
-            //TODO: Trainingen worden niet verwijderd uit de database, wel uit het object
+            $role = 'ROLE_TURNSTER';
+            $personen = $user->getPersoon();
+            foreach($personen as $persoonItem) {
+                $functie = $persoonItem->getFunctie();
+                if(count($functie)>0) {
+                    if($functie[0]->getFunctie() == 'Trainer') {
+                        $role = 'ROLE_TRAINER';
+                    }
+                    elseif($functie[0]->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
+                        $role = 'ROLE_ASSISTENT';
+                    }
+                }
+            }
+            $user->setRole($role);
+
             $em->persist($persoon);
-            //var_dump(count($persoon->getTrainingen()));die;
+            $em->persist($user);
             $em->flush();
 
             return $this->redirectToRoute('getAdminSelectiePage');
