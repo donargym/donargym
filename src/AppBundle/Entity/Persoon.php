@@ -69,6 +69,10 @@ class Persoon
 
     /**
      * @ORM\ManyToMany(targetEntity="Trainingen", mappedBy="persoon")
+     * @ORM\JoinTable(name="personen_trainingen",
+     *      joinColumns={@ORM\JoinColumn(name="trainingen_id", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="persoon_id", referencedColumnName="id", onDelete="cascade")}
+     *      )
      **/
     private $trainingen;
 
@@ -95,6 +99,103 @@ class Persoon
      *
      * @return integer 
      */
+
+    public function getAll()
+    {
+        $persoon = new \stdClass();
+        $persoon->id = $this->getId();
+        $persoon->voornaam = $this->getVoornaam();
+        $persoon->achternaam = $this->getAchternaam();
+        $foto = $this->getFoto();
+        if ($foto == null) {$persoon->foto = "plaatje.jpg";}
+        else {$persoon->foto = $foto->getLocatie();}
+        $persoon->categorie = $this->categorie(strtotime($this->getGeboortedatum()));
+        return $persoon;
+    }
+
+    private function categorie($geboortedatum)
+    {
+        if(date('m',time()) < 8)
+        {
+            if((date('Y',time())-date("Y",$geboortedatum))<8)
+            {
+                return "Voorinstap";
+            }
+            if((date('Y',time())-date("Y",$geboortedatum))==8)
+            {
+                return "Voorinstap";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==9)
+            {
+                return "Instap";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==10)
+            {
+                return "Pupil 1";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==11)
+            {
+                return "Pupil 2";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==12)
+            {
+                return "Jeugd 1";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==13)
+            {
+                return "Jeugd 2";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==14 || (date(Y,time())-date("Y",$geboortedatum))==15)
+            {
+                return "Junior";
+            }
+            else
+            {
+                return "Senior";
+            }
+        }
+        else
+        {
+
+            if((date('Y',time())-date("Y",$geboortedatum))<7)
+            {
+                return "Voorinstap";
+            }
+            if((date('Y',time())-date("Y",$geboortedatum))==7)
+            {
+                return "Voorinstap";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==8)
+            {
+                return "Instap";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==9)
+            {
+                return "Pupil 1";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==10)
+            {
+                return "Pupil 2";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==11)
+            {
+                return "Jeugd 1";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==12)
+            {
+                return "Jeugd 2";
+            }
+            elseif((date('Y',time())-date("Y",$geboortedatum))==13 || (date("Y",time())-date("Y",$geboortedatum))==14)
+            {
+                return "Junior";
+            }
+            else
+            {
+                return "Senior";
+            }
+        }
+    }
+
     public function getId()
     {
         return $this->id;
@@ -206,7 +307,7 @@ class Persoon
     {
         if ($this->functie->contains($functie)) {
             $this->functie->removeElement($functie);
-            $functie->setPerson(null);
+            $functie->setPersoon(null);
         }
 
         return $this;

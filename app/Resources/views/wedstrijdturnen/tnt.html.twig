@@ -1,0 +1,50 @@
+{% extends 'wedstrijdturnen/base.html.twig' %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id }) }}">{{ activeGroep.name }}</a>
+        > <b><i>Trainers en turnsters</i></b>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ activeGroep.name }}</h1>
+
+    <h2>Trainers</h2>
+    <table style="text-align:center;">
+        <tr>
+            {% for persoon in personen.Trainer %}
+                {% if loop.index0 is divisibleby(4) %}
+                    </tr><tr>
+                {% endif %}
+                <td><img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
+                    <p>{{ persoon.voornaam }} {{ persoon.achternaam }}<br>
+                        Trainer</p></td>
+            {% endfor %}
+
+            {% for persoon in attribute(personen, 'Assistent-Trainer') %}
+                {% if (loop.index0+personen.Trainer|length) is divisibleby(4) %}
+                    </tr><tr>
+                {% endif %}
+                <td><img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
+                    <p>{{ persoon.voornaam }} {{ persoon.achternaam }}<br>
+                        Assistent-Trainer</p></td>
+            {% endfor %}
+
+        </tr>
+    </table>
+
+    <h2>Turnsters</h2>
+    <table style="text-align:center;">
+        <tr>
+    {% for persoon in attribute(personen, 'Turnster') %}
+        {% if loop.index0 is divisibleby(4) %}
+            </tr><tr>
+        {% endif %}
+        <td><img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
+            <p>{{ persoon.voornaam }} {{ persoon.achternaam }}<br>
+            {{ persoon.categorie }}</p></td>
+    {% endfor %}
+        </tr>
+    </table>
+{% endblock %}

@@ -545,12 +545,10 @@ class AdminController extends BaseController
             }
         }
 
-        //@todo: laten zien in front wat al geselecteerd is
-        //@todo: bij post eerst alles updaten, daarna role checken en evt. aanpassen
-
         $query = $em->createQuery(
             'SELECT groepen
                 FROM AppBundle:Groepen groepen');
+        /** @var Groepen $groepen */
         $groepen = $query->getResult();
         $groepenItems = array();
         for($i=0;$i<count($groepen);$i++)
@@ -575,150 +573,108 @@ class AdminController extends BaseController
         }
         if($request->getMethod() == 'POST') {
             $query = $em->createQuery(
-                'SELECT user
-                FROM AppBundle:User user
-                WHERE user.id = :id')
-                ->setParameter('id', $this->get('request')->request->get('username'));
-            $user = $query->setMaxResults(1)->getOneOrNullResult();
-            if (count($user) == 0) {
-                $query = $em->createQuery(
-                    'SELECT user
-                FROM AppBundle:User user
-                WHERE user.username = :email
-                OR user.email2 = :email')
-                    ->setParameter('email', $this->get('request')->request->get('email2'));
-                $user = $query->setMaxResults(1)->getOneOrNullResult();
-            }
+                'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :id')
+                ->setParameter('id', $id);
 
-
-            if (count($user) > 0) {
-                $role = $user->getRole();
-                $newuser = false;
-            } else {
-                $user = new \AppBundle\Entity\User();
-                $newuser = true;
-            }
-            $persoon = new Persoon();
-
-            $k = 0;
-            $postGroepen = array();
-            foreach ($groepen as $groep) {
-                if ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Trainer' || $this->get('request')->request->get('groep_' . $groep->getId()) == 'Assistent-Trainer') {
-                    if ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Trainer') {
-                        $role = 'ROLE_TRAINER';
-                    } elseif ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Assistent-Trainer' && $role != 'ROLE_TRAINER') {
-                        $role = 'ROLE_ASSISTENT';
-                    }
-                    $query = $em->createQuery(
-                        'SELECT groepen
-                        FROM AppBundle:Groepen groepen
-                        WHERE groepen.id = :id')
-                        ->setParameter('id', $groep->getId());
-                    $result = $query->setMaxResults(1)->getOneOrNullResult();
-                    $postGroepen[$k] = $result;
-                    $functie = new Functie();
-                    $functie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
-                    $postGroepen[$k]->addFunctie($functie);
-                    $persoon->addFunctie($functie);
-                    $query = $em->createQuery(
-                        'SELECT trainingen
-                        FROM AppBundle:Trainingen trainingen
-                        WHERE trainingen.groep = :id')
-                        ->setParameter('id', $groep->getId());
-                    $trainingen = $query->getResult();
-                    foreach ($trainingen as $training) {
-                        if ($this->get('request')->request->get('trainingen_' . $training->getId()) == 'on') {
-                            $query = $em->createQuery(
-                                'SELECT trainingen
-                                FROM AppBundle:Trainingen trainingen
-                                WHERE trainingen.id = :id')
-                                ->setParameter('id', $training->getId());
-                            $result = $query->setMaxResults(1)->getOneOrNullResult();
-                            $persoon->addTrainingen($result);
-                        }
-                    }
-                }
-            }
+            /** @var Persoon $persoon */
+            $persoon = $query->setMaxResults(1)->getOneOrNullResult();
             $persoon->setVoornaam($this->get('request')->request->get('voornaam'));
             $persoon->setAchternaam($this->get('request')->request->get('achternaam'));
             $persoon->setGeboortedatum($this->get('request')->request->get('geboortedatum'));
-            $user->setRole($role);
-            $user->setUsername($this->get('request')->request->get('username'));
-            if ($this->get('request')->request->get('email2')) {
-                $user->setEmail2($this->get('request')->request->get('email2'));
+
+            /** @var Functie $functie */
+            $functies = $persoon->getFunctie();
+            foreach ($functies as $functie) {
+                /** @var Groepen $groep */
+                $groep = $functie->getGroep();
+                if (!($this->get('request')->request->get('groep_' . $groep->getId()) == 'Trainer' || $this->get('request')->request->get('groep_' . $groep->getId()) == 'Assistent-Trainer')) {
+                    $persoon->removeFunctie($functie);
+                    $query = $em->createQuery(
+                        'SELECT trainingen
+                    FROM AppBundle:Trainingen trainingen
+                    WHERE trainingen.groep = :id')
+                        ->setParameter('id', $groep->getId());
+
+                    /** @var Trainingen $removeTrainingen */
+                    /** @var Trainingen $removeTraining */
+                    $removeTrainingen = $query->getResult();
+                    foreach ($removeTrainingen as $removeTraining) {
+                        $persoon->removeTrainingen($removeTraining);
+                    }
+                }
             }
+
+            /** @var Trainingen $trainingen */
+            $trainingen = $persoon->getTrainingen();
+            foreach ($trainingen as $training) {
+                if (!($this->get('request')->request->get('trainingen_' . $training->getId()) == 'on')) {
+                    $persoon->removeTrainingen($training);
+                }
+            }
+
+            /** @var \AppBundle\Entity\User $user */
+            $user = $persoon->getUser();
+            $user->setUsername($this->get('request')->request->get('username'));
+            $user->setEmail2($this->get('request')->request->get('email2'));
             $user->setStraatnr($this->get('request')->request->get('straatnr'));
             $user->setPostcode($this->get('request')->request->get('postcode'));
             $user->setPlaats($this->get('request')->request->get('plaats'));
             $user->setTel1($this->get('request')->request->get('tel1'));
-            if ($this->get('request')->request->get('tel2')) {
-                $user->setTel2($this->get('request')->request->get('tel2'));
-            }
-            if ($this->get('request')->request->get('tel3')) {
-                $user->setTel3($this->get('request')->request->get('tel3'));
-            }
+            $user->setTel2($this->get('request')->request->get('tel2'));
+            $user->setTel3($this->get('request')->request->get('tel3'));
 
-            $persoon->setUser($user);
+            foreach ($groepen as $groep) {
+                $check = false;
+                if ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Trainer' ||
+                    $this->get('request')->request->get('groep_' . $groep->getId()) == 'Assistent-Trainer') {
+                    foreach ($functies as &$functie) {
+                        /** @var Groepen $functieGroep */
+                        $functieGroep = $functie->getGroep();
+                        if ($functieGroep->getId() == $groep->getId()) {
+                            $functie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
+                            $check = true;
+                        }
+                    }
+                    if(!$check) {
+                        $newFunctie = new Functie();
+                        $newFunctie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
+                        $newFunctie->setGroep($groep);
+                        $newFunctie->setPersoon($persoon);
+                        $persoon->addFunctie($newFunctie);
+                    }
 
-            if ($newuser) {
-                $password = $this->generatePassword();
-                $encoder = $this->container
-                    ->get('security.encoder_factory')
-                    ->getEncoder($user);
-                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-                $em->persist($user);
-            }
-            else{
-                $password = 'over een wachtwoord beschik je als het goed is al';
-            }
-            $user->addPersoon($persoon);
-            $em->persist($persoon);
-            $em->flush();
+                    $query = $em->createQuery(
+                        'SELECT trainingen
+                    FROM AppBundle:Trainingen trainingen
+                    WHERE trainingen.groep = :id')
+                        ->setParameter('id', $groep->getId());
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject('Inloggegevens website Donar')
-                ->setFrom('webmaster@donargym.nl')
-                ->setTo($user->getUsername())
-                ->setBody(
-                    $this->renderView(
-                        'mails/new_user.txt.twig',
-                        array(
-                            'voornaam' => $persoon->getVoornaam(),
-                            'email1' => $user->getUsername(),
-                            'email2' =>$user->getEmail2(),
-                            'password' => $password
-                        )
-                    ),
-                    'text/plain'
-                );
-            try{$this->get('mailer')->send($message);}
-            catch(\Exception $e){
-                var_dump($e->getMessage());die;
-            }
-
-            if($user->getEmail2())
-            {
-                $message = \Swift_Message::newInstance()
-                    ->setSubject('Inloggegevens website Donar')
-                    ->setFrom('webmaster@donargym.nl')
-                    ->setTo($user->getEmail2())
-                    ->setBody(
-                        $this->renderView(
-                            'mails/new_user.txt.twig',
-                            array(
-                                'voornaam' => $persoon->getVoornaam(),
-                                'email1' => $user->getUsername(),
-                                'email2' =>$user->getEmail2(),
-                                'password' => $password
-                            )
-                        ),
-                        'text/plain'
-                    );
-                try{$this->get('mailer')->send($message);}
-                catch(\Exception $e){
-                    var_dump($e->getMessage());die;
+                    /** @var Trainingen $dbTrainingen */
+                    /** @var Trainingen $dbTraining */
+                    $dbTrainingen = $query->getResult();
+                        foreach ($dbTrainingen as $dbTraining) {
+                            $trainingenCheck = false;
+                            if ($this->get('request')->request->get('trainingen_' . $dbTraining->getId()) == 'on') {
+                                foreach ($trainingen as $training) {
+                                    if ($dbTraining->getId() == $training->getId()) {
+                                        $trainingenCheck = true;
+                                    }
+                                }
+                                if (!$trainingenCheck) {
+                                    $persoon->addTrainingen($dbTraining);
+                                }
+                            }
+                        }
                 }
             }
+
+            //Todo: Update Role!!!! (Uit delete action halen)
+            //TODO: Trainingen worden niet verwijderd uit de database, wel uit het object
+            $em->persist($persoon);
+            var_dump(count($persoon->getTrainingen()));die;
+            $em->flush();
 
             return $this->redirectToRoute('getAdminSelectiePage');
         }
@@ -726,7 +682,7 @@ class AdminController extends BaseController
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
             'groepen' => $groepenItems,
-            'persoon' => $persoon
+            'persoonEdit' => $persoonEdit
         ));
     }
 

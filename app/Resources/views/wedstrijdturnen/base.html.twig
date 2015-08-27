@@ -7,7 +7,7 @@
 {% block menu %}
     <div id="items">
         {% for groep in groepen %}
-            <a href="http://www.donargym.nl/wedstrijdturnen/{{ groep.id }}">{{ groep.name }}</a>
+            <a href="{{ path('getWedstrijdturnenPage', { 'page': groep.id }) }}">{{ groep.name }}</a>
         {% endfor %}
         <a href="http://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a>
     </div>

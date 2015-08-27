@@ -268,8 +268,12 @@ class GetContentController extends BaseController
     /**
      * @Route("/wedstrijdturnen/{page}/{view}/{id}", defaults={"page" = "wedstrijdturnen", "view" = null, "id" = null}, name="getWedstrijdturnenPage")
      * @Method("GET")
+     * @param $page
+     * @param $view
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getWedstrijdturnenPageAction($page)
+    public function getWedstrijdturnenPageAction($page, $view, $id)
     {
         $this->header = 'wedstrijdturnen'.rand(1,11);
         $this->calendarItems = $this->getCalendarItems();
@@ -283,6 +287,7 @@ class GetContentController extends BaseController
         for($i=0;$i<count($groepen);$i++)
         {
             $groepItems[$i] = $groepen[$i]->getIdName();
+            $groepId[] = $groepen[$i]->getId();
         }
         if(in_array($page, array('wedstrijdturnen')))
         {
@@ -300,7 +305,7 @@ class GetContentController extends BaseController
                     'content' => $content->getContent(),
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
-                    'groepen' =>$groepItems
+                    'groepen' => $groepItems
                 ));
             }
             else
@@ -310,10 +315,58 @@ class GetContentController extends BaseController
                     'header' => $this->header
                 ));
             }
-
         }
-        elseif(in_array($page, array('voorselectiedenhaag', 'voorselectieleidschendam', 'aselectiedenhaag', 'aselectieleidschendam', 'bselectiedenhaag')))
+        elseif(in_array($page, $groepId))
         {
+            $query = $em->createQuery(
+                'SELECT groepen
+                FROM AppBundle:Groepen groepen
+                WHERE groepen.id = :id')
+                ->setParameter('id', $page);
+            $groep = $query->setMaxResults(1)->getOneOrNullResult();
+            $groepIdName = $groep->getIdName();
+            if ($view == null && $id == null) {
+                return $this->render('wedstrijdturnen/groepIndex.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'activeGroep' =>$groepIdName,
+                    'groepen' => $groepItems
+                ));
+            }
+            elseif ($view == 'wedstrijduitslagen') {
+                $wedstrijduitslagen = array();
+                foreach($groep->getWedstrijduitslagen() as $uitslagen) {
+                    if ($uitslagen->getDatum()->format('m')>7) {
+                        $wedstrijduitslagen[$uitslagen->getDatum()->format('Y')][] = $uitslagen->getAll();
+                    } else {
+                        $wedstrijduitslagen[($uitslagen->getDatum()->format('Y')-1)][] = $uitslagen->getAll();
+                    }
+                }
+                return $this->render('wedstrijdturnen/wedstrijduitslagen.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'activeGroep' =>$groepIdName,
+                    'groepen' => $groepItems,
+                    'wedstrijduitslagen' => $wedstrijduitslagen
+                ));
+            }
+            elseif ($view == 'TNT' && $id==null) {
+                $personen = array();
+                $personen['Trainer'] = array();
+                $personen['Assistent-Trainer'] = array();
+                $personen['Turnster'] = array();
+                foreach ($groep->getPeople() as $persoon) {
+                    $functie = $persoon->getFunctie();
+                    $personen[$functie[0]->getFunctie()][] = $persoon->getAll();
+                }
+                return $this->render('wedstrijdturnen/tnt.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'activeGroep' =>$groepIdName,
+                    'groepen' => $groepItems,
+                    'personen' => $personen
+                ));
+            }
 
         }
         else

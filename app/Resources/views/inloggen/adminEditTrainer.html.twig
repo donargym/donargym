@@ -3,60 +3,84 @@
 {% block inlogNavigation %}
     <div class="inlognavigation">
         <a href="{{ path('getAdminSelectiePage') }}">Selectie</a> >
-        <b><i>Trainer toevoegen/wijzigen</i></b>
+        <b><i>(Assistent-)Trainer wijzigen</i></b>
     </div>
 {% endblock %}
 
 {% block pageHeader %}
-    <h1>Trainer toevoegen</h1>
+    <h1>(Assistent-)Trainer wijzigen</h1>
     <form method="post" action="">
         <table>
             <tr>
-                <td>Voornaam</td><td><input type="text" value="{{ persoon.voornaam }}" name="voornaam" placeholder="Voornaam" required /></td>
+                <td>Voornaam</td><td><input type="text" value="{{ persoonEdit.voornaam }}" name="voornaam" placeholder="Voornaam" required /></td>
             </tr>
             <tr>
-                <td>Achternaam</td><td><input type="text" value="{{ persoon.achternaam }}" name="achternaam" placeholder="Achternaam" required /></td>
+                <td>Achternaam</td><td><input type="text" value="{{ persoonEdit.achternaam }}" name="achternaam" placeholder="Achternaam" required /></td>
             </tr>
             <tr>
-                <td>Geboortedatum</td><td><input type="date" value="{{ persoon.geboortedatum }}" name="geboortedatum" required /></td>
+                <td>Geboortedatum</td><td><input type="date" value="{{ persoonEdit.geboortedatum }}" name="geboortedatum" required /></td>
             </tr>
             <tr>
-                <td>Emailadres</td><td><input type="email" value="{{ persoon.username }}" name="username" placeholder="Emailadres" required /></td>
+                <td>Emailadres</td><td><input type="email" value="{{ persoonEdit.username }}" name="username" placeholder="Emailadres" required /></td>
             </tr>
             <tr>
-                <td>Tweede emailadres</td><td><input type="email" value="{{ persoon.email2 }}" name="email2" placeholder="Emailadres" /></td>
+                <td>Tweede emailadres</td><td><input type="email" value="{{ persoonEdit.email2 }}" name="email2" placeholder="Emailadres" /></td>
             </tr>
             <tr>
-                <td>Straat + huisnr</td><td><input type="text" value="{{ persoon.straatnr }}" name="straatnr" placeholder="Straat nr" required /></td>
+                <td>Straat + huisnr</td><td><input type="text" value="{{ persoonEdit.straatnr }}" name="straatnr" placeholder="Straat nr" required /></td>
             </tr>
             <tr>
-                <td>Postcode</td><td><input type="text" name="postcode" value="{{ persoon.postcode }}" placeholder="0000AA" required /></td>
+                <td>Postcode</td><td><input type="text" name="postcode" value="{{ persoonEdit.postcode }}" placeholder="0000AA" required /></td>
             </tr>
             <tr>
-                <td>Plaats</td><td><input type="text" name="plaats" value="{{ persoon.plaats }}" placeholder="Plaats" required /></td>
+                <td>Plaats</td><td><input type="text" name="plaats" value="{{ persoonEdit.plaats }}" placeholder="Plaats" required /></td>
             </tr>
             <tr>
-                <td>Telefoonnummer</td><td><input type="text" name="tel1" value="{{ persoon.tel1 }}" placeholder="0612345678" required /></td>
+                <td>Telefoonnummer</td><td><input type="text" name="tel1" value="{{ persoonEdit.tel1 }}" placeholder="0612345678" required /></td>
             </tr>
             <tr>
-                <td>Tweede Telefoonnummer</td><td><input type="text" name="tel2" value="{{ persoon.tel2 }}" placeholder="0612345678" /></td>
+                <td>Tweede Telefoonnummer</td><td><input type="text" name="tel2" value="{{ persoonEdit.tel2 }}" placeholder="0612345678" /></td>
             </tr>
             <tr>
-                <td>Derde Telefoonnummer</td><td><input type="text" name="tel3" value="{{ persoon.tel3 }}" placeholder="0612345678" /></td>
+                <td>Derde Telefoonnummer</td><td><input type="text" name="tel3" value="{{ persoonEdit.tel3 }}" placeholder="0612345678" /></td>
             </tr>
             {% for groep in groepen %}
                 <tr>
                     <td>{{ groep.naam }}</td><td>
                         <select name="groep_{{ groep.id }}">
                             <option value="null">Niet bij deze groep</option>
-                            <option value="Assistent-Trainer">Assistent-Trainer</option>
-                            <option value="Trainer">Trainer</option>
+                            <option value="Assistent-Trainer"
+                                {% for functie in persoonEdit.functie %}
+                                    {% if functie.groepId == groep.id %}
+                                        {% if functie.functie == "Assistent-Trainer" %}
+                                             selected
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            >Assistent-Trainer</option>
+                            <option value="Trainer"
+                                {% for functie in persoonEdit.functie %}
+                                    {% if functie.groepId == groep.id %}
+                                        {% if functie.functie == "Trainer" %}
+                                            selected
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            >Trainer</option>
                         </select>
                     </td>
                 </tr>
                 {% for training in groep.trainingen %}
                     <tr>
-                        <td></td><td><label><input type="checkbox" name="trainingen_{{ training.id }}" />{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</label></td>
+                        <td></td><td><label><input type="checkbox" name="trainingen_{{ training.id }}"
+                            {% for functie in persoonEdit.functie %}
+                                {% for trainingValue in functie.trainingen %}
+                                    {% if trainingValue.trainingId == training.id %}
+                                            checked
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                          />{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</label></td>
                     </tr>
                 {% endfor %}
             {% endfor %}

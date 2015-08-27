@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -47,6 +48,15 @@ class Wedstrijduitslagen
      * @ORM\Column(name="naam", type="string", length=255))
      */
     protected $naam;
+
+    public function getAll()
+    {
+        $uitslagen = new \stdClass();
+        $uitslagen->locatie = $this->getLocatie();
+        $uitslagen->datum = $this->getDatum();
+        $uitslagen->naam = $this->getNaam();
+        return $uitslagen;
+    }
 
     public function getAbsolutePath()
     {

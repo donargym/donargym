@@ -1,0 +1,13 @@
+{% extends 'wedstrijdturnen/base.html.twig' %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <b><i>{{ activeGroep.name }}</i></b>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ activeGroep.name }}</h1>
+    <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT' }) }}">Trainers en turnsters</a><br />
+    <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'wedstrijduitslagen' }) }}">Wedstrijduitslagen</a>
+{% endblock %}

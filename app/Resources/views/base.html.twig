@@ -69,7 +69,7 @@
                     {% endif %}
                 </h2>
                 (data onder voorbehoud)
-                <div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+                <div class="line" style="width:165px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
                 {% for item in calendarItems %}
                     <b><a href="{{ path('getAgendaPage', { 'id': item.id }) }}">{{ item.datum }}</a></b>
                     {% if app.user and is_granted('ROLE_ADMIN') %}
@@ -80,7 +80,7 @@
                     <a href="{{ path('getAgendaPage', { 'id': item.id }) }}">
                         <span style="font-weight:normal;">{{ item.activiteit }}</span>
                     </a>
-                    <div class="line" style="width:175px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+                    <div class="line" style="width:165px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
             {% endfor %}
             </div>
         </div>
