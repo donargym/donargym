@@ -1,0 +1,24 @@
+{% extends 'inloggen/base.html.twig' %}
+
+{% block menu %}
+    <div id="items">
+        {% for persoonItem in persoon %}
+            <a href="{#{{ path('getAdminIndexPage') }}#}">{{ persoonItem.voornaam }} {{ persoonItem.achternaam }}</a>
+        {% endfor %}
+        <a href="{{ path('logout') }}">Uitloggen</a>
+    </div>
+{% endblock %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <b><i>Index</i></b>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Inloggen</h1>
+{% endblock %}
+
+{% block body %}
+    <i>Ingelogd als Selectie</i>
+{% endblock %}

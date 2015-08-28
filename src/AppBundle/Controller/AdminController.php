@@ -479,7 +479,6 @@ class AdminController extends BaseController
                     );
                 $this->get('mailer')->send($message);
             }
-
             return $this->redirectToRoute('getAdminSelectiePage');
         }
         return $this->render('inloggen/adminAddTrainer.html.twig', array(
@@ -663,17 +662,18 @@ class AdminController extends BaseController
                         }
                 }
             }
-
             $role = 'ROLE_TURNSTER';
             $personen = $user->getPersoon();
             foreach($personen as $persoonItem) {
                 $functie = $persoonItem->getFunctie();
                 if(count($functie)>0) {
-                    if($functie[0]->getFunctie() == 'Trainer') {
-                        $role = 'ROLE_TRAINER';
-                    }
-                    elseif($functie[0]->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
-                        $role = 'ROLE_ASSISTENT';
+                    foreach ($functie as $functieItem) {
+                        if($functieItem->getFunctie() == 'Trainer') {
+                            $role = 'ROLE_TRAINER';
+                        }
+                        elseif($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
+                            $role = 'ROLE_ASSISTENT';
+                        }
                     }
                 }
             }
@@ -749,11 +749,13 @@ class AdminController extends BaseController
             else {
                 foreach($personen as $persoonItem) {
                     $functie = $persoonItem->getFunctie();
-                    if($functie[0]->getFunctie() == 'Trainer') {
-                        $role = 'ROLE_TRAINER';
-                    }
-                    elseif($functie[0]->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
-                        $role = 'ROLE_ASSISTENT';
+                    foreach ($functie as $functieItem) {
+                        if($functieItem->getFunctie() == 'Trainer') {
+                            $role = 'ROLE_TRAINER';
+                        }
+                        elseif($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
+                            $role = 'ROLE_ASSISTENT';
+                        }
                     }
                 }
                 $user->setRole($role);
