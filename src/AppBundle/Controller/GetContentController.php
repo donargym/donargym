@@ -627,69 +627,6 @@ class GetContentController extends BaseController
     }
 
     /**
-     * @Route("/inloggen/selectie/", name="getSelectieIndexPage")
-     * @Method({"GET"})
-     * @Security("has_role('ROLE_TURNSTER')")
-     */
-    public function getSelectieIndexPage()
-    {
-        $this->header = 'bannerhome'.rand(1,2);
-        $this->calendarItems = $this->getCalendarItems();
-
-        /** @var User $userObject */
-        $userObject = $this->getUser();
-        $personen = $userObject->getPersoon();
-        $persoon = array();
-
-        $user = new \stdClass();
-        $user->email = $userObject->getUsername();
-        $user->email2 = $userObject->getEmail2();
-        $user->straatnr = $userObject->getStraatnr();
-        $user->postcode = $userObject->getPostcode();
-        $user->plaats = $userObject->getPlaats();
-        $user->tel1 = $userObject->getTel1();
-        $user->tel2 = $userObject->getTel2();
-        $user->tel3 = $userObject->getTel3();
-
-        for ($i=0;$i<count($personen);$i++) {
-            $persoon[$i] = new \stdClass();
-            $persoon[$i]->voornaam = $personen[$i]->getVoornaam();
-            $persoon[$i]->achternaam = $personen[$i]->getAchternaam();
-            $persoon[$i]->geboortedatum = $personen[$i]->getGeboortedatum();
-            /** @var SelectieFoto $foto */
-            $foto = $personen[$i]->getFoto();
-            if(count($foto) > 0) {
-                $persoon[$i]->foto = $foto->getLocatie();
-            }
-            else {
-                $persoon[$i]->foto = 'uploads/selectiefotos/plaatje.jpg';
-            }
-            $groepen = $personen[$i]->getGroepen();
-            $persoon[$i]->groepen = array();
-            for ($j=0;$j<count($groepen);$j++) {
-                $persoon[$i]->groepen[$j] = new \stdClass();
-                $persoon[$i]->groepen[$j]->naam = $groepen[$j]->getName();
-            }
-            $trainerFunctie = false;
-            $functies = $personen[$i]->getFunctie();
-            foreach ($functies as $functie) {
-                if($functie->getFunctie() != 'Turnster') {
-                    $trainerFunctie = true;
-                }
-            } if($trainerFunctie) {
-                $persoon[$i]->functie = 'Trainer';
-            }
-
-        }
-        return $this->render('inloggen/selectieIndexPage.html.twig', array(
-            'calendarItems' => $this->calendarItems,
-            'header' => $this->header,
-            'persoon' => $persoon,
-            'user' => $user,
-        ));
-    }
-
-    /**
      * @Route("/inloggen/new_pass/", name="getNewPassPage")
      * @Method({"GET", "POST"})
      */

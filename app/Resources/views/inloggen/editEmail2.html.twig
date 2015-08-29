@@ -1,0 +1,31 @@
+{% extends 'inloggen/selectieIndexPage.html.twig' %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <a href="{{ path('getSelectieIndexPage') }}">Index</a>
+        > <b><i>Emailadres wijzigen</i></b>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Emailadres</h1>
+{% endblock %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_TURNSTER') %}
+        <a href="{{ path('getSelectieIndexPage') }}">Annuleer wijzigingen</a>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <table>
+            <tr>
+                <td></td><td>{{ form_errors(form.email2) }}</td>
+            </tr>
+            <tr>
+                <td>Emailadres</td><td>{{ form_widget(form.email2) }}</td>
+            </tr>
+        </table>
+
+        {{ form_widget(form.Verstuur) }}
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}

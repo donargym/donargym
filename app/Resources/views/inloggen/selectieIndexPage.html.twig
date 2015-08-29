@@ -16,9 +16,37 @@
 {% endblock %}
 
 {% block pageHeader %}
-    <h1>Inloggen</h1>
+    <h1>Algemene gegevens</h1>
 {% endblock %}
 
 {% block body %}
-    <i>Ingelogd als Selectie</i>
+    <h2>Contactgegevens<a href="{{ path('editContactgegevens') }}">
+            <img src="{{ asset('images/edit.png') }}" width="18px" />
+        </a></h2>
+    {{ user.straatnr }}<br>
+    {{ user.postcode }}<br>
+    {{ user.plaats }}<br>
+    {{ user.tel1 }}<br>
+    {% if user.tel2 %}
+        {{ user.tel2 }}<br>
+    {% endif %}
+    {% if user.tel3 %}
+        {{ user.tel3 }}<br>
+    {% endif %}
+    <h2>Inloggegevens</h2>
+    {{ user.email }} <a href="{{ path('editEmail') }}">
+    <img src="{{ asset('images/edit.png') }}" width="18px" />
+    </a><br>
+    {% if user.email2 %}
+        {{ user.email2 }} <a href="{{ path('editEmail2') }}">
+        <img src="{{ asset('images/edit.png') }}" width="18px" /><br>
+    {% else %}
+        Emailadres toevoegen <a href="{{ path('editEmail2') }}">
+        <img src="{{ asset('images/edit.png') }}" width="18px" />
+    </a><br>
+    {% endif %}
+
+    ******** <a href="{{ path('editPassword') }}">
+    <img src="{{ asset('images/edit.png') }}" width="18px" />
+</a>
 {% endblock %}
