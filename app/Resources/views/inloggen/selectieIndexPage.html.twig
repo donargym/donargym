@@ -3,7 +3,19 @@
 {% block menu %}
     <div id="items">
         {% for persoonItem in persoon %}
-            <a href="{#{{ path('getAdminIndexPage') }}#}">{{ persoonItem.voornaam }} {{ persoonItem.achternaam }}</a>
+                <a href="{#{{ path('getAdminIndexPage') }}#}">
+                {% if persoonSelected is defined %}
+                    {% if persoonSelected == persoonItem.Id %}
+                        <b>
+                    {% endif %}
+                {% endif %}
+                    {{ persoonItem.voornaam }} {{ persoonItem.achternaam }}
+                    {% if persoonSelected is defined  %}
+                        {% if persoonSelected == persoonItem.Id %}
+                        </b>
+                    {% endif %}
+                {% endif %}
+                </a>
         {% endfor %}
         <a href="{{ path('logout') }}">Uitloggen</a>
     </div>
