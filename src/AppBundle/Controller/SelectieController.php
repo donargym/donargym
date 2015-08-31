@@ -12,6 +12,7 @@ use AppBundle\Form\Type\ContactgegevensType;
 use AppBundle\Form\Type\Email1Type;
 use AppBundle\Form\Type\Email2Type;
 use AppBundle\Form\Type\UserType;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -104,8 +105,6 @@ class SelectieController extends BaseController
         }
         return($persoon);
     }
-
-
 
     /**
      * @Security("has_role('ROLE_TURNSTER')")
@@ -208,14 +207,45 @@ class SelectieController extends BaseController
      * @Route("/inloggen/selectie/editPassword/", name="editPassword")
      * @Method({"GET", "POST"})
      */
-    public function editPassword()
+    public function editPassword(Request $request)
     {
+        $error = "";
+        if ($request->getMethod() == 'POST') {
+            if($request->request->get('pass1') != $request->request->get('pass2')) {
+                $error = "De wachtwoorden zijn niet gelijk";
+            }
+            if (strlen($request->request->get('pass1')) < 6) {
+                $error = "Het wachtwoord moet minimaal 6 karakters bevatten";
+            }
+            if (strlen($request->request->get('pass1')) > 20) {
+                $error = "Het wachtwoord mag maximaal 20 karakters bevatten";
+            }
+            if (empty($error)) {
+                $userObject = $this->getUser();
+                $password = $request->request->get('pass1');
+                $encoder = $this->container
+                    ->get('security.encoder_factory')
+                    ->getEncoder($userObject);
+                $userObject->setPassword($encoder->encodePassword($password, $userObject->getSalt()));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($userObject);
+                $em->flush();
+
+                return $this->redirectToRoute('getSelectieIndexPage');
+            }
+        }
         $this->header = 'bannerhome'.rand(1,2);
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
-        return $this->redirectToRoute('getSelectieIndexPage');
+        return $this->render('inloggen/editPassword.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'error' => $error,
+        ));
     }
 
 }
