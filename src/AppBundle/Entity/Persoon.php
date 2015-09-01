@@ -113,7 +113,7 @@ class Persoon
         return $persoon;
     }
 
-    private function categorie($geboortedatum)
+    public function categorie($geboortedatum)
     {
         if(date('m',time()) < 8)
         {

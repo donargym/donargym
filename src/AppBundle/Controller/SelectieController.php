@@ -78,6 +78,7 @@ class SelectieController extends BaseController
             $persoon[$i]->voornaam = $personen[$i]->getVoornaam();
             $persoon[$i]->achternaam = $personen[$i]->getAchternaam();
             $persoon[$i]->geboortedatum = $personen[$i]->getGeboortedatum();
+            $persoon[$i]->id = $personen[$i]->getId();
             /** @var SelectieFoto $foto */
             $foto = $personen[$i]->getFoto();
             if(count($foto) > 0) {
@@ -203,10 +204,10 @@ class SelectieController extends BaseController
     }
 
     /**
-     * @Security("has_role('ROLE_TURNSTER')")
-     * @Route("/inloggen/selectie/editPassword/", name="editPassword")
-     * @Method({"GET", "POST"})
-     */
+ * @Security("has_role('ROLE_TURNSTER')")
+ * @Route("/inloggen/selectie/editPassword/", name="editPassword")
+ * @Method({"GET", "POST"})
+ */
     public function editPassword(Request $request)
     {
         $error = "";
@@ -245,6 +246,50 @@ class SelectieController extends BaseController
             'persoon' => $persoon,
             'user' => $user,
             'error' => $error,
+        ));
+    }
+
+    private function getOnePersoon($userObject, $id)
+    {
+        $personen = $userObject->getPersoon();
+        foreach ($personen as $persoon) {
+            /** @var Persoon $persoon */
+            if($persoon->getId() == $id) {
+                $persoonItems = new \stdClass();
+                $persoonItems->id = $persoon->getId();
+                $persoonItems->voornaam = $persoon->getVoornaam();
+                $persoonItems->achternaam = $persoon->getAchternaam();
+                $foto = $persoon->getFoto();
+                if ($foto == null) {$persoonItems->foto = "plaatje.jpg";}
+                else {$persoonItems->foto = $foto->getLocatie();}
+                $persoonItems->geboortedatum = $persoon->getGeboortedatum();
+                $persoonItems->categorie = $persoon->categorie(strtotime($persoonItems->geboortedatum));
+                // TODO: functie, (+ groepen), stukje, aanwezigheid, doelen, trainingen
+            }
+        }
+        return($persoonItems);
+    }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{id}/", name="showPersoon")
+     * @Method({"GET"})
+     */
+    public function showPersoon($id)
+    {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id);
+        return $this->render('inloggen/selectieShowPersoon.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
         ));
     }
 

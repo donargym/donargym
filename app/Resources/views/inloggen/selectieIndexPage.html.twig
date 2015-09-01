@@ -2,16 +2,16 @@
 
 {% block menu %}
     <div id="items">
-        {% for persoonItem in persoon %}
-                <a href="{#{{ path('getAdminIndexPage') }}#}">
-                {% if persoonSelected is defined %}
-                    {% if persoonSelected == persoonItem.Id %}
+        {% for persoonGegevens in persoon %}
+                <a href="{{ path('showPersoon', { 'id': persoonGegevens.id }) }}">
+                {% if persoonItems.id is defined %}
+                    {% if persoonItems.id == persoonGegevens.id %}
                         <b>
                     {% endif %}
                 {% endif %}
-                    {{ persoonItem.voornaam }} {{ persoonItem.achternaam }}
-                    {% if persoonSelected is defined  %}
-                        {% if persoonSelected == persoonItem.Id %}
+                    {{ persoonGegevens.voornaam }} {{ persoonGegevens.achternaam }}
+                    {% if persoonItems.id is defined  %}
+                        {% if persoonItems.id == persoonGegevens.id %}
                         </b>
                     {% endif %}
                 {% endif %}

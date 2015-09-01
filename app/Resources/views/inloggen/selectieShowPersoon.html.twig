@@ -1,0 +1,62 @@
+{% extends 'inloggen/selectieIndexPage.html.twig' %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <a href="{{ path('getSelectieIndexPage') }}">Index</a>
+        > <b><i>{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</i></b><br>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <div class="line"
+         style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+
+    <a href="http://www.facebook.com/groups/selectieleidschendam/" target="blank">Word lid van de Facebookgroep van
+        de voorselectie Leidschendam!</a>
+
+    <div class="line"
+         style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+    <h1>{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}
+    </h1>
+{% endblock %}
+
+{% block body %}
+    <h2>A-selectie Leidschendam</h2>
+    <table>
+        <tr>
+            <td>
+                <center>
+                <a href="">
+                    <img src="/donargym/web/images/voortgang.jpg"
+                         width="196" /><br>
+                    Voortgang jaardoelen
+                </a>
+                </center>
+            </td>
+            <td>
+                <center>
+                <a href="">
+                    <img src="/donargym/web/images/voortgang.jpg"
+                         width="196" /><br>
+                    Globale voortgang
+                </a>
+                </center>
+            </td>
+            <td>
+                <center>
+                <a href="">
+                    <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
+                         width="196"
+                         style="float:right;margin-right:2px;margin-top:5px;" /><br>
+                    {{ persoonItems.voornaam }} {{ persoonItems.achternaam }}
+                </a>
+                </center>
+            </td>
+        </tr>
+    </table>
+    <div class="line"
+         style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+    <h3>Presentie</h3>
+    <b>Woensdag</b>
+    Hallo
+{% endblock %}
