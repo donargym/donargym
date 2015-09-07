@@ -92,6 +92,7 @@ class Persoon
         $this->functie = new ArrayCollection();
         $this->doelen = new ArrayCollection();
         $this->aanwezigheid = new ArrayCollection();
+        $this->trainingen = new ArrayCollection();
     }
 
     /**

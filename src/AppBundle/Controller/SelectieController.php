@@ -262,11 +262,35 @@ class SelectieController extends BaseController
                 $foto = $persoon->getFoto();
                 if ($foto == null) {$persoonItems->foto = "plaatje.jpg";}
                 else {$persoonItems->foto = $foto->getLocatie();}
-                $persoonItems->geboortedatum = $persoon->getGeboortedatum();
-                $persoonItems->categorie = $persoon->categorie(strtotime($persoonItems->geboortedatum));
-                // TODO: functie, (+ groepen), stukje, aanwezigheid, doelen, trainingen
+                $geboortedatum = $persoon->getGeboortedatum();
+                $persoonItems->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+                $persoonItems->categorie = $persoon->categorie(strtotime($geboortedatum));
+                $functies = $persoon->getFunctie();
+                $persoonItems->functies = array();
+                for ($i=0;$i<count($functies);$i++) {
+                    $persoonItems->functies[$i] = new \stdClass();
+                    /** @var Groepen $groep */
+                    $groep = $functies[$i]->getGroep();
+                    $persoonItems->functies[$i]->groepNaam = $groep->getName();
+                    $persoonItems->functies[$i]->groepId = $groep->getId();
+                    $persoonItems->functies[$i]->functie = $functies[$i]->getFunctie();
+                }
+                /** @var Trainingen $trainingen */
+                $trainingen = $persoon->getTrainingen();
+                $persoonItems->trainingen = array();
+                for ($i=0;$i<count($trainingen);$i++) {
+                    $persoonItems->trainingen[$i] = new \stdClass();
+                    $persoonItems->trainingen[$i]->trainingId = $trainingen[$i]->getId();
+                    $persoonItems->trainingen[$i]->dag = $trainingen[$i]->getDag();
+                    $groep = $trainingen[$i]->getGroep();
+                    $persoonItems->trainingen[$i]->groepId = $groep->getId();
+                    $persoonItems->trainingen[$i]->tijdTot = $trainingen[$i]->getTijdtot();
+                    $persoonItems->trainingen[$i]->tijdVan = $trainingen[$i]->getTijdvan();
+                }
+                // TODO: stukje, aanwezigheid, doelen, trainingen
             }
         }
+        //var_dump($persoonItems);die;
         return($persoonItems);
     }
 

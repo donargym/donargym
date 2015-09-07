@@ -16,47 +16,54 @@
 
     <div class="line"
          style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+    <div style="height: 175px;">
+        <a href="">
+        <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
+             width="150"
+             style="float:right;margin-right:2px;margin-top:5px;" />
+    </a>
+    <br>
     <h1>{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}
     </h1>
+    <p><b>Geboortedatum:</b> {{ persoonItems.geboortedatum }}<br>
+    <b>Categorie:</b> {{ persoonItems.categorie }}</p></div>
 {% endblock %}
 
 {% block body %}
-    <h2>A-selectie Leidschendam</h2>
-    <table>
-        <tr>
-            <td>
-                <center>
-                <a href="">
-                    <img src="/donargym/web/images/voortgang.jpg"
-                         width="196" /><br>
-                    Voortgang jaardoelen
-                </a>
-                </center>
-            </td>
-            <td>
-                <center>
-                <a href="">
-                    <img src="/donargym/web/images/voortgang.jpg"
-                         width="196" /><br>
-                    Globale voortgang
-                </a>
-                </center>
-            </td>
-            <td>
-                <center>
-                <a href="">
-                    <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
-                         width="196"
-                         style="float:right;margin-right:2px;margin-top:5px;" /><br>
-                    {{ persoonItems.voornaam }} {{ persoonItems.achternaam }}
-                </a>
-                </center>
-            </td>
-        </tr>
-    </table>
-    <div class="line"
-         style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
-    <h3>Presentie</h3>
-    <b>Woensdag</b>
-    Hallo
+    {% for functie in persoonItems.functies %}
+        <div style="margin-bottom: 20px;"><h2>{{ functie.groepNaam }} ({{ functie.functie }})</h2>
+        <div class="line"
+             style="height:3px;width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+
+        <center><table>
+            <tr>
+                <td style="padding-right: 5px">
+                    <center>
+                        <a href="">
+                            <img src="/donargym/web/images/voortgang.jpg"
+                                 width="290" /><br>
+                            Voortgang jaardoelen
+                        </a>
+                    </center>
+                </td>
+                <td style="padding-left: 5px">
+                    <center>
+                        <a href="">
+                            <img src="/donargym/web/images/voortgang.jpg"
+                                 width="290" /><br>
+                            Globale voortgang
+                        </a>
+                    </center>
+                </td>
+            </tr>
+        </table></center>
+        <div class="line"
+             style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+        <h3>Presentie</h3>
+        <b>Woensdag</b>
+        Hallo
+</div>
+
+
+    {% endfor %}
 {% endblock %}
