@@ -604,6 +604,8 @@ class GetContentController extends BaseController
      */
     public function getInloggenPageAction()
     {
+        $this->header = 'bannerhome'.rand(1,2);
+        $this->calendarItems = $this->getCalendarItems();
         $user = $this->getUser();
         $roles = $user->getRoles();
         switch ($roles[0])
@@ -612,6 +614,7 @@ class GetContentController extends BaseController
                 return $this->redirectToRoute('getAdminIndexPage');
                 break;
             case 'ROLE_TRAINER':
+            case 'ROLE_ASSISTENT':
             case 'ROLE_TURNSTER':
                 return $this->redirectToRoute('getSelectieIndexPage');
                 break;
