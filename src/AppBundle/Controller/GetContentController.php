@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Functie;
+use AppBundle\Entity\Groepen;
 use AppBundle\Entity\Persoon;
 use AppBundle\Entity\SelectieFoto;
 use AppBundle\Entity\User;
@@ -359,8 +361,15 @@ class GetContentController extends BaseController
                 $personen['Assistent-Trainer'] = array();
                 $personen['Turnster'] = array();
                 foreach ($groep->getPeople() as $persoon) {
-                    $functie = $persoon->getFunctie();
-                    $personen[$functie[0]->getFunctie()][] = $persoon->getAll();
+                    $functies = $persoon->getFunctie();
+                    /** @var Functie $functie */
+                    foreach ($functies as $functie) {
+                        /** @var Groepen $groep */
+                        $groep = $functie->getGroep();
+                        if($groep->getId() == $page) {
+                            $personen[$functie->getFunctie()][] = $persoon->getAll();
+                        }
+                    }
                 }
                 return $this->render('wedstrijdturnen/tnt.html.twig', array(
                     'calendarItems' => $this->calendarItems,

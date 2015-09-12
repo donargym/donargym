@@ -24,7 +24,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=190, unique=true)
      */
     private $username;
 
@@ -36,7 +36,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="email2", type="string", length=60, unique=true, nullable=true)
+     * @ORM\Column(name="email2", type="string", length=190, unique=true, nullable=true)
      */
     private $email2;
 
@@ -136,7 +136,11 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function setEmail2($email2)
     {
-        $this->email2 = $email2;
+        if ($email2 == "") {
+            $this->email2 = null;
+        } else {
+            $this->email2 = $email2;
+        }
 
         return $this;
     }
