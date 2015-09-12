@@ -11,8 +11,6 @@
 /web/bundles/
 /.idea/*
 /web/images/*
-/web/images/headers/*
-/web/images/Selectie/*
 /web/adminuploads/*
 /web/uploads/*
 /web/nieuws/*
