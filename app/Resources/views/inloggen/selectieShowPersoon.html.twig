@@ -12,67 +12,89 @@
          style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
 
     <a href="http://www.facebook.com/groups/selectieleidschendam/" target="blank">Word lid van de Facebookgroep van
-        de voorselectie Leidschendam!</a>
+        de selectie Leidschendam!</a>
 
     <div class="line"
          style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
     <div style="height: 175px;">
         <a href="">
-        <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
-             width="150"
-             style="float:right;margin-right:2px;margin-top:5px;" />
-    </a>
-    <br>
-    <h1>{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}
-    </h1>
-    <p><b>Geboortedatum:</b> {{ persoonItems.geboortedatum }}<br>
-    <b>Categorie:</b> {{ persoonItems.categorie }}</p></div>
+            <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
+                 width="150"
+                 style="float:right;margin-right:2px;margin-top:5px;"/>
+        </a>
+        <br>
+
+        <h1>{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}
+        </h1>
+
+        <p><b>Geboortedatum:</b> {{ persoonItems.geboortedatum }}<br>
+            <b>Categorie:</b> {{ persoonItems.categorie }}</p></div>
 {% endblock %}
 
 {% block body %}
     {% for functie in persoonItems.functies %}
         <div style="margin-bottom: 75px;"><h2>{{ functie.groepNaam }} ({{ functie.functie }})</h2>
-        <div class="line"
-             style="height:3px;width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
 
-        <center><table>
-            <tr>
-                <td style="padding-right: 5px">
-                    <center>
-                        <a href="">
-                            <img src="/donargym/web/images/voortgang.jpg"
-                                 width="290" /><br>
-                            Voortgang jaardoelen
-                        </a>
-                    </center>
-                </td>
-                <td style="padding-left: 5px">
-                    <center>
-                        <a href="">
-                            <img src="/donargym/web/images/voortgang.jpg"
-                                 width="290" /><br>
-                            Globale voortgang
-                        </a>
-                    </center>
-                </td>
-            </tr>
-        </table></center>
-        <div class="line"
-             style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
-        Tabel met turnsters (oud-jong): naam, geb. datum, glob voortgang, jaar voortgang, %aanwezig
-        <div class="line"
-             style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
-        <h3>Presentie</h3>
-        <b>Woensdag</b>
-        Hallo
-        <div class="line"
-             style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
-        <a href="">Wedstrijduitslagen</a><br>
-        <a href="">Doelen</a><br>
-        <a href="">Adreslijst</a><br>
-        <div class="line"
-             style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
-</div>
+            <div class="line"
+                 style="height:3px;width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+            {% if functie.functie == 'Turnster' %}
+                <center>
+                    <table>
+                        <tr>
+                            <td style="padding-right: 5px">
+                                <center>
+                                    <a href="">
+                                        <img src="/donargym/web/images/voortgang.jpg"
+                                             width="290"/><br>
+                                        Voortgang jaardoelen
+                                    </a>
+                                </center>
+                            </td>
+                            <td style="padding-left: 5px">
+                                <center>
+                                    <a href="">
+                                        <img src="/donargym/web/images/voortgang.jpg"
+                                             width="290"/><br>
+                                        Globale voortgang
+                                    </a>
+                                </center>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+                <div class="line"
+                     style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+            {% endif %}
+            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
+                <h3>Turnsters
+                {% if functie.functie == 'Trainer' %}
+                    <a href="{{ path('addSelectieTurnsterPage', { 'id': persoonItems.id, 'groepsId': functie.groepId }) }}"><img src="{{ asset('images/add.png') }}" width="18px" /></a>
+                {% endif %}
+                </h3>
+                <table border="1">
+                    <tr style="font-weight: bold">
+                        <td>Naam</td><td>Geboortedatum</td><td>Voortgang</td><td>% aanwezig</td>
+                        {% if functie.functie == 'Trainer' %}
+                            <td></td><td></td>
+                        {% endif %}
+                    </tr>
+                </table>
+                Tabel met turnsters (oud-jong): naam, geb. datum, glob voortgang, jaar voortgang, %aanwezig, remove
+                <div class="line"
+                     style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+            {% endif %}
+            <h3>Presentie</h3>
+            <b>Woensdag</b>
+            Hallo
+            <div class="line"
+                 style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+            <a href="">Wedstrijduitslagen</a><br>
+            <a href="">Doelen</a><br>
+            <a href="">Adreslijst</a><br>
+
+            <div class="line"
+                 style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
+        </div>
 
 
     {% endfor %}
