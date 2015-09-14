@@ -40,7 +40,7 @@ class AdminController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         return $this->render('inloggen/adminIndex.html.twig', array(
             'calendarItems' => $this->calendarItems,
@@ -54,7 +54,7 @@ class AdminController extends BaseController
      */
     public function getAdminFotoPage()
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -81,7 +81,7 @@ class AdminController extends BaseController
      */
     public function addAdminFotoPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $foto = new FotoUpload();
         $form = $this->createFormBuilder($foto)
@@ -115,7 +115,7 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -168,7 +168,7 @@ class AdminController extends BaseController
      */
     public function getAdminBestandenPage()
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -195,7 +195,7 @@ class AdminController extends BaseController
      */
     public function addAdminBestandenPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $file = new FileUpload();
         $form = $this->createFormBuilder($file)
@@ -228,7 +228,7 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -281,7 +281,7 @@ class AdminController extends BaseController
      */
     public function getAdminSelectiePage()
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -309,7 +309,7 @@ class AdminController extends BaseController
      */
     public function addAdminTrainerPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -494,7 +494,7 @@ class AdminController extends BaseController
      */
     public function editAdminTrainerPageAction(Request $request, $id)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -701,7 +701,7 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(

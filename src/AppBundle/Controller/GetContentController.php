@@ -36,7 +36,7 @@ class GetContentController extends BaseController
      */
     public function getDonarPageAction($page)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('geschiedenis', 'visie', 'bestuur', 'leiding', 'evenementen', 'locaties', 'kleding', 'vacatures', 'sponsors')))
         {
@@ -81,7 +81,7 @@ class GetContentController extends BaseController
      */
     public function getNieuwsPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('index', 'vakanties', 'clubblad', 'archief')))
         {
@@ -232,7 +232,7 @@ class GetContentController extends BaseController
      */
     public function getLessenPageAction($page)
     {
-        $this->header = 'bannerrecreatie'.rand(1,5);
+        $this->header = 'bannerrecreatie'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('lesrooster', 'peuterenkleutergym', 'gymnastiekenrecreatiefturnen', '50plusgymenconditie', 'aerobicsenbodyshape', 'badmintonenvolleybal')))
         {
@@ -280,7 +280,7 @@ class GetContentController extends BaseController
      */
     public function getWedstrijdturnenPageAction($page, $view, $id)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -396,7 +396,7 @@ class GetContentController extends BaseController
      */
     public function getLidmaatschapPageAction($page)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('lidmaatschap', 'contributie', 'ooievaarspas')))
         {
@@ -459,7 +459,7 @@ class GetContentController extends BaseController
      */
     public function getFotofilmPageAction($page)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('fotoenfilm', 'foto', 'film')))
         {
@@ -503,7 +503,7 @@ class GetContentController extends BaseController
      */
     public function getVrijwilligersPageAction($page)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('vrijwilligers', 'taken', 'vrijwilligersdag')))
         {
@@ -547,7 +547,7 @@ class GetContentController extends BaseController
      */
     public function getContactPageAction($page)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('contact')))
         {
@@ -613,7 +613,7 @@ class GetContentController extends BaseController
      */
     public function getInloggenPageAction()
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $user = $this->getUser();
         $roles = $user->getRoles();
@@ -645,7 +645,7 @@ class GetContentController extends BaseController
     public function getNewPassPageAction(Request $request)
     {
         $error = "";
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
 
         if($request->getMethod() == 'POST')
@@ -728,7 +728,7 @@ class GetContentController extends BaseController
      */
     public function getAgendaPageAction($id)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(

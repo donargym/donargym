@@ -42,7 +42,7 @@ class SelectieController extends BaseController
      */
     public function getSelectieIndexPage()
     {
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -114,7 +114,7 @@ class SelectieController extends BaseController
      */
     public function editContactgegevens(Request $request)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -146,7 +146,7 @@ class SelectieController extends BaseController
      */
     public function editEmail(Request $request)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -178,7 +178,7 @@ class SelectieController extends BaseController
      */
     public function editEmail2(Request $request)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -235,7 +235,7 @@ class SelectieController extends BaseController
                 return $this->redirectToRoute('getSelectieIndexPage');
             }
         }
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -301,7 +301,7 @@ class SelectieController extends BaseController
      */
     public function showPersoon($id)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
@@ -324,7 +324,7 @@ class SelectieController extends BaseController
      */
     public function addSelectieTurnsterPageAction(Request $request, $id, $groepsId)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);

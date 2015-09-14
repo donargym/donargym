@@ -44,7 +44,7 @@ class EditContentController extends BaseController
      */
     public function editDonarPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('geschiedenis', 'visie', 'bestuur', 'leiding', 'evenementen', 'locaties', 'kleding', 'vacatures', 'sponsors')))
         {
@@ -106,7 +106,7 @@ class EditContentController extends BaseController
      */
     public function editLessenPageAction($page, Request $request)
     {
-        $this->header = 'bannerrecreatie'.rand(1,5);
+        $this->header = 'bannerrecreatie'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('lesrooster', 'peuterenkleutergym', 'gymnastiekenrecreatiefturnen', '50plusgymenconditie', 'aerobicsenbodyshape', 'badmintonenvolleybal')))
         {
@@ -168,7 +168,7 @@ class EditContentController extends BaseController
      */
     public function editWedstrijdturnenPageAction($page, Request $request)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,11);
+        $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('wedstrijdturnen')))
         {
@@ -233,7 +233,7 @@ class EditContentController extends BaseController
      */
     public function editLidmaatschapPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('lidmaatschap', 'contributie', 'formulieren', 'ooievaarspas')))
         {
@@ -294,7 +294,7 @@ class EditContentController extends BaseController
      */
     public function editFotofilmPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('fotoenfilm', 'foto', 'film')))
         {
@@ -355,7 +355,7 @@ class EditContentController extends BaseController
      */
     public function editVrijwilligersPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('vrijwilligers', 'taken', 'vrijwilligersdag')))
         {
@@ -416,7 +416,7 @@ class EditContentController extends BaseController
      */
     public function editContactPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('contact', 'veelgesteldevragen')))
         {
@@ -477,7 +477,7 @@ class EditContentController extends BaseController
      */
     public function addAgendaPage(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $agenda = new Calendar();
         $form = $this->createForm(new CalendarType(), $agenda);
@@ -504,7 +504,7 @@ class EditContentController extends BaseController
      */
     public function editAgendaPage($id, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -549,7 +549,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -602,7 +602,7 @@ class EditContentController extends BaseController
      */
     public function addNieuwsPage(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $nieuwsbericht = new Nieuwsbericht();
         $form = $this->createForm(new NieuwsberichtType(), $nieuwsbericht);
@@ -632,7 +632,7 @@ class EditContentController extends BaseController
      */
     public function editNieuwsberichtPage($id, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -679,7 +679,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -732,7 +732,7 @@ class EditContentController extends BaseController
      */
     public function addVakantiesPage(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -773,7 +773,7 @@ class EditContentController extends BaseController
      */
     public function editVakantiesPage($id, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -831,7 +831,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -898,7 +898,7 @@ class EditContentController extends BaseController
      */
     public function addClubbladPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $clubblad = new Clubblad();
         $form = $this->createFormBuilder($clubblad)
@@ -933,7 +933,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -987,7 +987,7 @@ class EditContentController extends BaseController
      */
     public function addFormulierenPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $formulier = new Formulieren();
         $form = $this->createFormBuilder($formulier)
@@ -1020,7 +1020,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -1073,7 +1073,7 @@ class EditContentController extends BaseController
      */
     public function addVeelgesteldeVragenPage(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $vraag = new VeelgesteldeVragen();
         $form = $this->createForm(new VeelgesteldeVragenType(), $vraag);
@@ -1100,7 +1100,7 @@ class EditContentController extends BaseController
      */
     public function editVeelgesteldeVragenPage($id, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
+        $this->header = 'bannerhome'.rand(1,4);
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -1145,7 +1145,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
+            $this->header = 'bannerhome'.rand(1,4);
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
