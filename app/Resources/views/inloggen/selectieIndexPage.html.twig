@@ -3,19 +3,19 @@
 {% block menu %}
     <div id="items">
         {% for persoonGegevens in persoon %}
-                <a href="{{ path('showPersoon', { 'id': persoonGegevens.id }) }}">
+            <a href="{{ path('showPersoon', { 'id': persoonGegevens.id }) }}">
                 {% if persoonItems.id is defined %}
-                    {% if persoonItems.id == persoonGegevens.id %}
-                        <b>
+                {% if persoonItems.id == persoonGegevens.id %}
+                <b>
                     {% endif %}
-                {% endif %}
+                    {% endif %}
                     {{ persoonGegevens.voornaam }} {{ persoonGegevens.achternaam }}
-                    {% if persoonItems.id is defined  %}
-                        {% if persoonItems.id == persoonGegevens.id %}
-                        </b>
-                    {% endif %}
+                    {% if persoonItems.id is defined %}
+                    {% if persoonItems.id == persoonGegevens.id %}
+                </b>
                 {% endif %}
-                </a>
+                {% endif %}
+            </a>
         {% endfor %}
         <a href="{{ path('logout') }}">Uitloggen</a>
     </div>
@@ -32,8 +32,8 @@
 {% endblock %}
 
 {% block body %}
-    <h2>Contactgegevens<a href="{{ path('editContactgegevens') }}">
-            <img src="{{ asset('images/edit.png') }}" width="18px" />
+    <h2>Contactgegevens <a href="{{ path('editContactgegevens') }}">
+            <img src="{{ asset('images/edit.png') }}" width="18px"/>
         </a></h2>
     {{ user.straatnr }}<br>
     {{ user.postcode }}<br>
@@ -46,19 +46,14 @@
         {{ user.tel3 }}<br>
     {% endif %}
     <h2>Inloggegevens</h2>
-    {{ user.email }} <a href="{{ path('editEmail') }}">
-    <img src="{{ asset('images/edit.png') }}" width="18px" />
-    </a><br>
+    {{ user.email }}
+    <a href="{{ path('editEmail') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a><br>
     {% if user.email2 %}
         {{ user.email2 }} <a href="{{ path('editEmail2') }}">
-        <img src="{{ asset('images/edit.png') }}" width="18px" /><br>
+        <img src="{{ asset('images/edit.png') }}" width="18px"/></a><br>
     {% else %}
-        Emailadres toevoegen <a href="{{ path('editEmail2') }}">
-        <img src="{{ asset('images/edit.png') }}" width="18px" />
-    </a><br>
+        Emailadres toevoegen <a href="{{ path('editEmail2') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a><br>
     {% endif %}
 
-    ******** <a href="{{ path('editPassword') }}">
-    <img src="{{ asset('images/edit.png') }}" width="18px" />
-</a>
+    ******** <a href="{{ path('editPassword') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a>
 {% endblock %}

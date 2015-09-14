@@ -9,7 +9,7 @@ body {
     width: 1050px;
     box-shadow: 0px 0px 10px #000;
     border-radius: 10px;
-    background-color: rgba(0,0,0,0.55);
+    background-color: rgba(0, 0, 0, 0.55);
     padding-top: 10px;
     padding-left: 20px;
     padding-right: 20px;
@@ -20,16 +20,16 @@ body {
 #header {
     margin-top: 20px;
     width: 1000px;
-    height: 370px;
+    height: 373px;
 }
 
-#header img{
+#header img {
     border-radius: 5px;
     width: 1000px;
 }
 
 #c {
-    background: rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.4);
     border: 0px solid #FFF;
     width: 770px;
     float: left;
@@ -41,7 +41,7 @@ body {
 }
 
 .content {
-    color: rgba(255,255,255,0.93);
+    color: rgba(255, 255, 255, 0.93);
     margin-top: 20px;
     margin-left: 20px;
     margin-right: 20px;
@@ -118,12 +118,12 @@ body {
 
 .date {
     font-size: 9pt;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255, 255, 255, 0.8);
     font-style: italic;
 }
 
 #agenda {
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     border: 0px solid #000;
     width: 200px;
     min-height: 300px;
@@ -217,10 +217,9 @@ body {
 
 /* ---------------------- */
 
-#primary_nav_wrap
-{
+#primary_nav_wrap {
     color: #FFF;
-    background: rgba(255,255,0,0.6);
+    background: rgba(255, 255, 0, 0.6);
     height: 35px;
     max-width: 1000px;
     display: block;
@@ -230,70 +229,65 @@ body {
     font-size: 11pt;
 }
 
-#primary_nav_wrap ul
-{
-    list-style:none;
-    position:relative;
-    float:left;
-    margin:0;
-    padding:0;
+#primary_nav_wrap ul {
+    list-style: none;
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 0;
 }
 
-#primary_nav_wrap ul a
-{
+#primary_nav_wrap ul a {
     display: block;
     color: #FFF;
-    text-decoration:none;
-    line-height:35px;
-    padding:0 15px;
+    text-decoration: none;
+    line-height: 35px;
+    padding: 0 15px;
 }
 
-#primary_nav_wrap ul li
-{
-    position:relative;
-    float:left;
-    margin:0;
-    padding:0;
+#primary_nav_wrap ul li {
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 0;
 }
 
-#primary_nav_wrap ul li:hover
-{
-    background: rgba(255,255,0,0.7);
+#primary_nav_wrap ul li:hover {
+    background: rgba(255, 255, 0, 0.7);
     border-radius: 5px;
 }
 
-#primary_nav_wrap ul ul
-{
+#primary_nav_wrap ul ul {
     color: #FF0000;
     text-align: left;
-    display:none;
-    position:absolute;
+    display: none;
+    position: absolute;
     top: 100%;
     left: 0;
-    background:#333333;
-    padding:0;
+    background: #333333;
+    padding: 0;
     border-radius: 5px;
 }
 
-#primary_nav_wrap ul ul li
-{
+#primary_nav_wrap ul ul li {
     float: none;
     width: 200px;
 }
 
-#primary_nav_wrap ul ul a
-{
-    line-height:120%;
-    padding:10px 15px;
+#primary_nav_wrap ul ul a {
+    line-height: 120%;
+    padding: 10px 15px;
 }
 
-#primary_nav_wrap ul ul ul
-{
-    top:0;
-    left:100%;
+#primary_nav_wrap ul ul ul {
+    top: 0;
+    left: 100%;
 }
 
-#primary_nav_wrap ul li:hover > ul
-{
-    display:block;
+#primary_nav_wrap ul li:hover > ul {
+    display: block;
+}
+
+#active_link {
+    border-bottom: 2px solid #FFFF00;
 }
