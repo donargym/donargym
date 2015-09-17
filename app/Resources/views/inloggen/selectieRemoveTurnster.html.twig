@@ -1,0 +1,31 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <a href="{{ path('getSelectieIndexPage') }}">Index</a>
+        > <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+        > <b><i>Turnster verwijderen</i></b><br>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Turnster verwijderen</h1>
+{% endblock %}
+
+{% block body %}
+    <span style="color:red;">Weet u zeker dat u <b>"{{ voornaam }} {{ achternaam }}"</b> wilt verwijderen?</span>
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="{{ path('removeSelectieTurnsterPage', { turnsterId: app.request.get('turnsterId'),
+                trainerId: app.request.get('trainerId')}) }}">
+                    <input name="bevestig" type="submit" value="Bevestig">
+                </form>
+            </td>
+            <td>
+                <a href="{{ path('showPersoon', {id: app.request.get('trainerId')}) }}"><input type="button" value="Annuleren"></a>
+            </td>
+        </tr>
+    </table>
+
+{% endblock %}

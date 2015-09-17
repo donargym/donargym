@@ -18,8 +18,39 @@ use Symfony\Component\HttpKernel\Exception;
 class BaseController extends Controller
 {
 
+    public $calendarItems;
+    public $header;
+    public $wedstrijdLinkItems;
+    public $groepItems;
+
     public function __construct()
     {
+    }
+
+    public function getHeader($page = null)
+    {
+        switch($page) {
+            case 'wedstrijdturnen': return 'wedstrijdturnen'.rand(1,12); break;
+            case 'recreatie': return 'bannerrecreatie'.rand(1,4); break;
+            default: return 'bannerhome'.rand(1,4); break;
+        }
+    }
+
+    public function getwedstrijdLinkItems()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT groepen
+                FROM AppBundle:Groepen groepen
+                ORDER BY groepen.id ASC');
+        $groepen = $query->getResult();
+        $groepItems = array();
+        for($i=0;$i<count($groepen);$i++)
+        {
+            $groepItems[$i] = $groepen[$i]->getIdName();
+            $groepId[] = $groepen[$i]->getId();
+        }
+        return array($groepItems, $groepId);
     }
 
     public function getCalendarItems()
@@ -39,6 +70,8 @@ class BaseController extends Controller
         }
         return $calendarItems;
     }
+
+
 
     public function maand($maandNummer)
     {

@@ -1,19 +1,19 @@
 {% extends 'inloggen/base.html.twig' %}
 
-{% block menu %}
+{% block inlogmenu %}
     <div id="items">
         {% for persoonGegevens in persoon %}
             <a href="{{ path('showPersoon', { 'id': persoonGegevens.id }) }}">
                 {% if persoonItems.id is defined %}
-                {% if persoonItems.id == persoonGegevens.id %}
-                <b>
-                    {% endif %}
-                    {% endif %}
-                    {{ persoonGegevens.voornaam }} {{ persoonGegevens.achternaam }}
-                    {% if persoonItems.id is defined %}
                     {% if persoonItems.id == persoonGegevens.id %}
-                </b>
+                        <b>
+                    {% endif %}
                 {% endif %}
+                {{ persoonGegevens.voornaam }} {{ persoonGegevens.achternaam }}
+                {% if persoonItems.id is defined %}
+                    {% if persoonItems.id == persoonGegevens.id %}
+                        </b>
+                    {% endif %}
                 {% endif %}
             </a>
         {% endfor %}
@@ -52,7 +52,8 @@
         {{ user.email2 }} <a href="{{ path('editEmail2') }}">
         <img src="{{ asset('images/edit.png') }}" width="18px"/></a><br>
     {% else %}
-        Emailadres toevoegen <a href="{{ path('editEmail2') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a><br>
+        Emailadres toevoegen <a href="{{ path('editEmail2') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a>
+        <br>
     {% endif %}
 
     ******** <a href="{{ path('editPassword') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a>

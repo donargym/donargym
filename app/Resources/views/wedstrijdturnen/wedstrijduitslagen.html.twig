@@ -2,7 +2,7 @@
 
 {% block inlogNavigation %}
     <div class="inlognavigation">
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id }) }}">{{ activeGroep.name }}</a>
+        <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT' }) }}">{{ activeGroep.name }}</a>
         > <b><i>Wedstrijduitslagen</i></b>
     </div>
 {% endblock %}

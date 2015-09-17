@@ -1,0 +1,46 @@
+{% extends 'wedstrijdturnen/base.html.twig' %}
+
+{% block inlogNavigation %}
+    <div class="inlognavigation">
+        <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT' }) }}">{{ activeGroep.name }}</a>
+        > <b><i>{{ turnster.voornaam }} {{ turnster.achternaam }}</i></b>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <table>
+        <tr style="vertical-align:top;">
+            <td><img src="http://www.donargym.nl/uploads/selectiefotos/{{ turnster.foto }}" width="200"/></td>
+            <td><br/>
+
+                <p>
+
+                <h1>{{ turnster.voornaam }} {{ turnster.achternaam }}</h1></p>
+                <p><b>Categorie:</b> {{ turnster.categorie }}</p></td>
+        </tr>
+    </table>
+    <ul>
+        <p><b>Leukste toestel:</b><br/>
+        {{ stukje.toestelleuk }}</p>
+
+        <p><b>Omdat:</b><br/>
+        {{ stukje.omdattoestelleuk }}</p>
+
+        <p><b>Leukste wedstijd tot nu toe:</b><br/>
+        {{ stukje.wedstrijd }}</p>
+
+        <p><b>Leukste/moeilijkste element:</b><br/>
+        {{ stukje.element }}</p>
+
+        <p><b>Ik wil dit jaar nog leren:</b><br/>
+        {{ stukje.leren }}</p>
+
+        <p><b>Beste turnster/voorbeeld:</b><br/>
+        {{ stukje.voorbeeld }}</p>
+
+        <p><b>Dit wil ik nog kwijt:</b><br/>
+        {{ stukje.overig }}</p>
+    </ul>
+
+
+{% endblock %}

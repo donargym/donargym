@@ -2,12 +2,13 @@
 
 {% block inlogNavigation %}
     <div class="inlognavigation">
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id }) }}">{{ activeGroep.name }}</a>
-        > <b><i>Trainers en turnsters</i></b>
+        <b><i>{{ activeGroep.name }}</i></b>
     </div>
 {% endblock %}
 
 {% block body %}
+    <div class="uitslagen"><a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'wedstrijduitslagen' }) }}">
+            &#187; Wedstrijduitslagen &#171;</a></div>
     <h1>{{ activeGroep.name }}</h1>
 
     <h2>Trainers</h2>
@@ -41,9 +42,10 @@
         {% if loop.index0 is divisibleby(4) %}
             </tr><tr>
         {% endif %}
-        <td><img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
+        <td><a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT', 'id': persoon.id }) }}">
+                <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
             <p>{{ persoon.voornaam }} {{ persoon.achternaam }}<br>
-            {{ persoon.categorie }}</p></td>
+            {{ persoon.categorie }}</p></a></td>
     {% endfor %}
         </tr>
     </table>

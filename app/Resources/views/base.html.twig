@@ -57,6 +57,9 @@
                 <li>{% block wedstrijdturnen %}<a href="#">Wedstrijdturnen</a>{% endblock %}
                     <ul>
                         <li><a href="{{ path('getWedstrijdturnenPage') }}">Algemeen</a></li>
+                        {% for wedstrijdLinkItem in wedstrijdLinkItems %}
+                            <li><a href="{{ path('getWedstrijdturnenPage', { 'page': wedstrijdLinkItem.id, 'view': 'TNT' }) }}">{{ wedstrijdLinkItem.name }}</a></li>
+                        {% endfor %}
                         <li><a href="http://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a></li>
                     </ul>
                 </li>
@@ -68,16 +71,9 @@
                         <li><a href="{{ path('getLidmaatschapPage', { 'page': 'ooievaarspas' }) }}">Ooievaarspas</a></li>
                     </ul>
                 </li>
-                <li>{% block fotofilm %}<a href="#">Foto/Film</a>{% endblock %}
-                    <ul>
-                        <li><a href="{{ path('getFotofilmPage') }}">Algemeen</a></li>
-                        <li><a href="{{ path('getFotofilmPage', { 'page': 'foto' }) }}">Foto</a></li>
-                        <li><a href="{{ path('getFotofilmPage', { 'page': 'film' }) }}">Film</a></li>
-                    </ul>
-                </li>
+                <li>{% block fotofilm %}<a href="{{ path('getFotofilmPage') }}">Foto/Film</a>{% endblock %}</li>
                 <li>{% block contact %}<a href="#">Contact</a>{% endblock %}
                     <ul>
-                        <li><a href="{{ path('getContactPage') }}">Algemeen</a></li>
                         <li><a href="{{ path('getContactPage', { 'page': 'contact' }) }}">Contactgegevens</a></li>
                         <li><a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Veelgestelde vragen</a></li>
                     </ul>
@@ -122,7 +118,10 @@
             {#<div id="menu">
                 {% block menu %}{% endblock %}
             </div>#}
-            <div class="content">
+            <div id="inlogmenu">
+                {% block inlogmenu %}{% endblock %}
+            </div>
+            <div id="content">
                 {% block inlogNavigation %}
 
                 {% endblock %}
@@ -163,7 +162,7 @@
             </div>
         </div>
         {% block javascripts %}
-            <script src="/donargym/web/js/showvoortgang.js"></script>
+            <script src="http://www.donargym.nl/js/showvoortgang.js"></script>
         {% endblock %}
     </div>
 </center>

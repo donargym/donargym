@@ -7,12 +7,14 @@ use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Functie;
 use AppBundle\Entity\Groepen;
 use AppBundle\Entity\Persoon;
+use AppBundle\Entity\Stukje;
 use AppBundle\Entity\Trainingen;
 use AppBundle\Form\Type\ContactgegevensType;
 use AppBundle\Form\Type\Email1Type;
 use AppBundle\Form\Type\Email2Type;
 use AppBundle\Form\Type\UserType;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,8 +30,6 @@ use Symfony\Component\Security\Core\User\User;
 
 class SelectieController extends BaseController
 {
-    protected $header;
-    protected $calendarItems;
 
     public function __construct()
     {
@@ -42,6 +42,10 @@ class SelectieController extends BaseController
      */
     public function getSelectieIndexPage()
     {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
         $this->header = 'wedstrijdturnen'.rand(1,12);
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
@@ -52,6 +56,7 @@ class SelectieController extends BaseController
             'header' => $this->header,
             'persoon' => $persoon,
             'user' => $user,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -114,7 +119,9 @@ class SelectieController extends BaseController
      */
     public function editContactgegevens(Request $request)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,12);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -135,6 +142,7 @@ class SelectieController extends BaseController
                 'form' => $form->createView(),
                 'persoon' => $persoon,
                 'user' => $user,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -146,7 +154,9 @@ class SelectieController extends BaseController
      */
     public function editEmail(Request $request)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,12);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -167,6 +177,7 @@ class SelectieController extends BaseController
                 'form' => $form->createView(),
                 'persoon' => $persoon,
                 'user' => $user,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -178,7 +189,9 @@ class SelectieController extends BaseController
      */
     public function editEmail2(Request $request)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,12);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -199,6 +212,7 @@ class SelectieController extends BaseController
                 'form' => $form->createView(),
                 'persoon' => $persoon,
                 'user' => $user,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -235,7 +249,9 @@ class SelectieController extends BaseController
                 return $this->redirectToRoute('getSelectieIndexPage');
             }
         }
-        $this->header = 'wedstrijdturnen'.rand(1,12);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -246,6 +262,7 @@ class SelectieController extends BaseController
             'persoon' => $persoon,
             'user' => $user,
             'error' => $error,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -274,6 +291,21 @@ class SelectieController extends BaseController
                     $persoonItems->functies[$i]->groepNaam = $groep->getName();
                     $persoonItems->functies[$i]->groepId = $groep->getId();
                     $persoonItems->functies[$i]->functie = $functies[$i]->getFunctie();
+                    $persoonItems->functies[$i]->turnster = array();
+                    $groepFuncties = $groep->getFuncties();
+                    for($j=0;$j<count($groepFuncties);$j++) {
+                        if($groepFuncties[$j]->getFunctie() == 'Turnster') {
+                            $persoonItems->functies[$i]->turnster[$j] = new \stdClass();
+                            /** @var Persoon $turnster */
+                            $turnster = $groepFuncties[$j]->getPersoon();
+                            $persoonItems->functies[$i]->turnster[$j]->voornaam = $turnster->getVoornaam();
+                            $persoonItems->functies[$i]->turnster[$j]->achternaam = $turnster->getAchternaam();
+                            $persoonItems->functies[$i]->turnster[$j]->id = $turnster->getId();
+                            $geboortedatum = $turnster->getGeboortedatum();
+                            $persoonItems->functies[$i]->turnster[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+                        }
+                    }
+
                 }
                 /** @var Trainingen $trainingen */
                 $trainingen = $persoon->getTrainingen();
@@ -287,7 +319,7 @@ class SelectieController extends BaseController
                     $persoonItems->trainingen[$i]->tijdTot = $trainingen[$i]->getTijdtot();
                     $persoonItems->trainingen[$i]->tijdVan = $trainingen[$i]->getTijdvan();
                 }
-                // TODO: stukje, aanwezigheid, doelen, trainingen
+                // TODO: turnsters, stukje, aanwezigheid, doelen, trainingen
             }
         }
         //var_dump($persoonItems);die;
@@ -301,7 +333,9 @@ class SelectieController extends BaseController
      */
     public function showPersoon($id)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,12);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
         $this->calendarItems = $this->getCalendarItems();
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
@@ -314,6 +348,7 @@ class SelectieController extends BaseController
             'persoon' => $persoon,
             'user' => $user,
             'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -324,7 +359,9 @@ class SelectieController extends BaseController
      */
     public function addSelectieTurnsterPageAction(Request $request, $id, $groepsId)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,12);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
         $this->calendarItems = $this->getCalendarItems();
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -335,7 +372,7 @@ class SelectieController extends BaseController
             'SELECT groepen
                 FROM AppBundle:Groepen groepen
                 WHERE groepen.id = :id')
-            ->setParameter('id', $groepsId);;
+            ->setParameter('id', $groepsId);
         $groepen = $query->getResult();
         $groepenItems = array();
         for($i=0;$i<count($groepen);$i++)
@@ -429,6 +466,8 @@ class SelectieController extends BaseController
             $persoon->setVoornaam($this->get('request')->request->get('voornaam'));
             $persoon->setAchternaam($this->get('request')->request->get('achternaam'));
             $persoon->setGeboortedatum($this->get('request')->request->get('geboortedatum'));
+            $stukje = new Stukje();
+            $persoon->setStukje($stukje);
             $user->setRole($role);
             $user->setUsername($this->get('request')->request->get('username'));
             if ($this->get('request')->request->get('email2')) {
@@ -511,6 +550,101 @@ class SelectieController extends BaseController
             'persoon' => $persoon,
             'user' => $user,
             'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{trainerId}/remove/{turnsterId}", name="removeSelectieTurnsterPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeAdminTrainerPage($trainerId, $turnsterId, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
+            $this->calendarItems = $this->getCalendarItems();
+            $userObject = $this->getUser();
+            $user = $this->getBasisUserGegevens($userObject);
+            $persoon = $this->getBasisPersoonsGegevens($userObject);
+            $persoonItems = $this->getOnePersoon($userObject, $trainerId);
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :id')
+                ->setParameter('id', $turnsterId);
+            $turnster = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($turnster) > 0)
+            {
+                return $this->render('inloggen/selectieRemoveTurnster.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'voornaam' => $turnster->getVoornaam(),
+                    'achternaam' => $turnster->getAchternaam(),
+                    'id' => $turnster->getId(),
+                    'wedstrijdLinkItems' => $this->groepItems,
+                    'persoon' => $persoon,
+                    'user' => $user,
+                    'persoonItems' => $persoonItems,
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :id')
+                ->setParameter('id', $turnsterId);
+            $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+            $user = $persoon->getUser();
+            $personen = $user->getPersoon();
+            $em->remove($persoon);
+            $em->flush();
+            $role = 'ROLE_TURNSTER';
+            if(count($personen) == 0) {
+                $em->remove($user);
+                $em->flush();
+            }
+            else {
+                foreach($personen as $persoonItem) {
+                    $functie = $persoonItem->getFunctie();
+                    foreach ($functie as $functieItem) {
+                        if($functieItem->getFunctie() == 'Trainer') {
+                            $role = 'ROLE_TRAINER';
+                        }
+                        elseif($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
+                            $role = 'ROLE_ASSISTENT';
+                        }
+                    }
+                }
+                $user->setRole($role);
+                $em->flush();
+            }
+            return $this->redirectToRoute('showPersoon', array(
+                'id' =>$trainerId
+            ));
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
+            ));
+        }
     }
 }

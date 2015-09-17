@@ -16,12 +16,9 @@
     <br>
     {% for persoon in personen %}
         {{ persoon.voornaam }} {{ persoon.achternaam }}
-        <a href="{{ path('editAdminTrainerPage', { 'id': persoon.id }) }}">
-            <img src="{{ asset('images/edit.png') }}" width="18px" />
-        </a>
-        <a href="{{ path('removeAdminTrainerPage', { 'id': persoon.id }) }}">
-            <img src="{{ asset('images/remove.png') }}" width="18px" /><br>
-        </a>
+        <a href="{{ path('editAdminTrainerPage', { 'id': persoon.id }) }}"><img src="{{ asset('images/edit.png') }}" width="18px" /></a>
+        <a href="{{ path('removeAdminTrainerPage', { 'id': persoon.id }) }}"><img src="{{ asset('images/remove.png') }}" width="18px" /></a>
+        <br>
     {% endfor %}
 
     {#Selectiegroep toevoegen#}

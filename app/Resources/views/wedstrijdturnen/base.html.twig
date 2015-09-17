@@ -3,12 +3,3 @@
 {% block wedstrijdturnen %}
     <a href="#"><span id="active_link">Wedstrijdturnen</span></a>
 {% endblock %}
-
-{% block menu %}
-    <div id="items">
-        {% for groep in groepen %}
-            <a href="{{ path('getWedstrijdturnenPage', { 'page': groep.id }) }}">{{ groep.name }}</a>
-        {% endfor %}
-        <a href="http://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a>
-    </div>
-{% endblock %}

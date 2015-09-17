@@ -27,9 +27,6 @@ use Symfony\Component\Security\Core\User\User;
  */
 class AdminController extends BaseController
 {
-    protected $header;
-    protected $calendarItems;
-
     public function __construct()
     {
     }
@@ -40,11 +37,14 @@ class AdminController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         return $this->render('inloggen/adminIndex.html.twig', array(
             'calendarItems' => $this->calendarItems,
-            'header' => $this->header
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -54,7 +54,9 @@ class AdminController extends BaseController
      */
     public function getAdminFotoPage()
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -70,7 +72,8 @@ class AdminController extends BaseController
         return $this->render('inloggen/adminFotos.html.twig', array(
             'contentItems' => $contentItems,
             'calendarItems' => $this->calendarItems,
-            'header' => $this->header
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -81,7 +84,9 @@ class AdminController extends BaseController
      */
     public function addAdminFotoPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $foto = new FotoUpload();
         $form = $this->createFormBuilder($foto)
@@ -103,6 +108,7 @@ class AdminController extends BaseController
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -115,7 +121,9 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -130,13 +138,15 @@ class AdminController extends BaseController
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
                     'content' => $foto->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -157,7 +167,8 @@ class AdminController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -168,7 +179,9 @@ class AdminController extends BaseController
      */
     public function getAdminBestandenPage()
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -184,7 +197,8 @@ class AdminController extends BaseController
         return $this->render('inloggen/adminUploads.html.twig', array(
             'contentItems' => $contentItems,
             'calendarItems' => $this->calendarItems,
-            'header' => $this->header
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -195,7 +209,9 @@ class AdminController extends BaseController
      */
     public function addAdminBestandenPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $file = new FileUpload();
         $form = $this->createFormBuilder($file)
@@ -216,6 +232,7 @@ class AdminController extends BaseController
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -228,7 +245,9 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -243,13 +262,15 @@ class AdminController extends BaseController
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
                     'content' => $file->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -270,7 +291,8 @@ class AdminController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -281,7 +303,9 @@ class AdminController extends BaseController
      */
     public function getAdminSelectiePage()
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -299,7 +323,8 @@ class AdminController extends BaseController
         return $this->render('inloggen/adminSelectie.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
-            'personen' => $persoonItems
+            'personen' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -309,7 +334,9 @@ class AdminController extends BaseController
      */
     public function addAdminTrainerPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -484,7 +511,8 @@ class AdminController extends BaseController
         return $this->render('inloggen/adminAddTrainer.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
-            'groepen' => $groepenItems
+            'groepen' => $groepenItems,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -494,7 +522,9 @@ class AdminController extends BaseController
      */
     public function editAdminTrainerPageAction(Request $request, $id)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -689,7 +719,8 @@ class AdminController extends BaseController
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
             'groepen' => $groepenItems,
-            'persoonEdit' => $persoonEdit
+            'persoonEdit' => $persoonEdit,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -701,7 +732,9 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -718,13 +751,15 @@ class AdminController extends BaseController
                     'voornaam' => $persoon->getVoornaam(),
                     'achternaam' => $persoon->getAchternaam(),
                     'id' => $persoon->getId(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -767,7 +802,8 @@ class AdminController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }

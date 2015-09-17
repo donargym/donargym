@@ -8,14 +8,10 @@
 {% endblock %}
 
 {% block pageHeader %}
-    <div class="line"
-         style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
 
     <a href="http://www.facebook.com/groups/selectieleidschendam/" target="blank">Word lid van de Facebookgroep van
         de selectie Leidschendam!</a>
 
-    <div class="line"
-         style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
     <div style="height: 175px;">
         <a href="">
             <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
@@ -35,8 +31,6 @@
     {% for functie in persoonItems.functies %}
         <div style="margin-bottom: 75px;"><h2>{{ functie.groepNaam }} ({{ functie.functie }})</h2>
 
-            <div class="line"
-                 style="height:3px;width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
             {% if functie.functie == 'Turnster' %}
                 <center>
                     <table>
@@ -62,8 +56,6 @@
                         </tr>
                     </table>
                 </center>
-                <div class="line"
-                     style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
             {% endif %}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
                 <h3>Turnsters
@@ -78,22 +70,51 @@
                             <td></td><td></td>
                         {% endif %}
                     </tr>
+                    {% for turnster in functie.turnster %}
+                        <tr>
+                            <td>
+                                <a href="">
+                                    {{ turnster.voornaam }} {{ turnster.achternaam }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="">
+                                    {{ turnster.geboortedatum }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="">
+
+                                </a>
+                            </td>
+                            <td>
+                                <a href="">
+
+                                </a>
+                            </td>
+                            {% if functie.functie == 'Trainer' %}
+                                <td>
+                                    <a href="">
+                                        <img src="{{ asset('images/edit.png') }}" width="18px"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('removeSelectieTurnsterPage', { 'trainerId': persoonItems.id, 'turnsterId': turnster.id }) }}">
+                                        <img src="{{ asset('images/remove.png') }}" width="18px"/>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
                 </table>
                 Tabel met turnsters (oud-jong): naam, geb. datum, glob voortgang, jaar voortgang, %aanwezig, remove
-                <div class="line"
-                     style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
             {% endif %}
             <h3>Presentie</h3>
             <b>Woensdag</b>
             Hallo
-            <div class="line"
-                 style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
             <a href="">Wedstrijduitslagen</a><br>
             <a href="">Doelen</a><br>
             <a href="">Adreslijst</a><br>
-
-            <div class="line"
-                 style="width:597px;margin-left:auto;margin-right:auto;margin-top:10px;margin-bottom:10px;"></div>
         </div>
 
 

@@ -82,7 +82,7 @@ class Persoon
     private $aanwezigheid;
 
     /**
-     * @ORM\OneToOne(targetEntity="Stukje")
+     * @ORM\OneToOne(targetEntity="Stukje", cascade={"persist", "remove"}, orphanRemoval=TRUE)
      * @ORM\JoinColumn(name="stukje_id", referencedColumnName="id")
      **/
     private $stukje;

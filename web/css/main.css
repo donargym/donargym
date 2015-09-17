@@ -40,7 +40,7 @@ body {
     border-radius: 5px;
 }
 
-.content {
+#content {
     color: rgba(255, 255, 255, 0.93);
     margin-top: 20px;
     margin-left: 20px;
@@ -51,11 +51,11 @@ body {
     overflow: hidden;
 }
 
-.content p {
+#content p {
     margin-bottom: 20px;
 }
 
-.content h1 {
+#content h1 {
     font-size: 20pt;
     color: #FFFF00;
     font-weight: normal;
@@ -63,14 +63,14 @@ body {
     margin-bottom: 5px;
 }
 
-.content h2 {
+#content h2 {
     font-size: 16pt;
     color: #FFFF00;
     font-weight: normal;
     margin-bottom: 2px;
 }
 
-.content h3 {
+#content h3 {
     font-size: 14pt;
     color: #FFFF00;
     font-weight: normal;
@@ -78,14 +78,14 @@ body {
     margin-bottom: 2px;
 }
 
-.content hr {
+#content hr {
     background: #FFFF00;
     height: 1px;
     border: 0px;
     margin-bottom: 0px;
 }
 
-.content img {
+#content img {
     max-width: 700px;
     border-radius: 5px;
     margin: 5px;
@@ -101,19 +101,52 @@ body {
     margin: 5px;
 }
 
-.content a:link {
+#content a:link {
     color: #FFFF00;
     text-decoration: underline;
 }
 
-.content a:visited {
+#content a:visited {
     color: #FFFF00;
     text-decoration: underline;
 }
 
-.content a:hover, a:active {
+#content a:hover, a:active {
     color: #FFAE00;
     text-decoration: underline;
+}
+
+#content .uitslagen a:link {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(255,255,255,0.5);
+    display: block;
+    float: right;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+#content .uitslagen a:visited {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(255,255,255,0.5);
+    display: block;
+    float: right;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+#content .uitslagen a:hover, .uitslagen a:active {
+    background: rgba(255,255,0,0.5);
+    color: #FFF;
+    text-decoration: none;
+    display: block;
+    float: right;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
 }
 
 .date {
@@ -215,6 +248,18 @@ body {
     margin-bottom: 2px;
 }
 
+a:link {
+    color: #FFF;
+}
+
+a:visited {
+    color: #FFF;
+}
+
+a:hover, a:active {
+    color: #FFF;
+}
+
 /* ---------------------- */
 
 #primary_nav_wrap {
@@ -287,6 +332,8 @@ body {
 #primary_nav_wrap ul li:hover > ul {
     display: block;
 }
+
+/* COMMENT LINE */
 
 #active_link {
     border-bottom: 2px solid #FFFF00;

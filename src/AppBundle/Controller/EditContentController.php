@@ -31,8 +31,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class EditContentController extends BaseController
 {
-    protected $header;
-    protected $calendarItems;
 
     public function __construct()
     {
@@ -44,7 +42,9 @@ class EditContentController extends BaseController
      */
     public function editDonarPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('geschiedenis', 'visie', 'bestuur', 'leiding', 'evenementen', 'locaties', 'kleding', 'vacatures', 'sponsors')))
         {
@@ -78,7 +78,8 @@ class EditContentController extends BaseController
                         'content' => $content->getContent(),
                         'calendarItems' => $this->calendarItems,
                         'header' => $this->header,
-                        'form' => $form->createView()
+                        'form' => $form->createView(),
+                        'wedstrijdLinkItems' => $this->groepItems,
                     ));
                 }
             }
@@ -86,7 +87,8 @@ class EditContentController extends BaseController
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
 
@@ -95,7 +97,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -106,7 +109,9 @@ class EditContentController extends BaseController
      */
     public function editLessenPageAction($page, Request $request)
     {
-        $this->header = 'bannerrecreatie'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('recreatie');
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('lesrooster', 'peuterenkleutergym', 'gymnastiekenrecreatiefturnen', '50plusgymenconditie', 'aerobicsenbodyshape', 'badmintonenvolleybal')))
         {
@@ -139,7 +144,8 @@ class EditContentController extends BaseController
                         'content' => $content->getContent(),
                         'calendarItems' => $this->calendarItems,
                         'header' => $this->header,
-                        'form' => $form->createView()
+                        'form' => $form->createView(),
+                        'wedstrijdLinkItems' => $this->groepItems,
                     ));
                 }
             }
@@ -147,7 +153,8 @@ class EditContentController extends BaseController
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
 
@@ -156,7 +163,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -168,7 +176,9 @@ class EditContentController extends BaseController
      */
     public function editWedstrijdturnenPageAction($page, Request $request)
     {
-        $this->header = 'wedstrijdturnen'.rand(1,12);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('wedstrijdturnen')))
         {
@@ -201,7 +211,8 @@ class EditContentController extends BaseController
                         'content' => $content->getContent(),
                         'calendarItems' => $this->calendarItems,
                         'header' => $this->header,
-                        'form' => $form->createView()
+                        'form' => $form->createView(),
+                        'wedstrijdLinkItems' => $this->groepItems,
                     ));
                 }
             }
@@ -209,7 +220,8 @@ class EditContentController extends BaseController
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
 
@@ -222,7 +234,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -233,7 +246,9 @@ class EditContentController extends BaseController
      */
     public function editLidmaatschapPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('lidmaatschap', 'contributie', 'formulieren', 'ooievaarspas')))
         {
@@ -266,7 +281,8 @@ class EditContentController extends BaseController
                         'content' => $content->getContent(),
                         'calendarItems' => $this->calendarItems,
                         'header' => $this->header,
-                        'form' => $form->createView()
+                        'form' => $form->createView(),
+                        'wedstrijdLinkItems' => $this->groepItems,
                     ));
                 }
             }
@@ -274,7 +290,8 @@ class EditContentController extends BaseController
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
 
@@ -283,7 +300,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -294,7 +312,9 @@ class EditContentController extends BaseController
      */
     public function editFotofilmPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('fotoenfilm', 'foto', 'film')))
         {
@@ -327,7 +347,8 @@ class EditContentController extends BaseController
                         'content' => $content->getContent(),
                         'calendarItems' => $this->calendarItems,
                         'header' => $this->header,
-                        'form' => $form->createView()
+                        'form' => $form->createView(),
+                        'wedstrijdLinkItems' => $this->groepItems,
                     ));
                 }
             }
@@ -335,7 +356,8 @@ class EditContentController extends BaseController
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
 
@@ -344,7 +366,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -355,7 +378,9 @@ class EditContentController extends BaseController
      */
     public function editVrijwilligersPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('vrijwilligers', 'taken', 'vrijwilligersdag')))
         {
@@ -389,6 +414,7 @@ class EditContentController extends BaseController
                         'calendarItems' => $this->calendarItems,
                         'header' => $this->header,
                         'form' => $form->createView(),
+                        'wedstrijdLinkItems' => $this->groepItems,
                     ));
                 }
             }
@@ -396,7 +422,8 @@ class EditContentController extends BaseController
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
 
@@ -405,7 +432,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -416,7 +444,9 @@ class EditContentController extends BaseController
      */
     public function editContactPageAction($page, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         if(in_array($page, array('contact', 'veelgesteldevragen')))
         {
@@ -449,7 +479,8 @@ class EditContentController extends BaseController
                         'content' => $content->getContent(),
                         'calendarItems' => $this->calendarItems,
                         'header' => $this->header,
-                        'form' => $form->createView()
+                        'form' => $form->createView(),
+                        'wedstrijdLinkItems' => $this->groepItems,
                     ));
                 }
             }
@@ -457,7 +488,8 @@ class EditContentController extends BaseController
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
 
@@ -466,7 +498,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -477,7 +510,9 @@ class EditContentController extends BaseController
      */
     public function addAgendaPage(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $agenda = new Calendar();
         $form = $this->createForm(new CalendarType(), $agenda);
@@ -493,7 +528,8 @@ class EditContentController extends BaseController
             return $this->render('default/addCalendar.html.twig', array(
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -504,7 +540,9 @@ class EditContentController extends BaseController
      */
     public function editAgendaPage($id, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -528,7 +566,8 @@ class EditContentController extends BaseController
                 return $this->render('default/addCalendar.html.twig', array(
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -536,7 +575,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -549,7 +589,9 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -563,14 +605,16 @@ class EditContentController extends BaseController
                 return $this->render('default/removeCalendar.html.twig', array(
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
-                    'content' => $agenda->getAll()
+                    'content' => $agenda->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -591,7 +635,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -602,7 +647,9 @@ class EditContentController extends BaseController
      */
     public function addNieuwsPage(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $nieuwsbericht = new Nieuwsbericht();
         $form = $this->createForm(new NieuwsberichtType(), $nieuwsbericht);
@@ -621,7 +668,8 @@ class EditContentController extends BaseController
             return $this->render('default/addNieuwsbericht.html.twig', array(
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -632,7 +680,9 @@ class EditContentController extends BaseController
      */
     public function editNieuwsberichtPage($id, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -658,7 +708,8 @@ class EditContentController extends BaseController
                 return $this->render('default/addNieuwsbericht.html.twig', array(
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -666,7 +717,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -679,7 +731,9 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -693,14 +747,16 @@ class EditContentController extends BaseController
                 return $this->render('default/removeNieuwsbericht.html.twig', array(
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
-                    'content' => $nieuwsbericht->getAll()
+                    'content' => $nieuwsbericht->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -721,7 +777,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -732,7 +789,9 @@ class EditContentController extends BaseController
      */
     public function addVakantiesPage(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -762,7 +821,8 @@ class EditContentController extends BaseController
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView(),
-                'vakantieItems' => $vakantieItems
+                'vakantieItems' => $vakantieItems,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -773,7 +833,9 @@ class EditContentController extends BaseController
      */
     public function editVakantiesPage($id, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -810,7 +872,8 @@ class EditContentController extends BaseController
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
                     'form' => $form->createView(),
-                    'vakantieItems' => $vakantieItems
+                    'vakantieItems' => $vakantieItems,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -818,7 +881,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -831,7 +895,9 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -858,14 +924,16 @@ class EditContentController extends BaseController
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
                     'content' => $vakanties->getAll(),
-                    'vakantieItems' => $vakantieItems
+                    'vakantieItems' => $vakantieItems,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -886,7 +954,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -898,7 +967,9 @@ class EditContentController extends BaseController
      */
     public function addClubbladPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $clubblad = new Clubblad();
         $form = $this->createFormBuilder($clubblad)
@@ -921,6 +992,7 @@ class EditContentController extends BaseController
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -933,7 +1005,9 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -948,13 +1022,15 @@ class EditContentController extends BaseController
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
                     'content' => $clubblad->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -975,7 +1051,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -987,7 +1064,9 @@ class EditContentController extends BaseController
      */
     public function addFormulierenPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $formulier = new Formulieren();
         $form = $this->createFormBuilder($formulier)
@@ -1008,6 +1087,7 @@ class EditContentController extends BaseController
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -1020,7 +1100,9 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -1035,13 +1117,15 @@ class EditContentController extends BaseController
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
                     'content' => $formulier->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -1062,7 +1146,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -1073,7 +1158,9 @@ class EditContentController extends BaseController
      */
     public function addVeelgesteldeVragenPage(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $vraag = new VeelgesteldeVragen();
         $form = $this->createForm(new VeelgesteldeVragenType(), $vraag);
@@ -1089,7 +1176,8 @@ class EditContentController extends BaseController
             return $this->render('contact/addVeelgesteldeVragen.html.twig', array(
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -1100,7 +1188,9 @@ class EditContentController extends BaseController
      */
     public function editVeelgesteldeVragenPage($id, Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,4);
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -1124,7 +1214,8 @@ class EditContentController extends BaseController
                 return $this->render('contact/addVeelgesteldeVragen.html.twig', array(
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -1132,7 +1223,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -1145,7 +1237,9 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,4);
+            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+            $this->groepItems = $this->wedstrijdLinkItems[0];
+            $this->header = $this->getHeader();
             $this->calendarItems = $this->getCalendarItems();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
@@ -1159,14 +1253,16 @@ class EditContentController extends BaseController
                 return $this->render('contact/removeVeelgesteldeVragen.html.twig', array(
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
-                    'content' => $vraag->getAll()
+                    'content' => $vraag->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -1187,7 +1283,8 @@ class EditContentController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }

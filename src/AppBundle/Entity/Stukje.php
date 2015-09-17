@@ -52,6 +52,20 @@ class Stukje
      */
     protected $overig;
 
+    public function getAll()
+    {
+        $stukje = new \stdClass();
+        $stukje->id = $this->id;
+        $stukje->toestelleuk = $this->toestelleuk;
+        $stukje->omdattoestelleuk = $this->omdattoestelleuk;
+        $stukje->wedstrijd = $this->wedstrijd;
+        $stukje->element = $this->element;
+        $stukje->leren = $this->leren;
+        $stukje->voorbeeld = $this->voorbeeld;
+        $stukje->overig = $this->overig;
+        return $stukje;
+    }
+
     /**
      * Get id
      *

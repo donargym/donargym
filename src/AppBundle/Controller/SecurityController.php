@@ -8,13 +8,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class SecurityController extends BaseController
 {
-    private $calendarItems;
 
     /**
      * @Route("/login", name="login_route")
      */
     public function loginAction(Request $request)
     {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $authenticationUtils = $this->get('security.authentication_utils');
 
@@ -31,7 +33,8 @@ class SecurityController extends BaseController
                 'last_username' => $lastUsername,
                 'error'         => $error,
                 'calendarItems' => $this->calendarItems,
-                'header'        => 'bannerhome'.rand(1,2)
+                'header'        => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
