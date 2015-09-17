@@ -13,7 +13,7 @@
         de selectie Leidschendam!</a>
 
     <div style="height: 175px;">
-        <a href="">
+        <a href="{{ path('addSelectieFotoPage', { 'persoonId': persoonItems.id }) }}">
             <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
                  width="150"
                  style="float:right;margin-right:2px;margin-top:5px;"/>
@@ -107,7 +107,6 @@
                         </tr>
                     {% endfor %}
                 </table>
-                Tabel met turnsters (oud-jong): naam, geb. datum, glob voortgang, jaar voortgang, %aanwezig, remove
             {% endif %}
             <h3>Presentie</h3>
             <b>Woensdag</b>

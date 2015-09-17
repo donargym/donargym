@@ -41,7 +41,7 @@ class Persoon
     private $geboortedatum;
 
     /**
-     * @ORM\OneToOne(targetEntity="SelectieFoto")
+     * @ORM\OneToOne(targetEntity="SelectieFoto", cascade={"persist", "remove"}, orphanRemoval=TRUE))
      * @ORM\JoinColumn(name="foto_id", referencedColumnName="id")
      **/
     private $foto;

@@ -7,6 +7,7 @@ use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Functie;
 use AppBundle\Entity\Groepen;
 use AppBundle\Entity\Persoon;
+use AppBundle\Entity\SelectieFoto;
 use AppBundle\Entity\Stukje;
 use AppBundle\Entity\Trainingen;
 use AppBundle\Form\Type\ContactgegevensType;
@@ -565,7 +566,7 @@ class SelectieController extends BaseController
         {
             $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
             $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
+            $this->header = $this->getHeader('wedstrijdturnen');
             $this->calendarItems = $this->getCalendarItems();
             $userObject = $this->getUser();
             $user = $this->getBasisUserGegevens($userObject);
@@ -647,4 +648,58 @@ class SelectieController extends BaseController
             ));
         }
     }
+
+    /**
+     * @Template()
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{persoonId}/addFoto/", name="addSelectieFotoPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addSelectieFotoPageAction(Request $request, $persoonId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $foto = new SelectieFoto();
+        $form = $this->createFormBuilder($foto)
+            ->add('file')
+            ->add('uploadBestand', 'submit')
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $personen = $userObject->getPersoon();
+            foreach ($personen as $persoonObject) {
+                /** @var Persoon $persoonObject */
+                if ($persoonObject->getId() == $persoonId) {
+                    $persoonObject->setFoto($foto);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($persoonObject);
+                    $em->flush();
+                    $this->get('helper.imageresizer')->resizeImage($foto->getAbsolutePath(), $foto->getUploadRootDir() . "/", null, $width = 200);
+                    return $this->redirectToRoute('showPersoon', array(
+                        'id' =>$persoonId
+                    ));
+                }
+            }
+        }
+        else {
+            return $this->render('inloggen/selectieAddFoto.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
+                'persoon' => $persoon,
+                'user' => $user,
+                'persoonItems' => $persoonItems,
+            ));
+        }
+    }
+
+    //todo: edit turnster functie en view
 }

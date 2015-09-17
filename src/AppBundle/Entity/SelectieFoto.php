@@ -25,11 +25,6 @@ class SelectieFoto
     /**
      * @ORM\Column(length=300)
      */
-    protected $naam;
-
-    /**
-     * @ORM\Column(length=300)
-     */
     protected $locatie;
 
     /**
