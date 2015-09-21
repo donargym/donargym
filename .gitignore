@@ -15,3 +15,4 @@
 /web/uploads/*
 /web/nieuws/*
 /src/AppBundle/DataFixtures/ORM/LoadUserData.php
+/httpdocs/*

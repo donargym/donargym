@@ -32,7 +32,7 @@ class BaseController extends Controller
         switch($page) {
             case 'wedstrijdturnen': return 'wedstrijdturnen'.rand(1,12); break;
             case 'recreatie': return 'bannerrecreatie'.rand(1,4); break;
-            default: return 'bannerhome'.rand(1,4); break;
+            default: return 'bannerhome'.rand(1,3); break;
         }
     }
 

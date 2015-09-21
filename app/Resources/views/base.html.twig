@@ -47,18 +47,25 @@
                 <li>{% block lessen %}<a href="#">Lessen</a>{% endblock %}
                     <ul>
                         <li><a href="{{ path('getLessenPage', { 'page': 'lesrooster' }) }}">Lesrooster</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'peuterenkleutergym' }) }}">Peuter & Kleutergym</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'gymnastiekenrecreatiefturnen' }) }}">Recreatief Turnen</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': '50plusgymenconditie' }) }}">50+ Gym & Conditie</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'aerobicsenbodyshape' }) }}">Aerobics & Bodyshape</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'badmintonenvolleybal' }) }}">Badminton & Volleybal</a></li>
+                        <li><a href="{{ path('getLessenPage', { 'page': 'peuterenkleutergym' }) }}">Peuter &
+                                Kleutergym</a></li>
+                        <li><a href="{{ path('getLessenPage', { 'page': 'gymnastiekenrecreatiefturnen' }) }}">Recreatief
+                                Turnen</a></li>
+                        <li><a href="{{ path('getLessenPage', { 'page': '50plusgymenconditie' }) }}">50+ Gym &
+                                Conditie</a></li>
+                        <li><a href="{{ path('getLessenPage', { 'page': 'aerobicsenbodyshape' }) }}">Aerobics &
+                                Bodyshape</a></li>
+                        <li><a href="{{ path('getLessenPage', { 'page': 'badmintonenvolleybal' }) }}">Badminton &
+                                Volleybal</a></li>
                     </ul>
                 </li>
                 <li>{% block wedstrijdturnen %}<a href="#">Wedstrijdturnen</a>{% endblock %}
                     <ul>
                         <li><a href="{{ path('getWedstrijdturnenPage') }}">Algemeen</a></li>
                         {% for wedstrijdLinkItem in wedstrijdLinkItems %}
-                            <li><a href="{{ path('getWedstrijdturnenPage', { 'page': wedstrijdLinkItem.id, 'view': 'TNT' }) }}">{{ wedstrijdLinkItem.name }}</a></li>
+                            <li>
+                                <a href="{{ path('getWedstrijdturnenPage', { 'page': wedstrijdLinkItem.id, 'view': 'TNT' }) }}">{{ wedstrijdLinkItem.name }}</a>
+                            </li>
                         {% endfor %}
                         <li><a href="http://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a></li>
                     </ul>
@@ -68,14 +75,16 @@
                         <li><a href="{{ path('getLidmaatschapPage') }}">Inlichtingen</a></li>
                         <li><a href="{{ path('getLidmaatschapPage', { 'page': 'contributie' }) }}">Contributie</a></li>
                         <li><a href="{{ path('getLidmaatschapPage', { 'page': 'formulieren' }) }}">Formulieren</a></li>
-                        <li><a href="{{ path('getLidmaatschapPage', { 'page': 'ooievaarspas' }) }}">Ooievaarspas</a></li>
+                        <li><a href="{{ path('getLidmaatschapPage', { 'page': 'ooievaarspas' }) }}">Ooievaarspas</a>
+                        </li>
                     </ul>
                 </li>
                 <li>{% block fotofilm %}<a href="{{ path('getFotofilmPage') }}">Foto/Film</a>{% endblock %}</li>
                 <li>{% block contact %}<a href="#">Contact</a>{% endblock %}
                     <ul>
                         <li><a href="{{ path('getContactPage', { 'page': 'contact' }) }}">Contactgegevens</a></li>
-                        <li><a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Veelgestelde vragen</a></li>
+                        <li><a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Veelgestelde
+                                vragen</a></li>
                     </ul>
                 </li>
                 <li>
@@ -118,10 +127,11 @@
             {#<div id="menu">
                 {% block menu %}{% endblock %}
             </div>#}
-            <div id="inlogmenu">
-                {% block inlogmenu %}{% endblock %}
-            </div>
+
             <div id="content">
+
+                {% block inlogmenu %}{% endblock %}
+
                 {% block inlogNavigation %}
 
                 {% endblock %}

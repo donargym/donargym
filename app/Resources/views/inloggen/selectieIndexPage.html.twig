@@ -1,23 +1,25 @@
 {% extends 'inloggen/base.html.twig' %}
 
 {% block inlogmenu %}
-    <div id="items">
-        {% for persoonGegevens in persoon %}
-            <a href="{{ path('showPersoon', { 'id': persoonGegevens.id }) }}">
-                {% if persoonItems.id is defined %}
-                    {% if persoonItems.id == persoonGegevens.id %}
+    <div id="inlogmenu">
+        <ul>
+            {% for persoonGegevens in persoon %}
+                <li><a href="{{ path('showPersoon', { 'id': persoonGegevens.id }) }}">
+                        {% if persoonItems.id is defined %}
+                        {% if persoonItems.id == persoonGegevens.id %}
                         <b>
-                    {% endif %}
-                {% endif %}
-                {{ persoonGegevens.voornaam }} {{ persoonGegevens.achternaam }}
-                {% if persoonItems.id is defined %}
-                    {% if persoonItems.id == persoonGegevens.id %}
+                            {% endif %}
+                            {% endif %}
+                            {{ persoonGegevens.voornaam }} {{ persoonGegevens.achternaam }}
+                            {% if persoonItems.id is defined %}
+                            {% if persoonItems.id == persoonGegevens.id %}
                         </b>
-                    {% endif %}
-                {% endif %}
-            </a>
-        {% endfor %}
-        <a href="{{ path('logout') }}">Uitloggen</a>
+                        {% endif %}
+                        {% endif %}
+                    </a></li>
+            {% endfor %}
+            <li><a href="{{ path('logout') }}">Uitloggen</a></li>
+        </ul>
     </div>
 {% endblock %}
 

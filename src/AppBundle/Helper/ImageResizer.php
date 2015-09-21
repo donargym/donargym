@@ -65,6 +65,22 @@ class ImageResizer
         }
         imagecopyresampled($gd_image_dest, $gd_image_src, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
 
+        $exif = exif_read_data($image);
+        if(isset($exif['Orientation'])) {
+            $orientation = $exif['Orientation'];
+            switch($orientation) {
+                case 3:
+                    $gd_image_dest = imagerotate($gd_image_dest, 180, 0);
+                    break;
+                case 6:
+                    $gd_image_dest = imagerotate($gd_image_dest, -90, 0);
+                    break;
+                case 8:
+                    $gd_image_dest = imagerotate($gd_image_dest, 90, 0);
+                    break;
+            }
+        }
+
         $filesystem = new Filesystem();
         $filesystem->mkdir($newPath, 0744);
         $newFileName = $newPath . $name . "." . $fileExtention;

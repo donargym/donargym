@@ -78,6 +78,14 @@ body {
     margin-bottom: 2px;
 }
 
+#content h4 {
+    font-size: 12pt;
+    color: #FFFF00;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+
 #content hr {
     background: #FFFF00;
     height: 1px;
@@ -119,7 +127,7 @@ body {
 #content .uitslagen a:link {
     color: #FFFF00;
     text-decoration: none;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     display: block;
     float: right;
     border-radius: 5px;
@@ -130,7 +138,7 @@ body {
 #content .uitslagen a:visited {
     color: #FFFF00;
     text-decoration: none;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     display: block;
     float: right;
     border-radius: 5px;
@@ -139,7 +147,7 @@ body {
 }
 
 #content .uitslagen a:hover, .uitslagen a:active {
-    background: rgba(255,255,0,0.5);
+    background: rgba(255, 255, 0, 0.5);
     color: #FFF;
     text-decoration: none;
     display: block;
@@ -337,4 +345,42 @@ a:hover, a:active {
 
 #active_link {
     border-bottom: 2px solid #FFFF00;
+}
+
+#inlogmenu {
+    background: rgba(255, 255, 255, 0.5);
+    height: 35px;
+    max-width: 1000px;
+    display: block;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    font-size: 11pt;
+}
+
+#inlogmenu ul {
+    list-style: none;
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#inlogmenu ul a:link, #inlogmenu ul a:visited {
+    display: block;
+    color: #FFF;
+    text-decoration: none;
+    line-height: 35px;
+    padding: 0 15px;
+}
+
+#inlogmenu ul li {
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#inlogmenu ul li:hover {
+    background: #7F7F7F; /*rgba(255, 255, 0, 0.7);*/
+    border-radius: 5px;
 }
