@@ -1,9 +1,11 @@
 {% extends 'inloggen/adminIndex.html.twig' %}
 
 {% block inlogNavigation %}
-    <div class="inlognavigation">
-        <a href="{{ path('getAdminSelectiePage') }}">Selectie</a> >
-        <b><i>(Assistent-)Trainer wijzigen</i></b>
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getAdminSelectiePage') }}">Selectie</a>
+            > <i>(Assistent-)Trainer wijzigen</i>
+        </div>
     </div>
 {% endblock %}
 

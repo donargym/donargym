@@ -320,6 +320,7 @@ a:hover, a:active {
     background: #333333;
     padding: 0;
     border-radius: 5px;
+    z-index: 1;
 }
 
 #primary_nav_wrap ul ul li {
@@ -383,4 +384,33 @@ a:hover, a:active {
 #inlogmenu ul li:hover {
     background: #7F7F7F; /*rgba(255, 255, 0, 0.7);*/
     border-radius: 5px;
+}
+
+#inlog_nav {
+    background: rgba(0,0,0,0.6);
+    max-width: 770px;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#inlog_nav #text {
+    color: #FFF;
+    padding: 7px;
+    padding-left: 10px;
+}
+
+#inlog_nav #text a:link {
+    color: #FFF;
+    text-decoration: none;
+}
+
+#inlog_nav #text a:visited {
+    color: #FFF;
+    text-decoration: none;
+}
+
+#inlog_nav #text a:hover, #inlog_nav #text a:active {
+    color: #FFFF00;
+    text-decoration: none;
 }

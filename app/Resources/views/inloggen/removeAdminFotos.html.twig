@@ -1,9 +1,11 @@
 {% extends 'inloggen/adminIndex.html.twig' %}
 
 {% block inlogNavigation %}
-    <div class="inlognavigation">
-        <a href="{{ path('getAdminFotoPage') }}">Foto's</a>
-        > <b><i>Foto verwijderen</i></b>
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getAdminFotoPage') }}">Foto's</a>
+            > <i>Foto verwijderen</i>
+        </div>
     </div>
 {% endblock %}
 

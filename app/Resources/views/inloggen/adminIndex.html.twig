@@ -1,18 +1,22 @@
 {% extends 'inloggen/base.html.twig' %}
 
 {% block inlogmenu %}
-    <div id="items">
-        <a href="{{ path('getAdminIndexPage') }}">Index</a>
-        <a href="{{ path('getAdminFotoPage') }}">Foto's</a>
-        <a href="{{ path('getAdminBestandenPage') }}">Andere bestanden</a>
-        <a href="{{ path('getAdminSelectiePage') }}">Selectie</a>
-        <a href="{{ path('logout') }}">Uitloggen</a>
+    <div id="inlogmenu">
+        <ul>
+            <li><a href="{{ path('getAdminIndexPage') }}">Index</a></li>
+            <li><a href="{{ path('getAdminFotoPage') }}">Foto's</a></li>
+            <li><a href="{{ path('getAdminBestandenPage') }}">Overige bestanden</a></li>
+            <li><a href="{{ path('getAdminSelectiePage') }}">Selectie</a></li>
+            <li><a href="{{ path('logout') }}">Uitloggen</a></li>
+        </ul>
     </div>
 {% endblock %}
 
 {% block inlogNavigation %}
-    <div class="inlognavigation">
-        <b><i>Index</i></b>
+    <div id="inlog_nav">
+        <div id="text">
+            <i>Index</i>
+        </div>
     </div>
 {% endblock %}
 

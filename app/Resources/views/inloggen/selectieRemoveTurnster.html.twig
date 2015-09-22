@@ -1,10 +1,12 @@
 {% extends 'inloggen/selectieShowPersoon.html.twig' %}
 
 {% block inlogNavigation %}
-    <div class="inlognavigation">
-        <a href="{{ path('getSelectieIndexPage') }}">Index</a>
-        > <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
-        > <b><i>Turnster verwijderen</i></b><br>
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getSelectieIndexPage') }}">Index</a>
+            > <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Turnster verwijderen</i>
+        </div>
     </div>
 {% endblock %}
 

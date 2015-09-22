@@ -34,7 +34,7 @@ class FotoUpload
 
     /**
      * @Assert\File(
-     *      maxSize="10M",
+     *      maxSize="5M",
      *      mimeTypes = {"image/gif", "image/jpeg", "image/pjpeg", "image/png"},
      *      mimeTypesMessage = "Please upload a valid image: gif, jpg or png"
      *      )

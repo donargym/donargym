@@ -1,10 +1,19 @@
 {% extends 'inloggen/selectieShowPersoon.html.twig' %}
 
 {% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getSelectieIndexPage') }}">Index</a>
+            > <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Foto uploaden</i>
+        </div>
+    </div>
+
+
     <div class="inlognavigation">
         <a href="{{ path('getSelectieIndexPage') }}">Index</a>
         > <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
-        > <b><i>Foto uploaden</i></b><br>
+        > <b><i></i></b><br>
     </div>
 {% endblock %}
 
@@ -14,7 +23,7 @@
 
 {% block body %}
     <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">Annuleer</a>
-    <p>Let op: het bestand mag maximaal 10 Mb zijn!</p>
+    <p>Let op: het bestand mag maximaal 5 Mb zijn!</p>
     {{ form_start(form) }}
     {{ form_errors(form) }}
     <table>
