@@ -13,7 +13,7 @@ class Email1Type extends AbstractType
         $builder
             ->add('username', 'email', array(
                 'attr' => array(
-                    'style' => 'width:140px',
+                    'style' => 'width:200px',
                     'placeholder' => 'voorbeeld@voorbeeld.nl'
                 ),
             ))

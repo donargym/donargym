@@ -13,38 +13,38 @@ class ContactgegevensType extends AbstractType
         $builder
             ->add('straatnr', 'text', array(
                 'attr' => array(
-                    'style' => 'width:140px',
+                    'style' => 'width:200px',
                     'placeholder' => 'Straat + Nr'
                 ),
             ))
             ->add('postcode', 'text', array(
                 'attr' => array(
-                    'style' => 'width:140px',
+                    'style' => 'width:200px',
                     'placeholder' => 'Postcode'
                 ),
             ))
             ->add('plaats', 'text', array(
                 'attr' => array(
-                    'style' => 'width:140px',
+                    'style' => 'width:200px',
                     'placeholder' => 'Plaats'
                     ),
             ))
             ->add('tel1', 'text', array(
                 'attr' => array(
-                    'style' => 'width:140px',
+                    'style' => 'width:200px',
                     'placeholder' => '0612345678'
                     ),
             ))
             ->add('tel2', 'text', array(
                 'attr' => array(
-                    'style' => 'width:140px',
+                    'style' => 'width:200px',
                     'placeholder' => '0612345678',
                     ),
                 'required' => false
             ))
             ->add('tel3', 'text', array(
                 'attr' => array(
-                    'style' => 'width:140px',
+                    'style' => 'width:200px',
                     'placeholder' => '0612345678'
                     ),
                 'required' => false
