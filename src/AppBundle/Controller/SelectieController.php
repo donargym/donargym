@@ -278,7 +278,7 @@ class SelectieController extends BaseController
         }
     }
 
-    private function getOnePersoon($userObject, $id, $afmelden = null)
+    private function getOnePersoon($userObject, $id, $afmelden = false)
     {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
@@ -336,7 +336,7 @@ class SelectieController extends BaseController
 
                     $persoonItems->trainingen[$i]->trainingsdata = array();
                     $trainingsdata = $trainingen[$i]->getTrainingsdata();
-                    if ($afmelden == null) {
+                    if ($afmelden) {
                         $counter = 0;
                         for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
                             $lesdatum = $trainingsdata[$j]->getLesdatum();
@@ -380,15 +380,38 @@ class SelectieController extends BaseController
                         }
                         $persoonItems->trainingen[$i]->trainingsdata = array_reverse($persoonItems->trainingen[$i]->trainingsdata);
                     } else { //TODO: HIER BEN IK GEBLEVEN!!!!!!!!!!!!
-                        $counter = 0;
+                        $aantalAanwezig = 0;
+                        $aanwezigheid = $persoon->getAanwezigheid();
                         for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
-
+                            $counter = 0;
+                            $lesdatum = $trainingsdata[$j]->getLesdatum();
+                            if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
+                                for($k=(count($aanwezigheid)-1); $k >= 0; $k--) {
+                                    if($aanwezigheid[$k]->getTrainingsdata() == $trainingsdata[$j]) {
+                                        $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
+                                        $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                        $persoonItems->trainingen[$i]->trainingsdata[$j]->aanwezigheid = $aanwezigheid[$k]->getAanwezigheid();
+                                        if(strtolower($aanwezigheid[$k]->getAanwezigheid()) == 'x') {
+                                            $aantalAanwezig++;
+                                        }
+                                        $counter++;
+                                        if($counter == 9) {
+                                            $k=0;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if(count($aanwezigheid)==0) {
+                            $persoonItems->trainingen[$i]->percentageAanwezig = 100;
+                        } else {
+                            $persoonItems->trainingen[$i]->percentageAanwezig = (100*($aantalAanwezig/count($aanwezigheid)));
                         }
                     }
-                    // TODO: turnsters, stukje, aanwezigheid, doelen, trainingen
+                    // TODO: turnsters, aanwezigheid, doelen
                 }
             }
-            //var_dump($persoonItems);die;
+            var_dump($persoonItems->trainingen);die;
             return ($persoonItems);
         }
     }
