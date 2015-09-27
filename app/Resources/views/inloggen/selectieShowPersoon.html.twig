@@ -32,8 +32,9 @@
 {% block body %}
     {% for functie in persoonItems.functies %}
         <div style="margin-bottom: 75px;"><h2>{{ functie.groepNaam }} ({{ functie.functie }})</h2>
+            <hr>
 
-            {% if functie.functie == 'Turnster' %}
+            {#{% if functie.functie == 'Turnster' %}
                 <center>
                     <table>
                         <tr>
@@ -58,7 +59,7 @@
                         </tr>
                     </table>
                 </center>
-            {% endif %}
+            {% endif %}#}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
                 <h3>Turnsters
                 {% if functie.functie == 'Trainer' %}
@@ -111,13 +112,60 @@
                 </table>
             {% endif %}
             <h3>Presentie</h3>
-            <b>Woensdag</b>
-            Hallo
-            <a href="">Wedstrijduitslagen</a><br>
-            <a href="">Doelen</a><br>
-            <a href="">Adreslijst</a><br>
+            {% set trainingcount = 0 %}
+            {% set percentageAanwezig = 0 %}
+            {% for training in persoonItems.trainingen %}
+                {% if training.groepId == functie.groepId %}
+                    {% set trainingcount = trainingcount + 1 %}
+                    {% set percentageAanwezig = percentageAanwezig + training.percentageAanwezig %}
+                    <p><h4>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h4>
+                    <table border="1">
+                        <tr>
+                            {% for trainingsdatum in training.trainingsdata %}
+                                <td style="font-size: 13px;">{{ trainingsdatum.lesdatum }}</td>
+                            {% endfor %}
+                            <td style="font-size: 13px;"><b>% Aanwezig</b></td>
+                        </tr>
+                        <tr>
+                            {% for trainingsdatum in training.trainingsdata %}
+                                <td style="text-align: center;
+                                {% if trainingsdatum.aanwezigheid == 'A' or trainingsdatum.aanwezigheid == '-' %}
+                                        background-color: yellow; color: red; font-weight: bold;
+                                        {% endif %}
+                                    ">{{ trainingsdatum.aanwezigheid }}</td>
+                            {% endfor %}
+                            <td style="text-align:center; font-weight: bold; background-color: #{{ training.percentageKleur }};">{{ training.percentageAanwezig |round }}%</td>
+                        </tr>
+                    </table>
+                {% endif %}
+            {% endfor %}
+            {% if trainingcount > 0 %}
+                <p>Totaal % aanwezig: <span style="font-weight: bold; background-color: #{{ functie.percentageKleur }};">{{ functie.percentageAanwezig | round }}%</span></p>
+            {% endif %}
+            <p><a href="">Afmelden voor trainingen</a></p>
+
+            <p>
+                <table>
+                {% for test in persoonItems.test %}
+                    <tr>
+                        <td style="background-color: #{{ test.color }}">
+                            {{ test.percentage }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </p>
+
+            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
+                {#<a href="">Wedstrijduitslagen</a><br>#}
+            {% endif %}
+
+            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
+                {#<a href="">Doelen</a><br>#}
+            {% endif %}
+
+            {#<a href="">Adreslijst</a><br>#}
+            {#<a href="">Stukje</a><br>#}
         </div>
-
-
     {% endfor %}
 {% endblock %}
