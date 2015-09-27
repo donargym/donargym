@@ -365,12 +365,57 @@ class SelectieController extends BaseController
                         $persoonItems->functies[$i]->percentageAanwezig = 100;
                     }
                     $persoonItems->functies[$i]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->percentageAanwezig);
+
                     $groepFuncties = $groep->getFuncties();
                     for ($j = 0; $j < count($groepFuncties); $j++) {
                         if ($groepFuncties[$j]->getFunctie() == 'Turnster') {
                             $persoonItems->functies[$i]->turnster[$j] = new \stdClass();
                             /** @var Persoon $turnster */
                             $turnster = $groepFuncties[$j]->getPersoon();
+
+                            $aantalAanwezig = 0;
+                            $aantalTrainingen = 0;
+                            $totaalAanwezigheid = $turnster->getAanwezigheid();
+                            for($counter=(count($totaalAanwezigheid)-1);$counter >= 0;$counter--) {
+                                $check = false;
+                                /** @var Trainingsdata $trainingsdatum */
+                                $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
+                                $lesdatum = $trainingsdatum->getLesdatum();
+                                /** @var Trainingen $training */
+                                $training = $trainingsdatum->getTrainingen();
+                                /** @var Groepen $trainingGroep */
+                                $trainingGroep = $training->getGroep();
+                                if($trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
+                                    if (date('m', time()) < '08') {
+                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                        ) {
+                                            $check = true;
+                                        } else {
+                                            $counter = 0;
+                                        }
+                                    } else {
+                                        if ($lesdatum->format('Y') != date('Y', time())) {
+                                            $counter = 0;
+                                        } else {
+                                            $check = true;
+                                        }
+                                    }
+                                }
+                                if($check) {
+                                    $aantalTrainingen++;
+                                    if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
+                                        $aantalAanwezig++;
+                                    }
+                                }
+                            }
+                            if($aantalTrainingen != 0) {
+                                $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100*$aantalAanwezig/$aantalTrainingen;
+                            } else {
+                                $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100;
+                            }
+                            $persoonItems->functies[$i]->turnster[$j]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageAanwezig);
+
                             $persoonItems->functies[$i]->turnster[$j]->voornaam = $turnster->getVoornaam();
                             $persoonItems->functies[$i]->turnster[$j]->achternaam = $turnster->getAchternaam();
                             $persoonItems->functies[$i]->turnster[$j]->id = $turnster->getId();
@@ -394,6 +439,13 @@ class SelectieController extends BaseController
                     $persoonItems->trainingen[$i]->trainingsdata = array();
                     $trainingsdata = $trainingen[$i]->getTrainingsdata();
                     if ($afmelden) {
+                        //TODO: Als al afgemeld, dit weergeven (alle aanwezigheid turnster uit toekomst ophalen
+                        //TODO: Formulier van view maken
+                        //TODO: Verplicht reden opgeven
+                        //TODO: Verwerking POST
+                        //TODO: Toevoegen aan turnster aanwezigheid
+                        //TODO: checkboxes checked if foutmelding
+                        //TODO: Mail sturen na afmelding
                         $counter = 0;
                         for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
                             $lesdatum = $trainingsdata[$j]->getLesdatum();
@@ -489,12 +541,6 @@ class SelectieController extends BaseController
                 }
             }
         }
-        $test=array();
-        for($i=1;$i<=100;$i++) {
-            $persoonItems->test[$i] = new \stdClass();
-            $persoonItems->test[$i]->percentage = $i;
-            $persoonItems->test[$i]->color = $this->colorGenerator($i);
-        }
         /*var_dump($persoonItems);
         die;*/
         return ($persoonItems);
@@ -534,6 +580,7 @@ class SelectieController extends BaseController
         elseif($percentage>=10) {return 'FF1100';}
         else {return 'FF0000';} //Red
     }
+
     /**
      * @Security("has_role('ROLE_TURNSTER')")
      * @Route("/inloggen/selectie/{id}/", name="showPersoon")
@@ -558,6 +605,34 @@ class SelectieController extends BaseController
             'user' => $user,
             'persoonItems' => $persoonItems,
             'wedstrijdLinkItems' => $this->groepItems,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{id}/afmelden/{groepId}/", name="Afmelding")
+     * @Method({"GET", "POST"})
+     */
+    public
+    function Afmelding($id, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id, true);
+        return $this->render('inloggen/selectieAfmelden.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'groepId' => $groepId,
         ));
     }
 
@@ -767,7 +842,7 @@ class SelectieController extends BaseController
      * @Method({"GET", "POST"})
      */
     public
-    function removeAdminTrainerPage($trainerId, $turnsterId, Request $request)
+    function removeSelectieTurnsterPage($trainerId, $turnsterId, Request $request)
     {
         if ($request->getMethod() == 'GET') {
             $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();

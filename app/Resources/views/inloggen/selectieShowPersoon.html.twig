@@ -62,15 +62,20 @@
             {% endif %}#}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
                 <h3>Turnsters
-                {% if functie.functie == 'Trainer' %}
-                    <a href="{{ path('addSelectieTurnsterPage', { 'id': persoonItems.id, 'groepsId': functie.groepId }) }}"><img src="{{ asset('images/add.png') }}" width="18px" /></a>
-                {% endif %}
+                    {% if functie.functie == 'Trainer' %}
+                        <a href="{{ path('addSelectieTurnsterPage', { 'id': persoonItems.id, 'groepsId': functie.groepId }) }}"><img
+                                    src="{{ asset('images/add.png') }}" width="18px"/></a>
+                    {% endif %}
                 </h3>
                 <table border="1">
                     <tr style="font-weight: bold">
-                        <td>Naam</td><td>Geboortedatum</td><td>Voortgang</td><td>% aanwezig</td>
+                        <td>Naam</td>
+                        <td>Geboortedatum</td>
+                        <td>Voortgang</td>
+                        <td>% aanwezig</td>
                         {% if functie.functie == 'Trainer' %}
-                            <td></td><td></td>
+                            <td></td>
+                            <td></td>
                         {% endif %}
                     </tr>
                     {% for turnster in functie.turnster %}
@@ -90,9 +95,11 @@
 
                                 </a>
                             </td>
-                            <td>
+                            <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
                                 <a href="">
-
+                                    <span style="color: rgba(0,0,0,0.6);">
+                                        {{ turnster.percentageAanwezig | round }}%
+                                    </span>
                                 </a>
                             </td>
                             {% if functie.functie == 'Trainer' %}
@@ -131,30 +138,22 @@
                                 <td style="text-align: center;
                                 {% if trainingsdatum.aanwezigheid == 'A' or trainingsdatum.aanwezigheid == '-' %}
                                         background-color: yellow; color: red; font-weight: bold;
-                                        {% endif %}
-                                    ">{{ trainingsdatum.aanwezigheid }}</td>
+                                {% endif %}
+                                        ">{{ trainingsdatum.aanwezigheid }}</td>
                             {% endfor %}
-                            <td style="text-align:center; font-weight: bold; background-color: #{{ training.percentageKleur }};">{{ training.percentageAanwezig |round }}%</td>
+                            <td style="text-align:center; font-weight: bold; background-color: #{{ training.percentageKleur }}; color: rgba(0,0,0,0.6);">
+                                {{ training.percentageAanwezig |round }}%
+                            </td>
                         </tr>
                     </table>
                 {% endif %}
             {% endfor %}
             {% if trainingcount > 0 %}
-                <p>Totaal % aanwezig: <span style="font-weight: bold; background-color: #{{ functie.percentageKleur }};">{{ functie.percentageAanwezig | round }}%</span></p>
+                <p>Totaal % aanwezig: <span
+                            style="font-weight: bold; background-color: #{{ functie.percentageKleur }}; color: rgba(0,0,0,0.6);">
+                        {{ functie.percentageAanwezig | round }}%</span></p>
             {% endif %}
-            <p><a href="">Afmelden voor trainingen</a></p>
-
-            <p>
-                <table>
-                {% for test in persoonItems.test %}
-                    <tr>
-                        <td style="background-color: #{{ test.color }}">
-                            {{ test.percentage }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </table>
-            </p>
+            <p><a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden voor trainingen</a></p>
 
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
                 {#<a href="">Wedstrijduitslagen</a><br>#}

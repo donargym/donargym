@@ -1,0 +1,31 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getSelectieIndexPage') }}">Index</a>
+            >
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Afmelden voor trainingen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Afmelden voor trainingen</h1>
+{% endblock %}
+
+{% block body %}
+    {% for training in persoonItems.trainingen %}
+        {% if training.groepId == groepId %}
+            <p>
+            <h2>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h2>
+            <table border="1">
+            {% for trainingsdatum in training.trainingsdata %}
+                <tr><td>{{ trainingsdatum.lesdatum }}</td><td><input type="checkbox" name="{{ trainingsdatum.id }}" /></td></tr>
+            {% endfor %}
+            </table></p>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}
