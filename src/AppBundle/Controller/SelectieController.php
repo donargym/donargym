@@ -439,13 +439,17 @@ class SelectieController extends BaseController
                     $persoonItems->trainingen[$i]->trainingsdata = array();
                     $trainingsdata = $trainingen[$i]->getTrainingsdata();
                     if ($afmelden) {
-                        //TODO: Als al afgemeld, dit weergeven (alle aanwezigheid turnster uit toekomst ophalen
+                        //TODO: Als al afgemeld, dit weergeven (alle aanwezigheid turnster uit toekomst ophalen)
                         //TODO: Formulier van view maken
-                        //TODO: Verplicht reden opgeven
+                        //TODO: Verplicht reden/opmerking opgeven
                         //TODO: Verwerking POST
                         //TODO: Toevoegen aan turnster aanwezigheid
                         //TODO: checkboxes checked if foutmelding
-                        //TODO: Mail sturen na afmelding
+                        //TODO: Mail sturen na afmelding (naar trainers van de groep)
+                        //TODO: stukje toevoegen bij turnster
+                        //TODO: Adreslijst van groep bekijken
+                        //TODO: Overzicht afmeldingen en aanwezigheid voor trainer/assistent
+                        //TODO: Kruisjeslijst invullen voor trainer (data max een week oud)
                         $counter = 0;
                         for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
                             $lesdatum = $trainingsdata[$j]->getLesdatum();
