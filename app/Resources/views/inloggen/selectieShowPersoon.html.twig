@@ -96,7 +96,7 @@
                                 </a>
                             </td>
                             <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
-                                <a href="">
+                                <a href="" style="text-decoration: none">
                                     <span style="color: rgba(0,0,0,0.6);">
                                         {{ turnster.percentageAanwezig | round }}%
                                     </span>
@@ -163,8 +163,11 @@
                 {#<a href="">Doelen</a><br>#}
             {% endif %}
 
+            {% if (functie.functie == 'Turnster') %}
+                <a href="{{ path('addSelectieStukjePage', { 'id': persoonItems.id }) }}">Schrijf een stukje over jezelf</a><br>
+            {% endif %}
+
             {#<a href="">Adreslijst</a><br>#}
-            {#<a href="">Stukje</a><br>#}
         </div>
     {% endfor %}
 {% endblock %}

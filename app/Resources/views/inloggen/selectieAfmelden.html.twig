@@ -16,16 +16,30 @@
 {% endblock %}
 
 {% block body %}
+<form method="post" name="afmelden" action="">
     {% for training in persoonItems.trainingen %}
         {% if training.groepId == groepId %}
             <p>
             <h2>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h2>
             <table border="1">
             {% for trainingsdatum in training.trainingsdata %}
-                <tr><td>{{ trainingsdatum.lesdatum }}</td><td><input type="checkbox" name="{{ trainingsdatum.id }}" /></td></tr>
+                <tr>
+                    <td>{{ trainingsdatum.lesdatum }}</td>
+                    <td style="text-align: center">
+                    {% if trainingsdatum.afmelding is defined %}
+                        {{ trainingsdatum.afmelding }}
+                    {% else %}
+                        <input type="checkbox" name="{{ trainingsdatum.id }}" />
+                    {% endif %}
+                    </td>
+                </tr>
             {% endfor %}
             </table></p>
         {% endif %}
     {% endfor %}
 
+    <p><h3>Opmerking</h3>
+    <textarea name="reden" style="width: 300px; height: 150px;" required></textarea></p>
+    <input type="submit" value="Verstuur afmeldingen" />
+</form>
 {% endblock %}

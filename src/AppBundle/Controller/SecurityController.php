@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class SecurityController extends BaseController
 {
@@ -44,5 +45,14 @@ class SecurityController extends BaseController
      */
     public function loginCheckAction()
     {
+    }
+
+    /**
+     * @Route("/pre_logout", name="pre_logout")
+     */
+    public function preLogout()
+    {
+        unset($_SESSION['username']);
+        return $this->redirectToRoute('logout');
     }
 }

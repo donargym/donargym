@@ -77,6 +77,10 @@ class SelectieController extends BaseController
         return ($user);
     }
 
+    /**
+     * @param $userObject
+     * @return array
+     */
     private function getBasisPersoonsGegevens($userObject)
     {
         $personen = $userObject->getPersoon();
@@ -322,11 +326,15 @@ class SelectieController extends BaseController
                     $persoonItems->functies[$i]->groepId = $groep->getId();
                     $persoonItems->functies[$i]->functie = $functies[$i]->getFunctie();
                     $persoonItems->functies[$i]->turnster = array();
+                    if($persoonItems->functies[$i]->functie == 'Turnster') {
+                        $stukje = $persoon->getStukje();
+                        $persoonItems->stukje = $stukje->getAll();
+                    }
 
                     $aantalAanwezig = 0;
                     $aantalTrainingen = 0;
                     $totaalAanwezigheid = $persoon->getAanwezigheid();
-                    for($counter=(count($totaalAanwezigheid)-1);$counter >= 0;$counter--) {
+                    for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
                         $check = false;
                         /** @var Trainingsdata $trainingsdatum */
                         $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
@@ -335,7 +343,7 @@ class SelectieController extends BaseController
                         $training = $trainingsdatum->getTrainingen();
                         /** @var Groepen $trainingGroep */
                         $trainingGroep = $training->getGroep();
-                        if($trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
+                        if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
                             if (date('m', time()) < '08') {
                                 if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
                                     ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
@@ -352,15 +360,15 @@ class SelectieController extends BaseController
                                 }
                             }
                         }
-                        if($check) {
+                        if ($check) {
                             $aantalTrainingen++;
                             if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
                                 $aantalAanwezig++;
                             }
                         }
                     }
-                    if($aantalTrainingen != 0) {
-                        $persoonItems->functies[$i]->percentageAanwezig = 100*$aantalAanwezig/$aantalTrainingen;
+                    if ($aantalTrainingen != 0) {
+                        $persoonItems->functies[$i]->percentageAanwezig = 100 * $aantalAanwezig / $aantalTrainingen;
                     } else {
                         $persoonItems->functies[$i]->percentageAanwezig = 100;
                     }
@@ -376,7 +384,7 @@ class SelectieController extends BaseController
                             $aantalAanwezig = 0;
                             $aantalTrainingen = 0;
                             $totaalAanwezigheid = $turnster->getAanwezigheid();
-                            for($counter=(count($totaalAanwezigheid)-1);$counter >= 0;$counter--) {
+                            for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
                                 $check = false;
                                 /** @var Trainingsdata $trainingsdatum */
                                 $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
@@ -385,7 +393,7 @@ class SelectieController extends BaseController
                                 $training = $trainingsdatum->getTrainingen();
                                 /** @var Groepen $trainingGroep */
                                 $trainingGroep = $training->getGroep();
-                                if($trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
+                                if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
                                     if (date('m', time()) < '08') {
                                         if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
                                             ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
@@ -402,15 +410,15 @@ class SelectieController extends BaseController
                                         }
                                     }
                                 }
-                                if($check) {
+                                if ($check) {
                                     $aantalTrainingen++;
                                     if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
                                         $aantalAanwezig++;
                                     }
                                 }
                             }
-                            if($aantalTrainingen != 0) {
-                                $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100*$aantalAanwezig/$aantalTrainingen;
+                            if ($aantalTrainingen != 0) {
+                                $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100 * $aantalAanwezig / $aantalTrainingen;
                             } else {
                                 $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100;
                             }
@@ -423,7 +431,6 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
                         }
                     }
-
                 }
                 /** @var Trainingen $trainingen */
                 $trainingen = $persoon->getTrainingen();
@@ -439,24 +446,20 @@ class SelectieController extends BaseController
                     $persoonItems->trainingen[$i]->trainingsdata = array();
                     $trainingsdata = $trainingen[$i]->getTrainingsdata();
                     if ($afmelden) {
-                        //TODO: Als al afgemeld, dit weergeven (alle aanwezigheid turnster uit toekomst ophalen)
-                        //TODO: Formulier van view maken
-                        //TODO: Verplicht reden/opmerking opgeven
-                        //TODO: Verwerking POST
-                        //TODO: Toevoegen aan turnster aanwezigheid
-                        //TODO: checkboxes checked if foutmelding
-                        //TODO: Mail sturen na afmelding (naar trainers van de groep inclusief dag en datum van trainingen)
-                        //TODO: stukje toevoegen bij turnster
-                        //TODO: Adreslijst van groep bekijken
-                        //TODO: Overzicht afmeldingen en aanwezigheid voor trainer/assistent
-                        //TODO: Kruisjeslijst invullen voor trainer (data max een week oud) (als afgemeld maar toch aanwezig?)
                         $counter = 0;
+                        $aanwezigheid = $persoon->getAanwezigheid();
                         for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
                             $lesdatum = $trainingsdata[$j]->getLesdatum();
                             if (strtotime($lesdatum->format('d-m-Y')) >= time()) {
                                 $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                 $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
                                 $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                /** @var Aanwezigheid $aanwezig */
+                                foreach($aanwezigheid as $aanwezig) {
+                                    if($aanwezig->getTrainingsdata() == $trainingsdata[$j]) {
+                                        $persoonItems->trainingen[$i]->trainingsdata[$j]->afmelding = $aanwezig->getAanwezig();
+                                    }
+                                }
                                 $counter++;
                                 if ($counter == 9) {
                                     $j = 0;
@@ -541,13 +544,24 @@ class SelectieController extends BaseController
                         }
                         $persoonItems->trainingen[$i]->percentageKleur = $this->colorGenerator($persoonItems->trainingen[$i]->percentageAanwezig);
                     }
-                    // TODO: turnsters, aanwezigheid, doelen
+                    // TODO: turnsters, doelen
                 }
+                return ($persoonItems);
             }
         }
         /*var_dump($persoonItems);
         die;*/
-        return ($persoonItems);
+    }
+
+    private function getPersoonObject($userObject, $id)
+    {
+        $personen = $userObject->getPersoon();
+        foreach ($personen as $persoon) {
+            /** @var Persoon $persoon */
+            if ($persoon->getId() == $id) {
+                return $persoon;
+            }
+        }
     }
 
     private function colorGenerator($percentage)
@@ -618,7 +632,7 @@ class SelectieController extends BaseController
      * @Method({"GET", "POST"})
      */
     public
-    function Afmelding($id, $groepId)
+    function Afmelding($id, $groepId, Request $request)
     {
         $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
         $this->groepItems = $this->wedstrijdLinkItems[0];
@@ -629,6 +643,93 @@ class SelectieController extends BaseController
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $id, true);
+        if ($request->getMethod() == 'POST') {
+            /** @var Persoon $persoonObject */
+            $persoonObject = $this->getPersoonObject($userObject, $id);
+            $afmeldingsData = array();
+            foreach ($_POST as $key=>$value) {
+                if($key != "reden") {
+                    $em = $this->getDoctrine()->getManager();
+                    $query = $em->createQuery(
+                    'SELECT trainingsdata
+                    FROM AppBundle:Trainingsdata trainingsdata
+                    WHERE trainingsdata.id = :id')
+                    ->setParameter('id', $key);
+                    /** @var Trainingsdata $trainingsdatum */
+                    $trainingsdatum = $query->setMaxResults(1)->getOneOrNullResult();
+                    $aanwezigheid = new Aanwezigheid();
+                    $aanwezigheid->setAanwezig('A');
+                    $aanwezigheid->setPersoon($persoonObject);
+                    $aanwezigheid->setTrainingsdata($trainingsdatum);
+                    $persoonObject->addAanwezigheid($aanwezigheid);
+                    $lesdatum = $trainingsdatum->getLesdatum();
+                    /** @var Trainingen $training */
+                    $training = $trainingsdatum->getTrainingen();
+                    $trainingsdag = $training->getDag();
+                    $afmeldingsData[] = $trainingsdag . " " . $lesdatum->format('d-m-Y');;
+                    $em->persist($persoonObject);
+                    $em->flush();
+                }
+                else {
+                    $reden = $value;
+                }
+            }
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+            'SELECT functie
+            FROM AppBundle:Functie functie
+            WHERE functie.groep = :id
+            AND functie.functie = :functie')
+            ->setParameter('id', $groepId)
+            ->setParameter('functie', 'Trainer');
+            $trainers = $query->getResult();
+            foreach ($trainers as $trainer) {
+                $persoon = $trainer->getPersoon();
+                /** @var User $user */
+                $user = $persoon->getUser();
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
+                    ->setFrom($_SESSION['username'])
+                    ->setTo($user->getUsername())
+                    ->setBody(
+                        $this->renderView(
+                            'mails/afmelding.txt.twig',
+                            array(
+                                'voornaam' => $persoonItems->voornaam,
+                                'achternaam' => $persoonItems->achternaam,
+                                'afmeldingsData' => $afmeldingsData,
+                                'reden' => $reden,
+                            )
+                        ),
+                        'text/plain'
+                    );
+                $this->get('mailer')->send($message);
+
+                if($user->getEmail2()) {
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
+                        ->setFrom($_SESSION['username'])
+                        ->setTo($user->getEmail2())
+                        ->setBody(
+                            $this->renderView(
+                                'mails/afmelding.txt.twig',
+                                array(
+                                    'voornaam' => $persoonItems->voornaam,
+                                    'achternaam' => $persoonItems->achternaam,
+                                    'afmeldingsData' => $afmeldingsData,
+                                    'reden' => $reden,
+                                )
+                            ),
+                            'text/plain'
+                        );
+                    $this->get('mailer')->send($message);
+                }
+
+            }
+            return $this->redirectToRoute('showPersoon', array(
+                'id' => $id
+            ));
+        }
         return $this->render('inloggen/selectieAfmelden.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
@@ -637,6 +738,50 @@ class SelectieController extends BaseController
             'persoonItems' => $persoonItems,
             'wedstrijdLinkItems' => $this->groepItems,
             'groepId' => $groepId,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{id}/stukje/", name="addSelectieStukjePage")
+     * @Method({"GET", "POST"})
+     */
+    public function addStukje($id, Request $request)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id, true);
+        if ($request->getMethod() == 'POST') {
+            /** @var Persoon $persoonObject */
+            $persoonObject = $this->getPersoonObject($userObject, $id);
+            $stukje = $persoonObject->getStukje();
+            $stukje->setLeren($request->request->get('leren'));
+            $stukje->setOmdattoestelleuk($request->request->get('omdattoestelleuk'));
+            $stukje->setElement($request->request->get('element'));
+            $stukje->setOverig($request->request->get('overig'));
+            $stukje->setToestelleuk($request->request->get('toestelleuk'));
+            $stukje->setVoorbeeld($request->request->get('voorbeeld'));
+            $stukje->setWedstrijd($request->request->get('wedstrijd'));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($stukje);
+            $em->flush();
+            return $this->redirectToRoute('showPersoon', array(
+                'id' => $id
+            ));
+        }
+        return $this->render('inloggen/selectieAddStukje.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -790,7 +935,7 @@ class SelectieController extends BaseController
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('Inloggegevens website Donar')
-                ->setFrom('webmaster@donargym.nl')
+                ->setFrom($_SESSION['username'])
                 ->setTo($user->getUsername())
                 ->setBody(
                     $this->renderView(
@@ -809,7 +954,7 @@ class SelectieController extends BaseController
             if ($user->getEmail2()) {
                 $message = \Swift_Message::newInstance()
                     ->setSubject('Inloggegevens website Donar')
-                    ->setFrom('webmaster@donargym.nl')
+                    ->setFrom($_SESSION['username'])
                     ->setTo($user->getEmail2())
                     ->setBody(
                         $this->renderView(
