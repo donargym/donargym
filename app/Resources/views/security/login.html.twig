@@ -2,10 +2,6 @@
 
 {% block body %}
     <h1>Inloggen</h1>
-    <p><div><span style="color:red;">We zijn bezig met wat veranderingen in de website.<br>
-    Op dit moment kan er niet ingelogd worden. <br>
-    We hopen binnenkort nieuwe inloggegevens te <br>
-    kunnen versturen zodat iedereen weer kan inloggen.</span></div></p>
     {% if error %}
         <div><span style="color:red;">{{ error.messageKey|trans(error.messageData, 'security') }}</span></div>
     {% endif %}
