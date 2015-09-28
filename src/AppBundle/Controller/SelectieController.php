@@ -445,11 +445,11 @@ class SelectieController extends BaseController
                         //TODO: Verwerking POST
                         //TODO: Toevoegen aan turnster aanwezigheid
                         //TODO: checkboxes checked if foutmelding
-                        //TODO: Mail sturen na afmelding (naar trainers van de groep)
+                        //TODO: Mail sturen na afmelding (naar trainers van de groep inclusief dag en datum van trainingen)
                         //TODO: stukje toevoegen bij turnster
                         //TODO: Adreslijst van groep bekijken
                         //TODO: Overzicht afmeldingen en aanwezigheid voor trainer/assistent
-                        //TODO: Kruisjeslijst invullen voor trainer (data max een week oud)
+                        //TODO: Kruisjeslijst invullen voor trainer (data max een week oud) (als afgemeld maar toch aanwezig?)
                         $counter = 0;
                         for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
                             $lesdatum = $trainingsdata[$j]->getLesdatum();
