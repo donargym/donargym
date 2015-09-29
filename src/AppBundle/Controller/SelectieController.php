@@ -428,7 +428,140 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j]->achternaam = $turnster->getAchternaam();
                             $persoonItems->functies[$i]->turnster[$j]->id = $turnster->getId();
                             $geboortedatum = $turnster->getGeboortedatum();
+                            $turnsterUser = $turnster->getUser();
+                            $persoonItems->functies[$i]->turnster[$j]->email = $turnsterUser->getUsername();
+                            $persoonItems->functies[$i]->turnster[$j]->email2 = $turnsterUser->getEmail2();
+                            $persoonItems->functies[$i]->turnster[$j]->straatNr = $turnsterUser->getStraatnr();
+                            $persoonItems->functies[$i]->turnster[$j]->postcode = $turnsterUser->getPostcode();
+                            $persoonItems->functies[$i]->turnster[$j]->plaats = $turnsterUser->getPlaats();
+                            $persoonItems->functies[$i]->turnster[$j]->tel1 = $turnsterUser->getTel1();
+                            $persoonItems->functies[$i]->turnster[$j]->tel2 = $turnsterUser->getTel2();
+                            $persoonItems->functies[$i]->turnster[$j]->tel3 = $turnsterUser->getTel3();
                             $persoonItems->functies[$i]->turnster[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+                        } elseif ($groepFuncties[$j]->getFunctie() == 'Trainer') {
+                            $persoonItems->functies[$i]->trainer[$j] = new \stdClass();
+                            /** @var Persoon $trainer */
+                            $trainer = $groepFuncties[$j]->getPersoon();
+
+                            $aantalAanwezig = 0;
+                            $aantalTrainingen = 0;
+                            $totaalAanwezigheid = $trainer->getAanwezigheid();
+                            for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
+                                $check = false;
+                                /** @var Trainingsdata $trainingsdatum */
+                                $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
+                                $lesdatum = $trainingsdatum->getLesdatum();
+                                /** @var Trainingen $training */
+                                $training = $trainingsdatum->getTrainingen();
+                                /** @var Groepen $trainingGroep */
+                                $trainingGroep = $training->getGroep();
+                                if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
+                                    if (date('m', time()) < '08') {
+                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                        ) {
+                                            $check = true;
+                                        } else {
+                                            $counter = 0;
+                                        }
+                                    } else {
+                                        if ($lesdatum->format('Y') != date('Y', time())) {
+                                            $counter = 0;
+                                        } else {
+                                            $check = true;
+                                        }
+                                    }
+                                }
+                                if ($check) {
+                                    $aantalTrainingen++;
+                                    if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
+                                        $aantalAanwezig++;
+                                    }
+                                }
+                            }
+                            if ($aantalTrainingen != 0) {
+                                $persoonItems->functies[$i]->trainer[$j]->percentageAanwezig = 100 * $aantalAanwezig / $aantalTrainingen;
+                            } else {
+                                $persoonItems->functies[$i]->trainer[$j]->percentageAanwezig = 100;
+                            }
+                            $persoonItems->functies[$i]->trainer[$j]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->trainer[$j]->percentageAanwezig);
+
+                            $persoonItems->functies[$i]->trainer[$j]->voornaam = $trainer->getVoornaam();
+                            $persoonItems->functies[$i]->trainer[$j]->achternaam = $trainer->getAchternaam();
+                            $persoonItems->functies[$i]->trainer[$j]->id = $trainer->getId();
+                            $geboortedatum = $trainer->getGeboortedatum();
+                            $trainerUser = $trainer->getUser();
+                            $persoonItems->functies[$i]->trainer[$j]->email = $trainerUser->getUsername();
+                            $persoonItems->functies[$i]->trainer[$j]->email2 = $trainerUser->getEmail2();
+                            $persoonItems->functies[$i]->trainer[$j]->straatNr = $trainerUser->getStraatnr();
+                            $persoonItems->functies[$i]->trainer[$j]->postcode = $trainerUser->getPostcode();
+                            $persoonItems->functies[$i]->trainer[$j]->plaats = $trainerUser->getPlaats();
+                            $persoonItems->functies[$i]->trainer[$j]->tel1 = $trainerUser->getTel1();
+                            $persoonItems->functies[$i]->trainer[$j]->tel2 = $trainerUser->getTel2();
+                            $persoonItems->functies[$i]->trainer[$j]->tel3 = $trainerUser->getTel3();
+                            $persoonItems->functies[$i]->trainer[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+                        } elseif ($groepFuncties[$j]->getFunctie() == 'Assistent-Trainer') {
+                            $persoonItems->functies[$i]->assistent[$j] = new \stdClass();
+                            /** @var Persoon $assistent */
+                            $assistent = $groepFuncties[$j]->getPersoon();
+
+                            $aantalAanwezig = 0;
+                            $aantalTrainingen = 0;
+                            $totaalAanwezigheid = $assistent->getAanwezigheid();
+                            for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
+                                $check = false;
+                                /** @var Trainingsdata $trainingsdatum */
+                                $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
+                                $lesdatum = $trainingsdatum->getLesdatum();
+                                /** @var Trainingen $training */
+                                $training = $trainingsdatum->getTrainingen();
+                                /** @var Groepen $trainingGroep */
+                                $trainingGroep = $training->getGroep();
+                                if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
+                                    if (date('m', time()) < '08') {
+                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                        ) {
+                                            $check = true;
+                                        } else {
+                                            $counter = 0;
+                                        }
+                                    } else {
+                                        if ($lesdatum->format('Y') != date('Y', time())) {
+                                            $counter = 0;
+                                        } else {
+                                            $check = true;
+                                        }
+                                    }
+                                }
+                                if ($check) {
+                                    $aantalTrainingen++;
+                                    if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
+                                        $aantalAanwezig++;
+                                    }
+                                }
+                            }
+                            if ($aantalTrainingen != 0) {
+                                $persoonItems->functies[$i]->assistent[$j]->percentageAanwezig = 100 * $aantalAanwezig / $aantalTrainingen;
+                            } else {
+                                $persoonItems->functies[$i]->assistent[$j]->percentageAanwezig = 100;
+                            }
+                            $persoonItems->functies[$i]->assistent[$j]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->assistent[$j]->percentageAanwezig);
+
+                            $persoonItems->functies[$i]->assistent[$j]->voornaam = $assistent->getVoornaam();
+                            $persoonItems->functies[$i]->assistent[$j]->achternaam = $assistent->getAchternaam();
+                            $persoonItems->functies[$i]->assistent[$j]->id = $assistent->getId();
+                            $geboortedatum = $assistent->getGeboortedatum();
+                            $assistentUser = $assistent->getUser();
+                            $persoonItems->functies[$i]->assistent[$j]->email = $assistentUser->getUsername();
+                            $persoonItems->functies[$i]->assistent[$j]->email2 = $assistentUser->getEmail2();
+                            $persoonItems->functies[$i]->assistent[$j]->straatNr = $assistentUser->getStraatnr();
+                            $persoonItems->functies[$i]->assistent[$j]->postcode = $assistentUser->getPostcode();
+                            $persoonItems->functies[$i]->assistent[$j]->plaats = $assistentUser->getPlaats();
+                            $persoonItems->functies[$i]->assistent[$j]->tel1 = $assistentUser->getTel1();
+                            $persoonItems->functies[$i]->assistent[$j]->tel2 = $assistentUser->getTel2();
+                            $persoonItems->functies[$i]->assistent[$j]->tel3 = $assistentUser->getTel3();
+                            $persoonItems->functies[$i]->assistent[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
                         }
                     }
                 }
@@ -740,6 +873,35 @@ class SelectieController extends BaseController
             'groepId' => $groepId,
         ));
     }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{id}/adreslijst/{groepId}/", name="viewAdreslijst")
+     * @Method({"GET", "POST"})
+     */
+    public
+    function viewAdreslijst($id, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id, true);
+        return $this->render('inloggen/selectieAdreslijst.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'groepId' => $groepId,
+        ));
+    }
+
 
     /**
      * @Security("has_role('ROLE_TURNSTER')")

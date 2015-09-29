@@ -61,6 +61,69 @@
                 </center>
             {% endif %}#}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
+            <h3>(Assistent-)Trainers</h3>
+            <table border="1">
+                <tr style="font-weight: bold">
+                    <td>Naam</td>
+                    <td>Geboortedatum</td>
+                    <td>% aanwezig</td>
+                </tr>
+
+                {% if functie.trainer is defined %}
+                    {% for turnster in functie.trainer %}
+                        <tr>
+                            <td>
+                                <a href="">
+                                    {{ turnster.voornaam }} {{ turnster.achternaam }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="">
+                                    {{ turnster.geboortedatum }}
+                                </a>
+                            </td>
+                            <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
+                                <a href="" style="text-decoration: none">
+                                        <span style="color: rgba(0,0,0,0.6);">
+                                            {{ turnster.percentageAanwezig | round }}%
+                                        </span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+
+                {% if functie.assistent is defined %}
+                    {% for turnster in functie.assistent %}
+                        <tr>
+                            <td>
+                                <a href="">
+                                    {{ turnster.voornaam }} {{ turnster.achternaam }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="">
+                                    {{ turnster.geboortedatum }}
+                                </a>
+                            </td>
+                            <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
+                                <a href="" style="text-decoration: none">
+                                        <span style="color: rgba(0,0,0,0.6);">
+                                            {{ turnster.percentageAanwezig | round }}%
+                                        </span>
+                                </a>
+                            </td>
+                            {% if functie.functie == 'Trainer' %}
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
                 <h3>Turnsters
                     {% if functie.functie == 'Trainer' %}
                         <a href="{{ path('addSelectieTurnsterPage', { 'id': persoonItems.id, 'groepsId': functie.groepId }) }}"><img
@@ -78,44 +141,47 @@
                             <td></td>
                         {% endif %}
                     </tr>
-                    {% for turnster in functie.turnster %}
-                        <tr>
-                            <td>
-                                <a href="">
-                                    {{ turnster.voornaam }} {{ turnster.achternaam }}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="">
-                                    {{ turnster.geboortedatum }}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="">
 
-                                </a>
-                            </td>
-                            <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
-                                <a href="" style="text-decoration: none">
-                                    <span style="color: rgba(0,0,0,0.6);">
-                                        {{ turnster.percentageAanwezig | round }}%
-                                    </span>
-                                </a>
-                            </td>
-                            {% if functie.functie == 'Trainer' %}
+                    {% if functie.turnster is defined %}
+                        {% for turnster in functie.turnster %}
+                            <tr>
                                 <td>
                                     <a href="">
-                                        <img src="{{ asset('images/edit.png') }}" width="18px"/>
+                                        {{ turnster.voornaam }} {{ turnster.achternaam }}
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="{{ path('removeSelectieTurnsterPage', { 'trainerId': persoonItems.id, 'turnsterId': turnster.id }) }}">
-                                        <img src="{{ asset('images/remove.png') }}" width="18px"/>
+                                    <a href="">
+                                        {{ turnster.geboortedatum }}
                                     </a>
                                 </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
+                                <td>
+                                    <a href="">
+
+                                    </a>
+                                </td>
+                                <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
+                                    <a href="" style="text-decoration: none">
+                                        <span style="color: rgba(0,0,0,0.6);">
+                                            {{ turnster.percentageAanwezig | round }}%
+                                        </span>
+                                    </a>
+                                </td>
+                                {% if functie.functie == 'Trainer' %}
+                                    <td>
+                                        <a href="">
+                                            <img src="{{ asset('images/edit.png') }}" width="18px"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('removeSelectieTurnsterPage', { 'trainerId': persoonItems.id, 'turnsterId': turnster.id }) }}">
+                                            <img src="{{ asset('images/remove.png') }}" width="18px"/>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                 </table>
             {% endif %}
             <h3>Presentie</h3>
@@ -164,10 +230,10 @@
             {% endif %}
 
             {% if (functie.functie == 'Turnster') %}
-                <a href="{{ path('addSelectieStukjePage', { 'id': persoonItems.id }) }}">Schrijf een stukje over jezelf</a><br>
+                <p><a href="{{ path('addSelectieStukjePage', { 'id': persoonItems.id }) }}">Schrijf een stukje over jezelf</a></p>
             {% endif %}
 
-            {#<a href="">Adreslijst</a><br>#}
+            <p><a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a></p>
         </div>
     {% endfor %}
 {% endblock %}

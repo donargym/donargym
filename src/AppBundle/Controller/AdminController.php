@@ -309,8 +309,12 @@ class AdminController extends BaseController
         $this->calendarItems = $this->getCalendarItems();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
-            'SELECT persoon
-                FROM AppBundle:Persoon persoon');
+            'SELECT functie
+                FROM AppBundle:Functie functie
+                WHERE functie.functie = :functie
+                OR functie.functie = :functie2')
+            ->setParameter('functie', 'Trainer')
+            ->setParameter('functie2', 'Assistent-Trainer');
         $personen = $query->getResult();
         $persoonItems = array();
         for($i=0;$i<count($personen);$i++)
