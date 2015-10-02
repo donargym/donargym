@@ -220,6 +220,17 @@
                         {{ functie.percentageAanwezig | round }}%</span></p>
             <p><a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden voor trainingen</a></p>
 
+            {% if (functie.functie == 'Turnster') %}
+                {% if persoonItems.categorie == 'Jeugd 2' or persoonItems.categorie == 'Junior' or persoonItems.categorie == 'Senior' %}
+                <p>Vloermuziek:
+                    {% if persoonItems.vloermuziek %}<a href="http://www.donargym.nl/uploads/vloermuziek/{{ persoonItems.vloermuziek }}" target="blank"><img src="{{ asset('images/listen.png') }}" width="18px"/></a>{% endif %}
+                    <a href="{{ path('addSelectieVloermuziekPage', { 'persoonId': persoonItems.id, 'groepId': functie.groepId, 'turnsterId': persoonItems.id }) }}">
+                        <img src="{{ asset('images/add.png') }}" width="25px"/>
+                    </a>
+                </p>
+                {% endif %}
+            {% endif %}
+
             {% if (functie.functie == 'Trainer') %}
                 <p><a href="{{  path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Kruisjeslijst invullen</a></p>
             {% endif %}
@@ -246,6 +257,10 @@
 
             {% if (functie.functie == 'Turnster') %}
                 <p><a href="{{ path('addSelectieStukjePage', { 'id': persoonItems.id }) }}">Schrijf een stukje over jezelf</a></p>
+            {% endif %}
+
+            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
+                <p><a href="{{ path('viewVloermuziek', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Vloermuziek</a></p>
             {% endif %}
 
             <p><a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a></p>

@@ -41,6 +41,12 @@ class Persoon
     private $geboortedatum;
 
     /**
+     * @ORM\OneToOne(targetEntity="Vloermuziek", cascade={"persist", "remove"}, orphanRemoval=TRUE))
+     * @ORM\JoinColumn(name="vloermuziek_id", referencedColumnName="id")
+     **/
+    private $vloermuziek;
+
+    /**
      * @ORM\OneToOne(targetEntity="SelectieFoto", cascade={"persist", "remove"}, orphanRemoval=TRUE))
      * @ORM\JoinColumn(name="foto_id", referencedColumnName="id")
      **/
@@ -110,6 +116,9 @@ class Persoon
         $geboortedatum = $this->getGeboortedatum();
         $persoon->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
         $foto = $this->getFoto();
+        $vloermuziek = $this->getVloermuziek();
+        if ($vloermuziek == null) {$persoon->vloermuziek = null;}
+        else {$persoon->vloermuziek = $vloermuziek->getLocatie();}
         if ($foto == null) {$persoon->foto = "plaatje.jpg";}
         else {$persoon->foto = $foto->getLocatie();}
         $persoon->categorie = $this->categorie(strtotime($this->getGeboortedatum()));
@@ -271,6 +280,29 @@ class Persoon
     public function getFoto()
     {
         return $this->foto;
+    }
+
+    /**
+     * Set foto
+     *
+     * @param \AppBundle\Entity\SelectieFoto $foto
+     * @return Persoon
+     */
+    public function setVloermuziek(\AppBundle\Entity\Vloermuziek $vloermuziek = null)
+    {
+        $this->vloermuziek = $vloermuziek;
+
+        return $this;
+    }
+
+    /**
+     * Get foto
+     *
+     * @return \AppBundle\Entity\SelectieFoto
+     */
+    public function getVloermuziek()
+    {
+        return $this->vloermuziek;
     }
 
     /**

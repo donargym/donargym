@@ -12,6 +12,7 @@ use AppBundle\Entity\SelectieFoto;
 use AppBundle\Entity\Stukje;
 use AppBundle\Entity\Trainingen;
 use AppBundle\Entity\Trainingsdata;
+use AppBundle\Entity\Vloermuziek;
 use AppBundle\Entity\Wedstrijduitslagen;
 use AppBundle\Form\Type\ContactgegevensType;
 use AppBundle\Form\Type\Email1Type;
@@ -315,6 +316,9 @@ class SelectieController extends BaseController
                 } else {
                     $persoonItems->foto = $foto->getLocatie();
                 }
+                $vloermuziek = $persoon->getVloermuziek();
+                if ($vloermuziek == null) {$persoonItems->vloermuziek = null;}
+                else {$persoonItems->vloermuziek = $vloermuziek->getLocatie();}
                 $geboortedatum = $persoon->getGeboortedatum();
                 $persoonItems->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
                 $persoonItems->categorie = $persoon->categorie(strtotime($geboortedatum));
@@ -2377,7 +2381,7 @@ class SelectieController extends BaseController
      * @Method({"GET"})
      */
     public
-    function viewSelectieTurnster(Request $request, $persoonId, $turnsterId, $groepId)
+    function viewSelectieTurnster($persoonId, $turnsterId, $groepId)
     {
         $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
         $this->groepItems = $this->wedstrijdLinkItems[0];
@@ -2407,5 +2411,136 @@ class SelectieController extends BaseController
         ));
     }
 
-    //todo: edit turnster functie en view
+    private function getVloermuziekjes($groepObject)
+    {
+        /** @var Groepen $groepObject */
+        $vloermuziek = array();
+        $personen = $groepObject->getPeople();
+        for ($i=0; $i<count($personen); $i++) {
+            $functies = $personen[$i]->getFunctie();
+            foreach ($functies as $functie) {
+                if($functie->getFunctie() == 'Turnster' && $functie->getGroep() == $groepObject) {
+                    $persoonInfo = $personen[$i]->getAll();
+                    if ($persoonInfo->categorie == 'Jeugd 2' || $persoonInfo->categorie == 'Junior' || $persoonInfo->categorie == 'Senior')
+                    {
+                        $vloermuziek[$i] = $persoonInfo;
+                    }
+                }
+            }
+        }
+        return $vloermuziek;
+    }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{persoonId}/viewvloermuziek/{groepId}/", name="viewVloermuziek")
+     * @Method({"GET"})
+     */
+    public function viewVloermuziek($persoonId, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer', 'Assistent-Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $groepObject = $response['groep'];
+            $vloermuziek = $this->getVloermuziekjes($groepObject);
+        }
+        return $this->render('inloggen/selectieViewVloermuziek.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' => $groepId,
+            'vloermuziek' => $vloermuziek,
+        ));
+    }
+
+    /**
+     * @Template()
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{persoonId}/addVloermuziek/{groepId}/{turnsterId}/", name="addSelectieVloermuziekPage")
+     * @Method({"GET", "POST"})
+     */
+    public
+    function addSelectieVloermuziekPageAction(Request $request, $persoonId, $turnsterId, $groepId)
+    {
+        $error = null;
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer', 'Turnster');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            if (($functie == 'Turnster' && $persoonId == $turnsterId) || $functie == 'Trainer') {
+                $vloermuziek = new Vloermuziek();
+                /** @var Groepen $groepObject */
+                $groepObject = $response['groep'];
+                $personen = $groepObject->getPeople();
+                foreach ($personen as $persoonObj) {
+                    if ($persoonObj->getId() == $turnsterId) {
+                        $persoonObject = $persoonObj;
+                        /** @var Persoon $persoonObject */
+                        $turnster = new \stdClass();
+                        $turnster->id = $persoonObject->getId();
+                        $turnster->voornaam = $persoonObject->getVoornaam();
+                        $turnster->achternaam = $persoonObject->getAchternaam();
+                        break;
+                    }
+                }
+                $form = $this->createFormBuilder($vloermuziek)
+                    ->add('file')
+                    ->add('uploadBestand', 'submit')
+                    ->getForm();
+                $form->handleRequest($request);
+
+                if ($form->isValid()) {
+                    $extensions = array('mp3', 'wma');
+                    if(in_array(strtolower($vloermuziek->getFile()->getClientOriginalExtension()), $extensions)) {
+                        $persoonObject->setVloermuziek($vloermuziek);
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($persoonObject);
+                        $em->flush();
+                        if ($persoonId == $turnsterId) {
+                            return $this->redirectToRoute('showPersoon', array(
+                                'id' => $persoonId
+                            ));
+                        }
+                        return $this->redirectToRoute('viewVloermuziek', array(
+                            'persoonId' => $persoonId,
+                            'groepId' => $groepId,
+                        ));
+                    } else {$error = 'Please upload a valid audio file: mp3 or wma';}
+                }
+                return $this->render('inloggen/selectieAddVloermuziek.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'form' => $form->createView(),
+                    'wedstrijdLinkItems' => $this->groepItems,
+                    'persoon' => $persoon,
+                    'user' => $user,
+                    'persoonItems' => $persoonItems,
+                    'turnster' => $turnster,
+                    'error' => $error,
+                ));
+
+            }
+        }
+    }
 }
