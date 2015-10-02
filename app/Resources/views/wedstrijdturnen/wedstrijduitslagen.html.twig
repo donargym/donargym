@@ -1,9 +1,11 @@
 {% extends 'wedstrijdturnen/base.html.twig' %}
 
 {% block inlogNavigation %}
-    <div class="inlognavigation">
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT' }) }}">{{ activeGroep.name }}</a>
-        > <b><i>Wedstrijduitslagen</i></b>
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT' }) }}">{{ activeGroep.name }}</a>
+            > <i>Wedstrijduitslagen</i>
+        </div>
     </div>
 {% endblock %}
 

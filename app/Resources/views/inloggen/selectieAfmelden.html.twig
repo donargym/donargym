@@ -3,8 +3,6 @@
 {% block inlogNavigation %}
     <div id="inlog_nav">
         <div id="text">
-            <a href="{{ path('getSelectieIndexPage') }}">Index</a>
-            >
             <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
             > <i>Afmelden voor trainingen</i>
         </div>

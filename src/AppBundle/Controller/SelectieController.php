@@ -12,12 +12,14 @@ use AppBundle\Entity\SelectieFoto;
 use AppBundle\Entity\Stukje;
 use AppBundle\Entity\Trainingen;
 use AppBundle\Entity\Trainingsdata;
+use AppBundle\Entity\Wedstrijduitslagen;
 use AppBundle\Form\Type\ContactgegevensType;
 use AppBundle\Form\Type\Email1Type;
 use AppBundle\Form\Type\Email2Type;
 use AppBundle\Form\Type\UserType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Func;
+use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -346,17 +348,18 @@ class SelectieController extends BaseController
                         if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
                             if (date('m', time()) < '08') {
                                 if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                    ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
-                                ) {
+                                    ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
                                     $check = true;
                                 } else {
-                                    $counter = 0;
+                                    break;
                                 }
                             } else {
-                                if ($lesdatum->format('Y') != date('Y', time())) {
-                                    $counter = 0;
-                                } else {
-                                    $check = true;
+                                if($lesdatum->format('Y') == date('Y', time())) {
+                                    if ($lesdatum->format('m') < '08') {
+                                        break;
+                                    } else {
+                                        $check = true;
+                                    }
                                 }
                             }
                         }
@@ -373,6 +376,8 @@ class SelectieController extends BaseController
                         $persoonItems->functies[$i]->percentageAanwezig = 100;
                     }
                     $persoonItems->functies[$i]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->percentageAanwezig);
+                    $persoonItems->functies[$i]->aantalAanwezig = $aantalAanwezig;
+                    $persoonItems->functies[$i]->aantalTrainingen = $aantalTrainingen;
 
                     $groepFuncties = $groep->getFuncties();
                     for ($j = 0; $j < count($groepFuncties); $j++) {
@@ -396,17 +401,18 @@ class SelectieController extends BaseController
                                 if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
                                     if (date('m', time()) < '08') {
                                         if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
-                                        ) {
+                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
                                             $check = true;
                                         } else {
-                                            $counter = 0;
+                                            break;
                                         }
                                     } else {
-                                        if ($lesdatum->format('Y') != date('Y', time())) {
-                                            $counter = 0;
-                                        } else {
-                                            $check = true;
+                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                            if ($lesdatum->format('m') < '08') {
+                                                break;
+                                            } else {
+                                                $check = true;
+                                            }
                                         }
                                     }
                                 }
@@ -422,8 +428,9 @@ class SelectieController extends BaseController
                             } else {
                                 $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100;
                             }
+                            $persoonItems->functies[$i]->turnster[$j]->aantalAanwezig = $aantalAanwezig;
+                            $persoonItems->functies[$i]->turnster[$j]->aantalTrainingen = $aantalTrainingen;
                             $persoonItems->functies[$i]->turnster[$j]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageAanwezig);
-
                             $persoonItems->functies[$i]->turnster[$j]->voornaam = $turnster->getVoornaam();
                             $persoonItems->functies[$i]->turnster[$j]->achternaam = $turnster->getAchternaam();
                             $persoonItems->functies[$i]->turnster[$j]->id = $turnster->getId();
@@ -462,13 +469,15 @@ class SelectieController extends BaseController
                                         ) {
                                             $check = true;
                                         } else {
-                                            $counter = 0;
+                                            break;
                                         }
                                     } else {
-                                        if ($lesdatum->format('Y') != date('Y', time())) {
-                                            $counter = 0;
-                                        } else {
-                                            $check = true;
+                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                            if ($lesdatum->format('m') < '08') {
+                                                break;
+                                            } else {
+                                                $check = true;
+                                            }
                                         }
                                     }
                                 }
@@ -484,8 +493,9 @@ class SelectieController extends BaseController
                             } else {
                                 $persoonItems->functies[$i]->trainer[$j]->percentageAanwezig = 100;
                             }
+                            $persoonItems->functies[$i]->trainer[$j]->aantalAanwezig = $aantalAanwezig;
+                            $persoonItems->functies[$i]->trainer[$j]->aantalTrainingen = $aantalTrainingen;
                             $persoonItems->functies[$i]->trainer[$j]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->trainer[$j]->percentageAanwezig);
-
                             $persoonItems->functies[$i]->trainer[$j]->voornaam = $trainer->getVoornaam();
                             $persoonItems->functies[$i]->trainer[$j]->achternaam = $trainer->getAchternaam();
                             $persoonItems->functies[$i]->trainer[$j]->id = $trainer->getId();
@@ -524,13 +534,15 @@ class SelectieController extends BaseController
                                         ) {
                                             $check = true;
                                         } else {
-                                            $counter = 0;
+                                            break;
                                         }
                                     } else {
-                                        if ($lesdatum->format('Y') != date('Y', time())) {
-                                            $counter = 0;
-                                        } else {
-                                            $check = true;
+                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                            if ($lesdatum->format('m') < '08') {
+                                                break;
+                                            } else {
+                                                $check = true;
+                                            }
                                         }
                                     }
                                 }
@@ -546,8 +558,9 @@ class SelectieController extends BaseController
                             } else {
                                 $persoonItems->functies[$i]->assistent[$j]->percentageAanwezig = 100;
                             }
+                            $persoonItems->functies[$i]->assistent[$j]->aantalAanwezig = $aantalAanwezig;
+                            $persoonItems->functies[$i]->assistent[$j]->aantalTrainingen = $aantalTrainingen;
                             $persoonItems->functies[$i]->assistent[$j]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->assistent[$j]->percentageAanwezig);
-
                             $persoonItems->functies[$i]->assistent[$j]->voornaam = $assistent->getVoornaam();
                             $persoonItems->functies[$i]->assistent[$j]->achternaam = $assistent->getAchternaam();
                             $persoonItems->functies[$i]->assistent[$j]->id = $assistent->getId();
@@ -583,7 +596,9 @@ class SelectieController extends BaseController
                         $aanwezigheid = $persoon->getAanwezigheid();
                         for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
                             $lesdatum = $trainingsdata[$j]->getLesdatum();
-                            if (strtotime($lesdatum->format('d-m-Y')) >= time()) {
+                            $timestamp = $lesdatum->getTimestamp();
+                            $timestampPlusDag = ((int)$timestamp + 86400);
+                            if (($timestampPlusDag) > time()) {
                                 $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                 $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
                                 $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
@@ -594,7 +609,7 @@ class SelectieController extends BaseController
                                     }
                                 }
                                 $counter++;
-                                if ($counter == 9) {
+                                if ($counter == 10) {
                                     $j = 0;
                                     $counter++;
                                 }
@@ -632,7 +647,7 @@ class SelectieController extends BaseController
                         $aantalTrainingen = 0;
                         $aantalAanwezig = 0;
                         $aanwezigheid = $persoon->getAanwezigheid();
-                        for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
+                        for ($j = (count($trainingsdata) - 4); $j >= 0; $j--) {
                             $lesdatum = $trainingsdata[$j]->getLesdatum();
                             if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
                                 for ($k = (count($aanwezigheid) - 1); $k >= 0; $k--) {
@@ -642,13 +657,15 @@ class SelectieController extends BaseController
                                             ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
                                             $check = true;
                                         } else {
-                                            $k=0;
+                                            break;
                                         }
                                     } else {
-                                        if($lesdatum->format('Y') != date('Y', time())) {
-                                            $counter=0;
-                                        } else {
-                                            $check = true;
+                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                            if ($lesdatum->format('m') < '08') {
+                                                break;
+                                            } else {
+                                                $check = true;
+                                            }
                                         }
                                     }
                                     if($check) {
@@ -675,9 +692,11 @@ class SelectieController extends BaseController
                         } else {
                             $persoonItems->trainingen[$i]->percentageAanwezig = (100 * ($aantalAanwezig / $aantalTrainingen));
                         }
+                        $persoonItems->trainingen[$i]->aantalAanwezig = $aantalAanwezig;
+                        $persoonItems->trainingen[$i]->aantalTrainingen = $aantalTrainingen;
                         $persoonItems->trainingen[$i]->percentageKleur = $this->colorGenerator($persoonItems->trainingen[$i]->percentageAanwezig);
                     }
-                    // TODO: turnsters, doelen
+                    // TODO: doelen
                 }
                 return ($persoonItems);
             }
@@ -871,6 +890,526 @@ class SelectieController extends BaseController
             'persoonItems' => $persoonItems,
             'wedstrijdLinkItems' => $this->groepItems,
             'groepId' => $groepId,
+        ));
+    }
+
+    private function getAanwezigheid($userObject, $id, $groepId, $toekomst) {
+        $personen = $userObject->getPersoon();
+        foreach ($personen as $persoon) {
+            /** @var Persoon $persoon */
+            if ($persoon->getId() == $id) {
+                $functies = $persoon->getFunctie();
+                foreach ($functies as $functie) {
+                    /** @var Functie $functie */
+                    if ($functie->getFunctie() == 'Trainer' || $functie->getFunctie() == 'Assistent-Trainer') {
+                        /** @var Groepen $groep */
+                        $groep = $functie->getGroep();
+                        if ($groep->getId() == $groepId) {
+                            $aanwezigheid = new \stdClass();
+                            $trainingen = $groep->getTrainingen();
+                            $aanwezigheid->trainingen = array();
+                            for ($i=0; $i<count($trainingen); $i++) {
+                                $aanwezigheid->trainingen[$i] = new \stdClass();
+                                $aanwezigheid->trainingen[$i]->dag = $trainingen[$i]->getDag();
+                                $aanwezigheid->trainingen[$i]->tijdVan = $trainingen[$i]->getTijdvan();
+                                $aanwezigheid->trainingen[$i]->tijdTot = $trainingen[$i]->getTijdtot();
+                                $aanwezigheid->trainingen[$i]->trainingsdata = array();
+                                $aanwezigheid->trainingen[$i]->turnsters = array();
+                                $aanwezigheid->trainingen[$i]->trainers = array();
+                                $aanwezigheid->trainingen[$i]->assistenten = array();
+                                $trainingsdata = $trainingen[$i]->getTrainingsdata();
+                                $personenPerTraining = $trainingen[$i]->getPersoon();
+                                for ($j=0; $j<count($personenPerTraining); $j++) {
+                                    /** @var Functie $functiePerPersoon */
+                                    $functiesPerPersoon = $personenPerTraining[$j]->getFunctie();
+                                    foreach ($functiesPerPersoon as $functiePerPersoon) {
+                                        $groepPerPersoon = $functiePerPersoon->getGroep();
+                                        if($groepPerPersoon->getId() == $groepId) {
+                                            $aantalTrainingen = 0;
+                                            $aantalAanwezig = 0;
+                                            $aanwezighedenPerPersoon = $personenPerTraining[$j]->getAanwezigheid();
+                                            for ($jj=(count($aanwezighedenPerPersoon)-1); $jj>=0; $jj--) {
+                                                /** @var Aanwezigheid $aanwezigheidPerPersoon */
+                                                $aanwezigTrainingsdata = $aanwezighedenPerPersoon[$jj]->getTrainingsdata();
+                                                $lesdatum = $aanwezigTrainingsdata->getLesdatum();
+                                                $timestamp = $lesdatum->getTimestamp();
+                                                if($aanwezigTrainingsdata->getTrainingen() == $trainingen[$i] && $timestamp < time()) {
+                                                    $check = false;
+                                                    if(date('m', time()) < '08') {
+                                                        if(($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('m') < '08') ||
+                                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('m') >= '08')) {
+                                                            $check = true;
+                                                        } else {
+                                                            break;
+                                                        }
+                                                    } else {
+                                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                                            if ($lesdatum->format('m') < '08') {
+                                                                break;
+                                                            } else {
+                                                                $check = true;
+                                                            }
+                                                        }
+                                                    }
+                                                    if($check) {
+                                                        $aantalTrainingen++;
+                                                        if ($aanwezighedenPerPersoon[$jj]->getAanwezig() == 'X') {
+                                                            $aantalAanwezig++;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if ($aantalTrainingen == 0) {
+                                                $percentageAanwezig = 100;
+                                            } else {
+                                                $percentageAanwezig = (100 * ($aantalAanwezig / $aantalTrainingen));
+                                            }
+                                            $percentageKleur = $this->colorGenerator($percentageAanwezig);
+                                            if($functiePerPersoon->getFunctie() == 'Trainer') {
+                                                $aanwezigheid->trainingen[$i]->trainers[$j] = new \stdClass();
+                                                $aanwezigheid->trainingen[$i]->trainers[$j]->voornaam = $personenPerTraining[$j]->getVoornaam();
+                                                $aanwezigheid->trainingen[$i]->trainers[$j]->achternaam = $personenPerTraining[$j]->getAchternaam();
+                                                $aanwezigheid->trainingen[$i]->trainers[$j]->id = $personenPerTraining[$j]->getId();
+                                                $aanwezigheid->trainingen[$i]->trainers[$j]->percentageAanwezig = $percentageAanwezig;
+                                                $aanwezigheid->trainingen[$i]->trainers[$j]->percentageKleur = $percentageKleur;
+                                            } elseif ($functiePerPersoon->getFunctie() == 'Assistent-Trainer') {
+                                                $aanwezigheid->trainingen[$i]->assistenten[$j] = new \stdClass();
+                                                $aanwezigheid->trainingen[$i]->assistenten[$j]->voornaam = $personenPerTraining[$j]->getVoornaam();
+                                                $aanwezigheid->trainingen[$i]->assistenten[$j]->achternaam = $personenPerTraining[$j]->getAchternaam();
+                                                $aanwezigheid->trainingen[$i]->assistenten[$j]->id = $personenPerTraining[$j]->getId();
+                                                $aanwezigheid->trainingen[$i]->assistenten[$j]->percentageAanwezig = $percentageAanwezig;
+                                                $aanwezigheid->trainingen[$i]->assistenten[$j]->percentageKleur = $percentageKleur;
+                                            } elseif ($functiePerPersoon->getFunctie() == 'Turnster') {
+                                                $aanwezigheid->trainingen[$i]->turnsters[$j] = new \stdClass();
+                                                $aanwezigheid->trainingen[$i]->turnsters[$j]->voornaam = $personenPerTraining[$j]->getVoornaam();
+                                                $aanwezigheid->trainingen[$i]->turnsters[$j]->achternaam = $personenPerTraining[$j]->getAchternaam();
+                                                $aanwezigheid->trainingen[$i]->turnsters[$j]->id = $personenPerTraining[$j]->getId();
+                                                $aanwezigheid->trainingen[$i]->turnsters[$j]->percentageAanwezig = $percentageAanwezig;
+                                                $aanwezigheid->trainingen[$i]->turnsters[$j]->percentageKleur = $percentageKleur;
+                                            }
+                                        }
+                                    }
+                                }
+                                $counter = 0;
+                                for ($j = (count($trainingsdata) - 4); $j >= 0; $j--) {
+                                    if($toekomst) {
+                                        $lesdatum = $trainingsdata[$j]->getLesdatum();
+                                        $timestamp = $lesdatum->getTimestamp();
+                                        $timestampPlusDag = ((int)$timestamp + 86400);
+                                        if($timestampPlusDag > time()) {
+                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j] = new \stdClass();
+                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j]->aanwezigheid = array();
+                                            $aanwezigheidPersonen = $trainingsdata[$j]->getAanwezigheid();
+                                            /** @var Aanwezigheid $aanwezigheidPersoon */
+                                            foreach ($aanwezigheidPersonen as $aanwezigheidPersoon) {
+                                                $persoonsObject = $aanwezigheidPersoon->getPersoon();
+                                                $aanwezigheid->trainingen[$i]->trainingsdata[$j]->aanwezigheid[$persoonsObject->getId()] = $aanwezigheidPersoon->getAanwezig();
+                                            }
+                                            $counter++;
+                                            if ($counter == 7) {
+                                                $j = 0;
+                                                $counter++;
+                                            }
+                                        }
+                                    } else {
+                                        $lesdatum = $trainingsdata[$j]->getLesdatum();
+                                        $timestamp = $lesdatum->getTimestamp();
+                                        if($timestamp < time()) {
+                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j] = new \stdClass();
+                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j]->aanwezigheid = array();
+                                            $aanwezigheidPersonen = $trainingsdata[$j]->getAanwezigheid();
+                                            /** @var Aanwezigheid $aanwezigheidPersoon */
+                                            foreach ($aanwezigheidPersonen as $aanwezigheidPersoon) {
+                                                $persoonsObject = $aanwezigheidPersoon->getPersoon();
+                                                $aanwezigheid->trainingen[$i]->trainingsdata[$j]->aanwezigheid[$persoonsObject->getId()] = $aanwezigheidPersoon->getAanwezig();
+                                            }
+                                            $counter++;
+                                            if ($counter == 7) {
+                                                $j = 0;
+                                                $counter++;
+                                            }
+                                        }
+                                    }
+                                }
+                                if($toekomst) {
+                                    if ($counter < 7) {
+                                        if (count($trainingsdata) == 0) {
+                                            for ($try = 0; $try < 7; $try++) {
+                                                $dag = $this->dayToDutch((time() + ($try * 86400)));
+                                                if ($dag == $aanwezigheid->trainingen[$i]->dag) {
+                                                    $lesdatum = date('Y-m-d', (time() + ($try * 86400) - 604800));
+                                                    $try = 7;
+                                                }
+                                            }
+                                        } else {
+                                            $j = (count($trainingsdata) - 1);
+                                            $lesdatum = $trainingsdata[$j]->getLesdatum();
+                                            $lesdatum = $lesdatum->format('Y-m-d');
+                                        }
+                                        $week = (604800 + 12 * 3600);
+                                        for ($counter; $counter < 7; $counter++) {
+                                            $lesdatum = date('Y-m-d', (strtotime($lesdatum) + $week));
+                                            $lesdatumForDb = \DateTime::createFromFormat('Y-m-d', $lesdatum);
+                                            $newLesdatum = new Trainingsdata();
+                                            $newLesdatum->setLesdatum($lesdatumForDb);
+                                            $newLesdatum->setTrainingen($trainingen[$i]);
+                                            $em = $this->getDoctrine()->getManager();
+                                            $em->persist($newLesdatum);
+                                            $em->flush();
+                                        }
+                                    }
+                                }
+                                $aanwezigheid->trainingen[$i]->trainingsdata = array_reverse($aanwezigheid->trainingen[$i]->trainingsdata);
+                            }
+                            return $aanwezigheid;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{id}/viewAfmeldingen/{groepId}/", name="viewAfmeldingen")
+     * @Method({"GET"})
+     */
+    public
+    function viewAfmeldingen($id, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id);
+        $aanwezigheid = $this->getAanwezigheid($userObject, $id, $groepId, true);
+        return $this->render('inloggen/selectieViewAfmeldingen.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'groepId' => $groepId,
+            'aanwezigheid' => $aanwezigheid,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{id}/viewAanwezigheid/{groepId}/", name="viewAanwezigheid")
+     * @Method({"GET"})
+     */
+    public
+    function viewAanwezigheid($id, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id);
+        $aanwezigheid = $this->getAanwezigheid($userObject, $id, $groepId, false);
+        return $this->render('inloggen/selectieViewAanwezigheid.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'groepId' => $groepId,
+            'aanwezigheid' => $aanwezigheid,
+        ));
+    }
+
+    private function getTrainingsdataVoorKruisjeslijst($userObject, $id, $groepId)
+    {
+        $personen = $userObject->getPersoon();
+        foreach ($personen as $persoon) {
+            /** @var Persoon $persoon */
+            if ($persoon->getId() == $id) {
+                $functies = $persoon->getFunctie();
+                foreach ($functies as $functie) {
+                    /** @var Functie $functie */
+                    if ($functie->getFunctie() == 'Trainer') {
+                        /** @var Groepen $groep */
+                        $groep = $functie->getGroep();
+                        if ($groep->getId() == $groepId) {
+                            $trainingen = $groep->getTrainingen();
+                            $trainingsdataVoorKruisjeslijst = new \stdClass();
+                            $trainingsdataVoorKruisjeslijst->trainingen = array();
+                            for ($j=0; $j<count($trainingen); $j++) {
+                                $trainingsdataVoorKruisjeslijst->trainingen[$j] = new \stdClass();
+                                $trainingsdataVoorKruisjeslijst->trainingen[$j]->dag = $trainingen[$j]->getDag();
+                                $trainingsdataVoorKruisjeslijst->trainingen[$j]->tijdVan = $trainingen[$j]->getTijdvan();
+                                $trainingsdataVoorKruisjeslijst->trainingen[$j]->tijdTot = $trainingen[$j]->getTijdtot();
+                                $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata = array();
+                                $trainingsdata = $trainingen[$j]->getTrainingsdata();
+                                for ($i=(count($trainingsdata)-1); $i>=0; $i--) {
+                                    $lesdatum = $trainingsdata[$i]->getLesdatum();
+                                    $timestamp = $lesdatum->getTimestamp();
+                                    if (($timestamp) > (time()-604800)) {
+                                        $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i] = new \stdClass();
+                                        $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i]->id = $trainingsdata[$i]->getId();
+                                        $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i]->datum = $lesdatum->format('d-m-Y');
+                                    }
+                                }
+                                $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata = array_reverse($trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata);
+                            }
+                            return $trainingsdataVoorKruisjeslijst;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{id}/kruisjeslijst/{groepId}/", name="kruisjeslijst")
+     * @Method({"GET"})
+     */
+    public
+    function kruisjeslijst($id, $groepId, Request $request)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id);
+        $trainingsdata = $this->getTrainingsdataVoorKruisjeslijst($userObject, $id, $groepId);
+        return $this->render('inloggen/selectieKruisjeslijst.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'groepId' => $groepId,
+            'trainingsdata' => $trainingsdata,
+        ));
+    }
+
+    private function getTrainingsdatumDetails($userObject, $id, $groepId, $trainingsdatumId)
+    {
+        $personen = $userObject->getPersoon();
+        foreach ($personen as $persoon) {
+            /** @var Persoon $persoon */
+            if ($persoon->getId() == $id) {
+                $functies = $persoon->getFunctie();
+                foreach ($functies as $functie) {
+                    /** @var Functie $functie */
+                    if ($functie->getFunctie() == 'Trainer') {
+                        /** @var Groepen $groep */
+                        $groep = $functie->getGroep();
+                        if ($groep->getId() == $groepId) {
+                            $trainingen = $groep->getTrainingen();
+                            for ($j=0; $j<count($trainingen); $j++) {
+                                $trainingsdata = $trainingen[$j]->getTrainingsdata();
+                                for ($i=(count($trainingsdata)-1); $i>=0; $i--) {
+                                    if ($trainingsdata[$i]->getId() == $trainingsdatumId) {
+                                        return $trainingsdata[$i];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{id}/kruisjeslijst/{groepId}/removeTraining/{trainingsdatumId}/", name="removeTrainingsdatum")
+     * @Method({"GET", "POST"})
+     */
+    public
+    function removeTrainingsdatum($id, $groepId, $trainingsdatumId, Request $request)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id);
+        /** @var Trainingsdata $trainingsdataObject */
+        $trainingsdataObject = $this->getTrainingsdatumDetails($userObject, $id, $groepId, $trainingsdatumId);
+        if ($request->getMethod() == 'POST') {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($trainingsdataObject);
+            $em->flush();
+            return $this->redirectToRoute('kruisjeslijst', array(
+                'id' => $id,
+                'groepId' => $groepId,
+            ));
+        }
+        $trainingsdata = new \stdClass();
+        $trainingsdata->id = $trainingsdataObject->getId();
+        $lesdatum = $trainingsdataObject->getLesdatum();
+        $trainingsdata->lesdatum = $lesdatum->format('d-m-Y');
+        return $this->render('inloggen/removeTrainingsdatum.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'groepId' => $groepId,
+            'trainingsdata' => $trainingsdata,
+        ));
+    }
+
+    private function getPersonenVoorTrainingsdatum($trainingsdataObject, $groepId)
+    {
+        /** @var Trainingsdata $trainingsdataObject */
+        /** @var Trainingen $training */
+        $training = $trainingsdataObject->getTrainingen();
+        $aanwezigheidPersonen = new \stdClass();
+        $personen = $training->getPersoon();
+        $aanwezigheidPersonen->trainers = array();
+        $aanwezigheidPersonen->assistenten = array();
+        $aanwezigheidPersonen->turnsters = array();
+        for ($i=0; $i<count($personen); $i++) {
+            $functies = $personen[$i]->getFunctie();
+            foreach($functies as $functie) {
+                $groep = $functie->getGroep();
+                if($groep->getId() == $groepId) {
+                    if($functie->getFunctie() == 'Trainer') {
+                        $aanwezigheidPersonen->trainers[$i] = new \stdClass();
+                        $aanwezigheidPersonen->trainers[$i]->voornaam = $personen[$i]->getVoornaam();
+                        $aanwezigheidPersonen->trainers[$i]->achternaam = $personen[$i]->getAchternaam();
+                        $aanwezigheidPersonen->trainers[$i]->id = $personen[$i]->getId();
+                    } elseif($functie->getFunctie() == 'Assistent-Trainer') {
+                        $aanwezigheidPersonen->assistenten[$i] = new \stdClass();
+                        $aanwezigheidPersonen->assistenten[$i]->voornaam = $personen[$i]->getVoornaam();
+                        $aanwezigheidPersonen->assistenten[$i]->achternaam = $personen[$i]->getAchternaam();
+                        $aanwezigheidPersonen->assistenten[$i]->id = $personen[$i]->getId();
+                    } elseif($functie->getFunctie() == 'Turnster') {
+                        $aanwezigheidPersonen->turnsters[$i] = new \stdClass();
+                        $aanwezigheidPersonen->turnsters[$i]->voornaam = $personen[$i]->getVoornaam();
+                        $aanwezigheidPersonen->turnsters[$i]->achternaam = $personen[$i]->getAchternaam();
+                        $aanwezigheidPersonen->turnsters[$i]->id = $personen[$i]->getId();
+                    }
+                }
+            }
+        }
+        $aanwezigheid = $trainingsdataObject->getAanwezigheid();
+        $aanwezigheidPersonen->aanwezigheid = array();
+        for ($i=0; $i<count($aanwezigheid); $i++) {
+            $aanwezigePersoon = $aanwezigheid[$i]->getPersoon();
+            $aanwezigheidPersonen->aanwezigheid[$aanwezigePersoon->getId()] = $aanwezigheid[$i]->getAanwezig();;
+        }
+        return $aanwezigheidPersonen;
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{id}/kruisjeslijst/{groepId}/invullen/{trainingsdatumId}/", name="kruisjeslijstInvullen")
+     * @Method({"GET", "POST"})
+     */
+    public
+    function kruisjeslijstInvullen($id, $groepId, $trainingsdatumId, Request $request)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $id);
+        /** @var Trainingsdata $trainingsdataObject */
+        $trainingsdataObject = $this->getTrainingsdatumDetails($userObject, $id, $groepId, $trainingsdatumId);
+        $personenAanwezigheid = $this->getPersonenVoorTrainingsdatum($trainingsdataObject, $groepId);
+        if ($request->getMethod() == 'POST') {
+            /** @var Persoon $persoonObject */
+            $afgemeldMaarAanwezig = array();
+            $aanwezigeIds = array();
+            foreach ($_POST as $key=>$value) {
+                if(preg_match("/^afgemeld/", $key)) {
+                    $afgemeldMaarAanwezigid = explode("_", $key);
+                    $afgemeldMaarAanwezig[] = (int)$afgemeldMaarAanwezigid[1];
+                }
+                else {
+                    $aanwezigeIds[] = $key;
+                }
+            }
+            $aanwezigheiden = $trainingsdataObject->getAanwezigheid();
+            $afgemeldeIds = array();
+            /** @var Aanwezigheid $aanwezigheid */
+            foreach ($aanwezigheiden as $aanwezigheid) {
+                $persoonAanwezigheid = $aanwezigheid->getPersoon();
+                $afgemeldeIds[] = $persoonAanwezigheid->getId();
+            }
+            $training = $trainingsdataObject->getTrainingen();
+            $personenVoorDezeTraining = $training->getPersoon();
+            $em = $this->getDoctrine()->getManager();
+            foreach ($personenVoorDezeTraining as $persoonVoorDezeTraining) {
+                if (in_array($persoonVoorDezeTraining->getId(), $afgemeldMaarAanwezig)) {
+                    $persoonsId = $persoonVoorDezeTraining->getId();
+                    $query = $em->createQuery(
+                        'SELECT aanwezigheid
+                        FROM AppBundle:Aanwezigheid aanwezigheid
+                        WHERE aanwezigheid.persoon = :persoon')
+                        ->setParameter('persoon', $persoonsId);
+                    /** @var Aanwezigheid $aanwezig */
+                    $aanwezig = $query->setMaxResults(1)->getOneOrNullResult();
+                    $aanwezig->setAanwezig('X');
+                    $em->flush();
+                } elseif (in_array($persoonVoorDezeTraining->getId(), $aanwezigeIds)) {
+                    $aanwezig = new Aanwezigheid();
+                    $aanwezig->setPersoon($persoonVoorDezeTraining);
+                    $aanwezig->setTrainingsdata($trainingsdataObject);
+                    $aanwezig->setAanwezig('X');
+                    $em->persist($aanwezig);
+                    $em->flush();
+                } elseif (in_array($persoonVoorDezeTraining->getId(), $afgemeldeIds)) {
+                } else {
+                    $aanwezig = new Aanwezigheid();
+                    $aanwezig->setPersoon($persoonVoorDezeTraining);
+                    $aanwezig->setTrainingsdata($trainingsdataObject);
+                    $aanwezig->setAanwezig('-');
+                    $em->persist($aanwezig);
+                    $em->flush();
+                }
+            }
+            return $this->redirectToRoute('showPersoon', array(
+                'id' => $id
+            ));
+        }
+        $trainingsdata = new \stdClass();
+        $trainingsdata->id = $trainingsdataObject->getId();
+        $lesdatum = $trainingsdataObject->getLesdatum();
+        $trainingsdata->lesdatum = $lesdatum->format('d-m-Y');
+        $trainingsdata->dag = $this->dayToDutch($lesdatum->getTimestamp());
+        return $this->render('inloggen/kruisjeslijstInvullen.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'groepId' => $groepId,
+            'trainingsdata' => $trainingsdata,
+            'personenAanwezigheid' => $personenAanwezigheid,
         ));
     }
 
@@ -1149,11 +1688,11 @@ class SelectieController extends BaseController
 
     /**
      * @Security("has_role('ROLE_TRAINER')")
-     * @Route("/inloggen/selectie/{trainerId}/remove/{turnsterId}", name="removeSelectieTurnsterPage")
+     * @Route("/inloggen/selectie/{trainerId}/remove/{turnsterId}/{groepId}", name="removeSelectieTurnsterPage")
      * @Method({"GET", "POST"})
      */
     public
-    function removeSelectieTurnsterPage($trainerId, $turnsterId, Request $request)
+    function removeSelectieTurnsterPage($trainerId, $turnsterId, $groepId, Request $request)
     {
         if ($request->getMethod() == 'GET') {
             $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
@@ -1198,10 +1737,21 @@ class SelectieController extends BaseController
                 WHERE persoon.id = :id')
                 ->setParameter('id', $turnsterId);
             $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+            $functies = $persoon->getFunctie();
             $user = $persoon->getUser();
             $personen = $user->getPersoon();
-            $em->remove($persoon);
-            $em->flush();
+            if (count($functies) == 1) {
+                $em->remove($persoon);
+                $em->flush();
+            } else {
+                foreach ($functies as $functie) {
+                    $groep = $functie->getGroep();
+                    if($groep->getId() == $groepId && $functie->getFunctie() == 'Turnster') {
+                        $em->remove($functie);
+                        $em->flush();
+                    }
+                }
+            }
             $role = 'ROLE_TURNSTER';
             if (count($personen) == 0) {
                 $em->remove($user);
@@ -1282,6 +1832,579 @@ class SelectieController extends BaseController
                 'persoonItems' => $persoonItems,
             ));
         }
+    }
+
+    private function checkGroupAuthorization($userObject, $id, $groepId, array $roles)
+    {
+        $response = array();
+        $authorized = false;
+        $groep = null;
+        $functie = null;
+        $personen = $userObject->getPersoon();
+        foreach ($personen as $persoon) {
+            /** @var Persoon $persoon */
+            if ($persoon->getId() == $id) {
+                $functies = $persoon->getFunctie();
+                foreach ($functies as $functie) {
+                    /** @var Functie $functie */
+                    if (in_array($functie->getFunctie(), $roles)) {
+                        /** @var Groepen $groep */
+                        $groep = $functie->getGroep();
+                        if ($groep->getId() == $groepId) {
+                            $authorized = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $response['authorized'] = $authorized;
+        $response['groep'] = $groep;
+        $response['functie'] = $functie->getFunctie();
+        return $response;
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{persoonId}/wedstrijduitslagen/{groepId}/", name="viewWedstrijduitslagen")
+     * @Method({"GET"})
+     */
+    public
+    function viewSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer', 'Assistent-Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $wedstrijduitslagen = array();
+            $groepObject = $response['groep'];
+            $functie = $response['functie'];
+            $uitslagen = $groepObject->getWedstrijduitslagen();
+            for ($counter=(count($uitslagen)-1); $counter>=0;$counter--) {
+                if ($uitslagen[$counter]->getDatum()->format('m')>7) {
+                    $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format('Y')][] = $uitslagen[$counter]->getAll();
+                } else {
+                    $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format('Y')-1)][] = $uitslagen[$counter]->getAll();
+                }
+            }
+        }
+        return $this->render('inloggen/selectieViewWedstrijduitslagen.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijduitslagen' =>$wedstrijduitslagen,
+            'functie' => $functie,
+            'groepId' =>$groepId,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{persoonId}/addWedstrijduitslagen/{groepId}/", name="addWedstrijduitslagen")
+     * @Method({"GET", "POST"})
+     */
+    public
+    function addSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $groepObject = $response['groep'];
+            $functie = $response['functie'];
+            $wedstrijduitslag = new Wedstrijduitslagen();
+            $form = $this->createFormBuilder($wedstrijduitslag)
+                ->add('naam')
+                ->add('datum', 'date', array(
+                    'widget' => 'single_text',
+                ))
+                ->add('file')
+                ->add('uploadBestand', 'submit')
+                ->getForm();
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $wedstrijduitslag->setGroep($groepObject);
+                $em->persist($wedstrijduitslag);
+                $em->flush();
+                return $this->redirectToRoute('viewWedstrijduitslagen', array(
+                    'persoonId' => $persoonId,
+                    'groepId' => $groepId,
+                ));
+            }
+
+
+            return $this->render('inloggen/selectieAddWedstrijduitslagen.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
+                'persoon' => $persoon,
+                'user' => $user,
+                'persoonItems' => $persoonItems,
+                'functie' => $functie,
+                'groepId' =>$groepId,
+                'form' => $form->createView(),
+            ));
+        }
+        return $this->render('error/NotAuthorized.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{persoonId}/removeWedstrijduitslagen/{groepId}/{wedstrijduitslagId}/", name="removeWedstrijduitslagen")
+     * @Method({"GET", "POST"})
+     */
+    public function removeSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId, $wedstrijduitslagId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+            'SELECT wedstrijduitslagen
+            FROM AppBundle:Wedstrijduitslagen wedstrijduitslagen
+            WHERE wedstrijduitslagen.id = :id')
+            ->setParameter('id', $wedstrijduitslagId);
+            $wedstrijduitslag = $query->setMaxResults(1)->getOneOrNullResult();
+            $uitslag = new \stdClass();
+            $uitslag->naam = $wedstrijduitslag->getNaam();
+            $uitslag->id = $wedstrijduitslag->getId();
+        }
+        if($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($wedstrijduitslag);
+            $em->flush();
+            return $this->redirectToRoute('viewWedstrijduitslagen', array(
+                'persoonId' => $persoonId,
+                'groepId' => $groepId,
+            ));
+        }
+        return $this->render('inloggen/selectieRemoveWedstrijduitslagen.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' =>$groepId,
+            'uitslag' => $uitslag,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{persoonId}/editTurnster/{groepId}/{turnsterId}/", name="editSelectieTurnster")
+     * @Method({"GET", "POST"})
+     */
+    public function editSelectieTurnsterAction(Request $request, $persoonId, $turnsterId, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT persoon
+            FROM AppBundle:Persoon persoon
+            WHERE persoon.id = :id')
+                ->setParameter('id', $turnsterId);
+            $result = $query->setMaxResults(1)->getOneOrNullResult();
+            $persoonEdit = new \stdClass();
+            $persoonEdit->voornaam = $result->getVoornaam();
+            $persoonEdit->achternaam = $result->getAchternaam();
+            $persoonEdit->geboortedatum = $result->getGeboortedatum();
+            $user = $result->getUser();
+            $persoonEdit->username = $user->getUsername();
+            $persoonEdit->email2 = $user->getEmail2();
+            $persoonEdit->userId = $user->getId();
+            $persoonEdit->straatnr = $user->getStraatnr();
+            $persoonEdit->postcode = $user->getPostcode();
+            $persoonEdit->plaats = $user->getPlaats();
+            $persoonEdit->tel1 = $user->getTel1();
+            $persoonEdit->tel2 = $user->getTel2();
+            $persoonEdit->tel3 = $user->getTel3();
+            $functies = $result->getFunctie();
+            $persoonEdit->functie = array();
+            for($i=0;$i<count($functies);$i++) {
+                $persoonEdit->functie[$i] = new \stdClass();
+                $persoonEdit->functie[$i]->functie = $functies[$i]->getFunctie();
+                $groep = $functies[$i]->getGroep();
+                $persoonEdit->functie[$i]->groepNaam = $groep->getName();
+                $persoonEdit->functie[$i]->groepId = $groep->getId();
+                $trainingen = $groep->getTrainingen();
+                $persoonEdit->functie[$i]->trainingen = array();
+                for($j=0;$j<count($trainingen);$j++) {
+                    $persoonTrainingen = $result->getTrainingen();
+                    for($k=0;$k<count($persoonTrainingen);$k++) {
+                        if($trainingen[$j]->getId() == $persoonTrainingen[$k]->getId()) {
+                            $persoonEdit->functie[$i]->trainingen[$k] = new \stdClass();
+                            $persoonEdit->functie[$i]->trainingen[$k]->trainingId = $persoonTrainingen[$k]->getId();
+                        }
+                    }
+                }
+            }
+            $query = $em->createQuery(
+                'SELECT groepen
+                FROM AppBundle:Groepen groepen');
+            /** @var Groepen $groepen */
+            $groepen = $query->getResult();
+            $groepenItems = array();
+            for($i=0;$i<count($groepen);$i++)
+            {
+                $groepenItems[$i] = new \stdClass();
+                $groepenItems[$i]->id = $groepen[$i]->getId();
+                $groepenItems[$i]->naam = $groepen[$i]->getName();
+                $groepenItems[$i]->trainingen = array();
+                $query = $em->createQuery(
+                    'SELECT trainingen
+                FROM AppBundle:Trainingen trainingen
+                WHERE trainingen.groep = :id')
+                    ->setParameter('id', $groepen[$i]->getId());
+                $trainingen = $query->getResult();
+                for($j=0;$j<count($trainingen);$j++) {
+                    $groepenItems[$i]->trainingen[$j] = new \stdClass();
+                    $groepenItems[$i]->trainingen[$j]->dag = $trainingen[$j]->getDag();
+                    $groepenItems[$i]->trainingen[$j]->tijdVan = $trainingen[$j]->getTijdVan();
+                    $groepenItems[$i]->trainingen[$j]->tijdTot = $trainingen[$j]->getTijdTot();
+                    $groepenItems[$i]->trainingen[$j]->id = $trainingen[$j]->getId();
+                }
+            }
+            if($request->getMethod() == 'POST') {
+                $query = $em->createQuery(
+                    'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :id')
+                    ->setParameter('id', $turnsterId);
+
+                /** @var Persoon $persoon */
+                $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+                $persoon->setVoornaam($this->get('request')->request->get('voornaam'));
+                $persoon->setAchternaam($this->get('request')->request->get('achternaam'));
+                $persoon->setGeboortedatum($this->get('request')->request->get('geboortedatum'));
+
+                /** @var Functie $functie */
+                $functies = $persoon->getFunctie();
+                foreach ($functies as $functie) {
+                    /** @var Groepen $groep */
+                    $groep = $functie->getGroep();
+                    if (!($this->get('request')->request->get('groep_' . $groep->getId()) == 'Turnster')) {
+                        $persoon->removeFunctie($functie);
+                        $query = $em->createQuery(
+                            'SELECT trainingen
+                    FROM AppBundle:Trainingen trainingen
+                    WHERE trainingen.groep = :id')
+                            ->setParameter('id', $groep->getId());
+
+                        /** @var Trainingen $removeTrainingen */
+                        /** @var Trainingen $removeTraining */
+                        $removeTrainingen = $query->getResult();
+                        foreach ($removeTrainingen as $removeTraining) {
+                            $persoon->removeTrainingen($removeTraining);
+                        }
+                    }
+                }
+
+                /** @var Trainingen $trainingen */
+                $trainingen = $persoon->getTrainingen();
+                foreach ($trainingen as $training) {
+                    if (!($this->get('request')->request->get('trainingen_' . $training->getId()) == 'on')) {
+                        $persoon->removeTrainingen($training);
+                    }
+                }
+
+                /** @var \AppBundle\Entity\User $user */
+                $user = $persoon->getUser();
+                $user->setUsername($this->get('request')->request->get('username'));
+                $user->setEmail2($this->get('request')->request->get('email2'));
+                $user->setStraatnr($this->get('request')->request->get('straatnr'));
+                $user->setPostcode($this->get('request')->request->get('postcode'));
+                $user->setPlaats($this->get('request')->request->get('plaats'));
+                $user->setTel1($this->get('request')->request->get('tel1'));
+                $user->setTel2($this->get('request')->request->get('tel2'));
+                $user->setTel3($this->get('request')->request->get('tel3'));
+
+                foreach ($groepen as $groep) {
+                    $check = false;
+                    if ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Turnster') {
+                        foreach ($functies as &$functie) {
+                            /** @var Groepen $functieGroep */
+                            $functieGroep = $functie->getGroep();
+                            if ($functieGroep->getId() == $groep->getId()) {
+                                $functie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
+                                $check = true;
+                            }
+                        }
+                        if(!$check) {
+                            $newFunctie = new Functie();
+                            $newFunctie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
+                            $newFunctie->setGroep($groep);
+                            $newFunctie->setPersoon($persoon);
+                            $persoon->addFunctie($newFunctie);
+                        }
+
+                        $query = $em->createQuery(
+                            'SELECT trainingen
+                    FROM AppBundle:Trainingen trainingen
+                    WHERE trainingen.groep = :id')
+                            ->setParameter('id', $groep->getId());
+
+                        /** @var Trainingen $dbTrainingen */
+                        /** @var Trainingen $dbTraining */
+                        $dbTrainingen = $query->getResult();
+                        foreach ($dbTrainingen as $dbTraining) {
+                            $trainingenCheck = false;
+                            if ($this->get('request')->request->get('trainingen_' . $dbTraining->getId()) == 'on') {
+                                foreach ($trainingen as $training) {
+                                    if ($dbTraining->getId() == $training->getId()) {
+                                        $trainingenCheck = true;
+                                    }
+                                }
+                                if (!$trainingenCheck) {
+                                    $persoon->addTrainingen($dbTraining);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $em->persist($persoon);
+                $em->persist($user);
+                $em->flush();
+
+                return $this->redirectToRoute('showPersoon', array(
+                    'id' => $persoonId
+                ));
+            }
+            return $this->render('inloggen/selectieEditTurnster.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'persoon' => $persoon,
+                'user' => $user,
+                'persoonItems' => $persoonItems,
+                'groepen' => $groepenItems,
+                'persoonEdit' => $persoonEdit,
+                'wedstrijdLinkItems' => $this->groepItems,
+                'functie' => $functie,
+                'groepId' => $groepId,
+                'persoonId' => $persoonId,
+
+            ));
+        }
+    }
+
+    private function getSelectieTurnsterInfo($turnsterId, $groepObject)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT persoon
+            FROM AppBundle:Persoon persoon
+            WHERE persoon.id = :id')
+            ->setParameter('id', $turnsterId);
+        /** @var Persoon $persoonObject */
+        $persoonObject = $query->setMaxResults(1)->getOneOrNullResult();
+        $turnster = $persoonObject->getAll();
+        $imageSize = getimagesize('http://www.donargym.nl/uploads/selectiefotos/' . $turnster->foto);
+        $turnster->width = $imageSize[0];
+        $turnster->height = $imageSize[1];
+        $trainingen = $persoonObject->getTrainingen();
+        $userObject = $persoonObject->getUser();
+        $turnster->straatnr = $userObject->getStraatnr();
+        $turnster->postcode = $userObject->getPostcode();
+        $turnster->plaats = $userObject->getPlaats();
+        $turnster->email = $userObject->getUsername();
+        $turnster->email2 = $userObject->getEmail2();
+        $turnster->tel1 = $userObject->getTel1();
+        $turnster->tel2 = $userObject->getTel2();
+        $turnster->tel3 = $userObject->getTel3();
+        $turnster->trainingen = array();
+        $functies = $persoonObject->getFunctie();
+        foreach ($functies as $functie) {
+            for ($i=0; $i<count($trainingen); $i++) {
+                if (($functie->getGroep() == $trainingen[$i]->getGroep() && $functie->getGroep() == $groepObject)) {
+                    $turnster->trainingen[$i] = new \stdClass();
+                    $turnster->trainingen[$i]->id = $trainingen[$i]->getId();
+                    $turnster->trainingen[$i]->dag = $trainingen[$i]->getDag();
+                    $turnster->trainingen[$i]->tijdvan = $trainingen[$i]->getTijdvan();
+                    $turnster->trainingen[$i]->tijdtot = $trainingen[$i]->getTijdtot();
+                    $turnster->trainingen[$i]->trainingsdata = array();
+                    $trainingsdata = $trainingen[$i]->getTrainingsdata();
+                    $counter=0;
+                    $aantalTrainingen = 0;
+                    $aantalAanwezig = 0;
+                    $aanwezigheid = $persoonObject->getAanwezigheid();
+                    for ($j = (count($trainingsdata) - 4); $j >= 0; $j--) {
+                        $lesdatum = $trainingsdata[$j]->getLesdatum();
+                        if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
+                            for ($k = (count($aanwezigheid) - 1); $k >= 0; $k--) {
+                                $check = false;
+                                if(date('m', time()) < '08') {
+                                    if(($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
+                                        $check = true;
+                                    } else {
+                                        break;
+                                    }
+                                } else {
+                                    if($lesdatum->format('Y') == date('Y', time())) {
+                                        if ($lesdatum->format('m') < '08') {
+                                            break;
+                                        } else {
+                                            $check = true;
+                                        }
+                                    }
+                                }
+                                if($check) {
+                                    if ($aanwezigheid[$k]->getTrainingsdata() == $trainingsdata[$j]) {
+                                        $aantalTrainingen++;
+                                        if($counter < 7) {
+                                            $turnster->trainingen[$i]->trainingsdata[$j] = new \stdClass();
+                                            $turnster->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
+                                            $turnster->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                            $turnster->trainingen[$i]->trainingsdata[$j]->aanwezigheid = $aanwezigheid[$k]->getAanwezig();
+                                            $counter++;
+                                        }
+                                        if (strtolower($aanwezigheid[$k]->getAanwezig()) == 'x') {
+                                            $aantalAanwezig++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $turnster->trainingen[$i]->trainingsdata = array_reverse($turnster->trainingen[$i]->trainingsdata);
+                    if ($aantalTrainingen == 0) {
+                        $turnster->trainingen[$i]->percentageAanwezig = 100;
+                    } else {
+                        $turnster->trainingen[$i]->percentageAanwezig = (100 * ($aantalAanwezig / $aantalTrainingen));
+                    }
+                    $turnster->trainingen[$i]->aantalAanwezig = $aantalAanwezig;
+                    $turnster->trainingen[$i]->aantalTrainingen = $aantalTrainingen;
+                    $turnster->trainingen[$i]->percentageKleur = $this->colorGenerator($turnster->trainingen[$i]->percentageAanwezig);
+                }
+            }
+        }
+        $aantalAanwezig = 0;
+        $aantalTrainingen = 0;
+        $totaalAanwezigheid = $persoonObject->getAanwezigheid();
+        for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
+            $check = false;
+            /** @var Trainingsdata $trainingsdatum */
+            $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
+            $lesdatum = $trainingsdatum->getLesdatum();
+            /** @var Trainingen $training */
+            $training = $trainingsdatum->getTrainingen();
+            /** @var Groepen $trainingGroep */
+            $trainingGroep = $training->getGroep();
+            if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $groepObject->getId()) {
+                if (date('m', time()) < '08') {
+                    if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
+                        $check = true;
+                    } else {
+                        break;
+                    }
+                } else {
+                    if($lesdatum->format('Y') == date('Y', time())) {
+                        if ($lesdatum->format('m') < '08') {
+                            break;
+                        } else {
+                            $check = true;
+                        }
+                    }
+                }
+            }
+            if ($check) {
+                $aantalTrainingen++;
+                if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
+                    $aantalAanwezig++;
+                }
+            }
+        }
+        if ($aantalTrainingen != 0) {
+            $turnster->percentageAanwezig = 100 * $aantalAanwezig / $aantalTrainingen;
+        } else {
+            $turnster->percentageAanwezig = 100;
+        }
+        $turnster->percentageKleur = $this->colorGenerator($turnster->percentageAanwezig);
+        $turnster->aantalAanwezig = $aantalAanwezig;
+        $turnster->aantalTrainingen = $aantalTrainingen;
+        return $turnster;
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{persoonId}/viewTurnster/{turnsterId}/{groepId}/", name="viewSelectieTurnster")
+     * @Method({"GET"})
+     */
+    public
+    function viewSelectieTurnster(Request $request, $persoonId, $turnsterId, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer', 'Assistent-Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $groepObject = $response['groep'];
+            $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
+        }
+        return $this->render('inloggen/selectieViewTurnster.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' =>$groepId,
+            'turnster' => $turnster,
+        ));
     }
 
     //todo: edit turnster functie en view

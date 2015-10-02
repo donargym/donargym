@@ -107,6 +107,8 @@ class Persoon
         $persoon->id = $this->getId();
         $persoon->voornaam = $this->getVoornaam();
         $persoon->achternaam = $this->getAchternaam();
+        $geboortedatum = $this->getGeboortedatum();
+        $persoon->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
         $foto = $this->getFoto();
         if ($foto == null) {$persoon->foto = "plaatje.jpg";}
         else {$persoon->foto = $foto->getLocatie();}

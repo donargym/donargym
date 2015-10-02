@@ -3,17 +3,26 @@
 {% block inlogmenu %}
     <div id="inlogmenu">
         <ul>
+            <li><a href="{{ path('getSelectieIndexPage') }}">
+                {% if persoonItems.id is not defined %}
+                    <span id="active_link">
+                {% endif %}
+                Algemene gegevens
+                {% if persoonItems.id is not defined %}
+                    </span>
+                {% endif %}
+            </a></li>
             {% for persoonGegevens in persoon %}
                 <li><a href="{{ path('showPersoon', { 'id': persoonGegevens.id }) }}">
                         {% if persoonItems.id is defined %}
                         {% if persoonItems.id == persoonGegevens.id %}
-                        <b>
+                        <span id="active_link">
                             {% endif %}
                             {% endif %}
                             {{ persoonGegevens.voornaam }} {{ persoonGegevens.achternaam }}
                             {% if persoonItems.id is defined %}
                             {% if persoonItems.id == persoonGegevens.id %}
-                        </b>
+                        </span>
                         {% endif %}
                         {% endif %}
                     </a></li>
@@ -26,7 +35,7 @@
 {% block inlogNavigation %}
     <div id="inlog_nav">
         <div id="text">
-            <i>Index</i>
+            <i>Algemene gegevens</i>
         </div>
     </div>
 {% endblock %}

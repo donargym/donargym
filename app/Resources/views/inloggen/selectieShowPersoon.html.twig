@@ -3,8 +3,7 @@
 {% block inlogNavigation %}
     <div id="inlog_nav">
         <div id="text">
-            <a href="{{ path('getSelectieIndexPage') }}">Index</a>
-            > <i>{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</i>
+            <i>{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</i>
         </div>
     </div>
 {% endblock %}
@@ -34,6 +33,7 @@
         <div style="margin-bottom: 75px;"><h2>{{ functie.groepNaam }} ({{ functie.functie }})</h2>
             <hr>
 
+            {% if functie.groepId == 3 or functie.groepId == 5 %}
             {#{% if functie.functie == 'Turnster' %}
                 <center>
                     <table>
@@ -60,8 +60,9 @@
                     </table>
                 </center>
             {% endif %}#}
+            {% endif %}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-            <h3>(Assistent-)Trainers</h3>
+            <p><h3>(Assistent-)Trainers</h3>
             <table border="1">
                 <tr style="font-weight: bold">
                     <td>Naam</td>
@@ -73,57 +74,55 @@
                     {% for turnster in functie.trainer %}
                         <tr>
                             <td>
-                                <a href="">
+                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                     {{ turnster.voornaam }} {{ turnster.achternaam }}
                                 </a>
                             </td>
                             <td>
-                                <a href="">
+                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                     {{ turnster.geboortedatum }}
                                 </a>
                             </td>
                             <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
-                                <a href="" style="text-decoration: none">
-                                        <span style="color: rgba(0,0,0,0.6);">
-                                            {{ turnster.percentageAanwezig | round }}%
-                                        </span>
+                            <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
+                            style="text-decoration: none">
+                                    <span style="color: rgba(0,0,0,0.6);">
+                                        {{ turnster.percentageAanwezig | round }}%
+                                    </span>
                                 </a>
                             </td>
                         </tr>
                     {% endfor %}
                 {% endif %}
-            </table>
 
                 {% if functie.assistent is defined %}
                     {% for turnster in functie.assistent %}
                         <tr>
                             <td>
-                                <a href="">
+                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                     {{ turnster.voornaam }} {{ turnster.achternaam }}
                                 </a>
                             </td>
                             <td>
-                                <a href="">
+                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                     {{ turnster.geboortedatum }}
                                 </a>
                             </td>
                             <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
-                                <a href="" style="text-decoration: none">
+                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
+                            style="text-decoration: none">
                                         <span style="color: rgba(0,0,0,0.6);">
                                             {{ turnster.percentageAanwezig | round }}%
                                         </span>
                                 </a>
                             </td>
-                            {% if functie.functie == 'Trainer' %}
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                            {% endif %}
                         </tr>
                     {% endfor %}
                 {% endif %}
+                </table>
+                </p>
 
+                <p>
                 <h3>Turnsters
                     {% if functie.functie == 'Trainer' %}
                         <a href="{{ path('addSelectieTurnsterPage', { 'id': persoonItems.id, 'groepsId': functie.groepId }) }}"><img
@@ -134,7 +133,9 @@
                     <tr style="font-weight: bold">
                         <td>Naam</td>
                         <td>Geboortedatum</td>
-                        <td>Voortgang</td>
+                        {% if functie.groepId == 3 or functie.groepId == 5 %}
+                            <td>Voortgang</td>
+                        {% endif %}
                         <td>% aanwezig</td>
                         {% if functie.functie == 'Trainer' %}
                             <td></td>
@@ -146,22 +147,25 @@
                         {% for turnster in functie.turnster %}
                             <tr>
                                 <td>
-                                    <a href="">
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                         {{ turnster.voornaam }} {{ turnster.achternaam }}
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="">
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                         {{ turnster.geboortedatum }}
                                     </a>
                                 </td>
-                                <td>
-                                    <a href="">
+                                {% if functie.groepId == 3 or functie.groepId == 5 %}
+                                    <td>
+                                        <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
 
-                                    </a>
-                                </td>
+                                        </a>
+                                    </td>
+                                {% endif %}
                                 <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
-                                    <a href="" style="text-decoration: none">
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
+                                    style="text-decoration: none">
                                         <span style="color: rgba(0,0,0,0.6);">
                                             {{ turnster.percentageAanwezig | round }}%
                                         </span>
@@ -169,12 +173,12 @@
                                 </td>
                                 {% if functie.functie == 'Trainer' %}
                                     <td>
-                                        <a href="">
+                                        <a href="{{ path('editSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                             <img src="{{ asset('images/edit.png') }}" width="18px"/>
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="{{ path('removeSelectieTurnsterPage', { 'trainerId': persoonItems.id, 'turnsterId': turnster.id }) }}">
+                                        <a href="{{ path('removeSelectieTurnsterPage', { 'trainerId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                             <img src="{{ asset('images/remove.png') }}" width="18px"/>
                                         </a>
                                     </td>
@@ -182,16 +186,12 @@
                             </tr>
                         {% endfor %}
                     {% endif %}
-                </table>
+                </table></p>
             {% endif %}
-            <h3>Presentie</h3>
-            {% set trainingcount = 0 %}
-            {% set percentageAanwezig = 0 %}
+            <p><h3>Presentie</h3>
             {% for training in persoonItems.trainingen %}
                 {% if training.groepId == functie.groepId %}
-                    {% set trainingcount = trainingcount + 1 %}
-                    {% set percentageAanwezig = percentageAanwezig + training.percentageAanwezig %}
-                    <p><h4>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h4>
+                    <h4>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h4>
                     <table border="1">
                         <tr>
                             {% for trainingsdatum in training.trainingsdata %}
@@ -214,19 +214,34 @@
                     </table>
                 {% endif %}
             {% endfor %}
-            {% if trainingcount > 0 %}
-                <p>Totaal % aanwezig: <span
+            </p>
+                <p>Totaal {{ functie.aantalAanwezig }} van {{ functie.aantalTrainingen }} trainingen aanwezig: <span
                             style="font-weight: bold; background-color: #{{ functie.percentageKleur }}; color: rgba(0,0,0,0.6);">
                         {{ functie.percentageAanwezig | round }}%</span></p>
-            {% endif %}
             <p><a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden voor trainingen</a></p>
 
-            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-                {#<a href="">Wedstrijduitslagen</a><br>#}
+            {% if (functie.functie == 'Trainer') %}
+                <p><a href="{{  path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Kruisjeslijst invullen</a></p>
             {% endif %}
 
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-                {#<a href="">Doelen</a><br>#}
+                <p><a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen bekijken</a></p>
+            {% endif %}
+
+            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
+                <p><a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid bekijken</a></p>
+            {% endif %}
+
+            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
+                <p><a href="{{ path('viewWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
+                        Wedstrijduitslagen
+                    </a></p>
+            {% endif %}
+
+            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
+                {% if functie.groepId == 3 or functie.groepId == 5 %}
+                    {#<p><a href="">Doelen</a></p>#}
+                {% endif %}
             {% endif %}
 
             {% if (functie.functie == 'Turnster') %}

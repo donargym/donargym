@@ -52,6 +52,7 @@ class Wedstrijduitslagen
     public function getAll()
     {
         $uitslagen = new \stdClass();
+        $uitslagen->id = $this->getId();
         $uitslagen->locatie = $this->getLocatie();
         $uitslagen->datum = $this->getDatum();
         $uitslagen->naam = $this->getNaam();
@@ -76,7 +77,7 @@ class Wedstrijduitslagen
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        return __DIR__.'/../../../web/'.$this->getUploadDir();
+        return __DIR__.'/../../../httpdocs/'.$this->getUploadDir();
     }
 
     protected function getUploadDir()

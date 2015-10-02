@@ -15,7 +15,7 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <span style="color:red;">Weet u zeker dat u <b>"{{ content.naam }}"</b> wilt verwijderen?</span>
+        Weet u zeker dat u <span style="color:#FFFF00; font-weight: bold;">"{{ content.naam }}"</span> wilt verwijderen?
         <table>
             <tr>
                 <td>

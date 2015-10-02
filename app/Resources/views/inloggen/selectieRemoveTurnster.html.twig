@@ -3,8 +3,7 @@
 {% block inlogNavigation %}
     <div id="inlog_nav">
         <div id="text">
-            <a href="{{ path('getSelectieIndexPage') }}">Index</a>
-            > <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
             > <i>Turnster verwijderen</i>
         </div>
     </div>
@@ -15,12 +14,11 @@
 {% endblock %}
 
 {% block body %}
-    <span style="color:red;">Weet u zeker dat u <b>"{{ voornaam }} {{ achternaam }}"</b> wilt verwijderen?</span>
+    <p>Weet u zeker dat u <span style="color:#FFFF00; font-weight: bold;">"{{ voornaam }} {{ achternaam }}"</span> wilt verwijderen?</p>
     <table>
         <tr>
             <td>
-                <form method="post" action="{{ path('removeSelectieTurnsterPage', { turnsterId: app.request.get('turnsterId'),
-                trainerId: app.request.get('trainerId')}) }}">
+                <form method="post" action="">
                     <input name="bevestig" type="submit" value="Bevestig">
                 </form>
             </td>

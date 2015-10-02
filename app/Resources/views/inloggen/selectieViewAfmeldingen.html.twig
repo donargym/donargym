@@ -1,0 +1,92 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Afmeldingen bekijken</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Afmeldingen bekijken</h1>
+{% endblock %}
+
+{% block body %}
+    {% for training in aanwezigheid.trainingen %}
+        <h2>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h2>
+        <h3>(Assistent-)Trainers</h3>
+        <table border="1" style="font-size: 10px;">
+            <tr style="font-weight: bold;"><td>Naam\Datum</td>
+                {% for trainingsdatum in training.trainingsdata %}
+                    <td>{{ trainingsdatum.lesdatum }}</td>
+                {% endfor %}
+            </tr>
+            {% for persoon in training.trainers %}
+                <tr>
+                    <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
+                    {% for trainingsdatum in training.trainingsdata %}
+                        {% if trainingsdatum.aanwezigheid[persoon.id] is defined %}
+                            <td style="text-align: center;
+                            {% if trainingsdatum.aanwezigheid[persoon.id] != 'X' %}
+                                    font-weight: bold; color: red; background-color: yellow;
+                            {% endif %}
+                                    ">
+                                {{ trainingsdatum.aanwezigheid[persoon.id] }}
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+
+            {% for persoon in training.assistenten %}
+                <tr>
+                    <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
+                    {% for trainingsdatum in training.trainingsdata %}
+                        {% if trainingsdatum.aanwezigheid[persoon.id] is defined %}
+                            <td style="text-align: center;
+                            {% if trainingsdatum.aanwezigheid[persoon.id] != 'X' %}
+                                    font-weight: bold; color: red; background-color: yellow;
+                            {% endif %}
+                                    ">
+                                {{ trainingsdatum.aanwezigheid[persoon.id] }}
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h3>Turnsters</h3>
+        <table border="1" style="font-size: 10px;">
+            <tr style="font-weight: bold;"><td>Naam\Datum</td>
+                {% for trainingsdatum in training.trainingsdata %}
+                    <td>{{ trainingsdatum.lesdatum }}</td>
+                {% endfor %}
+            </tr>
+            {% for persoon in training.turnsters %}
+                <tr>
+                    <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
+                    {% for trainingsdatum in training.trainingsdata %}
+                        {% if trainingsdatum.aanwezigheid[persoon.id] is defined %}
+                            <td style="text-align: center;
+                                    {% if trainingsdatum.aanwezigheid[persoon.id] != 'X' %}
+                                            font-weight: bold; color: red; background-color: yellow;
+                                    {% endif %}
+                                    ">
+                                {{ trainingsdatum.aanwezigheid[persoon.id] }}
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+{% endblock %}

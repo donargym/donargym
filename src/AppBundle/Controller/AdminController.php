@@ -9,6 +9,7 @@ use AppBundle\Entity\Groepen;
 use AppBundle\Entity\Persoon;
 use AppBundle\Entity\Trainingen;
 use AppBundle\Form\Type\UserType;
+use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -315,14 +316,21 @@ class AdminController extends BaseController
                 OR functie.functie = :functie2')
             ->setParameter('functie', 'Trainer')
             ->setParameter('functie2', 'Assistent-Trainer');
-        $personen = $query->getResult();
+        /** @var Functie $functies */
+        $functies = $query->getResult();
         $persoonItems = array();
-        for($i=0;$i<count($personen);$i++)
+        $ids = array();
+        for($i=0;$i<count($functies);$i++)
         {
-            $persoonItems[$i] = new \stdClass();
-            $persoonItems[$i]->id = $personen[$i]->getId();
-            $persoonItems[$i]->voornaam = $personen[$i]->getVoornaam();
-            $persoonItems[$i]->achternaam = $personen[$i]->getAchternaam();
+            $persoon = $functies[$i]->getPersoon();
+            if(!(in_array($persoon->getId(), $ids)))
+            {
+                $ids[] = $persoon->getId();
+                $persoonItems[$i] = new \stdClass();
+                $persoonItems[$i]->id = $persoon->getId();
+                $persoonItems[$i]->voornaam = $persoon->getVoornaam();
+                $persoonItems[$i]->achternaam = $persoon->getAchternaam();
+            }
         }
         return $this->render('inloggen/adminSelectie.html.twig', array(
             'calendarItems' => $this->calendarItems,

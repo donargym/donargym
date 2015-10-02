@@ -351,11 +351,12 @@ class GetContentController extends BaseController
             }
             elseif ($view == 'wedstrijduitslagen') {
                 $wedstrijduitslagen = array();
-                foreach($groep->getWedstrijduitslagen() as $uitslagen) {
-                    if ($uitslagen->getDatum()->format('m')>7) {
-                        $wedstrijduitslagen[$uitslagen->getDatum()->format('Y')][] = $uitslagen->getAll();
+                $uitslagen = $groep->getWedstrijduitslagen();
+                for ($counter=(count($uitslagen)-1); $counter>=0;$counter--) {
+                    if ($uitslagen[$counter]->getDatum()->format('m')>7) {
+                        $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format('Y')][] = $uitslagen[$counter]->getAll();
                     } else {
-                        $wedstrijduitslagen[($uitslagen->getDatum()->format('Y')-1)][] = $uitslagen->getAll();
+                        $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format('Y')-1)][] = $uitslagen[$counter]->getAll();
                     }
                 }
                 return $this->render('wedstrijdturnen/wedstrijduitslagen.html.twig', array(

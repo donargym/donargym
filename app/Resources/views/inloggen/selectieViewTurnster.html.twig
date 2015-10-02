@@ -1,0 +1,81 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>{{ turnster.voornaam }} {{ turnster.achternaam }}</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+        <img src="http://www.donargym.nl/uploads/selectiefotos/{{ turnster.foto }}"
+            {% if turnster.width > turnster.height %}
+                width="250"
+            {% else %}
+                height = "200"
+            {% endif %}
+            style="float:right;margin-right:2px;margin-top:5px;"/>
+    <h1>{{ turnster.voornaam }} {{ turnster.achternaam }} ({{ turnster.categorie }})</h1>
+{% endblock %}
+
+{% block body %}
+<p>
+    {{ turnster.geboortedatum }}<br>
+    {{ turnster.straatnr }}<br>
+    {{ turnster.postcode }}<br>
+    {{ turnster.plaats }}<br>
+    {{ turnster.email }}<br>
+    {% if turnster.email2 %}
+        {{ turnster.email2 }}<br>
+    {% endif %}
+    {{ turnster.tel1 }}<br>
+    {% if turnster.tel2 %}
+        {{ turnster.tel2 }}<br>
+    {% endif %}
+    {% if turnster.tel3 %}
+        {{ turnster.tel3 }}<br>
+    {% endif %}
+</p>
+
+    {% for training in turnster.trainingen %}
+        <p><h2>{{ training.dag }}: {{ training.tijdvan }} - {{ training.tijdtot }}</h2>
+        <table border="1">
+            <tr>
+                {% for trainingsdatum in training.trainingsdata %}
+                    <td style="font-size: 13px;">{{ trainingsdatum.lesdatum }}</td>
+                {% endfor %}
+                <td style="font-size: 13px;"><b>% Aanwezig</b></td>
+            </tr>
+            <tr>
+                {% for trainingsdatum in training.trainingsdata %}
+                    <td style="text-align: center;
+                    {% if trainingsdatum.aanwezigheid == 'A' or trainingsdatum.aanwezigheid == '-' %}
+                            background-color: yellow; color: red; font-weight: bold;
+                    {% endif %}
+                            ">{{ trainingsdatum.aanwezigheid }}</td>
+                {% endfor %}
+                <td style="text-align:center; font-weight: bold; background-color: #{{ training.percentageKleur }}; color: rgba(0,0,0,0.6);">
+                    {{ training.percentageAanwezig |round }}%
+                </td>
+            </tr>
+        </table>
+        </p>
+    {% endfor %}
+<p>Totaal {{ turnster.aantalAanwezig }} van {{ turnster.aantalTrainingen }} trainingen aanwezig: <span
+            style="font-weight: bold; background-color: #{{ turnster.percentageKleur }}; color: rgba(0,0,0,0.6);">
+        {{ turnster.percentageAanwezig | round }}%</span></p>
+
+
+
+
+
+    {% if (functie == 'Trainer') %}
+    {% endif %}
+
+
+    {% if turnster.doelen is defined %}
+    {% endif %}
+
+{% endblock %}
