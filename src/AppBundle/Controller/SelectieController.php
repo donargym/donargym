@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Aanwezigheid;
+use AppBundle\Entity\Doelen;
 use AppBundle\Entity\FileUpload;
 use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Functie;
@@ -39,6 +40,34 @@ class SelectieController extends BaseController
 
     public function __construct()
     {
+    }
+
+    /**
+     * Creates a token usable in a form
+     * @return string
+     */
+    private function getToken(){
+        $token = sha1(mt_rand());
+        if(!isset($_SESSION['tokens'])){
+            $_SESSION['tokens'] = array($token => 1);
+        }
+        else{
+            $_SESSION['tokens'][$token] = 1;
+        }
+        return $token;
+    }
+
+    /**
+     * Check if a token is valid. Removes it from the valid tokens list
+     * @param string $token The token
+     * @return bool
+     */
+    private function isTokenValid($token){
+        if(!empty($_SESSION['tokens'][$token])){
+            unset($_SESSION['tokens'][$token]);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -317,8 +346,11 @@ class SelectieController extends BaseController
                     $persoonItems->foto = $foto->getLocatie();
                 }
                 $vloermuziek = $persoon->getVloermuziek();
-                if ($vloermuziek == null) {$persoonItems->vloermuziek = null;}
-                else {$persoonItems->vloermuziek = $vloermuziek->getLocatie();}
+                if ($vloermuziek == null) {
+                    $persoonItems->vloermuziek = null;
+                } else {
+                    $persoonItems->vloermuziek = $vloermuziek->getLocatie();
+                }
                 $geboortedatum = $persoon->getGeboortedatum();
                 $persoonItems->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
                 $persoonItems->categorie = $persoon->categorie(strtotime($geboortedatum));
@@ -332,7 +364,7 @@ class SelectieController extends BaseController
                     $persoonItems->functies[$i]->groepId = $groep->getId();
                     $persoonItems->functies[$i]->functie = $functies[$i]->getFunctie();
                     $persoonItems->functies[$i]->turnster = array();
-                    if($persoonItems->functies[$i]->functie == 'Turnster') {
+                    if ($persoonItems->functies[$i]->functie == 'Turnster') {
                         $stukje = $persoon->getStukje();
                         $persoonItems->stukje = $stukje->getAll();
                     }
@@ -352,13 +384,14 @@ class SelectieController extends BaseController
                         if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
                             if (date('m', time()) < '08') {
                                 if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                    ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
+                                    ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                ) {
                                     $check = true;
                                 } else {
                                     break;
                                 }
                             } else {
-                                if($lesdatum->format('Y') == date('Y', time())) {
+                                if ($lesdatum->format('Y') == date('Y', time())) {
                                     if ($lesdatum->format('m') < '08') {
                                         break;
                                     } else {
@@ -405,13 +438,14 @@ class SelectieController extends BaseController
                                 if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
                                     if (date('m', time()) < '08') {
                                         if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
+                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                        ) {
                                             $check = true;
                                         } else {
                                             break;
                                         }
                                     } else {
-                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                        if ($lesdatum->format('Y') == date('Y', time())) {
                                             if ($lesdatum->format('m') < '08') {
                                                 break;
                                             } else {
@@ -476,7 +510,7 @@ class SelectieController extends BaseController
                                             break;
                                         }
                                     } else {
-                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                        if ($lesdatum->format('Y') == date('Y', time())) {
                                             if ($lesdatum->format('m') < '08') {
                                                 break;
                                             } else {
@@ -541,7 +575,7 @@ class SelectieController extends BaseController
                                             break;
                                         }
                                     } else {
-                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                        if ($lesdatum->format('Y') == date('Y', time())) {
                                             if ($lesdatum->format('m') < '08') {
                                                 break;
                                             } else {
@@ -607,8 +641,8 @@ class SelectieController extends BaseController
                                 $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
                                 $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
                                 /** @var Aanwezigheid $aanwezig */
-                                foreach($aanwezigheid as $aanwezig) {
-                                    if($aanwezig->getTrainingsdata() == $trainingsdata[$j]) {
+                                foreach ($aanwezigheid as $aanwezig) {
+                                    if ($aanwezig->getTrainingsdata() == $trainingsdata[$j]) {
                                         $persoonItems->trainingen[$i]->trainingsdata[$j]->afmelding = $aanwezig->getAanwezig();
                                     }
                                 }
@@ -647,7 +681,7 @@ class SelectieController extends BaseController
                         }
                         $persoonItems->trainingen[$i]->trainingsdata = array_reverse($persoonItems->trainingen[$i]->trainingsdata);
                     } else {
-                        $counter=0;
+                        $counter = 0;
                         $aantalTrainingen = 0;
                         $aantalAanwezig = 0;
                         $aanwezigheid = $persoon->getAanwezigheid();
@@ -656,15 +690,16 @@ class SelectieController extends BaseController
                             if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
                                 for ($k = (count($aanwezigheid) - 1); $k >= 0; $k--) {
                                     $check = false;
-                                    if(date('m', time()) < '08') {
-                                        if(($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
+                                    if (date('m', time()) < '08') {
+                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                        ) {
                                             $check = true;
                                         } else {
                                             break;
                                         }
                                     } else {
-                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                        if ($lesdatum->format('Y') == date('Y', time())) {
                                             if ($lesdatum->format('m') < '08') {
                                                 break;
                                             } else {
@@ -672,10 +707,10 @@ class SelectieController extends BaseController
                                             }
                                         }
                                     }
-                                    if($check) {
+                                    if ($check) {
                                         if ($aanwezigheid[$k]->getTrainingsdata() == $trainingsdata[$j]) {
                                             $aantalTrainingen++;
-                                            if($counter < 7) {
+                                            if ($counter < 7) {
                                                 $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                                 $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
                                                 $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
@@ -722,37 +757,71 @@ class SelectieController extends BaseController
 
     private function colorGenerator($percentage)
     {
-        if($percentage>=100) {return '00FF00';} //Green
-        elseif($percentage>=99) {return '11FF00';}
-        elseif($percentage>=97) {return '22FF00';}
-        elseif($percentage>=96) {return '33FF00';}
-        elseif($percentage>=94) {return '44FF00';}
-        elseif($percentage>=93) {return '55FF00';}
-        elseif($percentage>=91) {return '66FF00';}
-        elseif($percentage>=90) {return '77FF00';}
-        elseif($percentage>=88) {return '88FF00';}
-        elseif($percentage>=87) {return '99FF00';}
-        elseif($percentage>=85) {return 'AAFF00';}
-        elseif($percentage>=84) {return 'BBFF00';}
-        elseif($percentage>=82) {return 'CCFF00';}
-        elseif($percentage>=81) {return 'DDFF00';}
-        elseif($percentage>=79) {return 'EEFF00';}
-        elseif($percentage>=78) {return 'FFFF00';} //Yellow
-        elseif($percentage>=75) {return 'FFEE00';}
-        elseif($percentage>=70) {return 'FFDD00';}
-        elseif($percentage>=65) {return 'FFCC00';}
-        elseif($percentage>=60) {return 'FFBB00';}
-        elseif($percentage>=55) {return 'FFAA00';}
-        elseif($percentage>=50) {return 'FF9900';}
-        elseif($percentage>=45) {return 'FF8800';}
-        elseif($percentage>=40) {return 'FF7700';}
-        elseif($percentage>=35) {return 'FF6600';}
-        elseif($percentage>=30) {return 'FF5500';}
-        elseif($percentage>=25) {return 'FF4400';}
-        elseif($percentage>=20) {return 'FF3300';}
-        elseif($percentage>=15) {return 'FF2200';}
-        elseif($percentage>=10) {return 'FF1100';}
-        else {return 'FF0000';} //Red
+        if ($percentage >= 100) {
+            return '00FF00';
+        } //Green
+        elseif ($percentage >= 99) {
+            return '11FF00';
+        } elseif ($percentage >= 97) {
+            return '22FF00';
+        } elseif ($percentage >= 96) {
+            return '33FF00';
+        } elseif ($percentage >= 94) {
+            return '44FF00';
+        } elseif ($percentage >= 93) {
+            return '55FF00';
+        } elseif ($percentage >= 91) {
+            return '66FF00';
+        } elseif ($percentage >= 90) {
+            return '77FF00';
+        } elseif ($percentage >= 88) {
+            return '88FF00';
+        } elseif ($percentage >= 87) {
+            return '99FF00';
+        } elseif ($percentage >= 85) {
+            return 'AAFF00';
+        } elseif ($percentage >= 84) {
+            return 'BBFF00';
+        } elseif ($percentage >= 82) {
+            return 'CCFF00';
+        } elseif ($percentage >= 81) {
+            return 'DDFF00';
+        } elseif ($percentage >= 79) {
+            return 'EEFF00';
+        } elseif ($percentage >= 78) {
+            return 'FFFF00';
+        } //Yellow
+        elseif ($percentage >= 75) {
+            return 'FFEE00';
+        } elseif ($percentage >= 70) {
+            return 'FFDD00';
+        } elseif ($percentage >= 65) {
+            return 'FFCC00';
+        } elseif ($percentage >= 60) {
+            return 'FFBB00';
+        } elseif ($percentage >= 55) {
+            return 'FFAA00';
+        } elseif ($percentage >= 50) {
+            return 'FF9900';
+        } elseif ($percentage >= 45) {
+            return 'FF8800';
+        } elseif ($percentage >= 40) {
+            return 'FF7700';
+        } elseif ($percentage >= 35) {
+            return 'FF6600';
+        } elseif ($percentage >= 30) {
+            return 'FF5500';
+        } elseif ($percentage >= 25) {
+            return 'FF4400';
+        } elseif ($percentage >= 20) {
+            return 'FF3300';
+        } elseif ($percentage >= 15) {
+            return 'FF2200';
+        } elseif ($percentage >= 10) {
+            return 'FF1100';
+        } else {
+            return 'FF0000';
+        } //Red
     }
 
     /**
@@ -799,92 +868,102 @@ class SelectieController extends BaseController
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $id, true);
+        $token = $this->getToken();
         if ($request->getMethod() == 'POST') {
-            /** @var Persoon $persoonObject */
-            $persoonObject = $this->getPersoonObject($userObject, $id);
-            $afmeldingsData = array();
-            foreach ($_POST as $key=>$value) {
-                if($key != "reden") {
+            $postedToken = $request->request->get('token');
+            if(!empty($postedToken)) {
+                if ($this->isTokenValid($postedToken)) {
+                    /** @var Persoon $persoonObject */
+                    $persoonObject = $this->getPersoonObject($userObject, $id);
+                    $afmeldingsData = array();
+                    $em = $this->getDoctrine()->getManager();
+                    foreach ($_POST as $key => $value) {
+                        if ($key != "reden") {
+                            $query = $em->createQuery(
+                                'SELECT trainingsdata
+                                FROM AppBundle:Trainingsdata trainingsdata
+                                WHERE trainingsdata.id = :id')
+                                ->setParameter('id', $key);
+                            /** @var Trainingsdata $trainingsdatum */
+                            $trainingsdatum = $query->setMaxResults(1)->getOneOrNullResult();
+                            $aanwezigheid = new Aanwezigheid();
+                            $aanwezigheid->setAanwezig('A');
+                            $aanwezigheid->setPersoon($persoonObject);
+                            $aanwezigheid->setTrainingsdata($trainingsdatum);
+                            $persoonObject->addAanwezigheid($aanwezigheid);
+                            $lesdatum = $trainingsdatum->getLesdatum();
+                            /** @var Trainingen $training */
+                            $training = $trainingsdatum->getTrainingen();
+                            $trainingsdag = $training->getDag();
+                            $afmeldingsData[] = $trainingsdag . " " . $lesdatum->format('d-m-Y');;
+                            $em->persist($persoonObject);
+                            $em->flush();
+                        } else {
+                            $reden = $value;
+                        }
+                    }
                     $em = $this->getDoctrine()->getManager();
                     $query = $em->createQuery(
-                    'SELECT trainingsdata
-                    FROM AppBundle:Trainingsdata trainingsdata
-                    WHERE trainingsdata.id = :id')
-                    ->setParameter('id', $key);
-                    /** @var Trainingsdata $trainingsdatum */
-                    $trainingsdatum = $query->setMaxResults(1)->getOneOrNullResult();
-                    $aanwezigheid = new Aanwezigheid();
-                    $aanwezigheid->setAanwezig('A');
-                    $aanwezigheid->setPersoon($persoonObject);
-                    $aanwezigheid->setTrainingsdata($trainingsdatum);
-                    $persoonObject->addAanwezigheid($aanwezigheid);
-                    $lesdatum = $trainingsdatum->getLesdatum();
-                    /** @var Trainingen $training */
-                    $training = $trainingsdatum->getTrainingen();
-                    $trainingsdag = $training->getDag();
-                    $afmeldingsData[] = $trainingsdag . " " . $lesdatum->format('d-m-Y');;
-                    $em->persist($persoonObject);
-                    $em->flush();
+                        'SELECT functie
+                        FROM AppBundle:Functie functie
+                        WHERE functie.groep = :id
+                        AND functie.functie = :functie')
+                        ->setParameter('id', $groepId)
+                        ->setParameter('functie', 'Trainer');
+                    $trainers = $query->getResult();
+                    foreach ($trainers as $trainer) {
+                        $persoon = $trainer->getPersoon();
+                        /** @var User $user */
+                        $user = $persoon->getUser();
+                        $message = \Swift_Message::newInstance()
+                            ->setSubject('Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
+                            ->setFrom($_SESSION['username'])
+                            ->setTo($user->getUsername())
+                            ->setBody(
+                                $this->renderView(
+                                    'mails/afmelding.txt.twig',
+                                    array(
+                                        'voornaam' => $persoonItems->voornaam,
+                                        'achternaam' => $persoonItems->achternaam,
+                                        'afmeldingsData' => $afmeldingsData,
+                                        'reden' => $reden,
+                                    )
+                                ),
+                                'text/plain'
+                            );
+                        $this->get('mailer')->send($message);
+
+                        if ($user->getEmail2()) {
+                            $message = \Swift_Message::newInstance()
+                                ->setSubject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
+                                ->setFrom($_SESSION['username'])
+                                ->setTo($user->getEmail2())
+                                ->setBody(
+                                    $this->renderView(
+                                        'mails/afmelding.txt.twig',
+                                        array(
+                                            'voornaam' => $persoonItems->voornaam,
+                                            'achternaam' => $persoonItems->achternaam,
+                                            'afmeldingsData' => $afmeldingsData,
+                                            'reden' => $reden,
+                                        )
+                                    ),
+                                    'text/plain'
+                                );
+                            $this->get('mailer')->send($message);
+                        }
+
+                    }
+                    return $this->redirectToRoute('showPersoon', array(
+                        'id' => $id
+                    ));
                 }
                 else {
-                    $reden = $value;
+                    return $this->redirectToRoute('showPersoon', array(
+                        'id' => $id
+                    ));
                 }
             }
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-            'SELECT functie
-            FROM AppBundle:Functie functie
-            WHERE functie.groep = :id
-            AND functie.functie = :functie')
-            ->setParameter('id', $groepId)
-            ->setParameter('functie', 'Trainer');
-            $trainers = $query->getResult();
-            foreach ($trainers as $trainer) {
-                $persoon = $trainer->getPersoon();
-                /** @var User $user */
-                $user = $persoon->getUser();
-                $message = \Swift_Message::newInstance()
-                    ->setSubject('Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
-                    ->setFrom($_SESSION['username'])
-                    ->setTo($user->getUsername())
-                    ->setBody(
-                        $this->renderView(
-                            'mails/afmelding.txt.twig',
-                            array(
-                                'voornaam' => $persoonItems->voornaam,
-                                'achternaam' => $persoonItems->achternaam,
-                                'afmeldingsData' => $afmeldingsData,
-                                'reden' => $reden,
-                            )
-                        ),
-                        'text/plain'
-                    );
-                $this->get('mailer')->send($message);
-
-                if($user->getEmail2()) {
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
-                        ->setFrom($_SESSION['username'])
-                        ->setTo($user->getEmail2())
-                        ->setBody(
-                            $this->renderView(
-                                'mails/afmelding.txt.twig',
-                                array(
-                                    'voornaam' => $persoonItems->voornaam,
-                                    'achternaam' => $persoonItems->achternaam,
-                                    'afmeldingsData' => $afmeldingsData,
-                                    'reden' => $reden,
-                                )
-                            ),
-                            'text/plain'
-                        );
-                    $this->get('mailer')->send($message);
-                }
-
-            }
-            return $this->redirectToRoute('showPersoon', array(
-                'id' => $id
-            ));
         }
         return $this->render('inloggen/selectieAfmelden.html.twig', array(
             'calendarItems' => $this->calendarItems,
@@ -894,10 +973,12 @@ class SelectieController extends BaseController
             'persoonItems' => $persoonItems,
             'wedstrijdLinkItems' => $this->groepItems,
             'groepId' => $groepId,
+            'token' => $token,
         ));
     }
 
-    private function getAanwezigheid($userObject, $id, $groepId, $toekomst) {
+    private function getAanwezigheid($userObject, $id, $groepId, $toekomst)
+    {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
             /** @var Persoon $persoon */
@@ -912,7 +993,7 @@ class SelectieController extends BaseController
                             $aanwezigheid = new \stdClass();
                             $trainingen = $groep->getTrainingen();
                             $aanwezigheid->trainingen = array();
-                            for ($i=0; $i<count($trainingen); $i++) {
+                            for ($i = 0; $i < count($trainingen); $i++) {
                                 $aanwezigheid->trainingen[$i] = new \stdClass();
                                 $aanwezigheid->trainingen[$i]->dag = $trainingen[$i]->getDag();
                                 $aanwezigheid->trainingen[$i]->tijdVan = $trainingen[$i]->getTijdvan();
@@ -923,31 +1004,32 @@ class SelectieController extends BaseController
                                 $aanwezigheid->trainingen[$i]->assistenten = array();
                                 $trainingsdata = $trainingen[$i]->getTrainingsdata();
                                 $personenPerTraining = $trainingen[$i]->getPersoon();
-                                for ($j=0; $j<count($personenPerTraining); $j++) {
+                                for ($j = 0; $j < count($personenPerTraining); $j++) {
                                     /** @var Functie $functiePerPersoon */
                                     $functiesPerPersoon = $personenPerTraining[$j]->getFunctie();
                                     foreach ($functiesPerPersoon as $functiePerPersoon) {
                                         $groepPerPersoon = $functiePerPersoon->getGroep();
-                                        if($groepPerPersoon->getId() == $groepId) {
+                                        if ($groepPerPersoon->getId() == $groepId) {
                                             $aantalTrainingen = 0;
                                             $aantalAanwezig = 0;
                                             $aanwezighedenPerPersoon = $personenPerTraining[$j]->getAanwezigheid();
-                                            for ($jj=(count($aanwezighedenPerPersoon)-1); $jj>=0; $jj--) {
+                                            for ($jj = (count($aanwezighedenPerPersoon) - 1); $jj >= 0; $jj--) {
                                                 /** @var Aanwezigheid $aanwezigheidPerPersoon */
                                                 $aanwezigTrainingsdata = $aanwezighedenPerPersoon[$jj]->getTrainingsdata();
                                                 $lesdatum = $aanwezigTrainingsdata->getLesdatum();
                                                 $timestamp = $lesdatum->getTimestamp();
-                                                if($aanwezigTrainingsdata->getTrainingen() == $trainingen[$i] && $timestamp < time()) {
+                                                if ($aanwezigTrainingsdata->getTrainingen() == $trainingen[$i] && $timestamp < time()) {
                                                     $check = false;
-                                                    if(date('m', time()) < '08') {
-                                                        if(($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('m') < '08') ||
-                                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('m') >= '08')) {
+                                                    if (date('m', time()) < '08') {
+                                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('m') < '08') ||
+                                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('m') >= '08')
+                                                        ) {
                                                             $check = true;
                                                         } else {
                                                             break;
                                                         }
                                                     } else {
-                                                        if($lesdatum->format('Y') == date('Y', time())) {
+                                                        if ($lesdatum->format('Y') == date('Y', time())) {
                                                             if ($lesdatum->format('m') < '08') {
                                                                 break;
                                                             } else {
@@ -955,7 +1037,7 @@ class SelectieController extends BaseController
                                                             }
                                                         }
                                                     }
-                                                    if($check) {
+                                                    if ($check) {
                                                         $aantalTrainingen++;
                                                         if ($aanwezighedenPerPersoon[$jj]->getAanwezig() == 'X') {
                                                             $aantalAanwezig++;
@@ -969,7 +1051,7 @@ class SelectieController extends BaseController
                                                 $percentageAanwezig = (100 * ($aantalAanwezig / $aantalTrainingen));
                                             }
                                             $percentageKleur = $this->colorGenerator($percentageAanwezig);
-                                            if($functiePerPersoon->getFunctie() == 'Trainer') {
+                                            if ($functiePerPersoon->getFunctie() == 'Trainer') {
                                                 $aanwezigheid->trainingen[$i]->trainers[$j] = new \stdClass();
                                                 $aanwezigheid->trainingen[$i]->trainers[$j]->voornaam = $personenPerTraining[$j]->getVoornaam();
                                                 $aanwezigheid->trainingen[$i]->trainers[$j]->achternaam = $personenPerTraining[$j]->getAchternaam();
@@ -996,11 +1078,11 @@ class SelectieController extends BaseController
                                 }
                                 $counter = 0;
                                 for ($j = (count($trainingsdata) - 4); $j >= 0; $j--) {
-                                    if($toekomst) {
+                                    if ($toekomst) {
                                         $lesdatum = $trainingsdata[$j]->getLesdatum();
                                         $timestamp = $lesdatum->getTimestamp();
                                         $timestampPlusDag = ((int)$timestamp + 86400);
-                                        if($timestampPlusDag > time()) {
+                                        if ($timestampPlusDag > time()) {
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j]->aanwezigheid = array();
@@ -1019,7 +1101,7 @@ class SelectieController extends BaseController
                                     } else {
                                         $lesdatum = $trainingsdata[$j]->getLesdatum();
                                         $timestamp = $lesdatum->getTimestamp();
-                                        if($timestamp < time()) {
+                                        if ($timestamp < time()) {
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j]->aanwezigheid = array();
@@ -1037,7 +1119,7 @@ class SelectieController extends BaseController
                                         }
                                     }
                                 }
-                                if($toekomst) {
+                                if ($toekomst) {
                                     if ($counter < 7) {
                                         if (count($trainingsdata) == 0) {
                                             for ($try = 0; $try < 7; $try++) {
@@ -1151,17 +1233,17 @@ class SelectieController extends BaseController
                             $trainingen = $groep->getTrainingen();
                             $trainingsdataVoorKruisjeslijst = new \stdClass();
                             $trainingsdataVoorKruisjeslijst->trainingen = array();
-                            for ($j=0; $j<count($trainingen); $j++) {
+                            for ($j = 0; $j < count($trainingen); $j++) {
                                 $trainingsdataVoorKruisjeslijst->trainingen[$j] = new \stdClass();
                                 $trainingsdataVoorKruisjeslijst->trainingen[$j]->dag = $trainingen[$j]->getDag();
                                 $trainingsdataVoorKruisjeslijst->trainingen[$j]->tijdVan = $trainingen[$j]->getTijdvan();
                                 $trainingsdataVoorKruisjeslijst->trainingen[$j]->tijdTot = $trainingen[$j]->getTijdtot();
                                 $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata = array();
                                 $trainingsdata = $trainingen[$j]->getTrainingsdata();
-                                for ($i=(count($trainingsdata)-1); $i>=0; $i--) {
+                                for ($i = (count($trainingsdata) - 1); $i >= 0; $i--) {
                                     $lesdatum = $trainingsdata[$i]->getLesdatum();
                                     $timestamp = $lesdatum->getTimestamp();
-                                    if (($timestamp) > (time()-604800)) {
+                                    if (($timestamp) > (time() - 604800)) {
                                         $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i] = new \stdClass();
                                         $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i]->id = $trainingsdata[$i]->getId();
                                         $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i]->datum = $lesdatum->format('d-m-Y');
@@ -1221,9 +1303,9 @@ class SelectieController extends BaseController
                         $groep = $functie->getGroep();
                         if ($groep->getId() == $groepId) {
                             $trainingen = $groep->getTrainingen();
-                            for ($j=0; $j<count($trainingen); $j++) {
+                            for ($j = 0; $j < count($trainingen); $j++) {
                                 $trainingsdata = $trainingen[$j]->getTrainingsdata();
-                                for ($i=(count($trainingsdata)-1); $i>=0; $i--) {
+                                for ($i = (count($trainingsdata) - 1); $i >= 0; $i--) {
                                     if ($trainingsdata[$i]->getId() == $trainingsdatumId) {
                                         return $trainingsdata[$i];
                                     }
@@ -1290,22 +1372,22 @@ class SelectieController extends BaseController
         $aanwezigheidPersonen->trainers = array();
         $aanwezigheidPersonen->assistenten = array();
         $aanwezigheidPersonen->turnsters = array();
-        for ($i=0; $i<count($personen); $i++) {
+        for ($i = 0; $i < count($personen); $i++) {
             $functies = $personen[$i]->getFunctie();
-            foreach($functies as $functie) {
+            foreach ($functies as $functie) {
                 $groep = $functie->getGroep();
-                if($groep->getId() == $groepId) {
-                    if($functie->getFunctie() == 'Trainer') {
+                if ($groep->getId() == $groepId) {
+                    if ($functie->getFunctie() == 'Trainer') {
                         $aanwezigheidPersonen->trainers[$i] = new \stdClass();
                         $aanwezigheidPersonen->trainers[$i]->voornaam = $personen[$i]->getVoornaam();
                         $aanwezigheidPersonen->trainers[$i]->achternaam = $personen[$i]->getAchternaam();
                         $aanwezigheidPersonen->trainers[$i]->id = $personen[$i]->getId();
-                    } elseif($functie->getFunctie() == 'Assistent-Trainer') {
+                    } elseif ($functie->getFunctie() == 'Assistent-Trainer') {
                         $aanwezigheidPersonen->assistenten[$i] = new \stdClass();
                         $aanwezigheidPersonen->assistenten[$i]->voornaam = $personen[$i]->getVoornaam();
                         $aanwezigheidPersonen->assistenten[$i]->achternaam = $personen[$i]->getAchternaam();
                         $aanwezigheidPersonen->assistenten[$i]->id = $personen[$i]->getId();
-                    } elseif($functie->getFunctie() == 'Turnster') {
+                    } elseif ($functie->getFunctie() == 'Turnster') {
                         $aanwezigheidPersonen->turnsters[$i] = new \stdClass();
                         $aanwezigheidPersonen->turnsters[$i]->voornaam = $personen[$i]->getVoornaam();
                         $aanwezigheidPersonen->turnsters[$i]->achternaam = $personen[$i]->getAchternaam();
@@ -1316,7 +1398,7 @@ class SelectieController extends BaseController
         }
         $aanwezigheid = $trainingsdataObject->getAanwezigheid();
         $aanwezigheidPersonen->aanwezigheid = array();
-        for ($i=0; $i<count($aanwezigheid); $i++) {
+        for ($i = 0; $i < count($aanwezigheid); $i++) {
             $aanwezigePersoon = $aanwezigheid[$i]->getPersoon();
             $aanwezigheidPersonen->aanwezigheid[$aanwezigePersoon->getId()] = $aanwezigheid[$i]->getAanwezig();;
         }
@@ -1347,12 +1429,11 @@ class SelectieController extends BaseController
             /** @var Persoon $persoonObject */
             $afgemeldMaarAanwezig = array();
             $aanwezigeIds = array();
-            foreach ($_POST as $key=>$value) {
-                if(preg_match("/^afgemeld/", $key)) {
+            foreach ($_POST as $key => $value) {
+                if (preg_match("/^afgemeld/", $key)) {
                     $afgemeldMaarAanwezigid = explode("_", $key);
                     $afgemeldMaarAanwezig[] = (int)$afgemeldMaarAanwezigid[1];
-                }
-                else {
+                } else {
                     $aanwezigeIds[] = $key;
                 }
             }
@@ -1372,8 +1453,10 @@ class SelectieController extends BaseController
                     $query = $em->createQuery(
                         'SELECT aanwezigheid
                         FROM AppBundle:Aanwezigheid aanwezigheid
-                        WHERE aanwezigheid.persoon = :persoon')
-                        ->setParameter('persoon', $persoonsId);
+                        WHERE aanwezigheid.persoon = :persoon
+						AND aanwezigheid.trainingsdata = :training')
+                        ->setParameter('persoon', $persoonsId)
+                        ->setParameter('training', $trainingsdatumId);
                     /** @var Aanwezigheid $aanwezig */
                     $aanwezig = $query->setMaxResults(1)->getOneOrNullResult();
                     $aanwezig->setAanwezig('X');
@@ -1750,7 +1833,7 @@ class SelectieController extends BaseController
             } else {
                 foreach ($functies as $functie) {
                     $groep = $functie->getGroep();
-                    if($groep->getId() == $groepId && $functie->getFunctie() == 'Turnster') {
+                    if ($groep->getId() == $groepId && $functie->getFunctie() == 'Turnster') {
                         $em->remove($functie);
                         $em->flush();
                     }
@@ -1891,11 +1974,11 @@ class SelectieController extends BaseController
             $groepObject = $response['groep'];
             $functie = $response['functie'];
             $uitslagen = $groepObject->getWedstrijduitslagen();
-            for ($counter=(count($uitslagen)-1); $counter>=0;$counter--) {
-                if ($uitslagen[$counter]->getDatum()->format('m')>7) {
+            for ($counter = (count($uitslagen) - 1); $counter >= 0; $counter--) {
+                if ($uitslagen[$counter]->getDatum()->format('m') > 7) {
                     $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format('Y')][] = $uitslagen[$counter]->getAll();
                 } else {
-                    $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format('Y')-1)][] = $uitslagen[$counter]->getAll();
+                    $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format('Y') - 1)][] = $uitslagen[$counter]->getAll();
                 }
             }
         }
@@ -1906,9 +1989,9 @@ class SelectieController extends BaseController
             'persoon' => $persoon,
             'user' => $user,
             'persoonItems' => $persoonItems,
-            'wedstrijduitslagen' =>$wedstrijduitslagen,
+            'wedstrijduitslagen' => $wedstrijduitslagen,
             'functie' => $functie,
-            'groepId' =>$groepId,
+            'groepId' => $groepId,
         ));
     }
 
@@ -1963,7 +2046,7 @@ class SelectieController extends BaseController
                 'user' => $user,
                 'persoonItems' => $persoonItems,
                 'functie' => $functie,
-                'groepId' =>$groepId,
+                'groepId' => $groepId,
                 'form' => $form->createView(),
             ));
         }
@@ -1995,17 +2078,16 @@ class SelectieController extends BaseController
             $functie = $response['functie'];
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
-            'SELECT wedstrijduitslagen
+                'SELECT wedstrijduitslagen
             FROM AppBundle:Wedstrijduitslagen wedstrijduitslagen
             WHERE wedstrijduitslagen.id = :id')
-            ->setParameter('id', $wedstrijduitslagId);
+                ->setParameter('id', $wedstrijduitslagId);
             $wedstrijduitslag = $query->setMaxResults(1)->getOneOrNullResult();
             $uitslag = new \stdClass();
             $uitslag->naam = $wedstrijduitslag->getNaam();
             $uitslag->id = $wedstrijduitslag->getId();
         }
-        if($request->getMethod() == 'POST')
-        {
+        if ($request->getMethod() == 'POST') {
             $em = $this->getDoctrine()->getManager();
             $em->remove($wedstrijduitslag);
             $em->flush();
@@ -2022,7 +2104,7 @@ class SelectieController extends BaseController
             'user' => $user,
             'persoonItems' => $persoonItems,
             'functie' => $functie,
-            'groepId' =>$groepId,
+            'groepId' => $groepId,
             'uitslag' => $uitslag,
         ));
     }
@@ -2069,7 +2151,7 @@ class SelectieController extends BaseController
             $persoonEdit->tel3 = $user->getTel3();
             $functies = $result->getFunctie();
             $persoonEdit->functie = array();
-            for($i=0;$i<count($functies);$i++) {
+            for ($i = 0; $i < count($functies); $i++) {
                 $persoonEdit->functie[$i] = new \stdClass();
                 $persoonEdit->functie[$i]->functie = $functies[$i]->getFunctie();
                 $groep = $functies[$i]->getGroep();
@@ -2077,10 +2159,10 @@ class SelectieController extends BaseController
                 $persoonEdit->functie[$i]->groepId = $groep->getId();
                 $trainingen = $groep->getTrainingen();
                 $persoonEdit->functie[$i]->trainingen = array();
-                for($j=0;$j<count($trainingen);$j++) {
+                for ($j = 0; $j < count($trainingen); $j++) {
                     $persoonTrainingen = $result->getTrainingen();
-                    for($k=0;$k<count($persoonTrainingen);$k++) {
-                        if($trainingen[$j]->getId() == $persoonTrainingen[$k]->getId()) {
+                    for ($k = 0; $k < count($persoonTrainingen); $k++) {
+                        if ($trainingen[$j]->getId() == $persoonTrainingen[$k]->getId()) {
                             $persoonEdit->functie[$i]->trainingen[$k] = new \stdClass();
                             $persoonEdit->functie[$i]->trainingen[$k]->trainingId = $persoonTrainingen[$k]->getId();
                         }
@@ -2093,8 +2175,7 @@ class SelectieController extends BaseController
             /** @var Groepen $groepen */
             $groepen = $query->getResult();
             $groepenItems = array();
-            for($i=0;$i<count($groepen);$i++)
-            {
+            for ($i = 0; $i < count($groepen); $i++) {
                 $groepenItems[$i] = new \stdClass();
                 $groepenItems[$i]->id = $groepen[$i]->getId();
                 $groepenItems[$i]->naam = $groepen[$i]->getName();
@@ -2105,7 +2186,7 @@ class SelectieController extends BaseController
                 WHERE trainingen.groep = :id')
                     ->setParameter('id', $groepen[$i]->getId());
                 $trainingen = $query->getResult();
-                for($j=0;$j<count($trainingen);$j++) {
+                for ($j = 0; $j < count($trainingen); $j++) {
                     $groepenItems[$i]->trainingen[$j] = new \stdClass();
                     $groepenItems[$i]->trainingen[$j]->dag = $trainingen[$j]->getDag();
                     $groepenItems[$i]->trainingen[$j]->tijdVan = $trainingen[$j]->getTijdVan();
@@ -2113,7 +2194,7 @@ class SelectieController extends BaseController
                     $groepenItems[$i]->trainingen[$j]->id = $trainingen[$j]->getId();
                 }
             }
-            if($request->getMethod() == 'POST') {
+            if ($request->getMethod() == 'POST') {
                 $query = $em->createQuery(
                     'SELECT persoon
                 FROM AppBundle:Persoon persoon
@@ -2178,7 +2259,7 @@ class SelectieController extends BaseController
                                 $check = true;
                             }
                         }
-                        if(!$check) {
+                        if (!$check) {
                             $newFunctie = new Functie();
                             $newFunctie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
                             $newFunctie->setGroep($groep);
@@ -2263,7 +2344,7 @@ class SelectieController extends BaseController
         $turnster->trainingen = array();
         $functies = $persoonObject->getFunctie();
         foreach ($functies as $functie) {
-            for ($i=0; $i<count($trainingen); $i++) {
+            for ($i = 0; $i < count($trainingen); $i++) {
                 if (($functie->getGroep() == $trainingen[$i]->getGroep() && $functie->getGroep() == $groepObject)) {
                     $turnster->trainingen[$i] = new \stdClass();
                     $turnster->trainingen[$i]->id = $trainingen[$i]->getId();
@@ -2272,7 +2353,7 @@ class SelectieController extends BaseController
                     $turnster->trainingen[$i]->tijdtot = $trainingen[$i]->getTijdtot();
                     $turnster->trainingen[$i]->trainingsdata = array();
                     $trainingsdata = $trainingen[$i]->getTrainingsdata();
-                    $counter=0;
+                    $counter = 0;
                     $aantalTrainingen = 0;
                     $aantalAanwezig = 0;
                     $aanwezigheid = $persoonObject->getAanwezigheid();
@@ -2281,15 +2362,16 @@ class SelectieController extends BaseController
                         if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
                             for ($k = (count($aanwezigheid) - 1); $k >= 0; $k--) {
                                 $check = false;
-                                if(date('m', time()) < '08') {
-                                    if(($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
+                                if (date('m', time()) < '08') {
+                                    if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                    ) {
                                         $check = true;
                                     } else {
                                         break;
                                     }
                                 } else {
-                                    if($lesdatum->format('Y') == date('Y', time())) {
+                                    if ($lesdatum->format('Y') == date('Y', time())) {
                                         if ($lesdatum->format('m') < '08') {
                                             break;
                                         } else {
@@ -2297,10 +2379,10 @@ class SelectieController extends BaseController
                                         }
                                     }
                                 }
-                                if($check) {
+                                if ($check) {
                                     if ($aanwezigheid[$k]->getTrainingsdata() == $trainingsdata[$j]) {
                                         $aantalTrainingen++;
-                                        if($counter < 7) {
+                                        if ($counter < 7) {
                                             $turnster->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                             $turnster->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
                                             $turnster->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
@@ -2342,13 +2424,14 @@ class SelectieController extends BaseController
             if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $groepObject->getId()) {
                 if (date('m', time()) < '08') {
                     if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')) {
+                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                    ) {
                         $check = true;
                     } else {
                         break;
                     }
                 } else {
-                    if($lesdatum->format('Y') == date('Y', time())) {
+                    if ($lesdatum->format('Y') == date('Y', time())) {
                         if ($lesdatum->format('m') < '08') {
                             break;
                         } else {
@@ -2406,7 +2489,7 @@ class SelectieController extends BaseController
             'user' => $user,
             'persoonItems' => $persoonItems,
             'functie' => $functie,
-            'groepId' =>$groepId,
+            'groepId' => $groepId,
             'turnster' => $turnster,
         ));
     }
@@ -2416,13 +2499,12 @@ class SelectieController extends BaseController
         /** @var Groepen $groepObject */
         $vloermuziek = array();
         $personen = $groepObject->getPeople();
-        for ($i=0; $i<count($personen); $i++) {
+        for ($i = 0; $i < count($personen); $i++) {
             $functies = $personen[$i]->getFunctie();
             foreach ($functies as $functie) {
-                if($functie->getFunctie() == 'Turnster' && $functie->getGroep() == $groepObject) {
+                if ($functie->getFunctie() == 'Turnster' && $functie->getGroep() == $groepObject) {
                     $persoonInfo = $personen[$i]->getAll();
-                    if ($persoonInfo->categorie == 'Jeugd 2' || $persoonInfo->categorie == 'Junior' || $persoonInfo->categorie == 'Senior')
-                    {
+                    if ($persoonInfo->categorie == 'Jeugd 2' || $persoonInfo->categorie == 'Junior' || $persoonInfo->categorie == 'Senior') {
                         $vloermuziek[$i] = $persoonInfo;
                     }
                 }
@@ -2512,7 +2594,7 @@ class SelectieController extends BaseController
 
                 if ($form->isValid()) {
                     $extensions = array('mp3', 'wma');
-                    if(in_array(strtolower($vloermuziek->getFile()->getClientOriginalExtension()), $extensions)) {
+                    if (in_array(strtolower($vloermuziek->getFile()->getClientOriginalExtension()), $extensions)) {
                         $persoonObject->setVloermuziek($vloermuziek);
                         $em = $this->getDoctrine()->getManager();
                         $em->persist($persoonObject);
@@ -2526,7 +2608,9 @@ class SelectieController extends BaseController
                             'persoonId' => $persoonId,
                             'groepId' => $groepId,
                         ));
-                    } else {$error = 'Please upload a valid audio file: mp3 or wma';}
+                    } else {
+                        $error = 'Please upload a valid audio file: mp3 or wma';
+                    }
                 }
                 return $this->render('inloggen/selectieAddVloermuziek.html.twig', array(
                     'calendarItems' => $this->calendarItems,
@@ -2542,5 +2626,443 @@ class SelectieController extends BaseController
 
             }
         }
+    }
+
+    private function getAllDoelen($viewDoelen = true)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT doelen
+            FROM AppBundle:Doelen doelen');
+        $doelenObject = $query->getResult();
+        $doelenPerToestel = array();
+        $doelenPerToestel[0] = new \stdClass();
+        $doelenPerToestel[0]->naam = 'Sprong';
+        $doelenPerToestel[0]->doelen = array();
+        $doelenPerToestel[1] = new \stdClass();
+        $doelenPerToestel[1]->naam = 'Brug';
+        $doelenPerToestel[1]->doelen = array();
+        $doelenPerToestel[2] = new \stdClass();
+        $doelenPerToestel[2]->naam = 'Balk';
+        $doelenPerToestel[2]->doelen = array();
+        $doelenPerToestel[3] = new \stdClass();
+        $doelenPerToestel[3]->naam = 'Vloer';
+        $doelenPerToestel[3]->doelen = array();
+        for ($i = 0; $i < count($doelenObject); $i++) {
+            if ($viewDoelen) {
+                if ($doelenObject[$i]->getTrede()) {
+                    continue;
+                }
+            }
+            switch ($doelenObject[$i]->getToestel()) {
+                case 'Sprong':
+                    $doelenPerToestel[0]->doelen[$i] = new \stdClass();
+                    $doelenPerToestel[0]->doelen[$i]->id = $doelenObject[$i]->getId();
+                    $doelenPerToestel[0]->doelen[$i]->naam = $doelenObject[$i]->getNaam();
+                    $doelenPerToestel[0]->doelen[$i]->trede = $doelenObject[$i]->getTrede();
+                    break;
+                case 'Brug':
+                    $doelenPerToestel[1]->doelen[$i] = new \stdClass();
+                    $doelenPerToestel[1]->doelen[$i]->id = $doelenObject[$i]->getId();
+                    $doelenPerToestel[1]->doelen[$i]->naam = $doelenObject[$i]->getNaam();
+                    $doelenPerToestel[1]->doelen[$i]->trede = $doelenObject[$i]->getTrede();
+                    break;
+                case 'Balk':
+                    $doelenPerToestel[2]->doelen[$i] = new \stdClass();
+                    $doelenPerToestel[2]->doelen[$i]->id = $doelenObject[$i]->getId();
+                    $doelenPerToestel[2]->doelen[$i]->naam = $doelenObject[$i]->getNaam();
+                    $doelenPerToestel[2]->doelen[$i]->trede = $doelenObject[$i]->getTrede();
+                    break;
+                case 'Vloer':
+                    $doelenPerToestel[3]->doelen[$i] = new \stdClass();
+                    $doelenPerToestel[3]->doelen[$i]->id = $doelenObject[$i]->getId();
+                    $doelenPerToestel[3]->doelen[$i]->naam = $doelenObject[$i]->getNaam();
+                    $doelenPerToestel[3]->doelen[$i]->trede = $doelenObject[$i]->getTrede();
+                    break;
+            }
+        }
+        for ($i=0;$i<count($doelenPerToestel);$i++) {
+            usort($doelenPerToestel[$i]->doelen, function($a, $b)
+            {
+                return strcmp($a->naam, $b->naam);
+            });
+        }
+        return $doelenPerToestel;
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{persoonId}/viewdoelen/{groepId}/", name="viewDoelen")
+     * @Method({"GET"})
+     */
+    public function viewDoelen($persoonId, $groepId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer', 'Assistent-Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $doelenPerToestel = $this->getAllDoelen();
+        }
+        return $this->render('inloggen/selectieViewDoelen.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' => $groepId,
+            'doelenPerToestel' => $doelenPerToestel,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{persoonId}/adddoelen/{groepId}/", name="addDoelen")
+     * @Method({"GET", "POST"})
+     */
+    public function addDoelen($persoonId, $groepId, Request $request)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $doelenPerToestel = $this->getAllDoelen(false);
+            $repeat = false;
+            if ($request->getMethod() == 'POST') {
+                $doel = new Doelen();
+                $doel->setNaam($request->request->get('naam'));
+                $doel->setToestel($request->request->get('toestel'));
+                $subdoelen = array();
+                if ($request->request->get('sub1')) {
+                    $subdoelen[] = $request->request->get('sub1');
+                }
+                if ($request->request->get('sub2')) {
+                    $subdoelen[] = $request->request->get('sub2');
+                }
+                if ($request->request->get('sub3')) {
+                    $subdoelen[] = $request->request->get('sub3');
+                }
+                if ($request->request->get('sub4')) {
+                    $subdoelen[] = $request->request->get('sub4');
+                }
+                if ($request->request->get('sub5')) {
+                    $subdoelen[] = $request->request->get('sub5');
+                }
+                if ($request->request->get('sub6')) {
+                    $subdoelen[] = $request->request->get('sub6');
+                }
+                if ($request->request->get('trede')) {
+                    $doel->setTrede($request->request->get('trede'));
+                }
+                if (count($subdoelen) > 0) {
+                    $doel->setSubdoelen(json_encode($subdoelen));
+                }
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($doel);
+                $em->flush();
+                if ($request->request->get('repeat')) {
+                    $repeat = true;
+                    $doelenPerToestel = $this->getAllDoelen(false);
+                } else {
+                    return $this->redirectToRoute('viewDoelen', array(
+                        'persoonId' => $persoonId,
+                        'groepId' => $groepId,
+                    ));
+                }
+            }
+        }
+        return $this->render('inloggen/selectieAddDoelen.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' => $groepId,
+            'doelenPerToestel' => $doelenPerToestel,
+            'repeat' => $repeat,
+        ));
+    }
+
+    private function getDoelOpbouw($doelId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT doelen
+            FROM AppBundle:Doelen doelen
+            WHERE doelen.id = :id')
+            ->setParameter('id', $doelId);
+        /** @var Doelen $doelObject */
+        $doelObject = $query->setMaxResults(1)->getOneOrNullResult();
+        $doelOpbouw = new \stdClass();
+        $doelOpbouw->naam = $doelObject->getNaam();
+        $doelOpbouw->toestel = $doelObject->getToestel();
+        $doelOpbouw->subdoelen = array();
+        while (true) {
+            if ($doelObject->getTrede()) {
+                if(!isset($hoofddoel)) {
+                    $hoofddoel = new \stdClass();
+                    $hoofddoel->naam = $doelObject->getNaam();
+                    $hoofddoel->toestel = $doelObject->getToestel();
+                }
+                $trede = explode(' ', $doelObject->getTrede());
+                $trede = $trede[1];
+                for ($trede; $trede > 0; $trede--) {
+                    $query = $em->createQuery(
+                        'SELECT doelen
+                    FROM AppBundle:Doelen doelen
+                    WHERE doelen.naam = :naam
+                    AND doelen.trede = :trede
+                    AND doelen.toestel = :toestel')
+                        ->setParameter('naam', $hoofddoel->naam)
+                        ->setParameter('trede', 'Trede ' . $trede)
+                        ->setParameter('toestel', $hoofddoel->toestel);
+                    /** @var Doelen $subdoelObject */
+                    $subdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                    $subdoelenArray = json_decode($subdoelObject->getSubdoelen());
+                    $doelOpbouw->subdoelen[$trede] = new\stdClass();
+                    $doelOpbouw->subdoelen[$trede]->trededoelen = array();
+                    for ($j = 0; $j < count($subdoelenArray); $j++) {
+                        $query = $em->createQuery(
+                            'SELECT doelen
+                        FROM AppBundle:Doelen doelen
+                        WHERE doelen.id = :id')
+                            ->setParameter('id', $subdoelenArray[$j]);
+                        /** @var Doelen $trededoelObject */
+                        $trededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j] = new \stdClass();
+                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->id = $trededoelObject->getId();
+                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->naam = $trededoelObject->getNaam();
+                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->toestel = $trededoelObject->getToestel();
+                        $subsubdoelenIds = json_decode($trededoelObject->getSubdoelen());
+                        if (count($subsubdoelenIds) > 0) {
+                            $query = $em->createQuery(
+                                'SELECT doelen
+                            FROM AppBundle:Doelen doelen
+                            WHERE doelen.id = :id')
+                                ->setParameter('id', $subsubdoelenIds[0]);
+                            /** @var Doelen $subsubdoelObject */
+                            $subsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                            $subsubdoeltrede = explode(' ', $subsubdoelObject->getTrede());
+                            if (count($subsubdoeltrede) == 2) {
+                                if (!($subsubdoeltrede[1] == ($trede - 1) && $subsubdoelObject->getToestel() == $hoofddoel->toestel
+                                    && $subsubdoelObject->getNaam() == $hoofddoel->naam)) {
+                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen = array();
+                                    $subsubdoelOpbouw = new \stdClass();
+                                    $subsubdoelOpbouw->naam = $subsubdoelObject->getNaam();
+                                    $subsubdoelOpbouw->toestel = $subsubdoelObject->getToestel();
+                                    $subsubtrede = explode(' ', $subsubdoelObject->getTrede());
+                                    $subsubtrede = $subsubtrede[1];
+                                    for ($subsubtrede; $subsubtrede > 0; $subsubtrede--) {
+                                        $query = $em->createQuery(
+                                            'SELECT doelen
+                                            FROM AppBundle:Doelen doelen
+                                            WHERE doelen.naam = :naam
+                                            AND doelen.trede = :trede
+                                            AND doelen.toestel = :toestel')
+                                            ->setParameter('naam', $subsubdoelOpbouw->naam)
+                                            ->setParameter('trede', 'Trede ' . $subsubtrede)
+                                            ->setParameter('toestel', $subsubdoelOpbouw->toestel);
+                                        /** @var Doelen $subsubdoelObject */
+                                        $subsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                        $subsubdoelenArray = json_decode($subsubdoelObject->getSubdoelen());
+                                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede] = new\stdClass();
+                                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen = array();
+                                        for ($k = 0; $k < count($subsubdoelenArray); $k++) {
+                                            $query = $em->createQuery(
+                                                'SELECT doelen
+                                                FROM AppBundle:Doelen doelen
+                                                WHERE doelen.id = :id')
+                                                ->setParameter('id', $subsubdoelenArray[$k]);
+                                            /** @var Doelen $subsubtrededoelObject */
+                                            $subsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k] = new \stdClass();
+                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->id = $subsubtrededoelObject->getId();
+                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->naam = $subsubtrededoelObject->getNaam();
+                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->toestel = $subsubtrededoelObject->getToestel();
+//                                            $subsubsubdoelenIds = json_decode($subsubtrededoelObject->getSubdoelen());
+//                                            if (count($subsubsubdoelenIds) > 0) {
+//                                                $query = $em->createQuery(
+//                                                    'SELECT doelen
+//                                                        FROM AppBundle:Doelen doelen
+//                                                        WHERE doelen.id = :id')
+//                                                    ->setParameter('id', $subsubsubdoelenIds[0]);
+//                                                /** @var Doelen $subsubsubdoelObject */
+//                                                $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+//                                                $subsubsubdoeltrede = explode(' ', $subsubsubdoelObject->getTrede());
+//                                                if (count($subsubsubdoeltrede) == 2) {
+//                                                    if (!($subsubsubdoeltrede[1] == ($subsubtrede - 1) && $subsubsubdoelObject->getToestel() == $subsubdoelOpbouw->toestel
+//                                                        && $subsubsubdoelObject->getNaam() == $subsubdoelOpbouw->naam)
+//                                                    ) {
+//                                                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen = array();
+//                                                        $subsubsubdoelOpbouw = new \stdClass();
+//                                                        $subsubsubdoelOpbouw->naam = $subsubsubdoelObject->getNaam();
+//                                                        $subsubsubdoelOpbouw->toestel = $subsubsubdoelObject->getToestel();
+//                                                        $subsubsubtrede = explode(' ', $subsubsubdoelObject->getTrede());
+//                                                        $subsubsubtrede = $subsubsubtrede[1];
+//                                                        for ($subsubsubtrede; $subsubsubtrede > 0; $subsubsubtrede--) {
+//                                                            $query = $em->createQuery(
+//                                                                'SELECT doelen
+//                                                                    FROM AppBundle:Doelen doelen
+//                                                                    WHERE doelen.naam = :naam
+//                                                                    AND doelen.trede = :trede
+//                                                                    AND doelen.toestel = :toestel')
+//                                                                ->setParameter('naam', $subsubsubdoelOpbouw->naam)
+//                                                                ->setParameter('trede', 'Trede ' . $subsubsubtrede)
+//                                                                ->setParameter('toestel', $subsubsubdoelOpbouw->toestel);
+//                                                            /** @var Doelen $subsubdoelObject */
+//                                                            $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+//                                                            $subsubsubdoelenArray = json_decode($subsubsubdoelObject->getSubdoelen());
+//                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede] = new\stdClass();
+//                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen = array();
+//                                                            for ($l = 0; $l < count($subsubsubdoelenArray); $l++) {
+//                                                                $query = $em->createQuery(
+//                                                                    'SELECT doelen
+//                                                                    FROM AppBundle:Doelen doelen
+//                                                                    WHERE doelen.id = :id')
+//                                                                    ->setParameter('id', $subsubsubdoelenArray[$l]);
+//                                                                /** @var Doelen $subsubsubtrededoelObject */
+//                                                                $subsubsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+//                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l] = new \stdClass();
+//                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->id = $subsubsubtrededoelObject->getId();
+//                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->naam = $subsubsubtrededoelObject->getNaam();
+//                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->toestel = $subsubsubtrededoelObject->getToestel();
+//                                                                $subsubsubsubdoelenIds = json_decode($subsubsubtrededoelObject->getSubdoelen());
+//                                                                if (count($subsubsubsubdoelenIds) > 0) {
+//                                                                    $query = $em->createQuery(
+//                                                                        'SELECT doelen
+//                                                                            FROM AppBundle:Doelen doelen
+//                                                                            WHERE doelen.id = :id')
+//                                                                        ->setParameter('id', $subsubsubsubdoelenIds[0]);
+//                                                                    /** @var Doelen $subsubsubsubdoelObject */
+//                                                                    $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+//                                                                    $subsubsubsubdoeltrede = explode(' ', $subsubsubsubdoelObject->getTrede());
+//                                                                    if (count($subsubsubsubdoeltrede) == 2) {
+//                                                                        if (!($subsubsubsubdoeltrede[1] == ($subsubsubtrede - 1) && $subsubsubsubdoelObject->getToestel() == $subsubsubdoelOpbouw->toestel
+//                                                                            && $subsubsubsubdoelObject->getNaam() == $subsubsubdoelOpbouw->naam)
+//                                                                        ) {
+//                                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen = array();
+//                                                                            $subsubsubsubdoelOpbouw = new \stdClass();
+//                                                                            $subsubsubsubdoelOpbouw->naam = $subsubsubsubdoelObject->getNaam();
+//                                                                            $subsubsubsubdoelOpbouw->toestel = $subsubsubsubdoelObject->getToestel();
+//                                                                            $subsubsubsubtrede = explode(' ', $subsubsubsubdoelObject->getTrede());
+//                                                                            $subsubsubsubtrede = $subsubsubsubtrede[1];
+//                                                                            for ($subsubsubsubtrede; $subsubsubsubtrede > 0; $subsubsubsubtrede--) {
+//                                                                                $query = $em->createQuery(
+//                                                                                    'SELECT doelen
+//                                                                                        FROM AppBundle:Doelen doelen
+//                                                                                        WHERE doelen.naam = :naam
+//                                                                                        AND doelen.trede = :trede
+//                                                                                        AND doelen.toestel = :toestel')
+//                                                                                    ->setParameter('naam', $subsubsubsubdoelOpbouw->naam)
+//                                                                                    ->setParameter('trede', 'Trede ' . $subsubsubsubtrede)
+//                                                                                    ->setParameter('toestel', $subsubsubsubdoelOpbouw->toestel);
+//                                                                                /** @var Doelen $subsubsubsubdoelObject */
+//                                                                                $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+//                                                                                $subsubsubsubdoelenArray = json_decode($subsubsubsubdoelObject->getSubdoelen());
+//                                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede] = new\stdClass();
+//                                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen = array();
+//                                                                                for ($m = 0; $m < count($subsubsubsubdoelenArray); $m++) {
+//                                                                                    $query = $em->createQuery(
+//                                                                                        'SELECT doelen
+//                                                                                            FROM AppBundle:Doelen doelen
+//                                                                                            WHERE doelen.id = :id')
+//                                                                                        ->setParameter('id', $subsubsubsubdoelenArray[$m]);
+//                                                                                    /** @var Doelen $subsubsubsubtrededoelObject */
+//                                                                                    $subsubsubsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+//                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m] = new \stdClass();
+//                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->id = $subsubsubsubtrededoelObject->getId();
+//                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->naam = $subsubsubsubtrededoelObject->getNaam();
+//                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->toestel = $subsubsubsubtrededoelObject->getToestel();
+//                                                                                }
+//                                                                            }
+//                                                                        }
+//                                                                    }
+//                                                                }
+//                                                            }
+//                                                       }
+//                                                    }
+//                                                }
+//                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            } else {
+                $subdoelenArray = json_decode($doelObject->getSubdoelen());
+                if (count($subdoelenArray) == 0) {
+                    break;
+                } else {
+                    $query = $em->createQuery(
+                        'SELECT doelen
+                    FROM AppBundle:Doelen doelen
+                    WHERE doelen.id = :id')
+                        ->setParameter('id', $subdoelenArray[0]);
+                    /** @var Doelen $doelObject */
+                    $doelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                    $hoofddoel = new \stdClass();
+                    $hoofddoel->naam = $doelObject->getNaam();
+                    $hoofddoel->toestel = $doelObject->getToestel();
+                }
+            }
+        }
+        //var_dump($doelOpbouw);die;
+        return $doelOpbouw;
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{persoonId}/viewonedoel/{groepId}/{doelId}/", name="viewOneDoel")
+     * @Method({"GET"})
+     */
+    public function viewOneDoel($persoonId, $groepId, $doelId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer', 'Assistent-Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $doelOpbouw = $this->getDoelOpbouw($doelId);
+        }
+        return $this->render('inloggen/selectieViewOneDoel.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' => $groepId,
+            'doelOpbouw' => $doelOpbouw,
+        ));
     }
 }

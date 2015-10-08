@@ -251,7 +251,7 @@
 
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
                 {% if functie.groepId == 3 or functie.groepId == 5 %}
-                    {#<p><a href="">Doelen</a></p>#}
+                    <p><a href="{{ path('viewDoelen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Doelen</a></p>
                 {% endif %}
             {% endif %}
 

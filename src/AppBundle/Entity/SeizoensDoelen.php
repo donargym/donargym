@@ -29,12 +29,6 @@ class SeizoensDoelen
     protected $doel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Groepen", inversedBy="seizoensdoelen")
-     * @ORM\JoinColumn(name="groep_id", referencedColumnName="id")
-     **/
-    private $groep;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Persoon", inversedBy="seizoensdoelen")
      * @ORM\JoinColumn(name="persoon_id", referencedColumnName="id")
      **/
@@ -95,29 +89,6 @@ class SeizoensDoelen
     public function getDoel()
     {
         return $this->doel;
-    }
-
-    /**
-     * Set groep
-     *
-     * @param \AppBundle\Entity\Groepen $groep
-     * @return SeizoensDoelen
-     */
-    public function setGroep(\AppBundle\Entity\Groepen $groep = null)
-    {
-        $this->groep = $groep;
-
-        return $this;
-    }
-
-    /**
-     * Get groep
-     *
-     * @return \AppBundle\Entity\Groepen 
-     */
-    public function getGroep()
-    {
-        return $this->groep;
     }
 
     /**

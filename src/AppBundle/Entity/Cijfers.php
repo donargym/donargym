@@ -23,10 +23,10 @@ class Cijfers
     protected $cijfer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SubDoelen", inversedBy="cijfers")
-     * @ORM\JoinColumn(name="subdoel_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Doelen", inversedBy="cijfers")
+     * @ORM\JoinColumn(name="doel_id", referencedColumnName="id")
      **/
-    private $subdoel;
+    private $doel;
 
     /**
      * @ORM\Column(type="date")
@@ -92,23 +92,23 @@ class Cijfers
     /**
      * Set subdoel
      *
-     * @param \AppBundle\Entity\SubDoelen $subdoel
+     * @param \AppBundle\Entity\Doelen $doel
      * @return Cijfers
      */
-    public function setSubdoel(\AppBundle\Entity\SubDoelen $subdoel = null)
+    public function setDoel(\AppBundle\Entity\Doelen $doel = null)
     {
-        $this->subdoel = $subdoel;
+        $this->doel = $doel;
 
         return $this;
     }
 
     /**
-     * Get subdoel
+     * Get doel
      *
-     * @return \AppBundle\Entity\SubDoelen 
+     * @return \AppBundle\Entity\Doelen
      */
-    public function getSubdoel()
+    public function getDoel()
     {
-        return $this->subdoel;
+        return $this->doel;
     }
 }

@@ -28,11 +28,14 @@ class Doelen
     protected $toestel;
 
     /**
-     * @ORM\OneToOne(targetEntity="DoelenOpbouw")
-     * @ORM\JoinColumn(name="opbouw_id", referencedColumnName="id")
-     **/
-    protected $opbouw;
+     * @ORM\Column(length=156, nullable=TRUE)
+     */
+    protected $trede;
 
+    /**
+     * @ORM\Column(length=512, nullable=TRUE)
+     */
+    protected $subdoelen;
 
     /**
      * Get id
@@ -91,25 +94,40 @@ class Doelen
     }
 
     /**
-     * Set opbouw
-     *
-     * @param \AppBundle\Entity\DoelenOpbouw $opbouw
-     * @return Doelen
+     * @param $subdoelen
+     * @return $this
      */
-    public function setOpbouw(\AppBundle\Entity\DoelenOpbouw $opbouw = null)
+    public function setSubdoelen($subdoelen)
     {
-        $this->opbouw = $opbouw;
+        $this->subdoelen = $subdoelen;
 
         return $this;
     }
 
     /**
-     * Get opbouw
-     *
-     * @return \AppBundle\Entity\DoelenOpbouw 
+     * @return mixed
      */
-    public function getOpbouw()
+    public function getSubdoelen()
     {
-        return $this->opbouw;
+        return $this->subdoelen;
+    }
+
+    /**
+     * @param $trede
+     * @return $this
+     */
+    public function setTrede($trede)
+    {
+        $this->trede = $trede;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrede()
+    {
+        return $this->trede;
     }
 }
