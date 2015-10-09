@@ -878,7 +878,7 @@ class SelectieController extends BaseController
                     $afmeldingsData = array();
                     $em = $this->getDoctrine()->getManager();
                     foreach ($_POST as $key => $value) {
-                        if ($key != "reden") {
+                        if ($key != "reden" && $key != 'token') {
                             $query = $em->createQuery(
                                 'SELECT trainingsdata
                                 FROM AppBundle:Trainingsdata trainingsdata
@@ -898,7 +898,7 @@ class SelectieController extends BaseController
                             $afmeldingsData[] = $trainingsdag . " " . $lesdatum->format('d-m-Y');;
                             $em->persist($persoonObject);
                             $em->flush();
-                        } else {
+                        } elseif ($key == "reden") {
                             $reden = $value;
                         }
                     }
@@ -2862,6 +2862,19 @@ class SelectieController extends BaseController
                             /** @var Doelen $subsubdoelObject */
                             $subsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
                             $subsubdoeltrede = explode(' ', $subsubdoelObject->getTrede());
+                            if (count($subsubdoeltrede) != 2) {
+                                $check = json_decode($subsubdoelObject->getSubdoelen());
+                                if (count($check) == 1) {
+                                    $query = $em->createQuery(
+                                        'SELECT doelen
+									FROM AppBundle:Doelen doelen
+									WHERE doelen.id = :id')
+                                        ->setParameter('id', $check[0]);
+                                    /** @var Doelen $subsubdoelObject */
+                                    $subsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                    $subsubdoeltrede = explode(' ', $subsubdoelObject->getTrede());
+                                }
+                            }
                             if (count($subsubdoeltrede) == 2) {
                                 if (!($subsubdoeltrede[1] == ($trede - 1) && $subsubdoelObject->getToestel() == $hoofddoel->toestel
                                     && $subsubdoelObject->getNaam() == $hoofddoel->naam)) {
@@ -2898,110 +2911,136 @@ class SelectieController extends BaseController
                                             $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->id = $subsubtrededoelObject->getId();
                                             $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->naam = $subsubtrededoelObject->getNaam();
                                             $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->toestel = $subsubtrededoelObject->getToestel();
-//                                            $subsubsubdoelenIds = json_decode($subsubtrededoelObject->getSubdoelen());
-//                                            if (count($subsubsubdoelenIds) > 0) {
-//                                                $query = $em->createQuery(
-//                                                    'SELECT doelen
-//                                                        FROM AppBundle:Doelen doelen
-//                                                        WHERE doelen.id = :id')
-//                                                    ->setParameter('id', $subsubsubdoelenIds[0]);
-//                                                /** @var Doelen $subsubsubdoelObject */
-//                                                $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-//                                                $subsubsubdoeltrede = explode(' ', $subsubsubdoelObject->getTrede());
-//                                                if (count($subsubsubdoeltrede) == 2) {
-//                                                    if (!($subsubsubdoeltrede[1] == ($subsubtrede - 1) && $subsubsubdoelObject->getToestel() == $subsubdoelOpbouw->toestel
-//                                                        && $subsubsubdoelObject->getNaam() == $subsubdoelOpbouw->naam)
-//                                                    ) {
-//                                                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen = array();
-//                                                        $subsubsubdoelOpbouw = new \stdClass();
-//                                                        $subsubsubdoelOpbouw->naam = $subsubsubdoelObject->getNaam();
-//                                                        $subsubsubdoelOpbouw->toestel = $subsubsubdoelObject->getToestel();
-//                                                        $subsubsubtrede = explode(' ', $subsubsubdoelObject->getTrede());
-//                                                        $subsubsubtrede = $subsubsubtrede[1];
-//                                                        for ($subsubsubtrede; $subsubsubtrede > 0; $subsubsubtrede--) {
-//                                                            $query = $em->createQuery(
-//                                                                'SELECT doelen
-//                                                                    FROM AppBundle:Doelen doelen
-//                                                                    WHERE doelen.naam = :naam
-//                                                                    AND doelen.trede = :trede
-//                                                                    AND doelen.toestel = :toestel')
-//                                                                ->setParameter('naam', $subsubsubdoelOpbouw->naam)
-//                                                                ->setParameter('trede', 'Trede ' . $subsubsubtrede)
-//                                                                ->setParameter('toestel', $subsubsubdoelOpbouw->toestel);
-//                                                            /** @var Doelen $subsubdoelObject */
-//                                                            $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-//                                                            $subsubsubdoelenArray = json_decode($subsubsubdoelObject->getSubdoelen());
-//                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede] = new\stdClass();
-//                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen = array();
-//                                                            for ($l = 0; $l < count($subsubsubdoelenArray); $l++) {
-//                                                                $query = $em->createQuery(
-//                                                                    'SELECT doelen
-//                                                                    FROM AppBundle:Doelen doelen
-//                                                                    WHERE doelen.id = :id')
-//                                                                    ->setParameter('id', $subsubsubdoelenArray[$l]);
-//                                                                /** @var Doelen $subsubsubtrededoelObject */
-//                                                                $subsubsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-//                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l] = new \stdClass();
-//                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->id = $subsubsubtrededoelObject->getId();
-//                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->naam = $subsubsubtrededoelObject->getNaam();
-//                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->toestel = $subsubsubtrededoelObject->getToestel();
-//                                                                $subsubsubsubdoelenIds = json_decode($subsubsubtrededoelObject->getSubdoelen());
-//                                                                if (count($subsubsubsubdoelenIds) > 0) {
-//                                                                    $query = $em->createQuery(
-//                                                                        'SELECT doelen
-//                                                                            FROM AppBundle:Doelen doelen
-//                                                                            WHERE doelen.id = :id')
-//                                                                        ->setParameter('id', $subsubsubsubdoelenIds[0]);
-//                                                                    /** @var Doelen $subsubsubsubdoelObject */
-//                                                                    $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-//                                                                    $subsubsubsubdoeltrede = explode(' ', $subsubsubsubdoelObject->getTrede());
-//                                                                    if (count($subsubsubsubdoeltrede) == 2) {
-//                                                                        if (!($subsubsubsubdoeltrede[1] == ($subsubsubtrede - 1) && $subsubsubsubdoelObject->getToestel() == $subsubsubdoelOpbouw->toestel
-//                                                                            && $subsubsubsubdoelObject->getNaam() == $subsubsubdoelOpbouw->naam)
-//                                                                        ) {
-//                                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen = array();
-//                                                                            $subsubsubsubdoelOpbouw = new \stdClass();
-//                                                                            $subsubsubsubdoelOpbouw->naam = $subsubsubsubdoelObject->getNaam();
-//                                                                            $subsubsubsubdoelOpbouw->toestel = $subsubsubsubdoelObject->getToestel();
-//                                                                            $subsubsubsubtrede = explode(' ', $subsubsubsubdoelObject->getTrede());
-//                                                                            $subsubsubsubtrede = $subsubsubsubtrede[1];
-//                                                                            for ($subsubsubsubtrede; $subsubsubsubtrede > 0; $subsubsubsubtrede--) {
-//                                                                                $query = $em->createQuery(
-//                                                                                    'SELECT doelen
-//                                                                                        FROM AppBundle:Doelen doelen
-//                                                                                        WHERE doelen.naam = :naam
-//                                                                                        AND doelen.trede = :trede
-//                                                                                        AND doelen.toestel = :toestel')
-//                                                                                    ->setParameter('naam', $subsubsubsubdoelOpbouw->naam)
-//                                                                                    ->setParameter('trede', 'Trede ' . $subsubsubsubtrede)
-//                                                                                    ->setParameter('toestel', $subsubsubsubdoelOpbouw->toestel);
-//                                                                                /** @var Doelen $subsubsubsubdoelObject */
-//                                                                                $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-//                                                                                $subsubsubsubdoelenArray = json_decode($subsubsubsubdoelObject->getSubdoelen());
-//                                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede] = new\stdClass();
-//                                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen = array();
-//                                                                                for ($m = 0; $m < count($subsubsubsubdoelenArray); $m++) {
-//                                                                                    $query = $em->createQuery(
-//                                                                                        'SELECT doelen
-//                                                                                            FROM AppBundle:Doelen doelen
-//                                                                                            WHERE doelen.id = :id')
-//                                                                                        ->setParameter('id', $subsubsubsubdoelenArray[$m]);
-//                                                                                    /** @var Doelen $subsubsubsubtrededoelObject */
-//                                                                                    $subsubsubsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-//                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m] = new \stdClass();
-//                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->id = $subsubsubsubtrededoelObject->getId();
-//                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->naam = $subsubsubsubtrededoelObject->getNaam();
-//                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->toestel = $subsubsubsubtrededoelObject->getToestel();
-//                                                                                }
-//                                                                            }
-//                                                                        }
-//                                                                    }
-//                                                                }
-//                                                            }
-//                                                       }
-//                                                    }
-//                                                }
-//                                            }
+                                            $subsubsubdoelenIds = json_decode($subsubtrededoelObject->getSubdoelen());
+                                            if (count($subsubsubdoelenIds) > 0) {
+                                                $query = $em->createQuery(
+                                                    'SELECT doelen
+                                                        FROM AppBundle:Doelen doelen
+                                                        WHERE doelen.id = :id')
+                                                    ->setParameter('id', $subsubsubdoelenIds[0]);
+                                                /** @var Doelen $subsubsubdoelObject */
+                                                $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                                $subsubsubdoeltrede = explode(' ', $subsubsubdoelObject->getTrede());
+                                                if (count($subsubsubdoeltrede) != 2) {
+                                                    $check = json_decode($subsubsubdoelObject->getSubdoelen());
+                                                    if (count($check) == 1) {
+                                                        $query = $em->createQuery(
+                                                            'SELECT doelen
+														FROM AppBundle:Doelen doelen
+														WHERE doelen.id = :id')
+                                                            ->setParameter('id', $check[0]);
+                                                        /** @var Doelen $subsubsubdoelObject */
+                                                        $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                                        $subsubsubdoeltrede = explode(' ', $subsubsubdoelObject->getTrede());
+                                                    }
+                                                }
+                                                if (count($subsubsubdoeltrede) == 2) {
+                                                    if (!($subsubsubdoeltrede[1] == ($subsubtrede - 1) && $subsubsubdoelObject->getToestel() == $subsubdoelOpbouw->toestel
+                                                        && $subsubsubdoelObject->getNaam() == $subsubdoelOpbouw->naam)
+                                                    ) {
+                                                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen = array();
+                                                        $subsubsubdoelOpbouw = new \stdClass();
+                                                        $subsubsubdoelOpbouw->naam = $subsubsubdoelObject->getNaam();
+                                                        $subsubsubdoelOpbouw->toestel = $subsubsubdoelObject->getToestel();
+                                                        $subsubsubtrede = explode(' ', $subsubsubdoelObject->getTrede());
+                                                        $subsubsubtrede = $subsubsubtrede[1];
+                                                        for ($subsubsubtrede; $subsubsubtrede > 0; $subsubsubtrede--) {
+                                                            $query = $em->createQuery(
+                                                                'SELECT doelen
+                                                                    FROM AppBundle:Doelen doelen
+                                                                    WHERE doelen.naam = :naam
+                                                                    AND doelen.trede = :trede
+                                                                    AND doelen.toestel = :toestel')
+                                                                ->setParameter('naam', $subsubsubdoelOpbouw->naam)
+                                                                ->setParameter('trede', 'Trede ' . $subsubsubtrede)
+                                                                ->setParameter('toestel', $subsubsubdoelOpbouw->toestel);
+                                                            /** @var Doelen $subsubdoelObject */
+                                                            $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                                            $subsubsubdoelenArray = json_decode($subsubsubdoelObject->getSubdoelen());
+                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede] = new\stdClass();
+                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen = array();
+                                                            for ($l = 0; $l < count($subsubsubdoelenArray); $l++) {
+                                                                $query = $em->createQuery(
+                                                                    'SELECT doelen
+                                                                    FROM AppBundle:Doelen doelen
+                                                                    WHERE doelen.id = :id')
+                                                                    ->setParameter('id', $subsubsubdoelenArray[$l]);
+                                                                /** @var Doelen $subsubsubtrededoelObject */
+                                                                $subsubsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l] = new \stdClass();
+                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->id = $subsubsubtrededoelObject->getId();
+                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->naam = $subsubsubtrededoelObject->getNaam();
+                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->toestel = $subsubsubtrededoelObject->getToestel();
+                                                                $subsubsubsubdoelenIds = json_decode($subsubsubtrededoelObject->getSubdoelen());
+                                                                if (count($subsubsubsubdoelenIds) > 0) {
+                                                                    $query = $em->createQuery(
+                                                                        'SELECT doelen
+                                                                            FROM AppBundle:Doelen doelen
+                                                                            WHERE doelen.id = :id')
+                                                                        ->setParameter('id', $subsubsubsubdoelenIds[0]);
+                                                                    /** @var Doelen $subsubsubsubdoelObject */
+                                                                    $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                                                    $subsubsubsubdoeltrede = explode(' ', $subsubsubsubdoelObject->getTrede());
+                                                                    if (count($subsubsubdoeltrede) != 2) {
+                                                                        $check = json_decode($subsubsubsubdoelObject->getSubdoelen());
+                                                                        if (count($check) == 1) {
+                                                                            $query = $em->createQuery(
+                                                                                'SELECT doelen
+																			FROM AppBundle:Doelen doelen
+																			WHERE doelen.id = :id')
+                                                                                ->setParameter('id', $check[0]);
+                                                                            /** @var Doelen $subsubsubsubdoelObject */
+                                                                            $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                                                            $subsubsubsubdoeltrede = explode(' ', $subsubsubsubdoelObject->getTrede());
+                                                                        }
+                                                                    }
+                                                                    if (count($subsubsubsubdoeltrede) == 2) {
+                                                                        if (!($subsubsubsubdoeltrede[1] == ($subsubsubtrede - 1) && $subsubsubsubdoelObject->getToestel() == $subsubsubdoelOpbouw->toestel
+                                                                            && $subsubsubsubdoelObject->getNaam() == $subsubsubdoelOpbouw->naam)
+                                                                        ) {
+                                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen = array();
+                                                                            $subsubsubsubdoelOpbouw = new \stdClass();
+                                                                            $subsubsubsubdoelOpbouw->naam = $subsubsubsubdoelObject->getNaam();
+                                                                            $subsubsubsubdoelOpbouw->toestel = $subsubsubsubdoelObject->getToestel();
+                                                                            $subsubsubsubtrede = explode(' ', $subsubsubsubdoelObject->getTrede());
+                                                                            $subsubsubsubtrede = $subsubsubsubtrede[1];
+                                                                            for ($subsubsubsubtrede; $subsubsubsubtrede > 0; $subsubsubsubtrede--) {
+                                                                                $query = $em->createQuery(
+                                                                                    'SELECT doelen
+                                                                                        FROM AppBundle:Doelen doelen
+                                                                                        WHERE doelen.naam = :naam
+                                                                                        AND doelen.trede = :trede
+                                                                                        AND doelen.toestel = :toestel')
+                                                                                    ->setParameter('naam', $subsubsubsubdoelOpbouw->naam)
+                                                                                    ->setParameter('trede', 'Trede ' . $subsubsubsubtrede)
+                                                                                    ->setParameter('toestel', $subsubsubsubdoelOpbouw->toestel);
+                                                                                /** @var Doelen $subsubsubsubdoelObject */
+                                                                                $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                                                                $subsubsubsubdoelenArray = json_decode($subsubsubsubdoelObject->getSubdoelen());
+                                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede] = new\stdClass();
+                                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen = array();
+                                                                                for ($m = 0; $m < count($subsubsubsubdoelenArray); $m++) {
+                                                                                    $query = $em->createQuery(
+                                                                                        'SELECT doelen
+                                                                                            FROM AppBundle:Doelen doelen
+                                                                                            WHERE doelen.id = :id')
+                                                                                        ->setParameter('id', $subsubsubsubdoelenArray[$m]);
+                                                                                    /** @var Doelen $subsubsubsubtrededoelObject */
+                                                                                    $subsubsubsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m] = new \stdClass();
+                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->id = $subsubsubsubtrededoelObject->getId();
+                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->naam = $subsubsubsubtrededoelObject->getNaam();
+                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->toestel = $subsubsubsubtrededoelObject->getToestel();
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }

@@ -21,8 +21,21 @@
     {% if doelOpbouw.subdoelen is defined %}
         {% for subdoel in doelOpbouw.subdoelen %}
             <tr>
+                {% set counter = 0 %}
                 {% for trededoel in subdoel.trededoelen %}
-                    <td colspan="{{ (1/(subdoel.trededoelen|length))*12 }}">{{ trededoel.naam }} {{ trededoel.toestel }}</td>
+                    <td colspan="{{ (1/(subdoel.trededoelen|length))*12 }}">
+                        {% if trededoel.subdoelen is defined %}
+                            {% if subdoel.trededoelen|length > 1 %}
+                                <a href="">
+                            {% endif %}
+                        {% endif %}
+                        {{ trededoel.naam }} {{ trededoel.toestel }}
+                        {% if trededoel.subdoelen is defined %}
+                            {% if subdoel.trededoelen|length > 1 %}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
                     {% if trededoel.subdoelen is defined %}
                         {% if subdoel.trededoelen|length == 1 %}
                             </tr>
@@ -39,7 +52,9 @@
                     {% endif %}
                 {% endfor %}
             {% if trededoel.subdoelen is not defined or (trededoel.subdoelen is defined and subdoel.trededoelen|length > 1) %}
-                </tr>
+                {% if counter != 1 %}
+                    </tr>
+                {% endif %}
             {% endif %}
         {% endfor %}
     {% endif %}
