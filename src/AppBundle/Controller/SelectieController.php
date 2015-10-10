@@ -873,71 +873,53 @@ class SelectieController extends BaseController
             $postedToken = $request->request->get('token');
             if(!empty($postedToken)) {
                 if ($this->isTokenValid($postedToken)) {
-                    /** @var Persoon $persoonObject */
-                    $persoonObject = $this->getPersoonObject($userObject, $id);
-                    $afmeldingsData = array();
-                    $em = $this->getDoctrine()->getManager();
-                    foreach ($_POST as $key => $value) {
-                        if ($key != "reden" && $key != 'token') {
-                            $query = $em->createQuery(
-                                'SELECT trainingsdata
+                    if(!empty($_POST['reden'])) {
+                        /** @var Persoon $persoonObject */
+                        $persoonObject = $this->getPersoonObject($userObject, $id);
+                        $afmeldingsData = array();
+                        $em = $this->getDoctrine()->getManager();
+                        foreach ($_POST as $key => $value) {
+                            if ($key != "reden" && $key != 'token') {
+                                $query = $em->createQuery(
+                                    'SELECT trainingsdata
                                 FROM AppBundle:Trainingsdata trainingsdata
                                 WHERE trainingsdata.id = :id')
-                                ->setParameter('id', $key);
-                            /** @var Trainingsdata $trainingsdatum */
-                            $trainingsdatum = $query->setMaxResults(1)->getOneOrNullResult();
-                            $aanwezigheid = new Aanwezigheid();
-                            $aanwezigheid->setAanwezig('A');
-                            $aanwezigheid->setPersoon($persoonObject);
-                            $aanwezigheid->setTrainingsdata($trainingsdatum);
-                            $persoonObject->addAanwezigheid($aanwezigheid);
-                            $lesdatum = $trainingsdatum->getLesdatum();
-                            /** @var Trainingen $training */
-                            $training = $trainingsdatum->getTrainingen();
-                            $trainingsdag = $training->getDag();
-                            $afmeldingsData[] = $trainingsdag . " " . $lesdatum->format('d-m-Y');;
-                            $em->persist($persoonObject);
-                            $em->flush();
-                        } elseif ($key == "reden") {
-                            $reden = $value;
+                                    ->setParameter('id', $key);
+                                /** @var Trainingsdata $trainingsdatum */
+                                $trainingsdatum = $query->setMaxResults(1)->getOneOrNullResult();
+                                $aanwezigheid = new Aanwezigheid();
+                                $aanwezigheid->setAanwezig('A');
+                                $aanwezigheid->setPersoon($persoonObject);
+                                $aanwezigheid->setTrainingsdata($trainingsdatum);
+                                $persoonObject->addAanwezigheid($aanwezigheid);
+                                $lesdatum = $trainingsdatum->getLesdatum();
+                                /** @var Trainingen $training */
+                                $training = $trainingsdatum->getTrainingen();
+                                $trainingsdag = $training->getDag();
+                                $afmeldingsData[] = $trainingsdag . " " . $lesdatum->format('d-m-Y');;
+                                $em->persist($persoonObject);
+                                $em->flush();
+                            } elseif ($key == "reden") {
+                                $reden = $value;
+                            }
                         }
-                    }
-                    $em = $this->getDoctrine()->getManager();
-                    $query = $em->createQuery(
-                        'SELECT functie
+                        $em = $this->getDoctrine()->getManager();
+                        $query = $em->createQuery(
+                            'SELECT functie
                         FROM AppBundle:Functie functie
                         WHERE functie.groep = :id
                         AND functie.functie = :functie')
-                        ->setParameter('id', $groepId)
-                        ->setParameter('functie', 'Trainer');
-                    $trainers = $query->getResult();
-                    foreach ($trainers as $trainer) {
-                        $persoon = $trainer->getPersoon();
-                        /** @var User $user */
-                        $user = $persoon->getUser();
-                        $message = \Swift_Message::newInstance()
-                            ->setSubject('Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
-                            ->setFrom($_SESSION['username'])
-                            ->setTo($user->getUsername())
-                            ->setBody(
-                                $this->renderView(
-                                    'mails/afmelding.txt.twig',
-                                    array(
-                                        'voornaam' => $persoonItems->voornaam,
-                                        'achternaam' => $persoonItems->achternaam,
-                                        'afmeldingsData' => $afmeldingsData,
-                                        'reden' => $reden,
-                                    )
-                                ),
-                                'text/plain'
-                            );
-                        $this->get('mailer')->send($message);
-
-                        if ($user->getEmail2()) {
+                            ->setParameter('id', $groepId)
+                            ->setParameter('functie', 'Trainer');
+                        $trainers = $query->getResult();
+                        foreach ($trainers as $trainer) {
+                            $persoon = $trainer->getPersoon();
+                            /** @var User $user */
+                            $user = $persoon->getUser();
                             $message = \Swift_Message::newInstance()
-                                ->setSubject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
+                                ->setSubject('Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
                                 ->setFrom($_SESSION['username'])
-                                ->setTo($user->getEmail2())
+                                ->setTo($user->getUsername())
                                 ->setBody(
                                     $this->renderView(
                                         'mails/afmelding.txt.twig',
@@ -951,12 +933,53 @@ class SelectieController extends BaseController
                                     'text/plain'
                                 );
                             $this->get('mailer')->send($message);
-                        }
 
+                            if ($user->getEmail2()) {
+                                $message = \Swift_Message::newInstance()
+                                    ->setSubject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
+                                    ->setFrom($_SESSION['username'])
+                                    ->setTo($user->getEmail2())
+                                    ->setBody(
+                                        $this->renderView(
+                                            'mails/afmelding.txt.twig',
+                                            array(
+                                                'voornaam' => $persoonItems->voornaam,
+                                                'achternaam' => $persoonItems->achternaam,
+                                                'afmeldingsData' => $afmeldingsData,
+                                                'reden' => $reden,
+                                            )
+                                        ),
+                                        'text/plain'
+                                    );
+                                $this->get('mailer')->send($message);
+                            }
+
+                        }
+                        return $this->redirectToRoute('showPersoon', array(
+                            'id' => $id
+                        ));
                     }
-                    return $this->redirectToRoute('showPersoon', array(
-                        'id' => $id
-                    ));
+                    else {
+                        $error = 'Vul alstublieft het veld "Opmerking" in';
+                        $afmeldingsData = array();
+                        foreach ($_POST as $key => $value) {
+                            if ($key != "reden" && $key != 'token') {
+                                $afmeldingsData[] = $key;
+                            }
+                        }
+                        return $this->render('inloggen/selectieAfmelden.html.twig', array(
+                            'calendarItems' => $this->calendarItems,
+                            'header' => $this->header,
+                            'persoon' => $persoon,
+                            'user' => $user,
+                            'persoonItems' => $persoonItems,
+                            'wedstrijdLinkItems' => $this->groepItems,
+                            'groepId' => $groepId,
+                            'token' => $token,
+                            'error' => $error,
+                            'afmeldingsData' => $afmeldingsData,
+                        ));
+                    }
                 }
                 else {
                     return $this->redirectToRoute('showPersoon', array(

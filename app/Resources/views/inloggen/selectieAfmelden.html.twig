@@ -14,6 +14,9 @@
 {% endblock %}
 
 {% block body %}
+{% if error is defined %}
+    <span style="color: #FFFF00; font-weight: bold; background-color: red;">{{ error }}</span>
+{% endif %}
 <form method="post" name="afmelden" action="">
     {% for training in persoonItems.trainingen %}
         {% if training.groepId == groepId %}
@@ -27,7 +30,15 @@
                     {% if trainingsdatum.afmelding is defined %}
                         {{ trainingsdatum.afmelding }}
                     {% else %}
-                        <input type="checkbox" name="{{ trainingsdatum.id }}" />
+                        <input type="checkbox" name="{{ trainingsdatum.id }}"
+                         {% if afmeldingsData is defined %}
+                            {% for datumId in afmeldingsData %}
+                                {% if trainingsdatum.id == datumId %}
+                                    checked
+                                {% endif %}
+                            {% endfor %}
+                         {% endif %}
+                        />
                     {% endif %}
                     </td>
                 </tr>
