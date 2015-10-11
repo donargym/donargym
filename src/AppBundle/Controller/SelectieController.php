@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Aanwezigheid;
+use AppBundle\Entity\Afmeldingen;
 use AppBundle\Entity\Doelen;
 use AppBundle\Entity\FileUpload;
 use AppBundle\Entity\FotoUpload;
@@ -933,6 +934,16 @@ class SelectieController extends BaseController
                                     'text/plain'
                                 );
                             $this->get('mailer')->send($message);
+                            $subject = 'Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
+                            $from = $_SESSION['username'];
+                            $to = $user->getUsername();
+                            $body = $message->getBody();
+                            $afmeldingsObject = new Afmeldingen();
+                            $afmeldingsObject->setBericht('FROM: ' . $from . ', TO: ' . $to . ', SUBJECT: ' . $subject . ', BERICHT: ' . $body);
+                            $afmeldingsObject->setTurnster($persoonItems->voornaam . ' ' . $persoonItems->achternaam);
+                            $afmeldingsObject->setDatum(new \DateTime('now'));
+                            $em->persist($afmeldingsObject);
+                            $em->flush();
 
                             if ($user->getEmail2()) {
                                 $message = \Swift_Message::newInstance()
