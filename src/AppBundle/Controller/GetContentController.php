@@ -679,6 +679,9 @@ class GetContentController extends BaseController
         $this->calendarItems = $this->getCalendarItems();
         $user = $this->getUser();
         $roles = $user->getRoles();
+        if(!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('logout');
+        }
         switch ($roles[0])
         {
             case 'ROLE_ADMIN':
