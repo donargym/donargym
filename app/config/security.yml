@@ -30,7 +30,7 @@ security:
                 csrf_provider: security.csrf.token_manager
             logout:
                 path:   /logout
-                target: /
+                target: /login
 
             remember_me:
                 key:      "%secret%"
