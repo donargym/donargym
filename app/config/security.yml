@@ -28,6 +28,7 @@ security:
                 login_path: /login
                 check_path: /login_check
                 csrf_provider: security.csrf.token_manager
+                target: /inloggen
             logout:
                 path:   /logout
                 target: /login
