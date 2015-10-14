@@ -919,7 +919,7 @@ class SelectieController extends BaseController
                             $user = $persoon->getUser();
                             $message = \Swift_Message::newInstance()
                                 ->setSubject('Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
-                                ->setFrom($_SESSION['username'])
+                                ->setFrom('afmeldingen@donargym.nl')
                                 ->setTo($user->getUsername())
                                 ->setBody(
                                     $this->renderView(
@@ -935,7 +935,7 @@ class SelectieController extends BaseController
                                 );
                             $this->get('mailer')->send($message);
                             $subject = 'Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
-                            $from = $_SESSION['username'];
+                            $from = 'afmeldingen@donargym.nl';
                             $to = $user->getUsername();
                             $body = $message->getBody();
                             $afmeldingsObject = new Afmeldingen();
@@ -948,7 +948,7 @@ class SelectieController extends BaseController
                             if ($user->getEmail2()) {
                                 $message = \Swift_Message::newInstance()
                                     ->setSubject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
-                                    ->setFrom($_SESSION['username'])
+                                    ->setFrom('afmeldingen@donargym.nl')
                                     ->setTo($user->getEmail2())
                                     ->setBody(
                                         $this->renderView(
@@ -1757,7 +1757,7 @@ class SelectieController extends BaseController
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('Inloggegevens website Donar')
-                ->setFrom($_SESSION['username'])
+                ->setFrom('webmaster@donargym.nl')
                 ->setTo($user->getUsername())
                 ->setBody(
                     $this->renderView(
@@ -1776,7 +1776,7 @@ class SelectieController extends BaseController
             if ($user->getEmail2()) {
                 $message = \Swift_Message::newInstance()
                     ->setSubject('Inloggegevens website Donar')
-                    ->setFrom($_SESSION['username'])
+                    ->setFrom('webmaster@donargym.nl')
                     ->setTo($user->getEmail2())
                     ->setBody(
                         $this->renderView(

@@ -45,7 +45,6 @@ class SecurityController extends BaseController
      */
     public function loginCheckAction()
     {
-        $_SESSION['username'] = $_POST['_username'];
     }
 
     /**
