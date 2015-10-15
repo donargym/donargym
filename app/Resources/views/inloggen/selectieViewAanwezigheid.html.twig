@@ -40,7 +40,7 @@
                             <td></td>
                         {% endif %}
                     {% endfor %}
-                    <td style="text-align: center; background-color: #{{ persoon.percentageKleur }}; color: rgba(0,0,0,0.6); font-weight: bold;">{{ persoon.percentageAanwezig }}%</td>
+                    <td style="text-align: center; background-color: #{{ persoon.percentageKleur }}; color: rgba(0,0,0,0.6); font-weight: bold;">{{ persoon.percentageAanwezig|round }}%</td>
                 </tr>
             {% endfor %}
 
@@ -60,7 +60,7 @@
                             <td></td>
                         {% endif %}
                     {% endfor %}
-                    <td style="text-align: center; background-color: #{{ persoon.percentageKleur }}; color: rgba(0,0,0,0.6); font-weight: bold;">{{ persoon.percentageAanwezig }}%</td>
+                    <td style="text-align: center; background-color: #{{ persoon.percentageKleur }}; color: rgba(0,0,0,0.6); font-weight: bold;">{{ persoon.percentageAanwezig|round }}%</td>
                 </tr>
             {% endfor %}
         </table>
@@ -89,7 +89,7 @@
                             <td></td>
                         {% endif %}
                     {% endfor %}
-                    <td style="text-align: center; background-color: #{{ persoon.percentageKleur }}; color: rgba(0,0,0,0.6); font-weight: bold;">{{ persoon.percentageAanwezig }}%</td>
+                    <td style="text-align: center; background-color: #{{ persoon.percentageKleur }}; color: rgba(0,0,0,0.6); font-weight: bold;">{{ persoon.percentageAanwezig|round }}%</td>
                 </tr>
             {% endfor %}
         </table>
