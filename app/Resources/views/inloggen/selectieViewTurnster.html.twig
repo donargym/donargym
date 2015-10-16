@@ -38,9 +38,9 @@
         {{ turnster.tel3 }}<br>
     {% endif %}
 </p>
-
+<p><h2>Aanwezigheid</h2>
     {% for training in turnster.trainingen %}
-        <p><h2>{{ training.dag }}: {{ training.tijdvan }} - {{ training.tijdtot }}</h2>
+        <h3>{{ training.dag }}: {{ training.tijdvan }} - {{ training.tijdtot }}</h3>
         <table border="1">
             <tr>
                 {% for trainingsdatum in training.trainingsdata %}
@@ -61,21 +61,30 @@
                 </td>
             </tr>
         </table>
-        </p>
     {% endfor %}
+    </p>
 <p>Totaal {{ turnster.aantalAanwezig }} van {{ turnster.aantalTrainingen }} trainingen aanwezig: <span
             style="font-weight: bold; background-color: #{{ turnster.percentageKleur }}; color: rgba(0,0,0,0.6);">
         {{ turnster.percentageAanwezig | round }}%</span></p>
 
+<p><h2>Doelen
+{% if (functie == 'Trainer') %}
+            <a href="{{ path('addDoelToTurnster', { 'persoonId': persoonItems.id, 'groepId': groepId, 'turnsterId': turnster.id }) }}"><img
+                        src="{{ asset('images/add.png') }}" width="18px"/></a>
+        {% endif %}
+</h2>
+{% for toestel, doelen in doelen %}
+    <h3>{{ toestel }}</h3>
+    {% for id, doel in doelen %}
+        {{ doel }}<br>
+    {% endfor %}
+{% endfor %}
 
+</p>
 
+<p>
+<h2>Voortgang</h2>
 
-
-    {% if (functie == 'Trainer') %}
-    {% endif %}
-
-
-    {% if turnster.doelen is defined %}
-    {% endif %}
+</p>
 
 {% endblock %}

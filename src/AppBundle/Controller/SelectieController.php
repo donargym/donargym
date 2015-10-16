@@ -10,6 +10,7 @@ use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Functie;
 use AppBundle\Entity\Groepen;
 use AppBundle\Entity\Persoon;
+use AppBundle\Entity\SeizoensDoelen;
 use AppBundle\Entity\SelectieFoto;
 use AppBundle\Entity\Stukje;
 use AppBundle\Entity\SubDoelen;
@@ -338,6 +339,7 @@ class SelectieController extends BaseController
             /** @var Persoon $persoon */
             if ($persoon->getId() == $id) {
                 $persoonItems = new \stdClass();
+                $persoonItems->object = $persoon;
                 $persoonItems->id = $persoon->getId();
                 $persoonItems->voornaam = $persoon->getVoornaam();
                 $persoonItems->achternaam = $persoon->getAchternaam();
@@ -2369,6 +2371,7 @@ class SelectieController extends BaseController
         $turnster->height = $imageSize[1];
         $trainingen = $persoonObject->getTrainingen();
         $userObject = $persoonObject->getUser();
+        $turnster->id = $turnsterId;
         $turnster->straatnr = $userObject->getStraatnr();
         $turnster->postcode = $userObject->getPostcode();
         $turnster->plaats = $userObject->getPlaats();
@@ -2494,6 +2497,49 @@ class SelectieController extends BaseController
         return $turnster;
     }
 
+    private function getSeizoen()
+    {
+        if (date('m', time()) > '08') {
+            $seizoen = date('Y', time());
+        } else {
+            $seizoen = (int)date('Y', time()) - 1;
+        }
+        return $seizoen;
+    }
+
+    private function getDoelenVoorSeizoen($persoonId, $seizoen)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT seizoensdoelen
+            FROM AppBundle:SeizoensDoelen seizoensdoelen
+            WHERE seizoensdoelen.persoon = :persoonId
+            AND seizoensdoelen.seizoen = :seizoen')
+            ->setParameter('persoonId', $persoonId)
+            ->setParameter('seizoen', $seizoen);
+        $doelen = $query->getResult();
+        return ($doelen);
+    }
+
+    private function getDoelDetails($doelenObject)
+    {
+        $doelen = array();
+        $doelen['Sprong'] = array();
+        $doelen['Brug'] = array();
+        $doelen['Balk'] = array();
+        $doelen['Vloer'] = array();
+        foreach ($doelenObject as $doelObject) {
+            /** @var Doelen $helper */
+            $helper = $doelObject->getDoel();
+            $doelen[$helper->getToestel()][$helper->getId()] = $helper->getNaam();
+        }
+        asort($doelen['Sprong']);
+        asort($doelen['Brug']);
+        asort($doelen['Balk']);
+        asort($doelen['Vloer']);
+        return $doelen;
+    }
+
     /**
      * @Security("has_role('ROLE_ASSISTENT')")
      * @Route("/inloggen/selectie/{persoonId}/viewTurnster/{turnsterId}/{groepId}/", name="viewSelectieTurnster")
@@ -2510,6 +2556,9 @@ class SelectieController extends BaseController
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $seizoen = $this->getSeizoen();
+        $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
+        $doelen = $this->getDoelDetails($doelenObject);
         $roles = array('Trainer', 'Assistent-Trainer');
         $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
         if ($response['authorized']) {
@@ -2527,6 +2576,164 @@ class SelectieController extends BaseController
             'functie' => $functie,
             'groepId' => $groepId,
             'turnster' => $turnster,
+            'doelen' => $doelen
+        ));
+    }
+
+    private function getAvailableDoelen($doelen)
+    {
+        $doelenLijst = array();
+        $doelenLijst['Sprong'] = array();
+        $doelenLijst['Brug'] = array();
+        $doelenLijst['Balk'] = array();
+        $doelenLijst['Vloer'] = array();
+        $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
+        foreach($toestellen as $toestel) {
+            $ids[$toestel] = array();
+        }
+        foreach($toestellen as $toestel) {
+            if (! isset($doelen[$toestel])) continue;
+            foreach ($doelen[$toestel] as $id => $doelenToestel) {
+                if (!in_array($id, $ids[$toestel])) $ids[$toestel][] = $id;
+                $doelOpbouw = $this->getDoelOpbouw($id);
+                if(isset($doelOpbouw->subdoelen)){
+                    foreach($doelOpbouw->subdoelen as $subdoel) {
+                        if(isset($subdoel->trededoelen)){
+                            foreach($subdoel->trededoelen as $trededoel) {
+                                if (!in_array($trededoel->id, $ids[$toestel])) $ids[$toestel][] = $trededoel->id;
+                                if(isset($trededoel->subdoelen)){
+                                    foreach ($trededoel->subdoelen as $subsubdoel) {
+                                        if(isset($subsubdoel->trededoelen)){
+                                            foreach ($subsubdoel->trededoelen as $subsubtrededoel) {
+                                                if (!in_array($subsubtrededoel->id, $ids[$toestel])) $ids[$toestel][] = $subsubtrededoel->id;
+                                                if (isset($subsubtrededoel->subdoelen)) {
+                                                    foreach ($subsubtrededoel->subdoelen as $subsubsubdoel) {
+                                                        if (isset($subsubsubdoel->trededoelen)) {
+                                                            foreach ($subsubsubdoel->trededoelen as $subsubsubtrededoel) {
+                                                                if (!in_array($subsubsubtrededoel->id, $ids[$toestel])) $ids[$toestel][] = $subsubtrededoel->id; $ids[$toestel][] = $subsubsubtrededoel->id;
+                                                                if (isset($subsubsubtrededoel->subdoelen)) {
+                                                                    foreach ($subsubsubtrededoel->subdoelen as $subsubsubsubdoel) {
+                                                                        if (isset($subsubsubsubdoel->trededoelen)) {
+                                                                            foreach ($subsubsubsubdoel->trededoelen as $subsubsubsubtrededoel) {
+                                                                                if (!in_array($subsubsubsubtrededoel->id, $ids[$toestel])) $ids[$toestel][] = $subsubtrededoel->id; $ids[$toestel][] = $subsubsubsubtrededoel->id;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT doelen
+            FROM AppBundle:Doelen doelen
+            WHERE doelen.trede IS NULL');
+        $doelenObject = $query->getResult();
+        foreach ($doelenObject as $doelObject) {
+            foreach ($toestellen as $toestel) {
+                if ($doelObject->getToestel() != $toestel) continue;
+                if (isset($ids[$toestel])) if (in_array($doelObject->getId(), $ids[$toestel])) continue;
+                $doelenLijst[$toestel][$doelObject->getId()] = $doelObject->getNaam();
+
+            }
+        }
+        foreach ($toestellen as $toestel) {
+            asort($doelenLijst[$toestel]);
+        }
+        return $doelenLijst;
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{persoonId}/addDoelToTurnster/{groepId}/{turnsterId}/", name="addDoelToTurnster")
+     * @Method({"GET", "POST"})
+     */
+    public function addDoelToTurnster($persoonId, $groepId, $turnsterId, Request $request)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer', 'Assistent-Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $repeat = false;
+            $groepObject = $response['groep'];
+            $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
+            $token = $this->getToken();
+            if ($request->getMethod() == 'POST') {
+                $postedToken = $request->request->get('token');
+                if (!empty($postedToken)) {
+                    if ($this->isTokenValid($postedToken)) {
+                        $em = $this->getDoctrine()->getManager();
+                        $query = $em->createQuery(
+                        'SELECT doelen
+                        FROM AppBundle:Doelen doelen
+                        WHERE doelen.id = :id')
+                        ->setParameter('id', $request->request->get('doel'));
+                        $doelObject = $query->setMaxResults(1)->getOneOrNullResult();
+
+                        $query = $em->createQuery(
+                        'SELECT persoon
+                        FROM AppBundle:Persoon persoon
+                        WHERE persoon.id = :id')
+                        ->setParameter('id', $turnsterId);
+                        $turnserObject = $query->setMaxResults(1)->getOneOrNullResult();
+
+                        $seizoensDoel = new SeizoensDoelen();
+                        $seizoensDoel->setDoel($doelObject);
+                        $seizoensDoel->setPersoon($turnserObject);
+                        $seizoen = $this->getSeizoen();
+                        $seizoensDoel->setSeizoen($seizoen);
+                        $em->persist($seizoensDoel);
+                        $em->flush();
+
+                        if ($request->request->get('repeat')) {
+                            $repeat = true;
+                        } else {
+                            return $this->redirectToRoute('viewSelectieTurnster', array(
+                                'persoonId' => $persoonId,
+                                'turnsterId' => $turnsterId,
+                                'groepId' => $groepId,
+                            ));
+                        }
+                    }
+                }
+            }
+            $seizoen = $this->getSeizoen();
+            $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
+            $doelen = $this->getDoelDetails($doelenObject);
+            $doelenLijst = $this->getAvailableDoelen($doelen);
+        }
+        return $this->render('inloggen/selectieAddDoelToTurnster.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' => $groepId,
+            'turnster' => $turnster,
+            'doelen' => $doelenLijst,
+            'token' => $token,
+            'repeat' => $repeat,
         ));
     }
 
