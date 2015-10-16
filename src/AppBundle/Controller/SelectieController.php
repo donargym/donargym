@@ -12,6 +12,7 @@ use AppBundle\Entity\Groepen;
 use AppBundle\Entity\Persoon;
 use AppBundle\Entity\SelectieFoto;
 use AppBundle\Entity\Stukje;
+use AppBundle\Entity\SubDoelen;
 use AppBundle\Entity\Trainingen;
 use AppBundle\Entity\Trainingsdata;
 use AppBundle\Entity\Vloermuziek;
@@ -1751,6 +1752,7 @@ class SelectieController extends BaseController
             } else {
                 $password = 'over een wachtwoord beschik je als het goed is al';
             }
+            $this->addSubDoelenAanPersoon($persoon);
             $user->addPersoon($persoon);
             $em->persist($persoon);
             $em->flush();
@@ -2784,32 +2786,39 @@ class SelectieController extends BaseController
                 $doel->setNaam($request->request->get('naam'));
                 $doel->setToestel($request->request->get('toestel'));
                 $subdoelen = array();
+                $em = $this->getDoctrine()->getManager();
                 if ($request->request->get('sub1')) {
                     $subdoelen[] = $request->request->get('sub1');
-                }
-                if ($request->request->get('sub2')) {
+                } if ($request->request->get('sub2')) {
                     $subdoelen[] = $request->request->get('sub2');
-                }
-                if ($request->request->get('sub3')) {
+                } if ($request->request->get('sub3')) {
                     $subdoelen[] = $request->request->get('sub3');
-                }
-                if ($request->request->get('sub4')) {
+                } if ($request->request->get('sub4')) {
                     $subdoelen[] = $request->request->get('sub4');
-                }
-                if ($request->request->get('sub5')) {
+                } if ($request->request->get('sub5')) {
                     $subdoelen[] = $request->request->get('sub5');
-                }
-                if ($request->request->get('sub6')) {
+                } if ($request->request->get('sub6')) {
                     $subdoelen[] = $request->request->get('sub6');
-                }
-                if ($request->request->get('trede')) {
-                    $doel->setTrede($request->request->get('trede'));
-                }
-                if (count($subdoelen) > 0) {
+                } if (count($subdoelen) > 0) {
                     $doel->setSubdoelen(json_encode($subdoelen));
+                } if ($request->request->get('trede')) {
+                    $doel->setTrede($request->request->get('trede'));
+                    $em->persist($doel);
+                } else {
+                    $em->persist($doel);
+                    $query = $em->createQuery(
+                    'SELECT persoon
+                    FROM AppBundle:Persoon persoon');
+                    $personen = $query->getResult();
+                    /** @var Persoon $persoon */
+                    foreach ($personen as $persoon) {
+                        $subdoelEntity = new SubDoelen();
+                        $subdoelEntity->setDoel($doel);
+                        $subdoelEntity->setPersoon($persoon);
+                        $em->persist($subdoelEntity);
+                        $em->flush();
+                    }
                 }
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($doel);
                 $em->flush();
                 if ($request->request->get('repeat')) {
                     $repeat = true;

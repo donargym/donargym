@@ -476,6 +476,7 @@ class AdminController extends BaseController
             else{
                 $password = 'over een wachtwoord beschik je als het goed is al';
             }
+            $this->addSubDoelenAanPersoon($persoon);
             $user->addPersoon($persoon);
             $em->persist($persoon);
             $em->flush();

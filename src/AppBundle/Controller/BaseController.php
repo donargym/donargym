@@ -10,9 +10,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity\Calendar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Content;
-use AppBundle\Entity\Nieuws;
+use AppBundle\Entity\Nieuwsbericht;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception;
+use AppBundle\Entity\SubDoelen;
 
 
 class BaseController extends Controller
@@ -112,5 +113,22 @@ class BaseController extends Controller
             }
         }
         return $password;
+    }
+
+    protected function addSubDoelenAanPersoon($persoon)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT doelen
+        FROM AppBundle:Doelen doelen
+        WHERE doelen.trede IS NULL');
+        $doelen = $query->getResult();
+        foreach ($doelen as $doel) {
+            $subdoelEntity = new SubDoelen();
+            $subdoelEntity->setDoel($doel);
+            $subdoelEntity->setPersoon($persoon);
+            $em->persist($subdoelEntity);
+            $em->flush();
+        }
     }
 }

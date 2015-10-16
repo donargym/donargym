@@ -69,6 +69,11 @@ class Persoon
     private $seizoensdoelen;
 
     /**
+     * @ORM\OneToMany(targetEntity="SubDoelen", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $subdoelen;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Trainingen", mappedBy="persoon")
      * @ORM\JoinTable(name="personen_trainingen",
      *      joinColumns={@ORM\JoinColumn(name="trainingen_id", referencedColumnName="id", onDelete="cascade")},
@@ -91,6 +96,7 @@ class Persoon
     public function __construct()
     {
         $this->functie = new ArrayCollection();
+        $this->subdoelen = new ArrayCollection();
         $this->seizoensdoelen = new ArrayCollection();
         $this->aanwezigheid = new ArrayCollection();
         $this->trainingen = new ArrayCollection();
@@ -278,9 +284,9 @@ class Persoon
     }
 
     /**
-     * Set foto
+     * Set vloermuziek
      *
-     * @param \AppBundle\Entity\SelectieFoto $foto
+     * @param \AppBundle\Entity\Vloermuziek $vloermuziek
      * @return Persoon
      */
     public function setVloermuziek(\AppBundle\Entity\Vloermuziek $vloermuziek = null)
@@ -508,5 +514,38 @@ class Persoon
     public function getGeboortedatum()
     {
         return $this->geboortedatum;
+    }
+
+    /**
+     * Add subdoelen
+     *
+     * @param \AppBundle\Entity\SubDoelen $subdoelen
+     * @return Persoon
+     */
+    public function addSubdoelen(\AppBundle\Entity\SubDoelen $subdoelen)
+    {
+        $this->subdoelen[] = $subdoelen;
+
+        return $this;
+    }
+
+    /**
+     * Remove subdoelen
+     *
+     * @param \AppBundle\Entity\SubDoelen $subdoelen
+     */
+    public function removeSubdoelen(\AppBundle\Entity\SubDoelen $subdoelen)
+    {
+        $this->subdoelen->removeElement($subdoelen);
+    }
+
+    /**
+     * Get subdoelen
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSubdoelen()
+    {
+        return $this->subdoelen;
     }
 }
