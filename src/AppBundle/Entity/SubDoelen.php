@@ -27,7 +27,7 @@ class SubDoelen
     private $persoon;
 
     /**
-     * @ORM\OneToMany(targetEntity="Cijfers", mappedBy="subdoel", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     * @ORM\OneToMany(targetEntity="Cijfers", mappedBy="subdoel")
      */
     private $cijfers;
 

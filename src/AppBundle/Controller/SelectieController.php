@@ -2669,7 +2669,7 @@ class SelectieController extends BaseController
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $persoonId);
-        $roles = array('Trainer', 'Assistent-Trainer');
+        $roles = array('Trainer');
         $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
         if ($response['authorized']) {
             $functie = $response['functie'];
@@ -2734,6 +2734,65 @@ class SelectieController extends BaseController
             'doelen' => $doelenLijst,
             'token' => $token,
             'repeat' => $repeat,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{persoonId}/addDoelToTurnster/{groepId}/{turnsterId}/{doelId}/", name="removeDoelFromTurnster")
+     * @Method({"GET", "POST"})
+     */
+    public function removeDoelFromTurnster($persoonId, $groepId, $turnsterId, $doelId, Request $request)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $groepObject = $response['groep'];
+            $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+            'SELECT seizoensdoelen
+            FROM AppBundle:SeizoensDoelen seizoensdoelen
+            WHERE seizoensdoelen.doel = :id
+            AND seizoensdoelen.persoon = :turnsterId')
+            ->setParameter('id', $doelId)
+            ->setParameter('turnsterId', $turnsterId);
+            /** @var SeizoensDoelen $seizoensDoel */
+            $seizoensDoel = $query->setMaxResults(1)->getOneOrNullResult();
+            if ($request->getMethod() == 'POST') {
+                $em->remove($seizoensDoel);
+                $em->flush();
+                return $this->redirectToRoute('viewSelectieTurnster', array(
+                    'persoonId' => $persoonId,
+                    'turnsterId' => $turnsterId,
+                    'groepId' => $groepId,
+                ));
+            }
+        }
+        $doelObject = $seizoensDoel->getDoel();
+        $doelNaam = $doelObject->getNaam();
+        $doelToestel = $doelObject->getToestel();
+        return $this->render('inloggen/selectieRemoveDoelFromTurnster.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' => $groepId,
+            'turnster' => $turnster,
+            'doelNaam' => $doelNaam,
+            'doelToestel' => $doelToestel,
         ));
     }
 

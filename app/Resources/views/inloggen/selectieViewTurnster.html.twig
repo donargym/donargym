@@ -10,13 +10,13 @@
 {% endblock %}
 
 {% block pageHeader %}
-        <img src="http://www.donargym.nl/uploads/selectiefotos/{{ turnster.foto }}"
+    <img src="http://www.donargym.nl/uploads/selectiefotos/{{ turnster.foto }}"
             {% if turnster.width > turnster.height %}
                 width="250"
             {% else %}
-                height = "200"
+                height="200"
             {% endif %}
-            style="float:right;margin-right:2px;margin-top:5px;"/>
+         style="float:right;margin-right:2px;margin-top:5px;"/>
     <h1>{{ turnster.voornaam }} {{ turnster.achternaam }} ({{ turnster.categorie }})</h1>
 {% endblock %}
 
@@ -75,9 +75,13 @@
 </h2>
 {% for toestel, doelen in doelen %}
     <h3>{{ toestel }}</h3>
+    <table border="1">
     {% for id, doel in doelen %}
-        {{ doel }}<br>
+        <tr><td>{{ doel }}</td><td><a href="{{ path('removeDoelFromTurnster', { 'persoonId': persoonItems.id, 'groepId': groepId, 'turnsterId': turnster.id, 'doelId': id }) }}">
+        <img src="{{ asset('images/remove.png') }}" width="15px"/>
+        </a></td></tr>
     {% endfor %}
+    </table>
 {% endfor %}
 
 </p>
