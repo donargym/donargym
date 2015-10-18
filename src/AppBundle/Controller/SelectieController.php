@@ -781,7 +781,7 @@ class SelectieController extends BaseController
                     $som = $som + ($somDoel/3);
             }
         }
-        $percentage = 0;
+        $percentage = 1;
         if (count($doelen) > 0) {
             $percentage = $som/count($doelen);
         }
