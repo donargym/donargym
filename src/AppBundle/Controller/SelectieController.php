@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Aanwezigheid;
 use AppBundle\Entity\Afmeldingen;
+use AppBundle\Entity\Cijfers;
 use AppBundle\Entity\Doelen;
 use AppBundle\Entity\FileUpload;
 use AppBundle\Entity\FotoUpload;
@@ -339,7 +340,7 @@ class SelectieController extends BaseController
             /** @var Persoon $persoon */
             if ($persoon->getId() == $id) {
                 $persoonItems = new \stdClass();
-                $persoonItems->object = $persoon;
+                //$persoonItems->object = $persoon;
                 $persoonItems->id = $persoon->getId();
                 $persoonItems->voornaam = $persoon->getVoornaam();
                 $persoonItems->achternaam = $persoon->getAchternaam();
@@ -426,7 +427,12 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j] = new \stdClass();
                             /** @var Persoon $turnster */
                             $turnster = $groepFuncties[$j]->getPersoon();
-
+                            $seizoen = $this->getSeizoen();
+                            $seizoensdoelen = $this->getDoelenVoorSeizoen($turnster->getId(), $seizoen);
+                            $doelen = $this->getDoelDetails($seizoensdoelen);
+                            $doelen = $this->getAvailableDoelen($doelen, true);
+                            $persoonItems->functies[$i]->turnster[$j]->percentageVoortgang = (100*$this->getPercentageVoortgangTotaal($doelen, $turnster->getId()));
+                            $persoonItems->functies[$i]->turnster[$j]->percentageVoortgangKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageVoortgang);
                             $aantalAanwezig = 0;
                             $aantalTrainingen = 0;
                             $totaalAanwezigheid = $turnster->getAanwezigheid();
@@ -741,11 +747,45 @@ class SelectieController extends BaseController
                     }
                     // TODO: doelen
                 }
+                //var_dump($persoonItems);die;
                 return ($persoonItems);
             }
         }
-        /*var_dump($persoonItems);
-        die;*/
+    }
+
+    private function getPercentageVoortgangTotaal($doelen, $turnsterId)
+    {
+        $som = 0;
+        $huidigSeizoen = $this->getSeizoen();
+        foreach ($doelen as $doel) {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+            'SELECT subdoelen
+            FROM AppBundle:SubDoelen subdoelen
+            WHERE subdoelen.doel = :doel
+            AND subdoelen.persoon = :turnsterId')
+            ->setParameter('doel', $doel)
+            ->setParameter('turnsterId', $turnsterId);
+            /** @var SubDoelen $subdoel */
+            $subdoel = $query->setMaxResults(1)->getOneOrNullResult();
+            $cijfers = $subdoel->getCijfers();
+            if (count($cijfers) > 0) {
+                $somDoel = 0;
+                for ($i = count($cijfers)-1; $i > count($cijfers)-4; $i--) {
+                    $cijferSeizoen = $this->getSeizoen($cijfers[$i]->getDate()->getTimestamp());
+                    if($huidigSeizoen != $cijferSeizoen) {
+                        continue;
+                    }
+                    $somDoel = $somDoel + $cijfers[$i]->getCijfer();
+                }
+                    $som = $som + ($somDoel/3);
+            }
+        }
+        $percentage = 0;
+        if (count($doelen) > 0) {
+            $percentage = $som/count($doelen);
+        }
+        return $percentage;
     }
 
     private function getPersoonObject($userObject, $id)
@@ -2497,12 +2537,15 @@ class SelectieController extends BaseController
         return $turnster;
     }
 
-    private function getSeizoen()
+    private function getSeizoen($timestamp = null)
     {
-        if (date('m', time()) > '08') {
-            $seizoen = date('Y', time());
+        if ($timestamp == null) {
+            $timestamp = time();
+        }
+        if (date('m', $timestamp) > '08') {
+            $seizoen = date('Y', $timestamp);
         } else {
-            $seizoen = (int)date('Y', time()) - 1;
+            $seizoen = (int)date('Y', $timestamp) - 1;
         }
         return $seizoen;
     }
@@ -2519,6 +2562,31 @@ class SelectieController extends BaseController
             ->setParameter('seizoen', $seizoen);
         $doelen = $query->getResult();
         return ($doelen);
+    }
+
+    private function getDoelDetailsFromIds($ids)
+    {
+        $doelen = array();
+        $doelen['Sprong'] = array();
+        $doelen['Brug'] = array();
+        $doelen['Balk'] = array();
+        $doelen['Vloer'] = array();
+        foreach ($ids as $id) {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT doelen
+            FROM AppBundle:Doelen doelen
+            WHERE doelen.id = :id')
+            ->setParameter('id', $id);
+            /** @var Doelen $doelObject */
+            $doelObject = $query->setMaxResults(1)->getOneOrNullResult();
+            $doelen[$doelObject->getToestel()][$doelObject->getId()] = $doelObject->getNaam();
+        }
+        asort($doelen['Sprong']);
+        asort($doelen['Brug']);
+        asort($doelen['Balk']);
+        asort($doelen['Vloer']);
+        return $doelen;
     }
 
     private function getDoelDetails($doelenObject)
@@ -2566,6 +2634,11 @@ class SelectieController extends BaseController
             $groepObject = $response['groep'];
             $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
         }
+        $voortgang = new \stdClass();
+        $voortgang->sprong = 15;
+        $voortgang->brug = 85;
+        $voortgang->balk = 62;
+        $voortgang->vloer = 43;
         return $this->render('inloggen/selectieViewTurnster.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
@@ -2576,11 +2649,91 @@ class SelectieController extends BaseController
             'functie' => $functie,
             'groepId' => $groepId,
             'turnster' => $turnster,
-            'doelen' => $doelen
+            'doelen' => $doelen,
+            'voortgang' => $voortgang,
         ));
     }
 
-    private function getAvailableDoelen($doelen)
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/{persoonId}/viewTurnster/{turnsterId}/{groepId}/cijferGeven", name="SelectieTurnsterAddCijfer")
+     * @Method({"GET", "POST"})
+     */
+    public
+    function SelectieTurnsterAddCijfer($persoonId, $turnsterId, $groepId, Request $request)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $seizoen = $this->getSeizoen();
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $groepObject = $response['groep'];
+            $token = $this->getToken();
+            $repeat = false;
+            $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
+            $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
+            $doelen = $this->getDoelDetails($doelenObject);
+            $allSubdoelen = $this->getAvailableDoelen($doelen, true);
+            $allSubdoelen = $this->getDoelDetailsFromIds($allSubdoelen);
+            if ($request->getMethod() == 'POST') {
+                $postedToken = $request->request->get('token');
+                if (!empty($postedToken)) {
+                    if ($this->isTokenValid($postedToken)) {
+                        $em = $this->getDoctrine()->getManager();
+                        $query = $em->createQuery(
+                        'SELECT subdoelen
+                        FROM AppBundle:SubDoelen subdoelen
+                        WHERE subdoelen.doel = :id
+                        AND subdoelen.persoon = :turnsterId
+                        AND seizoen = :seizoen')
+                        ->setParameter('id', $request->request->get('doel'))
+                        ->setParameter('turnsterId', $turnsterId)
+                        ->setParameter('seizoen', $seizoen);
+                        $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                        $cijfer = new Cijfers();
+                        $cijfer->setCijfer($request->request->get('cijfer'));
+                        $cijfer->setSubdoel($subDoelObject);
+                        $cijfer->setDate(new \DateTime('NOW'));
+                        $em->persist($cijfer);
+                        $em->flush();
+                        if ($request->request->get('repeat')) {
+                            $repeat = true;
+                        } else {
+                            return $this->redirectToRoute('viewSelectieTurnster', array(
+                                'persoonId' => $persoonId,
+                                'turnsterId' => $turnsterId,
+                                'groepId' => $groepId,
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+        return $this->render('inloggen/SelectieTurnsterAddCijfer.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' => $groepId,
+            'turnster' => $turnster,
+            'doelen' => $allSubdoelen,
+            'repeat' => $repeat,
+            'token' => $token,
+        ));
+    }
+
+    private function getAvailableDoelen($doelen, $assigned=false)
     {
         $doelenLijst = array();
         $doelenLijst['Sprong'] = array();
@@ -2588,34 +2741,32 @@ class SelectieController extends BaseController
         $doelenLijst['Balk'] = array();
         $doelenLijst['Vloer'] = array();
         $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
-        foreach($toestellen as $toestel) {
-            $ids[$toestel] = array();
-        }
+        $ids = array();
         foreach($toestellen as $toestel) {
             if (! isset($doelen[$toestel])) continue;
             foreach ($doelen[$toestel] as $id => $doelenToestel) {
-                if (!in_array($id, $ids[$toestel])) $ids[$toestel][] = $id;
+                if (!in_array($id, $ids)) $ids[] = $id;
                 $doelOpbouw = $this->getDoelOpbouw($id);
                 if(isset($doelOpbouw->subdoelen)){
                     foreach($doelOpbouw->subdoelen as $subdoel) {
                         if(isset($subdoel->trededoelen)){
                             foreach($subdoel->trededoelen as $trededoel) {
-                                if (!in_array($trededoel->id, $ids[$toestel])) $ids[$toestel][] = $trededoel->id;
+                                if (!in_array($trededoel->id, $ids)) $ids[] = $trededoel->id;
                                 if(isset($trededoel->subdoelen)){
                                     foreach ($trededoel->subdoelen as $subsubdoel) {
                                         if(isset($subsubdoel->trededoelen)){
                                             foreach ($subsubdoel->trededoelen as $subsubtrededoel) {
-                                                if (!in_array($subsubtrededoel->id, $ids[$toestel])) $ids[$toestel][] = $subsubtrededoel->id;
+                                                if (!in_array($subsubtrededoel->id, $ids)) $ids[] = $subsubtrededoel->id;
                                                 if (isset($subsubtrededoel->subdoelen)) {
                                                     foreach ($subsubtrededoel->subdoelen as $subsubsubdoel) {
                                                         if (isset($subsubsubdoel->trededoelen)) {
                                                             foreach ($subsubsubdoel->trededoelen as $subsubsubtrededoel) {
-                                                                if (!in_array($subsubsubtrededoel->id, $ids[$toestel])) $ids[$toestel][] = $subsubtrededoel->id; $ids[$toestel][] = $subsubsubtrededoel->id;
+                                                                if (!in_array($subsubsubtrededoel->id, $ids)) $ids[] = $subsubsubtrededoel->id;
                                                                 if (isset($subsubsubtrededoel->subdoelen)) {
                                                                     foreach ($subsubsubtrededoel->subdoelen as $subsubsubsubdoel) {
                                                                         if (isset($subsubsubsubdoel->trededoelen)) {
                                                                             foreach ($subsubsubsubdoel->trededoelen as $subsubsubsubtrededoel) {
-                                                                                if (!in_array($subsubsubsubtrededoel->id, $ids[$toestel])) $ids[$toestel][] = $subsubtrededoel->id; $ids[$toestel][] = $subsubsubsubtrededoel->id;
+                                                                                if (!in_array($subsubsubsubtrededoel->id, $ids)) $ids[] = $subsubsubsubtrededoel->id;
                                                                             }
                                                                         }
                                                                     }
@@ -2643,7 +2794,7 @@ class SelectieController extends BaseController
         foreach ($doelenObject as $doelObject) {
             foreach ($toestellen as $toestel) {
                 if ($doelObject->getToestel() != $toestel) continue;
-                if (isset($ids[$toestel])) if (in_array($doelObject->getId(), $ids[$toestel])) continue;
+                if (isset($ids)) if (in_array($doelObject->getId(), $ids)) continue;
                 $doelenLijst[$toestel][$doelObject->getId()] = $doelObject->getNaam();
 
             }
@@ -2651,7 +2802,14 @@ class SelectieController extends BaseController
         foreach ($toestellen as $toestel) {
             asort($doelenLijst[$toestel]);
         }
-        return $doelenLijst;
+        if($assigned == false)
+        {
+            return $doelenLijst;
+        }
+        else {
+            sort($ids);
+            return $ids;
+        }
     }
 
     /**

@@ -6,30 +6,39 @@
             <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
             >
             <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': groepId }) }}">{{ turnster.voornaam }} {{ turnster.achternaam }}</a>
-            > <i>Doel toevoegen</i>
+            > <i>Cijfer geven</i>
         </div>
     </div>
 {% endblock %}
 
 {% block pageHeader %}
-    <h1>Doel toevoegen: {{ turnster.voornaam }} {{ turnster.achternaam }}</h1>
+    <h1>Cijfer geven: {{ turnster.voornaam }} {{ turnster.achternaam }}</h1>
 {% endblock %}
 
 {% block body %}
     <form method="post" action="">
         <p><select name="doel">
                 <option selected></option>
-            {% for toestel, doelen in doelen %}
-                {% for id, doel in doelen %}
-                    <option value="{{ id }}">{{ doel }} {{ toestel }}</option>
+                {% for toestel, doelen in doelen %}
+                    {% for id, doel in doelen %}
+                        <option value="{{ id }}">{{ doel }} {{ toestel }}</option>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </select>
+            </select></p>
+            <p><select name="cijfer">
+                <option selected></option>
+                <option value="6">Voldoende</option>
+                <option value="7">Ruim voldoende</option>
+                <option value="7">Goed</option>
+                <option value="8">Zeer goed</option>
+                <option value="10">Uitmuntend</option>
+
+            </select>
         </p>
         <p><label><input type="checkbox" name="repeat"
-            {% if repeat %}
+                        {% if repeat %}
                 checked
-            {% endif %}/>Hierna nog een doel toevoegen</label></p>
+                        {% endif %}/>Hierna nog een cijfer geven</label></p>
         <input type="hidden" name="token" value="{{ token }}"/>
         <input type="submit" value="Opslaan"/>
     </form>

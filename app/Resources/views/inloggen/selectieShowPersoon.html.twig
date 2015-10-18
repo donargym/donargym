@@ -10,8 +10,12 @@
 
 {% block pageHeader %}
 
-    <a href="http://www.facebook.com/groups/selectieleidschendam/" target="blank">Word lid van de Facebookgroep van
-        de selectie Leidschendam!</a>
+    {% for functie in persoonItems.functies %}
+        {% if functie.groepId == 5 %}
+            <a href="http://www.facebook.com/groups/selectieleidschendam/" target="blank">Word lid van de Facebookgroep van
+                de selectie Leidschendam!</a>
+        {% endif %}
+    {% endfor %}
 
     <div style="height: 175px;">
         <a href="{{ path('addSelectieFotoPage', { 'persoonId': persoonItems.id }) }}">
@@ -157,9 +161,12 @@
                                     </a>
                                 </td>
                                 {% if functie.groepId == 3 or functie.groepId == 5 %}
-                                    <td>
-                                        <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
-
+                                    <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageVoortgangKleur }};">
+                                        <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
+                                        style="text-decoration: none">
+                                            <span style="color: rgba(0,0,0,0.6);">
+                                            {{ turnster.percentageVoortgang | round }}%
+                                        </span>
                                         </a>
                                     </td>
                                 {% endif %}
