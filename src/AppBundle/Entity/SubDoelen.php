@@ -28,6 +28,7 @@ class SubDoelen
 
     /**
      * @ORM\OneToMany(targetEntity="Cijfers", mappedBy="subdoel")
+     * @ORM\OrderBy({"id" = "DESC"})
      */
     private $cijfers;
 

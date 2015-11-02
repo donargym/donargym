@@ -23,8 +23,8 @@ class SeizoensDoelen
     protected $seizoen;
 
     /**
-     * @ORM\OneToOne(targetEntity="Doelen")
-     * @ORM\JoinColumn(name="doel_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Doelen")
+     * @ORM\JoinColumn(name="doel_id", referencedColumnName="id", unique=false)
      **/
     protected $doel;
 

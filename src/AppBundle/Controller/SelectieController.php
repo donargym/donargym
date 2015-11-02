@@ -428,10 +428,53 @@ class SelectieController extends BaseController
                             /** @var Persoon $turnster */
                             $turnster = $groepFuncties[$j]->getPersoon();
                             $seizoen = $this->getSeizoen();
-                            $seizoensdoelen = $this->getDoelenVoorSeizoen($turnster->getId(), $seizoen);
-                            $doelen = $this->getDoelDetails($seizoensdoelen);
-                            $doelen = $this->getAvailableDoelen($doelen, true);
-                            $persoonItems->functies[$i]->turnster[$j]->percentageVoortgang = (100*$this->getPercentageVoortgangTotaal($doelen, $turnster->getId()));
+                            $doelenObject = $this->getDoelenVoorSeizoen($turnster->getId(), $seizoen);
+                            $doelen = $this->getDoelDetails($doelenObject);
+
+
+
+
+
+
+
+                            $doelenIdArray = array();
+                            foreach ($doelen as $doelenData) {
+                                foreach ($doelenData as $doelId => $doelNaam) {
+                                    $doelenIdArray[] = $doelId;
+                                }
+                            }
+                            $subdoelIds = array();
+                            $collectedDoelen = array();
+                            $cijfers = array();
+                            foreach ($doelenIdArray as $doelId) {
+                                $collectedDoelen[] = $doelId;
+                                $array = $this->getDoelOpbouw($doelId, $subdoelIds);
+                                $doelOpbouw = $array[0];
+                                $subdoelIds = $array[1];
+                                $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+                                $subdoelIds = $result[0];
+                                $extraDoelen = $result[1];
+                                $reveseExtraDoelen = array_reverse($extraDoelen);
+                                $repeat = true;
+                                while ($repeat) {
+                                    $repeat = false;
+                                    foreach ($reveseExtraDoelen as $id => $extraDoel) {
+                                        if ($result = $this->getPercentages($extraDoel, $cijfers, $turnster->getId())) {
+                                            $cijfers = $result;
+                                            unset ($reveseExtraDoelen[$id]);
+                                            continue;
+                                        }
+                                        $repeat = true;
+                                    }
+                                }
+                                $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnster->getId());
+                                foreach ($cijfers as $id => $percentage) {
+                                    $kleuren[$id] = $this->colorGenerator($percentage);
+                                }
+                            }
+                            $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
+
+                            $persoonItems->functies[$i]->turnster[$j]->percentageVoortgang = $voortgang['totaal'];
                             $persoonItems->functies[$i]->turnster[$j]->percentageVoortgangKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageVoortgang);
                             $aantalAanwezig = 0;
                             $aantalTrainingen = 0;
@@ -753,41 +796,6 @@ class SelectieController extends BaseController
         }
     }
 
-    private function getPercentageVoortgangTotaal($doelen, $turnsterId)
-    {
-        $som = 0;
-        $huidigSeizoen = $this->getSeizoen();
-        foreach ($doelen as $doel) {
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-            'SELECT subdoelen
-            FROM AppBundle:SubDoelen subdoelen
-            WHERE subdoelen.doel = :doel
-            AND subdoelen.persoon = :turnsterId')
-            ->setParameter('doel', $doel)
-            ->setParameter('turnsterId', $turnsterId);
-            /** @var SubDoelen $subdoel */
-            $subdoel = $query->setMaxResults(1)->getOneOrNullResult();
-            $cijfers = $subdoel->getCijfers();
-            if (count($cijfers) > 0) {
-                $somDoel = 0;
-                for ($i = count($cijfers)-1; $i > count($cijfers)-4; $i--) {
-                    $cijferSeizoen = $this->getSeizoen($cijfers[$i]->getDate()->getTimestamp());
-                    if($huidigSeizoen != $cijferSeizoen) {
-                        continue;
-                    }
-                    $somDoel = $somDoel + $cijfers[$i]->getCijfer();
-                }
-                    $som = $som + ($somDoel/3);
-            }
-        }
-        $percentage = 1;
-        if (count($doelen) > 0) {
-            $percentage = $som/count($doelen);
-        }
-        return $percentage;
-    }
-
     private function getPersoonObject($userObject, $id)
     {
         $personen = $userObject->getPersoon();
@@ -885,6 +893,57 @@ class SelectieController extends BaseController
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $id);
+        $seizoen = $this->getSeizoen();
+        foreach ($persoonItems->functies as $functie) {
+            if ($functie->functie == 'Turnster') {
+                $doelenObject = $this->getDoelenVoorSeizoen($id, $seizoen);
+                $doelen = $this->getDoelDetails($doelenObject);
+                $doelenIdArray = array();
+                foreach ($doelen as $doelenData) {
+                    foreach ($doelenData as $doelId => $doelNaam) {
+                        $doelenIdArray[] = $doelId;
+                    }
+                }
+                $subdoelIds = array();
+                $collectedDoelen = array();
+                $cijfers = array();
+                foreach ($doelenIdArray as $doelId) {
+                    $collectedDoelen[] = $doelId;
+                    $array = $this->getDoelOpbouw($doelId, $subdoelIds);
+                    $doelOpbouw = $array[0];
+                    $subdoelIds = $array[1];
+                    $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+                    $subdoelIds = $result[0];
+                    $extraDoelen = $result[1];
+                    $reveseExtraDoelen = array_reverse($extraDoelen);
+                    $repeat = true;
+                    while ($repeat) {
+                        $repeat = false;
+                        foreach ($reveseExtraDoelen as $DoelId => $extraDoel) {
+                            if ($result = $this->getPercentages($extraDoel, $cijfers, $id)) {
+                                $cijfers = $result;
+                                unset ($reveseExtraDoelen[$DoelId]);
+                                continue;
+                            }
+                            $repeat = true;
+                        }
+                    }
+                    $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $id);
+                    foreach ($cijfers as $DoelId => $percentage) {
+                        $kleuren[$DoelId] = $this->colorGenerator($percentage);
+                    }
+                }
+                $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
+                break;
+            }
+        }
+        if (!isset($voortgang)) {
+            $voortgang['Sprong'] = 100;
+            $voortgang['Brug'] = 100;
+            $voortgang['Balk'] = 100;
+            $voortgang['Vloer'] = 100;
+            $voortgang['Totaal'] = 100;
+        }
         return $this->render('inloggen/selectieShowPersoon.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
@@ -892,6 +951,139 @@ class SelectieController extends BaseController
             'user' => $user,
             'persoonItems' => $persoonItems,
             'wedstrijdLinkItems' => $this->groepItems,
+            'voortgang' => $voortgang,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{persoonId}/Doelen//{toestel}/", name="showPersoonDoelenPerToestel")
+     * @Method({"GET"})
+     */
+    public function showPersoonDoelenPerToestel($persoonId, $toestel)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $seizoen = $this->getSeizoen();
+        foreach ($persoonItems->functies as $functie) {
+            if ($functie->functie == 'Turnster') {
+                $doelenObject = $this->getDoelenVoorSeizoen($persoonId, $seizoen);
+                $doelen = $this->getDoelDetails($doelenObject);
+                $doelenIdArray = array();
+                foreach ($doelen as $doelenData) {
+                    foreach ($doelenData as $doelId => $doelNaam) {
+                        $doelenIdArray[] = $doelId;
+                    }
+                }
+                $subdoelIds = array();
+                $collectedDoelen = array();
+                $cijfers = array();
+                foreach ($doelenIdArray as $doelId) {
+                    $collectedDoelen[] = $doelId;
+                    $array = $this->getDoelOpbouw($doelId, $subdoelIds);
+                    $doelOpbouw = $array[0];
+                    $subdoelIds = $array[1];
+                    $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+                    $subdoelIds = $result[0];
+                    $extraDoelen = $result[1];
+                    $reveseExtraDoelen = array_reverse($extraDoelen);
+                    $repeat = true;
+                    while ($repeat) {
+                        $repeat = false;
+                        foreach ($reveseExtraDoelen as $DoelId => $extraDoel) {
+                            if ($result = $this->getPercentages($extraDoel, $cijfers, $persoonId)) {
+                                $cijfers = $result;
+                                unset ($reveseExtraDoelen[$DoelId]);
+                                continue;
+                            }
+                            $repeat = true;
+                        }
+                    }
+                    $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $persoonId);
+                    foreach ($cijfers as $DoelId => $percentage) {
+                        $kleuren[$DoelId] = $this->colorGenerator($percentage);
+                    }
+                }
+                $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
+                break;
+            }
+        }
+        return $this->render('inloggen/selectieShowPersoonDoelenPerToestel.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'voortgang' => $voortgang,
+            'toestel' => $toestel,
+            'doelen' => $doelen,
+            'kleuren' => $kleuren,
+            'cijfers' => $cijfers,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{persoonId}/Doelen/{toestel}/showDoel/{doelId}/", name="showPersoonOneDoelPerToestel")
+     * @Method({"GET"})
+     */
+    public function showPersoonOneDoelPerToestel($persoonId, $toestel, $doelId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $subdoelIds = array();
+        $collectedDoelen = array();
+        $collectedDoelen[] = $doelId;
+        $array = $this->getDoelOpbouw($doelId, $subdoelIds);
+        $doelOpbouw = $array[0];
+        $subdoelIds = $array[1];
+        $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+        $subdoelIds = $result[0];
+        $extraDoelen = $result[1];
+        $cijfers = array();
+        $reveseExtraDoelen = array_reverse($extraDoelen);
+        $repeat = true;
+        while ($repeat) {
+            $repeat = false;
+            foreach ($reveseExtraDoelen as $id => $extraDoel) {
+                if ($result = $this->getPercentages($extraDoel, $cijfers, $persoonId)) {
+                    $cijfers = $result;
+                    unset ($reveseExtraDoelen[$id]);
+                    continue;
+                }
+                $repeat = true;
+            }
+        }
+        $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $persoonId);
+        foreach ($cijfers as $id => $percentage) {
+            $kleuren[$id] = $this->colorGenerator($percentage);
+        }
+        return $this->render('inloggen/showPersoonOneDoelPerToestel.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'doelOpbouw' => $doelOpbouw,
+            'extraDoelen' => $extraDoelen,
+            'cijfers' => $cijfers,
+            'kleuren' => $kleuren,
+            'toestel' => $toestel,
         ));
     }
 
@@ -2625,20 +2817,51 @@ class SelectieController extends BaseController
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $persoonId);
         $seizoen = $this->getSeizoen();
-        $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
-        $doelen = $this->getDoelDetails($doelenObject);
         $roles = array('Trainer', 'Assistent-Trainer');
         $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
         if ($response['authorized']) {
             $functie = $response['functie'];
             $groepObject = $response['groep'];
             $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
+            $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
+            $doelen = $this->getDoelDetails($doelenObject);
+            $doelenIdArray = array();
+            foreach ($doelen as $doelenData) {
+                foreach ($doelenData as $doelId => $doelNaam) {
+                    $doelenIdArray[] = $doelId;
+                }
+            }
+            $subdoelIds = array();
+            $collectedDoelen = array();
+            $cijfers = array();
+            foreach ($doelenIdArray as $doelId) {
+                $collectedDoelen[] = $doelId;
+                $array = $this->getDoelOpbouw($doelId, $subdoelIds);
+                $doelOpbouw = $array[0];
+                $subdoelIds = $array[1];
+                $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+                $subdoelIds = $result[0];
+                $extraDoelen = $result[1];
+                $reveseExtraDoelen = array_reverse($extraDoelen);
+                $repeat = true;
+                while ($repeat) {
+                    $repeat = false;
+                    foreach ($reveseExtraDoelen as $id => $extraDoel) {
+                        if ($result = $this->getPercentages($extraDoel, $cijfers, $turnsterId)) {
+                            $cijfers = $result;
+                            unset ($reveseExtraDoelen[$id]);
+                            continue;
+                        }
+                        $repeat = true;
+                    }
+                }
+                $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnsterId);
+                foreach ($cijfers as $id => $percentage) {
+                    $kleuren[$id] = $this->colorGenerator($percentage);
+                }
+            }
+            $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
         }
-        $voortgang = new \stdClass();
-        $voortgang->sprong = 15;
-        $voortgang->brug = 85;
-        $voortgang->balk = 62;
-        $voortgang->vloer = 43;
         return $this->render('inloggen/selectieViewTurnster.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
@@ -2651,12 +2874,208 @@ class SelectieController extends BaseController
             'turnster' => $turnster,
             'doelen' => $doelen,
             'voortgang' => $voortgang,
+            'cijfers' => $cijfers,
+            'kleuren' => $kleuren,
         ));
+    }
+
+    private function getPercentageVoortgangTotaal($doelen, $cijfers)
+    {
+        $totaal = 0;
+        $voortgang = array();
+        foreach ($doelen as $toestel => $doelenData) {
+            $toestelSom = 0;
+            foreach ($doelenData as $doelId => $doelNaam) {
+                $toestelSom += $cijfers[$doelId . '_hoofd'];
+            }
+            if (count($doelenData) == 0) {
+                $voortgang[$toestel] = 100;
+                $totaal += $voortgang[$toestel];
+                continue;
+            }
+            $voortgang[$toestel] = $toestelSom/count($doelenData);
+            $totaal += $voortgang[$toestel];
+        }
+        $voortgang['totaal'] = $totaal/4;
+        return $voortgang;
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/{persoonId}/viewTurnster/{turnsterId}/{groepId}/viewOneDoel/{doelId}/", name="viewSelectieTurnsterOneDoel")
+     * @Method({"GET"})
+     */
+    public
+    function viewSelectieTurnsterOneDoel($persoonId, $turnsterId, $groepId, $doelId)
+    {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader('wedstrijdturnen');
+        $this->calendarItems = $this->getCalendarItems();
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer', 'Assistent-Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $functie = $response['functie'];
+            $groepObject = $response['groep'];
+            $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
+            $subdoelIds = array();
+            $collectedDoelen = array();
+            $collectedDoelen[] = $doelId;
+            $array = $this->getDoelOpbouw($doelId, $subdoelIds);
+            $doelOpbouw = $array[0];
+            $subdoelIds = $array[1];
+            $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+            $subdoelIds = $result[0];
+            $extraDoelen = $result[1];
+            $cijfers = array();
+            $reveseExtraDoelen = array_reverse($extraDoelen);
+            $repeat = true;
+            while ($repeat) {
+                $repeat = false;
+                foreach ($reveseExtraDoelen as $id => $extraDoel) {
+                    if ($result = $this->getPercentages($extraDoel, $cijfers, $turnsterId)) {
+                        $cijfers = $result;
+                        unset ($reveseExtraDoelen[$id]);
+                        continue;
+                    }
+                    $repeat = true;
+                }
+            }
+            $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnsterId);
+            foreach ($cijfers as $id => $percentage) {
+                $kleuren[$id] = $this->colorGenerator($percentage);
+            }
+        }
+        return $this->render('inloggen/selectieViewTurnsterOneDoel.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'functie' => $functie,
+            'groepId' => $groepId,
+            'turnster' => $turnster,
+            'doelOpbouw' => $doelOpbouw,
+            'extraDoelen' => $extraDoelen,
+            'cijfers' => $cijfers,
+            'kleuren' => $kleuren,
+        ));
+    }
+
+    private function getSubdoelIds($subdoelIds, $collectedDoelen)
+    {
+        $extraDoelen = array();
+        foreach ($subdoelIds as $subdoelId) {
+            if (!in_array($subdoelId, $collectedDoelen)) {
+                $collectedDoelen[] = $subdoelId;
+                $array = $this->getDoelOpbouw($subdoelId, $subdoelIds);
+                $extraDoelen[$subdoelId] = $array[0];
+                $subdoelIds = $array[1];
+            }
+        }
+        foreach ($subdoelIds as $subdoelId) {
+            if (!in_array($subdoelId, $collectedDoelen)) {
+                $collectedDoelen[] = $subdoelId;
+                $array = $this->getDoelOpbouw($subdoelId, $subdoelIds);
+                $extraDoelen[$subdoelId] = $array[0];
+                $subdoelIds = $array[1];
+            }
+        }
+        foreach ($subdoelIds as $subdoelId) {
+            if (!in_array($subdoelId, $collectedDoelen)) {
+                $collectedDoelen[] = $subdoelId;
+                $array = $this->getDoelOpbouw($subdoelId, $subdoelIds);
+                $extraDoelen[$subdoelId] = $array[0];
+                $subdoelIds = $array[1];
+            }
+        }
+        foreach ($subdoelIds as $subdoelId) {
+            if (!in_array($subdoelId, $collectedDoelen)) {
+                $collectedDoelen[] = $subdoelId;
+                $array = $this->getDoelOpbouw($subdoelId, $subdoelIds);
+                $extraDoelen[$subdoelId] = $array[0];
+                $subdoelIds = $array[1];
+            }
+        }
+        return array($subdoelIds, $extraDoelen);
+    }
+
+    private function getPercentages($doel, $cijfers, $turnsterId)
+    {
+        $subdoelPercentages = array();
+        $subdoelen = array_reverse($doel->subdoelen);
+        foreach ($subdoelen as $subdoel) {
+            $trededoelPercentages = array();
+            foreach ($subdoel->trededoelen as $trededoel) {
+                if (isset($trededoel->subdoelId)) {
+                    if (!isset($cijfers[$trededoel->id . '_hoofd'])) {
+                        return false;
+                    }
+                    $trededoelPercentages[] = $cijfers[$trededoel->id . '_hoofd'];
+                    continue;
+                } elseif (array_key_exists($trededoel->id, $cijfers)) {
+                    $trededoelPercentages[] = $cijfers[$trededoel->id];
+                    continue;
+                }
+                $em = $this->getDoctrine()->getManager();
+                $query = $em->createQuery(
+                'SELECT subdoelen
+                FROM AppBundle:SubDoelen subdoelen
+                WHERE subdoelen.doel = :id
+                AND subdoelen.persoon = :turnsterId')
+                ->setParameter('id', $trededoel->id)
+                ->setParameter('turnsterId', $turnsterId);
+                /** @var SubDoelen $subDoelObject */
+                $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                $subdoelCijfers = $subDoelObject->getCijfers();
+                $som = 0;
+                for ($i = 0; $i < 3; $i++) {
+                    if (count($subdoelCijfers) == 0) break;
+                    $som += 10*$subdoelCijfers[$i]->getCijfer();
+                }
+                $trededoelPercentages[] = $som/3;
+                $cijfers[$trededoel->id] = $som/3;
+            }
+            $subdoelPercentages[] = array_sum($trededoelPercentages)/count($trededoelPercentages);
+        }
+
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT subdoelen
+                FROM AppBundle:SubDoelen subdoelen
+                WHERE subdoelen.doel = :id
+                AND subdoelen.persoon = :turnsterId')
+            ->setParameter('id', $doel->id)
+            ->setParameter('turnsterId', $turnsterId);
+        /** @var SubDoelen $subDoelObject */
+        $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+        $subdoelCijfers = $subDoelObject->getCijfers();
+        $som = 0;
+        for ($i = (count($subdoelCijfers)-1); $i >= count($subdoelCijfers)-3; $i--) {
+            if ($i<0) break;
+            $som += 10*$subdoelCijfers[$i]->getCijfer();
+        }
+        $hoofddoelPercentage = $som/3;
+        $cijfers[$doel->id] = $som/3;
+        $cijfers[$doel->id] = $hoofddoelPercentage;
+        if (count($subdoelPercentages) > 0) {
+            $doelPercentage = 0.6*(array_sum($subdoelPercentages)/count(($subdoelPercentages))) + 0.4*$hoofddoelPercentage;
+        } else {
+            $doelPercentage = $hoofddoelPercentage;
+        }
+        $cijfers[$doel->id . '_hoofd'] = $doelPercentage;
+        return ($cijfers);
     }
 
     /**
      * @Security("has_role('ROLE_TRAINER')")
-     * @Route("/inloggen/selectie/{persoonId}/viewTurnster/{turnsterId}/{groepId}/cijferGeven", name="SelectieTurnsterAddCijfer")
+     * @Route("/inloggen/selectie/{persoonId}/viewTurnster/{turnsterId}/{groepId}/cijferGeven/", name="SelectieTurnsterAddCijfer")
      * @Method({"GET", "POST"})
      */
     public
@@ -2680,9 +3099,8 @@ class SelectieController extends BaseController
             $repeat = false;
             $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
             $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
-            $doelen = $this->getDoelDetails($doelenObject);
-            $allSubdoelen = $this->getAvailableDoelen($doelen, true);
-            $allSubdoelen = $this->getDoelDetailsFromIds($allSubdoelen);
+            $ids = $this->getAssignedDoelen($doelenObject);
+            $allSubdoelen = $this->getDoelDetailsFromIds($ids);
             if ($request->getMethod() == 'POST') {
                 $postedToken = $request->request->get('token');
                 if (!empty($postedToken)) {
@@ -2692,11 +3110,9 @@ class SelectieController extends BaseController
                         'SELECT subdoelen
                         FROM AppBundle:SubDoelen subdoelen
                         WHERE subdoelen.doel = :id
-                        AND subdoelen.persoon = :turnsterId
-                        AND seizoen = :seizoen')
+                        AND subdoelen.persoon = :turnsterId')
                         ->setParameter('id', $request->request->get('doel'))
-                        ->setParameter('turnsterId', $turnsterId)
-                        ->setParameter('seizoen', $seizoen);
+                        ->setParameter('turnsterId', $turnsterId);
                         $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
                         $cijfer = new Cijfers();
                         $cijfer->setCijfer($request->request->get('cijfer'));
@@ -2733,83 +3149,67 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getAvailableDoelen($doelen, $assigned=false)
+    private function getAssignedDoelen($doelenObject)
+    {
+        $ids = array();
+        foreach ($doelenObject as $doelObject) {
+            /** @var SeizoensDoelen $doelObject */
+            $doel = $doelObject->getDoel();
+            $ids[] = $doel->getId();
+        }
+        $subdoelIds = array();
+        foreach ($ids as $id) {
+            $result = $this->getDoelOpbouw($id, $subdoelIds, $ids);
+            $ids = $result[2];
+        }
+        foreach ($ids as $id) {
+            $result = $this->getDoelOpbouw($id, $subdoelIds, $ids);
+            $ids = $result[2];
+        }
+        foreach ($ids as $id) {
+            $result = $this->getDoelOpbouw($id, $subdoelIds, $ids);
+            $ids = $result[2];
+        }
+        foreach ($ids as $id) {
+            $result = $this->getDoelOpbouw($id, $subdoelIds, $ids);
+            $ids = $result[2];
+        }
+        foreach ($ids as $id) {
+            $result = $this->getDoelOpbouw($id, $subdoelIds, $ids);
+            $ids = $result[2];
+        }
+        foreach ($ids as $id) {
+            $result = $this->getDoelOpbouw($id, $subdoelIds, $ids);
+            $ids = $result[2];
+        }
+        sort($ids);
+        return ($ids);
+    }
+
+    private function getAvailableDoelen($doelenIds)
     {
         $doelenLijst = array();
         $doelenLijst['Sprong'] = array();
         $doelenLijst['Brug'] = array();
         $doelenLijst['Balk'] = array();
         $doelenLijst['Vloer'] = array();
-        $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
-        $ids = array();
-        foreach($toestellen as $toestel) {
-            if (! isset($doelen[$toestel])) continue;
-            foreach ($doelen[$toestel] as $id => $doelenToestel) {
-                if (!in_array($id, $ids)) $ids[] = $id;
-                $doelOpbouw = $this->getDoelOpbouw($id);
-                if(isset($doelOpbouw->subdoelen)){
-                    foreach($doelOpbouw->subdoelen as $subdoel) {
-                        if(isset($subdoel->trededoelen)){
-                            foreach($subdoel->trededoelen as $trededoel) {
-                                if (!in_array($trededoel->id, $ids)) $ids[] = $trededoel->id;
-                                if(isset($trededoel->subdoelen)){
-                                    foreach ($trededoel->subdoelen as $subsubdoel) {
-                                        if(isset($subsubdoel->trededoelen)){
-                                            foreach ($subsubdoel->trededoelen as $subsubtrededoel) {
-                                                if (!in_array($subsubtrededoel->id, $ids)) $ids[] = $subsubtrededoel->id;
-                                                if (isset($subsubtrededoel->subdoelen)) {
-                                                    foreach ($subsubtrededoel->subdoelen as $subsubsubdoel) {
-                                                        if (isset($subsubsubdoel->trededoelen)) {
-                                                            foreach ($subsubsubdoel->trededoelen as $subsubsubtrededoel) {
-                                                                if (!in_array($subsubsubtrededoel->id, $ids)) $ids[] = $subsubsubtrededoel->id;
-                                                                if (isset($subsubsubtrededoel->subdoelen)) {
-                                                                    foreach ($subsubsubtrededoel->subdoelen as $subsubsubsubdoel) {
-                                                                        if (isset($subsubsubsubdoel->trededoelen)) {
-                                                                            foreach ($subsubsubsubdoel->trededoelen as $subsubsubsubtrededoel) {
-                                                                                if (!in_array($subsubsubsubtrededoel->id, $ids)) $ids[] = $subsubsubsubtrededoel->id;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
         $em = $this->getDoctrine()->getManager();
+
         $query = $em->createQuery(
             'SELECT doelen
             FROM AppBundle:Doelen doelen
             WHERE doelen.trede IS NULL');
         $doelenObject = $query->getResult();
         foreach ($doelenObject as $doelObject) {
-            foreach ($toestellen as $toestel) {
-                if ($doelObject->getToestel() != $toestel) continue;
-                if (isset($ids)) if (in_array($doelObject->getId(), $ids)) continue;
-                $doelenLijst[$toestel][$doelObject->getId()] = $doelObject->getNaam();
-
-            }
+            if (isset($doelenIds)) if (in_array($doelObject->getId(), $doelenIds)) continue;
+            $toestel = $doelObject->getToestel();
+            $doelenLijst[$toestel][$doelObject->getId()] = $doelObject->getNaam();
         }
+        $toestellen = array ('Sprong', 'Brug', 'Balk', 'Vloer');
         foreach ($toestellen as $toestel) {
             asort($doelenLijst[$toestel]);
         }
-        if($assigned == false)
-        {
-            return $doelenLijst;
-        }
-        else {
-            sort($ids);
-            return $ids;
-        }
+        return $doelenLijst;
     }
 
     /**
@@ -2876,8 +3276,8 @@ class SelectieController extends BaseController
             }
             $seizoen = $this->getSeizoen();
             $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
-            $doelen = $this->getDoelDetails($doelenObject);
-            $doelenLijst = $this->getAvailableDoelen($doelen);
+            $ids = $this->getAssignedDoelen($doelenObject);
+            $doelenLijst = $this->getAvailableDoelen($ids);
         }
         return $this->render('inloggen/selectieAddDoelToTurnster.html.twig', array(
             'calendarItems' => $this->calendarItems,
@@ -3269,7 +3669,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getDoelOpbouw($doelId)
+    private function getDoelOpbouw($doelId, $subDoelIds, $ids = array())
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -3282,6 +3682,8 @@ class SelectieController extends BaseController
         $doelOpbouw = new \stdClass();
         $doelOpbouw->naam = $doelObject->getNaam();
         $doelOpbouw->toestel = $doelObject->getToestel();
+        $doelOpbouw->id = $doelId;
+        if (!in_array($doelId, $ids)) $ids[] = $doelId;
         $doelOpbouw->subdoelen = array();
         while (true) {
             if ($doelObject->getTrede()) {
@@ -3319,196 +3721,29 @@ class SelectieController extends BaseController
                         $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->id = $trededoelObject->getId();
                         $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->naam = $trededoelObject->getNaam();
                         $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->toestel = $trededoelObject->getToestel();
+                        if (!in_array($trededoelObject->getId(), $ids)) $ids[] = $trededoelObject->getId();
                         $subsubdoelenIds = json_decode($trededoelObject->getSubdoelen());
                         if (count($subsubdoelenIds) > 0) {
                             $query = $em->createQuery(
-                                'SELECT doelen
+                            'SELECT doelen
                             FROM AppBundle:Doelen doelen
                             WHERE doelen.id = :id')
-                                ->setParameter('id', $subsubdoelenIds[0]);
+                            ->setParameter('id', $subsubdoelenIds[0]);
                             /** @var Doelen $subsubdoelObject */
                             $subsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
                             $subsubdoeltrede = explode(' ', $subsubdoelObject->getTrede());
                             if (count($subsubdoeltrede) != 2) {
-                                $check = json_decode($subsubdoelObject->getSubdoelen());
-                                if (count($check) == 1) {
-                                    $query = $em->createQuery(
-                                        'SELECT doelen
-									FROM AppBundle:Doelen doelen
-									WHERE doelen.id = :id')
-                                        ->setParameter('id', $check[0]);
-                                    /** @var Doelen $subsubdoelObject */
-                                    $subsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                    $subsubdoeltrede = explode(' ', $subsubdoelObject->getTrede());
+                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelId = $trededoelObject->getId();
+                                if (!in_array($trededoelObject->getId(), $subDoelIds)) {
+                                    $subDoelIds[] = $trededoelObject->getId();
                                 }
                             }
                             if (count($subsubdoeltrede) == 2) {
                                 if (!($subsubdoeltrede[1] == ($trede - 1) && $subsubdoelObject->getToestel() == $hoofddoel->toestel
                                     && $subsubdoelObject->getNaam() == $hoofddoel->naam)) {
-                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen = array();
-                                    $subsubdoelOpbouw = new \stdClass();
-                                    $subsubdoelOpbouw->naam = $subsubdoelObject->getNaam();
-                                    $subsubdoelOpbouw->toestel = $subsubdoelObject->getToestel();
-                                    $subsubtrede = explode(' ', $subsubdoelObject->getTrede());
-                                    $subsubtrede = $subsubtrede[1];
-                                    for ($subsubtrede; $subsubtrede > 0; $subsubtrede--) {
-                                        $query = $em->createQuery(
-                                            'SELECT doelen
-                                            FROM AppBundle:Doelen doelen
-                                            WHERE doelen.naam = :naam
-                                            AND doelen.trede = :trede
-                                            AND doelen.toestel = :toestel')
-                                            ->setParameter('naam', $subsubdoelOpbouw->naam)
-                                            ->setParameter('trede', 'Trede ' . $subsubtrede)
-                                            ->setParameter('toestel', $subsubdoelOpbouw->toestel);
-                                        /** @var Doelen $subsubdoelObject */
-                                        $subsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                        $subsubdoelenArray = json_decode($subsubdoelObject->getSubdoelen());
-                                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede] = new\stdClass();
-                                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen = array();
-                                        for ($k = 0; $k < count($subsubdoelenArray); $k++) {
-                                            $query = $em->createQuery(
-                                                'SELECT doelen
-                                                FROM AppBundle:Doelen doelen
-                                                WHERE doelen.id = :id')
-                                                ->setParameter('id', $subsubdoelenArray[$k]);
-                                            /** @var Doelen $subsubtrededoelObject */
-                                            $subsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k] = new \stdClass();
-                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->id = $subsubtrededoelObject->getId();
-                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->naam = $subsubtrededoelObject->getNaam();
-                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->toestel = $subsubtrededoelObject->getToestel();
-                                            $subsubsubdoelenIds = json_decode($subsubtrededoelObject->getSubdoelen());
-                                            if (count($subsubsubdoelenIds) > 0) {
-                                                $query = $em->createQuery(
-                                                    'SELECT doelen
-                                                        FROM AppBundle:Doelen doelen
-                                                        WHERE doelen.id = :id')
-                                                    ->setParameter('id', $subsubsubdoelenIds[0]);
-                                                /** @var Doelen $subsubsubdoelObject */
-                                                $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                                $subsubsubdoeltrede = explode(' ', $subsubsubdoelObject->getTrede());
-                                                if (count($subsubsubdoeltrede) != 2) {
-                                                    $check = json_decode($subsubsubdoelObject->getSubdoelen());
-                                                    if (count($check) == 1) {
-                                                        $query = $em->createQuery(
-                                                            'SELECT doelen
-														FROM AppBundle:Doelen doelen
-														WHERE doelen.id = :id')
-                                                            ->setParameter('id', $check[0]);
-                                                        /** @var Doelen $subsubsubdoelObject */
-                                                        $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                                        $subsubsubdoeltrede = explode(' ', $subsubsubdoelObject->getTrede());
-                                                    }
-                                                }
-                                                if (count($subsubsubdoeltrede) == 2) {
-                                                    if (!($subsubsubdoeltrede[1] == ($subsubtrede - 1) && $subsubsubdoelObject->getToestel() == $subsubdoelOpbouw->toestel
-                                                        && $subsubsubdoelObject->getNaam() == $subsubdoelOpbouw->naam)
-                                                    ) {
-                                                        $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen = array();
-                                                        $subsubsubdoelOpbouw = new \stdClass();
-                                                        $subsubsubdoelOpbouw->naam = $subsubsubdoelObject->getNaam();
-                                                        $subsubsubdoelOpbouw->toestel = $subsubsubdoelObject->getToestel();
-                                                        $subsubsubtrede = explode(' ', $subsubsubdoelObject->getTrede());
-                                                        $subsubsubtrede = $subsubsubtrede[1];
-                                                        for ($subsubsubtrede; $subsubsubtrede > 0; $subsubsubtrede--) {
-                                                            $query = $em->createQuery(
-                                                                'SELECT doelen
-                                                                    FROM AppBundle:Doelen doelen
-                                                                    WHERE doelen.naam = :naam
-                                                                    AND doelen.trede = :trede
-                                                                    AND doelen.toestel = :toestel')
-                                                                ->setParameter('naam', $subsubsubdoelOpbouw->naam)
-                                                                ->setParameter('trede', 'Trede ' . $subsubsubtrede)
-                                                                ->setParameter('toestel', $subsubsubdoelOpbouw->toestel);
-                                                            /** @var Doelen $subsubdoelObject */
-                                                            $subsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                                            $subsubsubdoelenArray = json_decode($subsubsubdoelObject->getSubdoelen());
-                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede] = new\stdClass();
-                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen = array();
-                                                            for ($l = 0; $l < count($subsubsubdoelenArray); $l++) {
-                                                                $query = $em->createQuery(
-                                                                    'SELECT doelen
-                                                                    FROM AppBundle:Doelen doelen
-                                                                    WHERE doelen.id = :id')
-                                                                    ->setParameter('id', $subsubsubdoelenArray[$l]);
-                                                                /** @var Doelen $subsubsubtrededoelObject */
-                                                                $subsubsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l] = new \stdClass();
-                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->id = $subsubsubtrededoelObject->getId();
-                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->naam = $subsubsubtrededoelObject->getNaam();
-                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->toestel = $subsubsubtrededoelObject->getToestel();
-                                                                $subsubsubsubdoelenIds = json_decode($subsubsubtrededoelObject->getSubdoelen());
-                                                                if (count($subsubsubsubdoelenIds) > 0) {
-                                                                    $query = $em->createQuery(
-                                                                        'SELECT doelen
-                                                                            FROM AppBundle:Doelen doelen
-                                                                            WHERE doelen.id = :id')
-                                                                        ->setParameter('id', $subsubsubsubdoelenIds[0]);
-                                                                    /** @var Doelen $subsubsubsubdoelObject */
-                                                                    $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                                                    $subsubsubsubdoeltrede = explode(' ', $subsubsubsubdoelObject->getTrede());
-                                                                    if (count($subsubsubdoeltrede) != 2) {
-                                                                        $check = json_decode($subsubsubsubdoelObject->getSubdoelen());
-                                                                        if (count($check) == 1) {
-                                                                            $query = $em->createQuery(
-                                                                                'SELECT doelen
-																			FROM AppBundle:Doelen doelen
-																			WHERE doelen.id = :id')
-                                                                                ->setParameter('id', $check[0]);
-                                                                            /** @var Doelen $subsubsubsubdoelObject */
-                                                                            $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                                                            $subsubsubsubdoeltrede = explode(' ', $subsubsubsubdoelObject->getTrede());
-                                                                        }
-                                                                    }
-                                                                    if (count($subsubsubsubdoeltrede) == 2) {
-                                                                        if (!($subsubsubsubdoeltrede[1] == ($subsubsubtrede - 1) && $subsubsubsubdoelObject->getToestel() == $subsubsubdoelOpbouw->toestel
-                                                                            && $subsubsubsubdoelObject->getNaam() == $subsubsubdoelOpbouw->naam)
-                                                                        ) {
-                                                                            $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen = array();
-                                                                            $subsubsubsubdoelOpbouw = new \stdClass();
-                                                                            $subsubsubsubdoelOpbouw->naam = $subsubsubsubdoelObject->getNaam();
-                                                                            $subsubsubsubdoelOpbouw->toestel = $subsubsubsubdoelObject->getToestel();
-                                                                            $subsubsubsubtrede = explode(' ', $subsubsubsubdoelObject->getTrede());
-                                                                            $subsubsubsubtrede = $subsubsubsubtrede[1];
-                                                                            for ($subsubsubsubtrede; $subsubsubsubtrede > 0; $subsubsubsubtrede--) {
-                                                                                $query = $em->createQuery(
-                                                                                    'SELECT doelen
-                                                                                        FROM AppBundle:Doelen doelen
-                                                                                        WHERE doelen.naam = :naam
-                                                                                        AND doelen.trede = :trede
-                                                                                        AND doelen.toestel = :toestel')
-                                                                                    ->setParameter('naam', $subsubsubsubdoelOpbouw->naam)
-                                                                                    ->setParameter('trede', 'Trede ' . $subsubsubsubtrede)
-                                                                                    ->setParameter('toestel', $subsubsubsubdoelOpbouw->toestel);
-                                                                                /** @var Doelen $subsubsubsubdoelObject */
-                                                                                $subsubsubsubdoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                                                                $subsubsubsubdoelenArray = json_decode($subsubsubsubdoelObject->getSubdoelen());
-                                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede] = new\stdClass();
-                                                                                $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen = array();
-                                                                                for ($m = 0; $m < count($subsubsubsubdoelenArray); $m++) {
-                                                                                    $query = $em->createQuery(
-                                                                                        'SELECT doelen
-                                                                                            FROM AppBundle:Doelen doelen
-                                                                                            WHERE doelen.id = :id')
-                                                                                        ->setParameter('id', $subsubsubsubdoelenArray[$m]);
-                                                                                    /** @var Doelen $subsubsubsubtrededoelObject */
-                                                                                    $subsubsubsubtrededoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m] = new \stdClass();
-                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->id = $subsubsubsubtrededoelObject->getId();
-                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->naam = $subsubsubsubtrededoelObject->getNaam();
-                                                                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelen[$subsubtrede]->trededoelen[$k]->subdoelen[$subsubsubtrede]->trededoelen[$l]->subdoelen[$subsubsubsubtrede]->trededoelen[$m]->toestel = $subsubsubsubtrededoelObject->getToestel();
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
+                                    $doelOpbouw->subdoelen[$trede]->trededoelen[$j]->subdoelId = $trededoelObject->getId();
+                                    if (!in_array($trededoelObject->getId(), $subDoelIds)) {
+                                        $subDoelIds[] = $trededoelObject->getId();
                                     }
                                 }
                             }
@@ -3535,7 +3770,7 @@ class SelectieController extends BaseController
             }
         }
         //var_dump($doelOpbouw);die;
-        return $doelOpbouw;
+        return array($doelOpbouw, $subDoelIds, $ids);
     }
 
     /**
@@ -3557,7 +3792,45 @@ class SelectieController extends BaseController
         $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
         if ($response['authorized']) {
             $functie = $response['functie'];
-            $doelOpbouw = $this->getDoelOpbouw($doelId);
+            $subdoelIds = array();
+            $collectedDoelen = array();
+            $collectedDoelen[] = $doelId;
+            $array = $this->getDoelOpbouw($doelId, $subdoelIds);
+            $doelOpbouw = $array[0];
+            $subdoelIds = $array[1];
+            $extraDoelen = array();
+            foreach ($subdoelIds as $subdoelId) {
+                if (!in_array($subdoelId, $collectedDoelen)) {
+                    $collectedDoelen[] = $subdoelId;
+                    $array = $this->getDoelOpbouw($subdoelId, $subdoelIds);
+                    $extraDoelen[$subdoelId] = $array[0];
+                    $subdoelIds = $array[1];
+                }
+            }
+            foreach ($subdoelIds as $subdoelId) {
+                if (!in_array($subdoelId, $collectedDoelen)) {
+                    $collectedDoelen[] = $subdoelId;
+                    $array = $this->getDoelOpbouw($subdoelId, $subdoelIds);
+                    $extraDoelen[$subdoelId] = $array[0];
+                    $subdoelIds = $array[1];
+                }
+            }
+            foreach ($subdoelIds as $subdoelId) {
+                if (!in_array($subdoelId, $collectedDoelen)) {
+                    $collectedDoelen[] = $subdoelId;
+                    $array = $this->getDoelOpbouw($subdoelId, $subdoelIds);
+                    $extraDoelen[$subdoelId] = $array[0];
+                    $subdoelIds = $array[1];
+                }
+            }
+            foreach ($subdoelIds as $subdoelId) {
+                if (!in_array($subdoelId, $collectedDoelen)) {
+                    $collectedDoelen[] = $subdoelId;
+                    $array = $this->getDoelOpbouw($subdoelId, $subdoelIds);
+                    $extraDoelen[$subdoelId] = $array[0];
+                    $subdoelIds = $array[1];
+                }
+            }
         }
         return $this->render('inloggen/selectieViewOneDoel.html.twig', array(
             'calendarItems' => $this->calendarItems,
@@ -3569,6 +3842,7 @@ class SelectieController extends BaseController
             'functie' => $functie,
             'groepId' => $groepId,
             'doelOpbouw' => $doelOpbouw,
+            'extraDoelen' => $extraDoelen,
         ));
     }
 }

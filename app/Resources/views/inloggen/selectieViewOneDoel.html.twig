@@ -15,50 +15,56 @@
 {% endblock %}
 
 {% block body %}
-<table border="1" style="text-align: center;">
-    <tr><th colspan="12">{{ doelOpbouw.naam }} {{ doelOpbouw.toestel }}</th></tr>
-    <tr><td colspan="12">{{ doelOpbouw.naam }} {{ doelOpbouw.toestel }}</td></tr>
-    {% if doelOpbouw.subdoelen is defined %}
-        {% for subdoel in doelOpbouw.subdoelen %}
-            <tr>
-                {% set counter = 0 %}
-                {% for trededoel in subdoel.trededoelen %}
-                    <td colspan="{{ (1/(subdoel.trededoelen|length))*12 }}">
-                        {% if trededoel.subdoelen is defined %}
-                            {% if subdoel.trededoelen|length > 1 %}
-                                <a href="">
+<p>
+    <table border="1" style="text-align: center;">
+        <tr><th colspan="12">{{ doelOpbouw.naam }} {{ doelOpbouw.toestel }}</th></tr>
+        <tr><td colspan="12">{{ doelOpbouw.naam }} {{ doelOpbouw.toestel }}</td></tr>
+        {% if doelOpbouw.subdoelen is defined %}
+            {% for subdoel in doelOpbouw.subdoelen %}
+                <tr>
+                    {% set counter = 0 %}
+                    {% for trededoel in subdoel.trededoelen %}
+                        <td colspan="{{ (1/(subdoel.trededoelen|length))*12 }}">
+                            {% if trededoel.subdoelId is defined %}
+                            <a href="#{{ trededoel.subdoelId }}">
+                                {% endif %}
+                                {{ trededoel.naam }} {{ trededoel.toestel }}
+                                {% if trededoel.subdoelenId is defined %}
+                            </a>
                             {% endif %}
-                        {% endif %}
-                        {{ trededoel.naam }} {{ trededoel.toestel }}
-                        {% if trededoel.subdoelen is defined %}
-                            {% if subdoel.trededoelen|length > 1 %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+</p>
+    {% for extraDoel in extraDoelen %}
+    <p>
+        <table border="1" style="text-align: center;">
+            <tr><th colspan="12">{{ extraDoel.naam }} {{ extraDoel.toestel }}</th></tr>
+            <tr><td colspan="12">{{ extraDoel.naam }} {{ extraDoel.toestel }}</td></tr>
+            {% if extraDoel.subdoelen is defined %}
+                {% for subdoel in extraDoel.subdoelen %}
+                    <tr>
+                        {% set counter = 0 %}
+                        {% for trededoel in subdoel.trededoelen %}
+                            <td colspan="{{ (1/(subdoel.trededoelen|length))*12 }}">
+                                {% if trededoel.subdoelId is defined %}
+                                <a href="#{{ trededoel.subdoelId }}">
+                                    {% endif %}
+                                    {{ trededoel.naam }} {{ trededoel.toestel }}
+                                    {% if trededoel.subdoelenId is defined %}
                                 </a>
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                    {% if trededoel.subdoelen is defined %}
-                        {% if subdoel.trededoelen|length == 1 %}
-                            </tr>
-                            {% for subsubdoel in trededoel.subdoelen %}
-                                <tr>
-                                    {% for subtrededoel in subsubdoel.trededoelen %}
-                                        <td colspan="{{ (1/(subsubdoel.trededoelen|length))*12 }}">{{ subtrededoel.naam }} {{ subtrededoel.toestel }}</td>
-                                    {% endfor %}
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% if trededoel.subdoelen is not defined or (trededoel.subdoelen is defined and subdoel.trededoelen|length > 1) %}
-                {% if counter != 1 %}
+                                {% endif %}
+                            </td>
+                        {% endfor %}
                     </tr>
-                {% endif %}
+                {% endfor %}
             {% endif %}
-        {% endfor %}
-    {% endif %}
-</table>
+        </table>
+    </p>
+    {% endfor %}
 
 
 {% endblock %}

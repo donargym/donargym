@@ -79,12 +79,20 @@
     </a></p>
 {% endif %}
 {% for toestel, doelen in doelen %}
-    <h3>{{ toestel }}</h3>
+    <h3>{{ toestel }} ({{ attribute(voortgang, toestel)|round }}%)</h3>
     <table border="1">
     <tr><th>Naam</th><th>Voortgang</th><th></th></tr>
     {% for id, doel in doelen %}
-        <tr><td>{{ doel }}</td>
-        <td style="text-align: center;">%</td>
+        <tr><td><a href="{{ path('viewSelectieTurnsterOneDoel', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': groepId, 'doelId': id }) }}">
+            {{ doel }}
+        </a></td>
+        <td style="text-align:center; font-weight: bold; background-color: #{{ attribute(kleuren, id~'_hoofd') }};">
+        <a href="{{ path('viewSelectieTurnsterOneDoel', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': groepId, 'doelId': id }) }}" style="text-decoration: none; color: rgba(0,0,0,0.6);">
+            <span style="text-decoration: none;">
+            {{ attribute(cijfers, id~'_hoofd')|round }} %
+        </span>
+        </a>
+        </td>
         <td><a href="{{ path('removeDoelFromTurnster', { 'persoonId': persoonItems.id, 'groepId': groepId, 'turnsterId': turnster.id, 'doelId': id }) }}">
         <img src="{{ asset('images/remove.png') }}" width="15px"/>
         </a></td></tr>
@@ -192,7 +200,7 @@
                 },
                 series: [{
                     name: 'Sprong',
-                    data: [{{ voortgang.sprong }}],
+                    data: [{{ voortgang.Sprong|round }}],
                     dataLabels: {
                         format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                         ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'
@@ -219,7 +227,7 @@
                 },
                 series: [{
                     name: 'Brug',
-                    data: [{{ voortgang.brug }}],
+                    data: [{{ voortgang.Brug|round }}],
                     dataLabels: {
                         format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                         ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'
@@ -246,7 +254,7 @@
                 },
                 series: [{
                     name: 'Balk',
-                    data: [{{ voortgang.balk }}],
+                    data: [{{ voortgang.Balk|round }}],
                     dataLabels: {
                         format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                         ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'
@@ -273,7 +281,7 @@
                 },
                 series: [{
                     name: 'Vloer',
-                    data: [{{ voortgang.vloer }}],
+                    data: [{{ voortgang.Vloer|round }}],
                     dataLabels: {
                         format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                         ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'
