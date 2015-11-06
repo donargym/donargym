@@ -17,15 +17,15 @@
 
 {% block body %}
     <form method="post" action="">
-        <p><select name="doel">
-                <option selected></option>
                 {% for toestel, doelen in doelen %}
+        <p><h3>{{ toestel }}</h3>
+            <select name="doel_{{ toestel }}">
+                <option selected></option>
                     {% for id, doel in doelen %}
                         <option value="{{ id }}">{{ doel }} {{ toestel }}</option>
                     {% endfor %}
-                {% endfor %}
             </select></p>
-            <p><select name="cijfer">
+            <p><select name="cijfer_{{ toestel }}">
                 <option selected></option>
                 <option value="6">Voldoende</option>
                 <option value="7">Ruim voldoende</option>
@@ -35,6 +35,7 @@
 
             </select>
         </p>
+                {% endfor %}
         <p><label><input type="checkbox" name="repeat"
                         {% if repeat %}
                 checked

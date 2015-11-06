@@ -3010,6 +3010,7 @@ class SelectieController extends BaseController
                 $som = 0;
                 for ($i = 0; $i < 3; $i++) {
                     if (count($subdoelCijfers) == 0) break;
+                    if ((count($subdoelCijfers)-$i) == 0) break;
                     $som += 10*$subdoelCijfers[$i]->getCijfer();
                 }
                 $trededoelPercentages[] = $som/3;
@@ -3076,21 +3077,24 @@ class SelectieController extends BaseController
                 $postedToken = $request->request->get('token');
                 if (!empty($postedToken)) {
                     if ($this->isTokenValid($postedToken)) {
+                        $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
                         $em = $this->getDoctrine()->getManager();
-                        $query = $em->createQuery(
-                        'SELECT subdoelen
-                        FROM AppBundle:SubDoelen subdoelen
-                        WHERE subdoelen.doel = :id
-                        AND subdoelen.persoon = :turnsterId')
-                        ->setParameter('id', $request->request->get('doel'))
-                        ->setParameter('turnsterId', $turnsterId);
-                        $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                        $cijfer = new Cijfers();
-                        $cijfer->setCijfer($request->request->get('cijfer'));
-                        $cijfer->setSubdoel($subDoelObject);
-                        $cijfer->setDate(new \DateTime('NOW'));
-                        $em->persist($cijfer);
-                        $em->flush();
+                        foreach ($toestellen as $toestel) {
+                            $query = $em->createQuery(
+                                'SELECT subdoelen
+                                FROM AppBundle:SubDoelen subdoelen
+                                WHERE subdoelen.doel = :id
+                                AND subdoelen.persoon = :turnsterId')
+                                ->setParameter('id', $request->request->get('doel_' . $toestel))
+                                ->setParameter('turnsterId', $turnsterId);
+                            $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                            $cijfer = new Cijfers();
+                            $cijfer->setCijfer($request->request->get('cijfer_' . $toestel));
+                            $cijfer->setSubdoel($subDoelObject);
+                            $cijfer->setDate(new \DateTime('NOW'));
+                            $em->persist($cijfer);
+                            $em->flush();
+                        }
                         $query = $em->createQuery(
                             'SELECT persoon
                             FROM AppBundle:Persoon persoon
@@ -3098,15 +3102,15 @@ class SelectieController extends BaseController
                             ->setParameter('turnsterId', $turnsterId);
                         $turnster = $query->setMaxResults(1)->getOneOrNullResult();
                         $this->updateDoelCijfersInDatabase($turnster);
-                        if ($request->request->get('repeat')) {
-                            $repeat = true;
-                        } else {
-                            return $this->redirectToRoute('viewSelectieTurnster', array(
-                                'persoonId' => $persoonId,
-                                'turnsterId' => $turnsterId,
-                                'groepId' => $groepId,
-                            ));
-                        }
+                    }
+                    if ($request->request->get('repeat')) {
+                        $repeat = true;
+                    } else {
+                        return $this->redirectToRoute('viewSelectieTurnster', array(
+                            'persoonId' => $persoonId,
+                            'turnsterId' => $turnsterId,
+                            'groepId' => $groepId,
+                        ));
                     }
                 }
             }
