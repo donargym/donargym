@@ -355,7 +355,6 @@ class SelectieController extends BaseController
                         $stukje = $persoon->getStukje();
                         $persoonItems->stukje = $stukje->getAll();
                     }
-
                     if ($page == 'Index') {
                         $aanwezigheidPerPersoon = $this->getAanwezigheidPerPersoon($persoon, $groep->getId());
                         $persoonItems->functies[$i]->percentageAanwezig = $aanwezigheidPerPersoon->percentageAanwezig;
@@ -370,47 +369,10 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j] = new \stdClass();
                             /** @var Persoon $turnster */
                             $turnster = $groepFuncties[$j]->getPersoon();
-                            $seizoen = $this->getSeizoen();
-                            $doelenObject = $this->getDoelenVoorSeizoen($turnster->getId(), $seizoen);
-                            $doelen = $this->getDoelDetails($doelenObject);
-                            $doelenIdArray = array();
-                            foreach ($doelen as $doelenData) {
-                                foreach ($doelenData as $doelId => $doelNaam) {
-                                    $doelenIdArray[] = $doelId;
-                                }
+                            if ($turnster->getVoortgangTotaal() == null) {
+                                $this->updateDoelCijfersInDatabase($turnster);
                             }
-                            $subdoelIds = array();
-                            $collectedDoelen = array();
-                            $cijfers = array();
-                            foreach ($doelenIdArray as $doelId) {
-                                $collectedDoelen[] = $doelId;
-                                $array = $this->getDoelOpbouw($doelId, $subdoelIds);
-                                $doelOpbouw = $array[0];
-                                $subdoelIds = $array[1];
-                                $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
-                                $subdoelIds = $result[0];
-                                $extraDoelen = $result[1];
-                                $reveseExtraDoelen = array_reverse($extraDoelen);
-                                $repeat = true;
-                                while ($repeat) {
-                                    $repeat = false;
-                                    foreach ($reveseExtraDoelen as $id => $extraDoel) {
-                                        if ($result = $this->getPercentages($extraDoel, $cijfers, $turnster->getId())) {
-                                            $cijfers = $result;
-                                            unset ($reveseExtraDoelen[$id]);
-                                            continue;
-                                        }
-                                        $repeat = true;
-                                    }
-                                }
-                                $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnster->getId());
-                                foreach ($cijfers as $id => $percentage) {
-                                    $kleuren[$id] = $this->colorGenerator($percentage);
-                                }
-                            }
-                            $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
-
-                            $persoonItems->functies[$i]->turnster[$j]->percentageVoortgang = $voortgang['totaal'];
+                            $persoonItems->functies[$i]->turnster[$j]->percentageVoortgang = $turnster->getVoortgangTotaal();
                             $persoonItems->functies[$i]->turnster[$j]->percentageVoortgangKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageVoortgang);
                             if ($page == 'Index') {
                                 $aantalAanwezig = 0;
@@ -735,6 +697,60 @@ class SelectieController extends BaseController
         }
     }
 
+
+    private function updateDoelCijfersInDatabase($turnster)
+    {
+        /** @var Persoon $turnster */
+        $seizoen = $this->getSeizoen();
+        $doelenObject = $this->getDoelenVoorSeizoen($turnster->getId(), $seizoen);
+        $doelen = $this->getDoelDetails($doelenObject);
+        $doelenIdArray = array();
+        foreach ($doelen as $doelenData) {
+            foreach ($doelenData as $doelId => $doelNaam) {
+                $doelenIdArray[] = $doelId;
+            }
+        }
+        $subdoelIds = array();
+        $collectedDoelen = array();
+        $cijfers = array();
+        foreach ($doelenIdArray as $doelId) {
+            $collectedDoelen[] = $doelId;
+            $array = $this->getDoelOpbouw($doelId, $subdoelIds);
+            $doelOpbouw = $array[0];
+            $subdoelIds = $array[1];
+            $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+            $subdoelIds = $result[0];
+            $extraDoelen = $result[1];
+            $reveseExtraDoelen = array_reverse($extraDoelen);
+            $repeat = true;
+            while ($repeat) {
+                $repeat = false;
+                foreach ($reveseExtraDoelen as $id => $extraDoel) {
+                    if ($result = $this->getPercentages($extraDoel, $cijfers, $turnster->getId())) {
+                        $cijfers = $result;
+                        unset ($reveseExtraDoelen[$id]);
+                        continue;
+                    }
+                    $repeat = true;
+                }
+            }
+            $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnster->getId());
+            foreach ($cijfers as $id => $percentage) {
+                $kleuren[$id] = $this->colorGenerator($percentage);
+            }
+        }
+        $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
+
+        $turnster->setVoortgangSprong($voortgang['Sprong']);
+        $turnster->setVoortgangBrug($voortgang['Brug']);
+        $turnster->setVoortgangBalk($voortgang['Balk']);
+        $turnster->setVoortgangVloer($voortgang['Vloer']);
+        $turnster->setVoortgangTotaal($voortgang['totaal']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($turnster);
+        $em->flush();
+    }
+
     private function getAanwezigheidPerPersoon($persoon, $groepId)
     {
         $aanwezigheid = new \stdClass();
@@ -920,7 +936,14 @@ class SelectieController extends BaseController
                         $kleuren[$DoelId] = $this->colorGenerator($percentage);
                     }
                 }
-                $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
+                /** @var Persoon $persoonObject */
+                $persoonObject = $this->getPersoonObject($userObject, $id);
+                $voortgang = array();
+                $voortgang['Sprong'] = $persoonObject->getVoortgangSprong();
+                $voortgang['Brug'] = $persoonObject->getVoortgangBrug();
+                $voortgang['Balk'] = $persoonObject->getVoortgangBalk();
+                $voortgang['Vloer'] = $persoonObject->getVoortgangVloer();
+                $voortgang['Totaal'] = $persoonObject->getVoortgangTotaal();
                 break;
             }
         }
@@ -995,7 +1018,13 @@ class SelectieController extends BaseController
                         $kleuren[$DoelId] = $this->colorGenerator($percentage);
                     }
                 }
-                $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
+                $persoonObject = $this->getPersoonObject($userObject, $persoonId);
+                $voortgang = array();
+                $voortgang['Sprong'] = $persoonObject->getVoortgangSprong();
+                $voortgang['Brug'] = $persoonObject->getVoortgangBrug();
+                $voortgang['Balk'] = $persoonObject->getVoortgangBalk();
+                $voortgang['Vloer'] = $persoonObject->getVoortgangVloer();
+                $voortgang['Totaal'] = $persoonObject->getVoortgangTotaal();
                 break;
             }
         }
@@ -2793,7 +2822,20 @@ class SelectieController extends BaseController
                     $kleuren[$id] = $this->colorGenerator($percentage);
                 }
             }
-            $voortgang = $this->getPercentageVoortgangTotaal($doelen, $cijfers);
+
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :turnsterId')
+                ->setParameter('turnsterId', $turnsterId);
+            $persoonObject = $query->setMaxResults(1)->getOneOrNullResult();
+            $voortgang = array();
+            $voortgang['Sprong'] = $persoonObject->getVoortgangSprong();
+            $voortgang['Brug'] = $persoonObject->getVoortgangBrug();
+            $voortgang['Balk'] = $persoonObject->getVoortgangBalk();
+            $voortgang['Vloer'] = $persoonObject->getVoortgangVloer();
+            $voortgang['Totaal'] = $persoonObject->getVoortgangTotaal();
         }
         return $this->render('inloggen/selectieViewTurnster.html.twig', array(
             'calendarItems' => $this->calendarItems,
@@ -3047,6 +3089,13 @@ class SelectieController extends BaseController
                         $cijfer->setDate(new \DateTime('NOW'));
                         $em->persist($cijfer);
                         $em->flush();
+                        $query = $em->createQuery(
+                            'SELECT persoon
+                            FROM AppBundle:Persoon persoon
+                            WHERE persoon.id = :turnsterId')
+                            ->setParameter('turnsterId', $turnsterId);
+                        $turnster = $query->setMaxResults(1)->getOneOrNullResult();
+                        $this->updateDoelCijfersInDatabase($turnster);
                         if ($request->request->get('repeat')) {
                             $repeat = true;
                         } else {
@@ -3190,6 +3239,8 @@ class SelectieController extends BaseController
                         }
                         $em->flush();
 
+                        $this->updateDoelCijfersInDatabase($turnserObject);
+
                         if ($request->request->get('repeat')) {
                             $repeat = true;
                         } else {
@@ -3254,6 +3305,13 @@ class SelectieController extends BaseController
             if ($request->getMethod() == 'POST') {
                 $em->remove($seizoensDoel);
                 $em->flush();
+                $query = $em->createQuery(
+                    'SELECT persoon
+                    FROM AppBundle:Persoon persoon
+                    WHERE persoon.id = :turnsterId')
+                    ->setParameter('turnsterId', $turnsterId);
+                $turnster = $query->setMaxResults(1)->getOneOrNullResult();
+                $this->updateDoelCijfersInDatabase($turnster);
                 return $this->redirectToRoute('viewSelectieTurnster', array(
                     'persoonId' => $persoonId,
                     'turnsterId' => $turnsterId,

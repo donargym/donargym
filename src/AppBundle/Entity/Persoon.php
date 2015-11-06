@@ -93,6 +93,31 @@ class Persoon
      **/
     private $stukje;
 
+    /**
+     * @ORM\Column(type="integer", nullable=TRUE)
+     */
+    private $voortgangSprong;
+
+    /**
+     * @ORM\Column(type="integer", nullable=TRUE)
+     */
+    private $voortgangBrug;
+
+    /**
+     * @ORM\Column(type="integer", nullable=TRUE)
+     */
+    private $voortgangBalk;
+
+    /**
+     * @ORM\Column(type="integer", nullable=TRUE)
+     */
+    private $voortgangVloer;
+
+    /**
+     * @ORM\Column(type="integer", nullable=TRUE)
+     */
+    private $voortgangTotaal;
+
     public function __construct()
     {
         $this->functie = new ArrayCollection();
@@ -547,5 +572,120 @@ class Persoon
     public function getSubdoelen()
     {
         return $this->subdoelen;
+    }
+
+    /**
+     * Set voortgangSprong
+     *
+     * @param integer $voortgangSprong
+     * @return Persoon
+     */
+    public function setVoortgangSprong($voortgangSprong)
+    {
+        $this->voortgangSprong = $voortgangSprong;
+
+        return $this;
+    }
+
+    /**
+     * Get voortgangSprong
+     *
+     * @return integer 
+     */
+    public function getVoortgangSprong()
+    {
+        return $this->voortgangSprong;
+    }
+
+    /**
+     * Set voortgangBrug
+     *
+     * @param integer $voortgangBrug
+     * @return Persoon
+     */
+    public function setVoortgangBrug($voortgangBrug)
+    {
+        $this->voortgangBrug = $voortgangBrug;
+
+        return $this;
+    }
+
+    /**
+     * Get voortgangBrug
+     *
+     * @return integer 
+     */
+    public function getVoortgangBrug()
+    {
+        return $this->voortgangBrug;
+    }
+
+    /**
+     * Set voortgangBalk
+     *
+     * @param integer $voortgangBalk
+     * @return Persoon
+     */
+    public function setVoortgangBalk($voortgangBalk)
+    {
+        $this->voortgangBalk = $voortgangBalk;
+
+        return $this;
+    }
+
+    /**
+     * Get voortgangBalk
+     *
+     * @return integer 
+     */
+    public function getVoortgangBalk()
+    {
+        return $this->voortgangBalk;
+    }
+
+    /**
+     * Set voortgangVloer
+     *
+     * @param integer $voortgangVloer
+     * @return Persoon
+     */
+    public function setVoortgangVloer($voortgangVloer)
+    {
+        $this->voortgangVloer = $voortgangVloer;
+
+        return $this;
+    }
+
+    /**
+     * Get voortgangVloer
+     *
+     * @return integer 
+     */
+    public function getVoortgangVloer()
+    {
+        return $this->voortgangVloer;
+    }
+
+    /**
+     * Set voortgangTotaal
+     *
+     * @param integer $voortgangTotaal
+     * @return Persoon
+     */
+    public function setVoortgangTotaal($voortgangTotaal)
+    {
+        $this->voortgangTotaal = $voortgangTotaal;
+
+        return $this;
+    }
+
+    /**
+     * Get voortgangTotaal
+     *
+     * @return integer 
+     */
+    public function getVoortgangTotaal()
+    {
+        return $this->voortgangTotaal;
     }
 }
