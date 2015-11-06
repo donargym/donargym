@@ -369,7 +369,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j] = new \stdClass();
                             /** @var Persoon $turnster */
                             $turnster = $groepFuncties[$j]->getPersoon();
-                            if ($turnster->getVoortgangTotaal() == null) {
+                            if ($turnster->getVoortgangTotaal() === null) {
                                 $this->updateDoelCijfersInDatabase($turnster);
                             }
                             $persoonItems->functies[$i]->turnster[$j]->percentageVoortgang = $turnster->getVoortgangTotaal();
@@ -2552,7 +2552,7 @@ class SelectieController extends BaseController
         }
     }
 
-    private function getSelectieTurnsterInfo($turnsterId, $groepObject)
+    private function getSelectieTurnsterInfo($turnsterId, $groepObject, $page = null)
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -2563,9 +2563,11 @@ class SelectieController extends BaseController
         /** @var Persoon $persoonObject */
         $persoonObject = $query->setMaxResults(1)->getOneOrNullResult();
         $turnster = $persoonObject->getAll();
-        $imageSize = getimagesize('http://www.donargym.nl/uploads/selectiefotos/' . $turnster->foto);
-        $turnster->width = $imageSize[0];
-        $turnster->height = $imageSize[1];
+        if ($page == "Index") {
+            $imageSize = getimagesize('http://www.donargym.nl/uploads/selectiefotos/' . $turnster->foto);
+            $turnster->width = $imageSize[0];
+            $turnster->height = $imageSize[1];
+        }
         $trainingen = $persoonObject->getTrainingen();
         $userObject = $persoonObject->getUser();
         $turnster->id = $turnsterId;
@@ -2784,7 +2786,7 @@ class SelectieController extends BaseController
         if ($response['authorized']) {
             $functie = $response['functie'];
             $groepObject = $response['groep'];
-            $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject);
+            $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject, "Index");
             $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
             $doelen = $this->getDoelDetails($doelenObject);
             $doelenIdArray = array();
