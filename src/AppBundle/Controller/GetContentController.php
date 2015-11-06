@@ -35,10 +35,7 @@ class GetContentController extends BaseController
      */
     public function getDonarPageAction($page)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('geschiedenis', 'visie', 'bestuur', 'leiding', 'evenementen', 'locaties', 'kleding', 'vacatures', 'sponsors')))
         {
             $this->calendarItems = $this->getCalendarItems();
@@ -85,10 +82,7 @@ class GetContentController extends BaseController
      */
     public function getNieuwsPageAction($page, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('index', 'vakanties', 'clubblad', 'archief')))
         {
             switch($page)
@@ -244,10 +238,7 @@ class GetContentController extends BaseController
      */
     public function getLessenPageAction($page)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('recreatie');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('recreatie');
         if(in_array($page, array('lesrooster', 'peuterenkleutergym', 'gymnastiekenrecreatiefturnen', '50plusgymenconditie', 'aerobicsenbodyshape', 'badmintonenvolleybal')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -297,11 +288,8 @@ class GetContentController extends BaseController
      */
     public function getWedstrijdturnenPageAction($page, $view, $id)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $groepId = $this->wedstrijdLinkItems[1];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
+        $groepId = $this->groepIds;
         if(in_array($page, array('wedstrijdturnen')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -434,10 +422,7 @@ class GetContentController extends BaseController
      */
     public function getLidmaatschapPageAction($page)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('lidmaatschap', 'contributie', 'ooievaarspas')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -503,10 +488,7 @@ class GetContentController extends BaseController
      */
     public function getFotofilmPageAction($page)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('fotoenfilm', 'foto', 'film')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -552,10 +534,7 @@ class GetContentController extends BaseController
      */
     public function getVrijwilligersPageAction($page)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('vrijwilligers', 'taken', 'vrijwilligersdag')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -601,10 +580,7 @@ class GetContentController extends BaseController
      */
     public function getContactPageAction($page)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('contact')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -673,10 +649,7 @@ class GetContentController extends BaseController
      */
     public function getInloggenPageAction()
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $user = $this->getUser();
         $roles = $user->getRoles();
         switch ($roles[0])
@@ -707,10 +680,7 @@ class GetContentController extends BaseController
     public function getNewPassPageAction(Request $request)
     {
         $error = "";
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
 
         if($request->getMethod() == 'POST')
         {
@@ -793,10 +763,7 @@ class GetContentController extends BaseController
      */
     public function getAgendaPageAction($id)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT calendar

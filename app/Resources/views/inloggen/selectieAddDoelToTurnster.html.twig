@@ -17,15 +17,16 @@
 
 {% block body %}
     <form method="post" action="">
-        <p><select name="doel">
-                <option selected></option>
             {% for toestel, doelen in doelen %}
+                <p><h3>{{ toestel }}</h3>
+                    <select name="doel_{{ toestel }}">
+                    <option selected></option>
                 {% for id, doel in doelen %}
                     <option value="{{ id }}">{{ doel }} {{ toestel }}</option>
                 {% endfor %}
+                    </select>
+                </p>
             {% endfor %}
-        </select>
-        </p>
         <p><label><input type="checkbox" name="repeat"
             {% if repeat %}
                 checked

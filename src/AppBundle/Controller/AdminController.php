@@ -38,10 +38,7 @@ class AdminController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         return $this->render('inloggen/adminIndex.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
@@ -55,10 +52,7 @@ class AdminController extends BaseController
      */
     public function getAdminFotoPage()
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT fotoupload
@@ -85,10 +79,7 @@ class AdminController extends BaseController
      */
     public function addAdminFotoPageAction(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $foto = new FotoUpload();
         $form = $this->createFormBuilder($foto)
             ->add('naam')
@@ -122,10 +113,7 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT fotoupload
@@ -180,10 +168,7 @@ class AdminController extends BaseController
      */
     public function getAdminBestandenPage()
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT fileupload
@@ -210,10 +195,7 @@ class AdminController extends BaseController
      */
     public function addAdminBestandenPageAction(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $file = new FileUpload();
         $form = $this->createFormBuilder($file)
             ->add('naam')
@@ -246,10 +228,7 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT fileupload
@@ -304,10 +283,7 @@ class AdminController extends BaseController
      */
     public function getAdminSelectiePage()
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT functie
@@ -346,10 +322,7 @@ class AdminController extends BaseController
      */
     public function addAdminTrainerPageAction(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT groepen
@@ -535,10 +508,7 @@ class AdminController extends BaseController
      */
     public function editAdminTrainerPageAction(Request $request, $id)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT persoon
@@ -745,10 +715,7 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT persoon

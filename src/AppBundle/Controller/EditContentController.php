@@ -42,10 +42,7 @@ class EditContentController extends BaseController
      */
     public function editDonarPageAction($page, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('geschiedenis', 'visie', 'bestuur', 'leiding', 'evenementen', 'locaties', 'kleding', 'vacatures', 'sponsors')))
         {
             $this->calendarItems = $this->getCalendarItems();
@@ -109,10 +106,7 @@ class EditContentController extends BaseController
      */
     public function editLessenPageAction($page, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('recreatie');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('recreatie');
         if(in_array($page, array('lesrooster', 'peuterenkleutergym', 'gymnastiekenrecreatiefturnen', '50plusgymenconditie', 'aerobicsenbodyshape', 'badmintonenvolleybal')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -176,10 +170,7 @@ class EditContentController extends BaseController
      */
     public function editWedstrijdturnenPageAction($page, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         if(in_array($page, array('wedstrijdturnen')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -246,10 +237,7 @@ class EditContentController extends BaseController
      */
     public function editLidmaatschapPageAction($page, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('lidmaatschap', 'contributie', 'formulieren', 'ooievaarspas')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -312,10 +300,7 @@ class EditContentController extends BaseController
      */
     public function editFotofilmPageAction($page, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('fotoenfilm', 'foto', 'film')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -378,10 +363,7 @@ class EditContentController extends BaseController
      */
     public function editVrijwilligersPageAction($page, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('vrijwilligers', 'taken', 'vrijwilligersdag')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -444,10 +426,7 @@ class EditContentController extends BaseController
      */
     public function editContactPageAction($page, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         if(in_array($page, array('contact', 'veelgesteldevragen')))
         {
             $em = $this->getDoctrine()->getManager();
@@ -510,10 +489,7 @@ class EditContentController extends BaseController
      */
     public function addAgendaPage(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $agenda = new Calendar();
         $form = $this->createForm(new CalendarType(), $agenda);
         $form->handleRequest($request);
@@ -540,10 +516,7 @@ class EditContentController extends BaseController
      */
     public function editAgendaPage($id, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT calendar
@@ -589,10 +562,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT calendar
@@ -647,10 +617,7 @@ class EditContentController extends BaseController
      */
     public function addNieuwsPage(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $nieuwsbericht = new Nieuwsbericht();
         $form = $this->createForm(new NieuwsberichtType(), $nieuwsbericht);
         $form->handleRequest($request);
@@ -680,10 +647,7 @@ class EditContentController extends BaseController
      */
     public function editNieuwsberichtPage($id, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT nieuwsbericht
@@ -731,10 +695,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT nieuwsbericht
@@ -789,10 +750,7 @@ class EditContentController extends BaseController
      */
     public function addVakantiesPage(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT vakanties
@@ -833,10 +791,7 @@ class EditContentController extends BaseController
      */
     public function editVakantiesPage($id, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT vakanties
@@ -895,10 +850,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT vakanties
@@ -967,10 +919,7 @@ class EditContentController extends BaseController
      */
     public function addClubbladPageAction(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $clubblad = new Clubblad();
         $form = $this->createFormBuilder($clubblad)
             ->add('datum', 'date', array(
@@ -1005,10 +954,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT clubblad
@@ -1064,10 +1010,7 @@ class EditContentController extends BaseController
      */
     public function addFormulierenPageAction(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $formulier = new Formulieren();
         $form = $this->createFormBuilder($formulier)
             ->add('naam')
@@ -1100,10 +1043,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT formulieren
@@ -1158,10 +1098,7 @@ class EditContentController extends BaseController
      */
     public function addVeelgesteldeVragenPage(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $vraag = new VeelgesteldeVragen();
         $form = $this->createForm(new VeelgesteldeVragenType(), $vraag);
         $form->handleRequest($request);
@@ -1188,10 +1125,7 @@ class EditContentController extends BaseController
      */
     public function editVeelgesteldeVragenPage($id, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT veelgesteldevragen
@@ -1237,10 +1171,7 @@ class EditContentController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader();
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT veelgesteldevragen

@@ -19,10 +19,10 @@ use AppBundle\Entity\SubDoelen;
 class BaseController extends Controller
 {
 
-    public $calendarItems;
-    public $header;
-    public $wedstrijdLinkItems;
-    public $groepItems;
+    protected $calendarItems;
+    protected $header;
+    protected $groepItems;
+    protected $groepIds;
 
     public function __construct()
     {
@@ -130,5 +130,14 @@ class BaseController extends Controller
             $em->persist($subdoelEntity);
             $em->flush();
         }
+    }
+
+    protected function setBasicPageData($page = null)
+    {
+        $wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $wedstrijdLinkItems[0];
+        $this->groepIds = $wedstrijdLinkItems[1];
+        $this->header = $this->getHeader($page);
+        $this->calendarItems = $this->getCalendarItems();
     }
 }

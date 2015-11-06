@@ -81,12 +81,7 @@ class SelectieController extends BaseController
      */
     public function getSelectieIndexPage()
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
-        $this->header = 'wedstrijdturnen' . rand(1, 12);
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -162,10 +157,7 @@ class SelectieController extends BaseController
      */
     public function editContactgegevens(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -196,10 +188,7 @@ class SelectieController extends BaseController
      */
     public function editEmail(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -230,10 +219,7 @@ class SelectieController extends BaseController
      */
     public function editEmail2(Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -289,10 +275,7 @@ class SelectieController extends BaseController
                 return $this->redirectToRoute('getSelectieIndexPage');
             }
         }
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -333,14 +316,13 @@ class SelectieController extends BaseController
         }
     }
 
-    private function getOnePersoon($userObject, $id, $afmelden = false)
+    private function getOnePersoon($userObject, $id, $afmelden = false, $page = null)
     {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
             /** @var Persoon $persoon */
             if ($persoon->getId() == $id) {
                 $persoonItems = new \stdClass();
-                //$persoonItems->object = $persoon;
                 $persoonItems->id = $persoon->getId();
                 $persoonItems->voornaam = $persoon->getVoornaam();
                 $persoonItems->achternaam = $persoon->getAchternaam();
@@ -374,69 +356,23 @@ class SelectieController extends BaseController
                         $persoonItems->stukje = $stukje->getAll();
                     }
 
-                    $aantalAanwezig = 0;
-                    $aantalTrainingen = 0;
-                    $totaalAanwezigheid = $persoon->getAanwezigheid();
-                    for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
-                        $check = false;
-                        /** @var Trainingsdata $trainingsdatum */
-                        $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
-                        $lesdatum = $trainingsdatum->getLesdatum();
-                        /** @var Trainingen $training */
-                        $training = $trainingsdatum->getTrainingen();
-                        /** @var Groepen $trainingGroep */
-                        $trainingGroep = $training->getGroep();
-                        if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
-                            if (date('m', time()) < '08') {
-                                if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                    ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
-                                ) {
-                                    $check = true;
-                                } else {
-                                    break;
-                                }
-                            } else {
-                                if ($lesdatum->format('Y') == date('Y', time())) {
-                                    if ($lesdatum->format('m') < '08') {
-                                        break;
-                                    } else {
-                                        $check = true;
-                                    }
-                                }
-                            }
-                        }
-                        if ($check) {
-                            $aantalTrainingen++;
-                            if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
-                                $aantalAanwezig++;
-                            }
-                        }
+                    if ($page == 'Index') {
+                        $aanwezigheidPerPersoon = $this->getAanwezigheidPerPersoon($persoon, $groep->getId());
+                        $persoonItems->functies[$i]->percentageAanwezig = $aanwezigheidPerPersoon->percentageAanwezig;
+                        $persoonItems->functies[$i]->percentageKleur = $aanwezigheidPerPersoon->percentageKleur;
+                        $persoonItems->functies[$i]->aantalAanwezig = $aanwezigheidPerPersoon->aantalAanwezig;
+                        $persoonItems->functies[$i]->aantalTrainingen = $aanwezigheidPerPersoon->aantalTrainingen;
                     }
-                    if ($aantalTrainingen != 0) {
-                        $persoonItems->functies[$i]->percentageAanwezig = 100 * $aantalAanwezig / $aantalTrainingen;
-                    } else {
-                        $persoonItems->functies[$i]->percentageAanwezig = 100;
-                    }
-                    $persoonItems->functies[$i]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->percentageAanwezig);
-                    $persoonItems->functies[$i]->aantalAanwezig = $aantalAanwezig;
-                    $persoonItems->functies[$i]->aantalTrainingen = $aantalTrainingen;
 
                     $groepFuncties = $groep->getFuncties();
                     for ($j = 0; $j < count($groepFuncties); $j++) {
-                        if ($groepFuncties[$j]->getFunctie() == 'Turnster') {
+                        if ($groepFuncties[$j]->getFunctie() == 'Turnster' && $page == 'Index') {
                             $persoonItems->functies[$i]->turnster[$j] = new \stdClass();
                             /** @var Persoon $turnster */
                             $turnster = $groepFuncties[$j]->getPersoon();
                             $seizoen = $this->getSeizoen();
                             $doelenObject = $this->getDoelenVoorSeizoen($turnster->getId(), $seizoen);
                             $doelen = $this->getDoelDetails($doelenObject);
-
-
-
-
-
-
-
                             $doelenIdArray = array();
                             foreach ($doelen as $doelenData) {
                                 foreach ($doelenData as $doelId => $doelNaam) {
@@ -476,52 +412,55 @@ class SelectieController extends BaseController
 
                             $persoonItems->functies[$i]->turnster[$j]->percentageVoortgang = $voortgang['totaal'];
                             $persoonItems->functies[$i]->turnster[$j]->percentageVoortgangKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageVoortgang);
-                            $aantalAanwezig = 0;
-                            $aantalTrainingen = 0;
-                            $totaalAanwezigheid = $turnster->getAanwezigheid();
-                            for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
-                                $check = false;
-                                /** @var Trainingsdata $trainingsdatum */
-                                $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
-                                $lesdatum = $trainingsdatum->getLesdatum();
-                                /** @var Trainingen $training */
-                                $training = $trainingsdatum->getTrainingen();
-                                /** @var Groepen $trainingGroep */
-                                $trainingGroep = $training->getGroep();
-                                if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
-                                    if (date('m', time()) < '08') {
-                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
-                                        ) {
-                                            $check = true;
-                                        } else {
-                                            break;
-                                        }
-                                    } else {
-                                        if ($lesdatum->format('Y') == date('Y', time())) {
-                                            if ($lesdatum->format('m') < '08') {
-                                                break;
-                                            } else {
+                            if ($page == 'Index') {
+                                $aantalAanwezig = 0;
+                                $aantalTrainingen = 0;
+                                $totaalAanwezigheid = $turnster->getAanwezigheid();
+                                for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
+                                    $check = false;
+                                    /** @var Trainingsdata $trainingsdatum */
+                                    $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
+                                    $lesdatum = $trainingsdatum->getLesdatum();
+                                    /** @var Trainingen $training */
+                                    $training = $trainingsdatum->getTrainingen();
+                                    /** @var Groepen $trainingGroep */
+                                    $trainingGroep = $training->getGroep();
+                                    if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
+                                        if (date('m', time()) < '08') {
+                                            if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                                                ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                            ) {
                                                 $check = true;
+                                            } else {
+                                                break;
+                                            }
+                                        } else {
+                                            if ($lesdatum->format('Y') == date('Y', time())) {
+                                                if ($lesdatum->format('m') < '08') {
+                                                    break;
+                                                } else {
+                                                    $check = true;
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                if ($check) {
-                                    $aantalTrainingen++;
-                                    if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
-                                        $aantalAanwezig++;
+                                    if ($check) {
+                                        $aantalTrainingen++;
+                                        if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
+                                            $aantalAanwezig++;
+                                        }
                                     }
                                 }
+                                if ($aantalTrainingen != 0) {
+                                    $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100 * $aantalAanwezig / $aantalTrainingen;
+                                } else {
+                                    $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100;
+                                }
+                                $persoonItems->functies[$i]->turnster[$j]->aantalAanwezig = $aantalAanwezig;
+                                $persoonItems->functies[$i]->turnster[$j]->aantalTrainingen = $aantalTrainingen;
+                                $persoonItems->functies[$i]->turnster[$j]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageAanwezig);
                             }
-                            if ($aantalTrainingen != 0) {
-                                $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100 * $aantalAanwezig / $aantalTrainingen;
-                            } else {
-                                $persoonItems->functies[$i]->turnster[$j]->percentageAanwezig = 100;
-                            }
-                            $persoonItems->functies[$i]->turnster[$j]->aantalAanwezig = $aantalAanwezig;
-                            $persoonItems->functies[$i]->turnster[$j]->aantalTrainingen = $aantalTrainingen;
-                            $persoonItems->functies[$i]->turnster[$j]->percentageKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageAanwezig);
+
                             $persoonItems->functies[$i]->turnster[$j]->voornaam = $turnster->getVoornaam();
                             $persoonItems->functies[$i]->turnster[$j]->achternaam = $turnster->getAchternaam();
                             $persoonItems->functies[$i]->turnster[$j]->id = $turnster->getId();
@@ -536,7 +475,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j]->tel2 = $turnsterUser->getTel2();
                             $persoonItems->functies[$i]->turnster[$j]->tel3 = $turnsterUser->getTel3();
                             $persoonItems->functies[$i]->turnster[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
-                        } elseif ($groepFuncties[$j]->getFunctie() == 'Trainer') {
+                        } elseif ($groepFuncties[$j]->getFunctie() == 'Trainer' && $page == 'Index') {
                             $persoonItems->functies[$i]->trainer[$j] = new \stdClass();
                             /** @var Persoon $trainer */
                             $trainer = $groepFuncties[$j]->getPersoon();
@@ -601,7 +540,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->trainer[$j]->tel2 = $trainerUser->getTel2();
                             $persoonItems->functies[$i]->trainer[$j]->tel3 = $trainerUser->getTel3();
                             $persoonItems->functies[$i]->trainer[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
-                        } elseif ($groepFuncties[$j]->getFunctie() == 'Assistent-Trainer') {
+                        } elseif ($groepFuncties[$j]->getFunctie() == 'Assistent-Trainer' && $page == 'Index') {
                             $persoonItems->functies[$i]->assistent[$j] = new \stdClass();
                             /** @var Persoon $assistent */
                             $assistent = $groepFuncties[$j]->getPersoon();
@@ -670,130 +609,181 @@ class SelectieController extends BaseController
                     }
                 }
                 /** @var Trainingen $trainingen */
-                $trainingen = $persoon->getTrainingen();
-                $persoonItems->trainingen = array();
-                for ($i = 0; $i < count($trainingen); $i++) {
-                    $persoonItems->trainingen[$i] = new \stdClass();
-                    $persoonItems->trainingen[$i]->trainingId = $trainingen[$i]->getId();
-                    $persoonItems->trainingen[$i]->dag = $trainingen[$i]->getDag();
-                    $groep = $trainingen[$i]->getGroep();
-                    $persoonItems->trainingen[$i]->groepId = $groep->getId();
-                    $persoonItems->trainingen[$i]->tijdTot = $trainingen[$i]->getTijdtot();
-                    $persoonItems->trainingen[$i]->tijdVan = $trainingen[$i]->getTijdvan();
-                    $persoonItems->trainingen[$i]->trainingsdata = array();
-                    $trainingsdata = $trainingen[$i]->getTrainingsdata();
-                    if ($afmelden) {
-                        $counter = 0;
-                        $aanwezigheid = $persoon->getAanwezigheid();
-                        for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
-                            $lesdatum = $trainingsdata[$j]->getLesdatum();
-                            $timestamp = $lesdatum->getTimestamp();
-                            $timestampPlusDag = ((int)$timestamp + 86400);
-                            if (($timestampPlusDag) > time()) {
-                                $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
-                                $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
-                                $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
-                                /** @var Aanwezigheid $aanwezig */
-                                foreach ($aanwezigheid as $aanwezig) {
-                                    if ($aanwezig->getTrainingsdata() == $trainingsdata[$j]) {
-                                        $persoonItems->trainingen[$i]->trainingsdata[$j]->afmelding = $aanwezig->getAanwezig();
-                                    }
-                                }
-                                $counter++;
-                                if ($counter == 10) {
-                                    $j = 0;
-                                    $counter++;
-                                }
-                            }
-                        }
-                        if ($counter < 10) {
-                            if (count($trainingsdata) == 0) {
-                                for ($try = 0; $try < 7; $try++) {
-                                    $dag = $this->dayToDutch((time() + ($try * 86400)));
-                                    if ($dag == $persoonItems->trainingen[$i]->dag) {
-                                        $lesdatum = date('Y-m-d', (time() + ($try * 86400) - 604800));
-                                        $try = 7;
-                                    }
-                                }
-                            } else {
-                                $j = (count($trainingsdata) - 1);
+                if ($page == 'Index' || $afmelden) {
+                    $trainingen = $persoon->getTrainingen();
+                    $persoonItems->trainingen = array();
+                    for ($i = 0; $i < count($trainingen); $i++) {
+                        $persoonItems->trainingen[$i] = new \stdClass();
+                        $persoonItems->trainingen[$i]->trainingId = $trainingen[$i]->getId();
+                        $persoonItems->trainingen[$i]->dag = $trainingen[$i]->getDag();
+                        $groep = $trainingen[$i]->getGroep();
+                        $persoonItems->trainingen[$i]->groepId = $groep->getId();
+                        $persoonItems->trainingen[$i]->tijdTot = $trainingen[$i]->getTijdtot();
+                        $persoonItems->trainingen[$i]->tijdVan = $trainingen[$i]->getTijdvan();
+                        $persoonItems->trainingen[$i]->trainingsdata = array();
+                        $trainingsdata = $trainingen[$i]->getTrainingsdata();
+                        if ($afmelden) {
+                            $counter = 0;
+                            $aanwezigheid = $persoon->getAanwezigheid();
+                            for ($j = (count($trainingsdata) - 1); $j >= 0; $j--) {
                                 $lesdatum = $trainingsdata[$j]->getLesdatum();
-                                $lesdatum = $lesdatum->format('Y-m-d');
-                            }
-                            $week = (604800 + 12 * 3600);
-                            for ($counter; $counter < 10; $counter++) {
-                                $lesdatum = date('Y-m-d', (strtotime($lesdatum) + $week));
-                                $lesdatumForDb = \DateTime::createFromFormat('Y-m-d', $lesdatum);
-                                $newLesdatum = new Trainingsdata();
-                                $newLesdatum->setLesdatum($lesdatumForDb);
-                                $newLesdatum->setTrainingen($trainingen[$i]);
-                                $em = $this->getDoctrine()->getManager();
-                                $em->persist($newLesdatum);
-                                $em->flush();
-                            }
-                        }
-                        $persoonItems->trainingen[$i]->trainingsdata = array_reverse($persoonItems->trainingen[$i]->trainingsdata);
-                    } else {
-                        $counter = 0;
-                        $aantalTrainingen = 0;
-                        $aantalAanwezig = 0;
-                        $aanwezigheid = $persoon->getAanwezigheid();
-                        for ($j = (count($trainingsdata) - 4); $j >= 0; $j--) {
-                            $lesdatum = $trainingsdata[$j]->getLesdatum();
-                            if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
-                                for ($k = (count($aanwezigheid) - 1); $k >= 0; $k--) {
-                                    $check = false;
-                                    if (date('m', time()) < '08') {
-                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
-                                        ) {
-                                            $check = true;
-                                        } else {
-                                            break;
-                                        }
-                                    } else {
-                                        if ($lesdatum->format('Y') == date('Y', time())) {
-                                            if ($lesdatum->format('m') < '08') {
-                                                break;
-                                            } else {
-                                                $check = true;
-                                            }
+                                $timestamp = $lesdatum->getTimestamp();
+                                $timestampPlusDag = ((int)$timestamp + 86400);
+                                if (($timestampPlusDag) > time()) {
+                                    $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
+                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
+                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                    /** @var Aanwezigheid $aanwezig */
+                                    foreach ($aanwezigheid as $aanwezig) {
+                                        if ($aanwezig->getTrainingsdata() == $trainingsdata[$j]) {
+                                            $persoonItems->trainingen[$i]->trainingsdata[$j]->afmelding = $aanwezig->getAanwezig();
                                         }
                                     }
-                                    if ($check) {
-                                        if ($aanwezigheid[$k]->getTrainingsdata() == $trainingsdata[$j]) {
-                                            $aantalTrainingen++;
-                                            if ($counter < 7) {
-                                                $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
-                                                $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
-                                                $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
-                                                $persoonItems->trainingen[$i]->trainingsdata[$j]->aanwezigheid = $aanwezigheid[$k]->getAanwezig();
-                                                $counter++;
+                                    $counter++;
+                                    if ($counter == 10) {
+                                        $j = 0;
+                                        $counter++;
+                                    }
+                                }
+                            }
+                            if ($counter < 10) {
+                                if (count($trainingsdata) == 0) {
+                                    for ($try = 0; $try < 7; $try++) {
+                                        $dag = $this->dayToDutch((time() + ($try * 86400)));
+                                        if ($dag == $persoonItems->trainingen[$i]->dag) {
+                                            $lesdatum = date('Y-m-d', (time() + ($try * 86400) - 604800));
+                                            $try = 7;
+                                        }
+                                    }
+                                } else {
+                                    $j = (count($trainingsdata) - 1);
+                                    $lesdatum = $trainingsdata[$j]->getLesdatum();
+                                    $lesdatum = $lesdatum->format('Y-m-d');
+                                }
+                                $week = (604800 + 12 * 3600);
+                                for ($counter; $counter < 10; $counter++) {
+                                    $lesdatum = date('Y-m-d', (strtotime($lesdatum) + $week));
+                                    $lesdatumForDb = \DateTime::createFromFormat('Y-m-d', $lesdatum);
+                                    $newLesdatum = new Trainingsdata();
+                                    $newLesdatum->setLesdatum($lesdatumForDb);
+                                    $newLesdatum->setTrainingen($trainingen[$i]);
+                                    $em = $this->getDoctrine()->getManager();
+                                    $em->persist($newLesdatum);
+                                    $em->flush();
+                                }
+                            }
+                            $persoonItems->trainingen[$i]->trainingsdata = array_reverse($persoonItems->trainingen[$i]->trainingsdata);
+                        } else {
+                            $counter = 0;
+                            $aantalTrainingen = 0;
+                            $aantalAanwezig = 0;
+                            $aanwezigheid = $persoon->getAanwezigheid();
+                            for ($j = (count($trainingsdata) - 4); $j >= 0; $j--) {
+                                $lesdatum = $trainingsdata[$j]->getLesdatum();
+                                if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
+                                    for ($k = (count($aanwezigheid) - 1); $k >= 0; $k--) {
+                                        $check = false;
+                                        if (date('m', time()) < '08') {
+                                            if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                                                ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                            ) {
+                                                $check = true;
+                                            } else {
+                                                break;
                                             }
-                                            if (strtolower($aanwezigheid[$k]->getAanwezig()) == 'x') {
-                                                $aantalAanwezig++;
+                                        } else {
+                                            if ($lesdatum->format('Y') == date('Y', time())) {
+                                                if ($lesdatum->format('m') < '08') {
+                                                    break;
+                                                } else {
+                                                    $check = true;
+                                                }
+                                            }
+                                        }
+                                        if ($check) {
+                                            if ($aanwezigheid[$k]->getTrainingsdata() == $trainingsdata[$j]) {
+                                                $aantalTrainingen++;
+                                                if ($counter < 7) {
+                                                    $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
+                                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
+                                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->aanwezigheid = $aanwezigheid[$k]->getAanwezig();
+                                                    $counter++;
+                                                }
+                                                if (strtolower($aanwezigheid[$k]->getAanwezig()) == 'x') {
+                                                    $aantalAanwezig++;
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+                            $persoonItems->trainingen[$i]->trainingsdata = array_reverse($persoonItems->trainingen[$i]->trainingsdata);
+                            if ($aantalTrainingen == 0) {
+                                $persoonItems->trainingen[$i]->percentageAanwezig = 100;
+                            } else {
+                                $persoonItems->trainingen[$i]->percentageAanwezig = (100 * ($aantalAanwezig / $aantalTrainingen));
+                            }
+                            $persoonItems->trainingen[$i]->aantalAanwezig = $aantalAanwezig;
+                            $persoonItems->trainingen[$i]->aantalTrainingen = $aantalTrainingen;
+                            $persoonItems->trainingen[$i]->percentageKleur = $this->colorGenerator($persoonItems->trainingen[$i]->percentageAanwezig);
                         }
-                        $persoonItems->trainingen[$i]->trainingsdata = array_reverse($persoonItems->trainingen[$i]->trainingsdata);
-                        if ($aantalTrainingen == 0) {
-                            $persoonItems->trainingen[$i]->percentageAanwezig = 100;
-                        } else {
-                            $persoonItems->trainingen[$i]->percentageAanwezig = (100 * ($aantalAanwezig / $aantalTrainingen));
-                        }
-                        $persoonItems->trainingen[$i]->aantalAanwezig = $aantalAanwezig;
-                        $persoonItems->trainingen[$i]->aantalTrainingen = $aantalTrainingen;
-                        $persoonItems->trainingen[$i]->percentageKleur = $this->colorGenerator($persoonItems->trainingen[$i]->percentageAanwezig);
                     }
-                    // TODO: doelen
                 }
-                //var_dump($persoonItems);die;
                 return ($persoonItems);
             }
         }
+    }
+
+    private function getAanwezigheidPerPersoon($persoon, $groepId)
+    {
+        $aanwezigheid = new \stdClass();
+        /** @var Persoon $persoon */
+        $aanwezigheid->aantalAanwezig = 0;
+        $aanwezigheid->aantalTrainingen = 0;
+        $totaalAanwezigheid = $persoon->getAanwezigheid();
+        for ($counter = (count($totaalAanwezigheid) - 1); $counter >= 0; $counter--) {
+            $check = false;
+            /** @var Trainingsdata $trainingsdatum */
+            $trainingsdatum = $totaalAanwezigheid[$counter]->getTrainingsdata();
+            $lesdatum = $trainingsdatum->getLesdatum();
+            /** @var Trainingen $training */
+            $training = $trainingsdatum->getTrainingen();
+            /** @var Groepen $trainingGroep */
+            $trainingGroep = $training->getGroep();
+            if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $groepId) {
+                if (date('m', time()) < '08') {
+                    if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
+                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                    ) {
+                        $check = true;
+                    } else {
+                        break;
+                    }
+                } else {
+                    if ($lesdatum->format('Y') == date('Y', time())) {
+                        if ($lesdatum->format('m') < '08') {
+                            break;
+                        } else {
+                            $check = true;
+                        }
+                    }
+                }
+            }
+            if ($check) {
+                $aanwezigheid->aantalTrainingen++;
+                if (strtolower($totaalAanwezigheid[$counter]->getAanwezig()) == 'x') {
+                    $aanwezigheid->aantalAanwezig++;
+                }
+            }
+        }
+        if ($aanwezigheid->aantalTrainingen != 0) {
+            $aanwezigheid->percentageAanwezig = 100 * $aanwezigheid->aantalAanwezig / $aanwezigheid->aantalTrainingen;
+        } else {
+            $aanwezigheid->percentageAanwezig = 100;
+        }
+        $aanwezigheid->percentageKleur = $this->colorGenerator($aanwezigheid->percentageAanwezig);
+        return $aanwezigheid;
     }
 
     private function getPersoonObject($userObject, $id)
@@ -884,15 +874,12 @@ class SelectieController extends BaseController
     public
     function showPersoon($id)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
-        $persoonItems = $this->getOnePersoon($userObject, $id);
+        $persoonItems = $this->getOnePersoon($userObject, $id, false, 'Index');
         $seizoen = $this->getSeizoen();
         foreach ($persoonItems->functies as $functie) {
             if ($functie->functie == 'Turnster') {
@@ -957,15 +944,12 @@ class SelectieController extends BaseController
 
     /**
      * @Security("has_role('ROLE_TURNSTER')")
-     * @Route("/inloggen/selectie/{persoonId}/Doelen//{toestel}/", name="showPersoonDoelenPerToestel")
+     * @Route("/inloggen/selectie/{persoonId}/Doelen/{toestel}/", name="showPersoonDoelenPerToestel")
      * @Method({"GET"})
      */
     public function showPersoonDoelenPerToestel($persoonId, $toestel)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1037,10 +1021,7 @@ class SelectieController extends BaseController
      */
     public function showPersoonOneDoelPerToestel($persoonId, $toestel, $doelId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -1095,10 +1076,7 @@ class SelectieController extends BaseController
     public
     function Afmelding($id, $groepId, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1434,10 +1412,7 @@ class SelectieController extends BaseController
     public
     function viewAfmeldingen($id, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1464,10 +1439,7 @@ class SelectieController extends BaseController
     public
     function viewAanwezigheid($id, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1536,10 +1508,7 @@ class SelectieController extends BaseController
     public
     function kruisjeslijst($id, $groepId, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1595,10 +1564,7 @@ class SelectieController extends BaseController
     public
     function removeTrainingsdatum($id, $groepId, $trainingsdatumId, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1682,10 +1648,7 @@ class SelectieController extends BaseController
     public
     function kruisjeslijstInvullen($id, $groepId, $trainingsdatumId, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1777,10 +1740,7 @@ class SelectieController extends BaseController
     public
     function viewAdreslijst($id, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1805,10 +1765,7 @@ class SelectieController extends BaseController
      */
     public function addStukje($id, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
@@ -1850,10 +1807,7 @@ class SelectieController extends BaseController
     public
     function addSelectieTurnsterPageAction(Request $request, $id, $groepsId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -2052,10 +2006,7 @@ class SelectieController extends BaseController
     function removeSelectieTurnsterPage($trainerId, $turnsterId, $groepId, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-            $this->groepItems = $this->wedstrijdLinkItems[0];
-            $this->header = $this->getHeader('wedstrijdturnen');
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData('wedstrijdturnen');
             $userObject = $this->getUser();
             $user = $this->getBasisUserGegevens($userObject);
             $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -2148,10 +2099,7 @@ class SelectieController extends BaseController
     public
     function addSelectieFotoPageAction(Request $request, $persoonId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -2229,10 +2177,7 @@ class SelectieController extends BaseController
     public
     function viewSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -2273,10 +2218,7 @@ class SelectieController extends BaseController
     public
     function addSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -2334,10 +2276,7 @@ class SelectieController extends BaseController
      */
     public function removeSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId, $wedstrijduitslagId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -2386,10 +2325,7 @@ class SelectieController extends BaseController
      */
     public function editSelectieTurnsterAction(Request $request, $persoonId, $turnsterId, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -2808,10 +2744,7 @@ class SelectieController extends BaseController
     public
     function viewSelectieTurnster($persoonId, $turnsterId, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -2908,10 +2841,7 @@ class SelectieController extends BaseController
     public
     function viewSelectieTurnsterOneDoel($persoonId, $turnsterId, $groepId, $doelId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -3081,10 +3011,7 @@ class SelectieController extends BaseController
     public
     function SelectieTurnsterAddCijfer($persoonId, $turnsterId, $groepId, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -3219,10 +3146,7 @@ class SelectieController extends BaseController
      */
     public function addDoelToTurnster($persoonId, $groepId, $turnsterId, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -3239,27 +3163,31 @@ class SelectieController extends BaseController
                 $postedToken = $request->request->get('token');
                 if (!empty($postedToken)) {
                     if ($this->isTokenValid($postedToken)) {
+                        $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
                         $em = $this->getDoctrine()->getManager();
-                        $query = $em->createQuery(
-                        'SELECT doelen
+                        foreach ($toestellen as $toestel) {
+                            $query = $em->createQuery(
+                                'SELECT doelen
                         FROM AppBundle:Doelen doelen
                         WHERE doelen.id = :id')
-                        ->setParameter('id', $request->request->get('doel'));
-                        $doelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                ->setParameter('id', $request->request->get('doel_' . $toestel));
+                            $doelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                            if (count($doelObject) == 1) {
+                                $query = $em->createQuery(
+                                    'SELECT persoon
+                                FROM AppBundle:Persoon persoon
+                                WHERE persoon.id = :id')
+                                    ->setParameter('id', $turnsterId);
+                                $turnserObject = $query->setMaxResults(1)->getOneOrNullResult();
 
-                        $query = $em->createQuery(
-                        'SELECT persoon
-                        FROM AppBundle:Persoon persoon
-                        WHERE persoon.id = :id')
-                        ->setParameter('id', $turnsterId);
-                        $turnserObject = $query->setMaxResults(1)->getOneOrNullResult();
-
-                        $seizoensDoel = new SeizoensDoelen();
-                        $seizoensDoel->setDoel($doelObject);
-                        $seizoensDoel->setPersoon($turnserObject);
-                        $seizoen = $this->getSeizoen();
-                        $seizoensDoel->setSeizoen($seizoen);
-                        $em->persist($seizoensDoel);
+                                $seizoensDoel = new SeizoensDoelen();
+                                $seizoensDoel->setDoel($doelObject);
+                                $seizoensDoel->setPersoon($turnserObject);
+                                $seizoen = $this->getSeizoen();
+                                $seizoensDoel->setSeizoen($seizoen);
+                                $em->persist($seizoensDoel);
+                            }
+                        }
                         $em->flush();
 
                         if ($request->request->get('repeat')) {
@@ -3302,10 +3230,7 @@ class SelectieController extends BaseController
      */
     public function removeDoelFromTurnster($persoonId, $groepId, $turnsterId, $doelId, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -3380,10 +3305,7 @@ class SelectieController extends BaseController
      */
     public function viewVloermuziek($persoonId, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -3418,10 +3340,7 @@ class SelectieController extends BaseController
     function addSelectieVloermuziekPageAction(Request $request, $persoonId, $turnsterId, $groepId)
     {
         $error = null;
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -3557,10 +3476,7 @@ class SelectieController extends BaseController
      */
     public function viewDoelen($persoonId, $groepId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -3591,10 +3507,7 @@ class SelectieController extends BaseController
      */
     public function addDoelen($persoonId, $groepId, Request $request)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -3780,10 +3693,7 @@ class SelectieController extends BaseController
      */
     public function viewOneDoel($persoonId, $groepId, $doelId)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader('wedstrijdturnen');
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
