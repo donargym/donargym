@@ -365,7 +365,7 @@ class SelectieController extends BaseController
 
                     $groepFuncties = $groep->getFuncties();
                     for ($j = 0; $j < count($groepFuncties); $j++) {
-                        if ($groepFuncties[$j]->getFunctie() == 'Turnster' && $page == 'Index') {
+                        if ($groepFuncties[$j]->getFunctie() == 'Turnster') {
                             $persoonItems->functies[$i]->turnster[$j] = new \stdClass();
                             /** @var Persoon $turnster */
                             $turnster = $groepFuncties[$j]->getPersoon();
@@ -437,7 +437,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j]->tel2 = $turnsterUser->getTel2();
                             $persoonItems->functies[$i]->turnster[$j]->tel3 = $turnsterUser->getTel3();
                             $persoonItems->functies[$i]->turnster[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
-                        } elseif ($groepFuncties[$j]->getFunctie() == 'Trainer' && $page == 'Index') {
+                        } elseif ($groepFuncties[$j]->getFunctie() == 'Trainer') {
                             $persoonItems->functies[$i]->trainer[$j] = new \stdClass();
                             /** @var Persoon $trainer */
                             $trainer = $groepFuncties[$j]->getPersoon();
@@ -502,7 +502,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->trainer[$j]->tel2 = $trainerUser->getTel2();
                             $persoonItems->functies[$i]->trainer[$j]->tel3 = $trainerUser->getTel3();
                             $persoonItems->functies[$i]->trainer[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
-                        } elseif ($groepFuncties[$j]->getFunctie() == 'Assistent-Trainer' && $page == 'Index') {
+                        } elseif ($groepFuncties[$j]->getFunctie() == 'Assistent-Trainer') {
                             $persoonItems->functies[$i]->assistent[$j] = new \stdClass();
                             /** @var Persoon $assistent */
                             $assistent = $groepFuncties[$j]->getPersoon();
@@ -691,6 +691,14 @@ class SelectieController extends BaseController
                             $persoonItems->trainingen[$i]->percentageKleur = $this->colorGenerator($persoonItems->trainingen[$i]->percentageAanwezig);
                         }
                     }
+                }
+                foreach ($persoonItems->functies as $functie) {
+                    usort($functie->turnster, function($a, $b)
+                    {
+                        $t1 = strtotime($a->geboortedatum);
+                        $t2 = strtotime($b->geboortedatum);
+                        return $t1-$t2;
+                    });
                 }
                 return ($persoonItems);
             }
@@ -3088,12 +3096,19 @@ class SelectieController extends BaseController
                                 ->setParameter('id', $request->request->get('doel_' . $toestel))
                                 ->setParameter('turnsterId', $turnsterId);
                             $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                            $cijfer = new Cijfers();
-                            $cijfer->setCijfer($request->request->get('cijfer_' . $toestel));
-                            $cijfer->setSubdoel($subDoelObject);
-                            $cijfer->setDate(new \DateTime('NOW'));
-                            $em->persist($cijfer);
-                            $em->flush();
+                            $counter = 1;
+                            if ($request->request->get('drie_keer_' . $toestel)) {
+                                $counter = 3;
+                            }
+                            while ($counter > 0) {
+                                $cijfer = new Cijfers();
+                                $cijfer->setCijfer($request->request->get('cijfer_' . $toestel));
+                                $cijfer->setSubdoel($subDoelObject);
+                                $cijfer->setDate(new \DateTime('NOW'));
+                                $em->persist($cijfer);
+                                $em->flush();
+                                $counter--;
+                            }
                         }
                         $query = $em->createQuery(
                             'SELECT persoon

@@ -59,7 +59,7 @@
         <table border="1" style="text-align: center;">
             <tr><th colspan="12" style="background-color: #{{ attribute(kleuren, extraDoel.id~'_hoofd') }};">
             <span style="color: rgba(0,0,0,0.6);">{{ extraDoel.naam }} {{ extraDoel.toestel }} ({{ attribute(cijfers, extraDoel.id~'_hoofd')|round }}%)</span></th></tr>
-            <tr><td colspan="12" style="background-color: #{{ attribute(kleuren, doelOpbouw.id) }};">
+            <tr><td colspan="12" style="background-color: #{{ attribute(kleuren, extraDoel.id) }};">
             <span style="color: rgba(0,0,0,0.6);">{{ extraDoel.naam }} {{ extraDoel.toestel }} ({{ attribute(cijfers, extraDoel.id)|round }}%)</span></td></tr>
                 {% if extraDoel.subdoelen is defined %}
                     {% for subdoel in extraDoel.subdoelen %}

@@ -372,7 +372,12 @@ class GetContentController extends BaseController
                         }
                     }
                 }
-                // Todo: Order $personen['Turnster'] by geboortedatum
+                usort($personen['Turnster'], function($a, $b)
+                {
+                    $t1 = strtotime($a->geboortedatum);
+                    $t2 = strtotime($b->geboortedatum);
+                    return $t1-$t2;
+                });
                 return $this->render('wedstrijdturnen/tnt.html.twig', array(
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
