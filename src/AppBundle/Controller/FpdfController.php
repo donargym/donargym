@@ -380,7 +380,9 @@ class FpdfController
 
     function Footer()
     {
-        // To be implemented in your own inherited class
+        $this->SetY(-15);
+        $this->SetFont('Helvetica','I',8);
+        $this->Cell(0,10,'Pagina '.$this->PageNo().'/{nb}',0,0,'C');
     }
 
     function PageNo()

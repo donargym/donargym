@@ -242,6 +242,11 @@
             {% endif %}
 
             {% if (functie.functie == 'Trainer') %}
+                <p><a href="{{ path('TrainingsplanIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
+                        Trainingsplan</a></p>
+            {% endif %}
+
+            {% if (functie.functie == 'Trainer') %}
                 <p><a href="{{ path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Kruisjeslijst
                         invullen</a></p>
             {% endif %}

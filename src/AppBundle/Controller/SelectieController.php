@@ -50,7 +50,7 @@ class SelectieController extends BaseController
      * Creates a token usable in a form
      * @return string
      */
-    private function getToken(){
+    protected function getToken(){
         $token = sha1(mt_rand());
         if(!isset($_SESSION['tokens'])){
             $_SESSION['tokens'] = array($token => 1);
@@ -66,7 +66,7 @@ class SelectieController extends BaseController
      * @param string $token The token
      * @return bool
      */
-    private function isTokenValid($token){
+    protected function isTokenValid($token){
         if(!empty($_SESSION['tokens'][$token])){
             unset($_SESSION['tokens'][$token]);
             return true;
@@ -94,7 +94,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getBasisUserGegevens($userObject)
+    protected function getBasisUserGegevens($userObject)
     {
         $user = new \stdClass();
         $user->email = $userObject->getUsername();
@@ -112,7 +112,7 @@ class SelectieController extends BaseController
      * @param $userObject
      * @return array
      */
-    private function getBasisPersoonsGegevens($userObject)
+    protected function getBasisPersoonsGegevens($userObject)
     {
         $personen = $userObject->getPersoon();
         $persoon = array();
@@ -289,7 +289,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function dayToDutch($time)
+    protected function dayToDutch($time)
     {
         switch (date('N', $time)) {
             case 1:
@@ -316,7 +316,7 @@ class SelectieController extends BaseController
         }
     }
 
-    private function getOnePersoon($userObject, $id, $afmelden = false, $page = null)
+    protected function getOnePersoon($userObject, $id, $afmelden = false, $page = null)
     {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
@@ -706,7 +706,7 @@ class SelectieController extends BaseController
     }
 
 
-    private function updateDoelCijfersInDatabase($turnster)
+    protected function updateDoelCijfersInDatabase($turnster)
     {
         /** @var Persoon $turnster */
         $seizoen = $this->getSeizoen();
@@ -759,7 +759,7 @@ class SelectieController extends BaseController
         $em->flush();
     }
 
-    private function getAanwezigheidPerPersoon($persoon, $groepId)
+    protected function getAanwezigheidPerPersoon($persoon, $groepId)
     {
         $aanwezigheid = new \stdClass();
         /** @var Persoon $persoon */
@@ -810,7 +810,7 @@ class SelectieController extends BaseController
         return $aanwezigheid;
     }
 
-    private function getPersoonObject($userObject, $id)
+    protected function getPersoonObject($userObject, $id)
     {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
@@ -821,7 +821,7 @@ class SelectieController extends BaseController
         }
     }
 
-    private function colorGenerator($percentage)
+    protected function colorGenerator($percentage)
     {
         if ($percentage >= 100) {
             return '00FF00';
@@ -1261,7 +1261,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getAanwezigheid($userObject, $id, $groepId, $toekomst)
+    protected function getAanwezigheid($userObject, $id, $groepId, $toekomst)
     {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
@@ -1495,7 +1495,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getTrainingsdataVoorKruisjeslijst($userObject, $id, $groepId)
+    protected function getTrainingsdataVoorKruisjeslijst($userObject, $id, $groepId)
     {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
@@ -1564,7 +1564,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getTrainingsdatumDetails($userObject, $id, $groepId, $trainingsdatumId)
+    protected function getTrainingsdatumDetails($userObject, $id, $groepId, $trainingsdatumId)
     {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
@@ -1634,7 +1634,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getPersonenVoorTrainingsdatum($trainingsdataObject, $groepId)
+    protected function getPersonenVoorTrainingsdatum($trainingsdataObject, $groepId)
     {
         /** @var Trainingsdata $trainingsdataObject */
         /** @var Trainingen $training */
@@ -2176,7 +2176,7 @@ class SelectieController extends BaseController
         }
     }
 
-    private function checkGroupAuthorization($userObject, $id, $groepId, array $roles)
+    protected function checkGroupAuthorization($userObject, $id, $groepId, array $roles)
     {
         $response = array();
         $authorized = false;
@@ -2560,7 +2560,7 @@ class SelectieController extends BaseController
         }
     }
 
-    private function getSelectieTurnsterInfo($turnsterId, $groepObject, $page = null)
+    protected function getSelectieTurnsterInfo($turnsterId, $groepObject, $page = null)
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -2704,7 +2704,7 @@ class SelectieController extends BaseController
         return $turnster;
     }
 
-    private function getSeizoen($timestamp = null)
+    protected function getSeizoen($timestamp = null)
     {
         if ($timestamp == null) {
             $timestamp = time();
@@ -2717,7 +2717,7 @@ class SelectieController extends BaseController
         return $seizoen;
     }
 
-    private function getDoelenVoorSeizoen($persoonId, $seizoen)
+    protected function getDoelenVoorSeizoen($persoonId, $seizoen)
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -2731,7 +2731,7 @@ class SelectieController extends BaseController
         return ($doelen);
     }
 
-    private function getDoelDetailsFromIds($ids)
+    protected function getDoelDetailsFromIds($ids)
     {
         $doelen = array();
         $doelen['Sprong'] = array();
@@ -2756,7 +2756,7 @@ class SelectieController extends BaseController
         return $doelen;
     }
 
-    private function getDoelDetails($doelenObject)
+    protected function getDoelDetails($doelenObject)
     {
         $doelen = array();
         $doelen['Sprong'] = array();
@@ -2806,6 +2806,7 @@ class SelectieController extends BaseController
             $subdoelIds = array();
             $collectedDoelen = array();
             $cijfers = array();
+            $kleuren = array();
             foreach ($doelenIdArray as $doelId) {
                 $collectedDoelen[] = $doelId;
                 $array = $this->getDoelOpbouw($doelId, $subdoelIds);
@@ -2864,7 +2865,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getPercentageVoortgangTotaal($doelen, $cijfers)
+    protected function getPercentageVoortgangTotaal($doelen, $cijfers)
     {
         $totaal = 0;
         $voortgang = array();
@@ -2927,6 +2928,7 @@ class SelectieController extends BaseController
                     $repeat = true;
                 }
             }
+            $kleuren = array();
             $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnsterId);
             foreach ($cijfers as $id => $percentage) {
                 $kleuren[$id] = $this->colorGenerator($percentage);
@@ -2949,7 +2951,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getSubdoelIds($subdoelIds, $collectedDoelen)
+    protected function getSubdoelIds($subdoelIds, $collectedDoelen)
     {
         $extraDoelen = array();
         foreach ($subdoelIds as $subdoelId) {
@@ -2987,7 +2989,7 @@ class SelectieController extends BaseController
         return array($subdoelIds, $extraDoelen);
     }
 
-    private function getPercentages($doel, $cijfers, $turnsterId)
+    protected function getPercentages($doel, $cijfers, $turnsterId)
     {
         $subdoelPercentages = array();
         $subdoelen = array_reverse($doel->subdoelen);
@@ -3146,7 +3148,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getAssignedDoelen($doelenObject)
+    protected function getAssignedDoelen($doelenObject)
     {
         $ids = array();
         foreach ($doelenObject as $doelObject) {
@@ -3183,7 +3185,7 @@ class SelectieController extends BaseController
         return ($ids);
     }
 
-    private function getAvailableDoelen($doelenIds)
+    protected function getAvailableDoelen($doelenIds)
     {
         $doelenLijst = array();
         $doelenLijst['Sprong'] = array();
@@ -3358,7 +3360,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getVloermuziekjes($groepObject)
+    protected function getVloermuziekjes($groepObject)
     {
         /** @var Groepen $groepObject */
         $vloermuziek = array();
@@ -3486,7 +3488,7 @@ class SelectieController extends BaseController
         }
     }
 
-    private function getAllDoelen($viewDoelen = true)
+    protected function getAllDoelen($viewDoelen = true)
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -3661,7 +3663,7 @@ class SelectieController extends BaseController
         ));
     }
 
-    private function getDoelOpbouw($doelId, $subDoelIds, $ids = array())
+    protected function getDoelOpbouw($doelId, $subDoelIds, $ids = array())
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
