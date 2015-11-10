@@ -27,6 +27,7 @@ class Trainingen
     /**
      * @ORM\ManyToMany(targetEntity="Persoon", inversedBy="trainingen")
      * @ORM\JoinTable(name="personen_trainingen")
+     * @ORM\OrderBy({"geboortedatum" = "ASC"})
      **/
     protected $persoon;
 
