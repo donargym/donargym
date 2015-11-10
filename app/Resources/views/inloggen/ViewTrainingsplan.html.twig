@@ -1,0 +1,64 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <a href="{{ path('TrainingsplanIndex', { 'persoonId': persoonItems.id, 'groepId': groepId }) }}">Trainingsplan</a>
+            > <i>Trainingsplan bekijken</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Trainingsplan bekijken</h1>
+{% endblock %}
+
+{% block body %}
+    <h2>{{ trainingsdata.dag }} {{ trainingsdata.lesdatum }}</h2>
+    <h3>Groepjes</h3>
+        <table border="1" style="font-size: 11px;">
+            <tr>
+            {% for groepsNummer, voorbereiding in trainingsplan %}
+                <th><h4>Groepje {{ groepsNummer }}</h4></th>
+            {% endfor %}
+            </tr>
+            <tr>
+                {% for groepsNummer, voorbereiding in trainingsplan %}
+                <td>
+                    {% for turnsterId, turnster in voorbereiding.turnsters %}
+                        {{ turnster.naam }}<br>
+                    {% endfor %}
+                    <br>
+                    <h4>Toestelvolgorde</h4>
+                    {% for key, toestel in attribute(toestelVolgorde, voorbereiding.begintoestel) %}
+                        {{ toestel }}
+                        {% if key < (attribute(toestelVolgorde, voorbereiding.begintoestel)|length -1) %}
+                             -
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                {% endfor %}
+                </tr>
+        </table>
+    {% for groepsNummer, voorbereiding in trainingsplan %}
+        <p><h3>Groepje {{ groepsNummer }}</h3>
+        {% for key, toestel in attribute(toestelVolgorde, voorbereiding.begintoestel) %}
+            <h4>{{ toestel }}</h4>
+            {% for turnsterId, turnster in voorbereiding.turnsters %}
+                {{ turnster.naam }}
+                {% if attribute(turnster.trainingsDoelen, toestel) is defined %}
+                    <ul style="margin-top: 3px;">
+                    {% for key, doelen in attribute(turnster.trainingsDoelen, toestel) %}
+                        <li>
+                            {{ doelen.naam }}: {{ doelen.subdoelNaam }} {{ doelen.toestel }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+        </p>
+    {% endfor %}
+
+{% endblock %}

@@ -3,6 +3,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\AppBundle;
 use AppBundle\Controller\FpdfController as FPDF;
+use AppBundle\Entity\Trainingsplan;
 use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,6 +28,14 @@ class TrainingsPlanController extends SelectieController
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $persoonId);
         $trainingsdata = $this->getTrainingsdataVoorKruisjeslijst($userObject, $persoonId, $groepId);
+        $trainingsplannen = array();
+        foreach ($trainingsdata->trainingen as $trainingsdag) {
+            foreach ($trainingsdag->trainingsdata as $trainingsdatum) {
+                if ($trainingsplan = $this->getTrainingsplanById($trainingsdatum->id)) {
+                    $trainingsplannen[$trainingsdatum->id] = true;
+                }
+            }
+        }
         return $this->render('inloggen/TrainingsplanIndex.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
@@ -36,6 +45,7 @@ class TrainingsPlanController extends SelectieController
             'wedstrijdLinkItems' => $this->groepItems,
             'groepId' => $groepId,
             'trainingsdata' => $trainingsdata,
+            'trainingsplannen' => $trainingsplannen,
         ));
     }
 
@@ -72,8 +82,39 @@ class TrainingsPlanController extends SelectieController
     }
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    private function getTrainingsplanById($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT trainingsplan
+            FROM AppBundle:Trainingsplan trainingsplan
+            WHERE trainingsplan.trainingsdatumId = :id')
+            ->setParameter('id', $id);
+        $trainingsplan = $query->setMaxResults(1)->getOneOrNullResult();
+        if (count($trainingsplan) == 0)
+        {
+            return false;
+        }
+        return ($trainingsplan);
+    }
+    private function getNaamById($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT persoon
+            FROM AppBundle:Persoon persoon
+            WHERE persoon.id = :id')
+            ->setParameter('id', $id);
+        $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+        return ($persoon->getVoornaam() . ' ' . $persoon->getAchternaam());
+    }
+
+    /**
      * @Route("/inloggen/selectie/{persoonId}/Trainingsplan/{groepId}/makeTrainingsPlan/{trainingId}/", name="makeTrainingsplan")
-     * @Method({"POST"})
+     * @Method({"POST", "GET"})
      */
     public function makeTrainingsplan($persoonId, $groepId, $trainingId, Request $request)
     {
@@ -82,17 +123,61 @@ class TrainingsPlanController extends SelectieController
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $persoonId);
-        $seizoen = $this->getSeizoen();
-        $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
-        foreach ($_POST as $key => $value) {
-            if (!isset ($chosenHoofdDoelen[$value]['begintoestel'])) {
-                $toestelKey = rand(0,(count($toestellen)-1));
-                $chosenHoofdDoelen[$value]['begintoestel'] = $toestellen[$toestelKey];
-                unset ($toestellen[$toestelKey]);
+        $trainingsdataObject = $this->getTrainingsdatumDetails($userObject, $persoonId, $groepId, $trainingId);
+        $trainingsdata = new \stdClass();
+        $trainingsdata->id = $trainingsdataObject->getId();
+        $lesdatum = $trainingsdataObject->getLesdatum();
+        $trainingsdata->lesdatum = $lesdatum->format('d-m-Y');
+        $trainingsdata->dag = $this->dayToDutch($lesdatum->getTimestamp());
+        $toestelVolgorde['Sprong'] = array('Sprong', 'Brug', 'Balk', 'Vloer');
+        $toestelVolgorde['Brug'] = array('Brug', 'Balk', 'Vloer', 'Sprong');
+        $toestelVolgorde['Balk'] = array('Balk', 'Vloer', 'Sprong', 'Brug');
+        $toestelVolgorde['Vloer'] = array('Vloer', 'Sprong', 'Brug', 'Balk');
+        if ($request->getMethod() == "POST") {
+            $seizoen = $this->getSeizoen();
+            $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
+            foreach ($_POST as $key => $value) {
+                if (empty($value)) continue;
+                if (!isset ($chosenHoofdDoelen[$value]['begintoestel'])) {
+                    $toestelKey = rand(0,(count($toestellen)-1));
+                    $chosenHoofdDoelen[$value]['begintoestel'] = $toestellen[$toestelKey];
+                    unset ($toestellen[$toestelKey]);
+                    $toestellen = array_values($toestellen);
+                }
+                $chosenHoofdDoelen[$value]['turnsters'][$key]['naam'] = $this->getNaamById($key);
+                $chosenHoofdDoelen[$value]['turnsters'][$key]['trainingsDoelen'] = $this->getTrainingsDoelPerTurnster($key, $seizoen);
             }
-            $chosenHoofdDoelen[$value][$key] = $this->getTrainingsDoelPerTurnster($key, $seizoen);
+            ksort($chosenHoofdDoelen);
+            if ($trainingsplanObject = $this->getTrainingsplanById($trainingId)) {
+                $em = $this->getDoctrine()->getManager();
+                $trainingsplanObject->setTrainingsplan(json_encode($chosenHoofdDoelen));
+                $em->persist($trainingsplanObject);
+                $em->flush();
+            } else {
+                $em = $this->getDoctrine()->getManager();
+                $trainingsplanObject = new Trainingsplan();
+                $trainingsplanObject->setTrainingsdatumId($trainingId);
+                $trainingsplanObject->setTrainingsplan(json_encode($chosenHoofdDoelen));
+                $em->persist($trainingsplanObject);
+                $em->flush();
+            }
+        } elseif ($request->getMethod() == "GET") {
+            /** @var Trainingsplan $trainingsplanObject */
+            $trainingsplanObject = $this->getTrainingsplanById($trainingId);
+            $chosenHoofdDoelen = json_decode($trainingsplanObject->getTrainingsplan(), true);
         }
-        var_dump($chosenHoofdDoelen);die;
+        return $this->render('inloggen/ViewTrainingsplan.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'persoon' => $persoon,
+            'user' => $user,
+            'persoonItems' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+            'groepId' => $groepId,
+            'trainingsplan' => $chosenHoofdDoelen,
+            'trainingsdata' => $trainingsdata,
+            'toestelVolgorde' => $toestelVolgorde,
+        ));
     }
 
     private function getTrainingsDoelPerTurnster($turnsterId, $seizoen)
@@ -158,7 +243,7 @@ class TrainingsPlanController extends SelectieController
                 $doelOpbouw = $this->getDoelOpbouw($hoofddoel['id'], array());
                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
-                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelnaam'] = $doelOpbouw[0]->naam;
+                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
                     $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                     continue;
@@ -214,7 +299,7 @@ class TrainingsPlanController extends SelectieController
                                 $doelOpbouw = $this->getDoelOpbouw($value['id'], array());
                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
-                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelnaam'] = $doelOpbouw[0]->naam;
+                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
                                     $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                     break;
@@ -268,7 +353,7 @@ class TrainingsPlanController extends SelectieController
                                                 $doelOpbouw = $this->getDoelOpbouw($value['id'], array());
                                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
-                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelnaam'] = $doelOpbouw[0]->naam;
+                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
                                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                                     break;
@@ -322,7 +407,7 @@ class TrainingsPlanController extends SelectieController
                                                                 $doelOpbouw = $this->getDoelOpbouw($value['id'], array());
                                                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
-                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelnaam'] = $doelOpbouw[0]->naam;
+                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
                                                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                                                     break;
@@ -376,7 +461,7 @@ class TrainingsPlanController extends SelectieController
                                                                                 $doelOpbouw = $this->getDoelOpbouw($value['id'], array());
                                                                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
-                                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelnaam'] = $doelOpbouw[0]->naam;
+                                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
                                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
                                                                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                                                                     break;
@@ -431,7 +516,7 @@ class TrainingsPlanController extends SelectieController
                                                                                                 $doelOpbouw = $this->getDoelOpbouw($value['id'], array());
                                                                                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
-                                                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelnaam'] = $doelOpbouw[0]->naam;
+                                                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
                                                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
                                                                                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                                                                                     break;
