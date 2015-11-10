@@ -244,7 +244,7 @@ class TrainingsPlanController extends SelectieController
                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
-                    $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
+                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelToestel'] = $doelOpbouw[0]->toestel;
                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                     continue;
                 }
@@ -300,7 +300,7 @@ class TrainingsPlanController extends SelectieController
                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
-                                    $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
+                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelToestel'] = $doelOpbouw[0]->toestel;
                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                     break;
                                 }
@@ -354,7 +354,7 @@ class TrainingsPlanController extends SelectieController
                                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
-                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
+                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelToestel'] = $doelOpbouw[0]->toestel;
                                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                                     break;
                                                 }
@@ -408,7 +408,7 @@ class TrainingsPlanController extends SelectieController
                                                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
-                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
+                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelToestel'] = $doelOpbouw[0]->toestel;
                                                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                                                     break;
                                                                 }
@@ -462,7 +462,7 @@ class TrainingsPlanController extends SelectieController
                                                                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
                                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
-                                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
+                                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelToestel'] = $doelOpbouw[0]->toestel;
                                                                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                                                                     break;
                                                                                 }
@@ -517,7 +517,7 @@ class TrainingsPlanController extends SelectieController
                                                                                                 if (count($doelOpbouw[0]->subdoelen) == 0) {
                                                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelId'] = $doelOpbouw[0]->id;
                                                                                                     $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelNaam'] = $doelOpbouw[0]->naam;
-                                                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['toestel'] = $doelOpbouw[0]->toestel;
+                                                                                                    $chosenHoofdDoelen[$toestel][$doelNummer]['subdoelToestel'] = $doelOpbouw[0]->toestel;
                                                                                                     $chosenSubdoelIds[] = $doelOpbouw[0]->id;
                                                                                                     break;
                                                                                                 }
