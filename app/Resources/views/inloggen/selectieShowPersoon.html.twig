@@ -18,7 +18,7 @@
         {% endif %}
     {% endfor %}
 
-    <div style="height: 175px;">
+    <div style="height: 200px;">
         <a href="{{ path('addSelectieFotoPage', { 'persoonId': persoonItems.id }) }}">
             <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
                  width="150"
@@ -29,15 +29,55 @@
         <h1>{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}
         </h1>
 
-        <p><b>Geboortedatum:</b> {{ persoonItems.geboortedatum }}<br>
-            <b>Categorie:</b> {{ persoonItems.categorie }}</p></div>
+        <p><font style="color: #FFFF00;">Geboortedatum:</font> {{ persoonItems.geboortedatum }}<br>
+            <font style="color: #FFFF00;">Categorie:</font> {{ persoonItems.categorie }}</p>
+        <div class="button">
+
+
+            {% if persoonItems.vloermuziek %}
+                <a href="http://www.donargym.nl/uploads/vloermuziek/{{ persoonItems.vloermuziek }}" target="blank">
+                    Vloermuziek downloaden
+                </a><br>
+            {% endif %}
+            <a href="{{ path('addSelectieStukjePage', { 'id': persoonItems.id }) }}">Stukje schrijven</a>
+        </div>
+    </div>
 {% endblock %}
 
 {% block body %}
     {% for functie in persoonItems.functies %}
         <div style="margin-bottom: 75px;"><h2>{{ functie.groepNaam }} ({{ functie.functie }})</h2>
             <hr>
-
+            {% if functie.functie == 'Trainer' or functie.functie == 'Assistent-Trainer' %}
+                <center>
+                    <div id="button4">
+                        <a href="{{ path('TrainingsplanIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
+                            Trainingsplan</a>
+                        <a href="{{ path('viewDoelen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Doelen</a>
+                        <a href="{{ path('viewWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
+                            Uitslagen
+                        </a>
+                        <a href="{{ path('viewVloermuziek', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Vloermuziek</a>
+                        <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
+                        <br />
+                        <a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden</a>
+                        {% if functie.functie == "Trainer" %}
+                            <a href="{{ path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Kruisjeslijst</a>
+                        {% endif %}
+                        <a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen</a>
+                        <a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid</a>
+                    </div>
+                </center>
+            {% else %}
+                <div id="button3">
+                    <a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden</a>
+                    {% if persoonItems.categorie == 'Jeugd 2' or persoonItems.categorie == 'Junior' or persoonItems.categorie == 'Senior' %}
+                        <a href="{{ path('addSelectieVloermuziekPage', { 'persoonId': persoonItems.id, 'groepId': functie.groepId, 'turnsterId': persoonItems.id }) }}">
+                            Vloermuziek uploaden</a>
+                    {% endif %}
+                    <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
+                </div>
+            {% endif %}
             {% if functie.groepId == 3 or functie.groepId == 5 %}
                 {% if functie.functie == 'Turnster' %}
                     <p>
@@ -64,11 +104,11 @@
             {% endif %}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
             <p><h3>(Assistent-)Trainers</h3>
-            <table border="1">
-                <tr style="font-weight: bold">
-                    <td>Naam</td>
-                    <td>Geboortedatum</td>
-                    <td>% aanwezig</td>
+            <table border="0" id="nolink">
+                <tr style="color:#FFFF00;">
+                    <th>Naam</th>
+                    <th>Geboortedatum</th>
+                    <th>% aanwezig</th>
                 </tr>
 
                 {% if functie.trainer is defined %}
@@ -130,17 +170,17 @@
                                     src="{{ asset('images/add.png') }}" width="18px"/></a>
                     {% endif %}
                 </h3>
-                <table border="1">
-                    <tr style="font-weight: bold">
-                        <td>Naam</td>
-                        <td>Geboortedatum</td>
+                <table border="0" id="nolink">
+                    <tr style="color: #FFFF00;">
+                        <th>Naam</th>
+                        <th>Geboortedatum</th>
                         {% if functie.groepId == 3 or functie.groepId == 5 %}
-                            <td>Voortgang</td>
+                            <th>Voortgang</th>
                         {% endif %}
-                        <td>% aanwezig</td>
+                        <th>% aanwezig</th>
                         {% if functie.functie == 'Trainer' %}
-                            <td></td>
-                            <td></td>
+                            <th></th>
+                            <th></th>
                         {% endif %}
                     </tr>
 
@@ -198,12 +238,12 @@
             {% for training in persoonItems.trainingen %}
                 {% if training.groepId == functie.groepId %}
                     <h4>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h4>
-                    <table border="1">
+                    <table border="0" id="presentie">
                         <tr>
                             {% for trainingsdatum in training.trainingsdata %}
-                                <td style="font-size: 13px;">{{ trainingsdatum.lesdatum }}</td>
+                                <th style="font-size: 13px;">{{ trainingsdatum.lesdatum }}</th>
                             {% endfor %}
-                            <td style="font-size: 13px;"><b>% Aanwezig</b></td>
+                            <th style="font-size: 13px;"><b>% Aanwezig</b></th>
                         </tr>
                         <tr>
                             {% for trainingsdatum in training.trainingsdata %}
@@ -221,72 +261,10 @@
                 {% endif %}
             {% endfor %}
             </p>
-            <p>Totaal {{ functie.aantalAanwezig }} van {{ functie.aantalTrainingen }} trainingen aanwezig: <span
-                        style="font-weight: bold; background-color: #{{ functie.percentageKleur }}; color: rgba(0,0,0,0.6);">
+
+            <p class="button1" style="background: {{ functie.percentageKleur }};">Totaal {{ functie.aantalAanwezig }} van {{ functie.aantalTrainingen }} trainingen aanwezig:
+                <span style="font-weight: bold; color: #FFF;">
                         {{ functie.percentageAanwezig | round }}%</span></p>
-
-            <p><a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden voor
-                    trainingen</a></p>
-
-            {% if (functie.functie == 'Turnster') %}
-                {% if persoonItems.categorie == 'Jeugd 2' or persoonItems.categorie == 'Junior' or persoonItems.categorie == 'Senior' %}
-                    <p>Vloermuziek:
-                        {% if persoonItems.vloermuziek %}<a
-                            href="http://www.donargym.nl/uploads/vloermuziek/{{ persoonItems.vloermuziek }}"
-                            target="blank"><img src="{{ asset('images/listen.png') }}" width="18px"/></a>{% endif %}
-                        <a href="{{ path('addSelectieVloermuziekPage', { 'persoonId': persoonItems.id, 'groepId': functie.groepId, 'turnsterId': persoonItems.id }) }}">
-                            <img src="{{ asset('images/add.png') }}" width="25px"/>
-                        </a>
-                    </p>
-                {% endif %}
-            {% endif %}
-
-            {% if (functie.functie == 'Trainer') %}
-                <p><a href="{{ path('TrainingsplanIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
-                        Trainingsplan</a></p>
-            {% endif %}
-
-            {% if (functie.functie == 'Trainer') %}
-                <p><a href="{{ path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Kruisjeslijst
-                        invullen</a></p>
-            {% endif %}
-
-            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-                <p><a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen
-                        bekijken</a></p>
-            {% endif %}
-
-            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-                <p><a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid
-                        bekijken</a></p>
-            {% endif %}
-
-            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-                <p>
-                    <a href="{{ path('viewWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
-                        Wedstrijduitslagen
-                    </a></p>
-            {% endif %}
-
-            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-                <p><a href="{{ path('viewDoelen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Doelen</a>
-                </p>
-            {% endif %}
-
-            {% if (functie.functie == 'Turnster') %}
-                <p><a href="{{ path('addSelectieStukjePage', { 'id': persoonItems.id }) }}">Schrijf een stukje over
-                        jezelf</a></p>
-            {% endif %}
-
-            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-                <p>
-                    <a href="{{ path('viewVloermuziek', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Vloermuziek</a>
-                </p>
-            {% endif %}
-
-            <p>
-                <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
-            </p>
         </div>
     {% endfor %}
 {% endblock %}

@@ -20,18 +20,19 @@
                 {% if loop.index0 is divisibleby(4) %}
                     </tr><tr>
                 {% endif %}
-                <td><img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
+                <td><a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT', 'id': persoon.id }) }}" style="text-decoration: none;">
+                    <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
                     <p>{{ persoon.voornaam }} {{ persoon.achternaam }}<br>
-                        Trainer</p></td>
+                        Trainer</p></a></td>
             {% endfor %}
 
             {% for persoon in attribute(personen, 'Assistent-Trainer') %}
                 {% if (loop.index0+personen.Trainer|length) is divisibleby(4) %}
                     </tr><tr>
                 {% endif %}
-                <td><img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
+                <td><a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT', 'id': persoon.id }) }}" style="text-decoration: none;"><img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
                     <p>{{ persoon.voornaam }} {{ persoon.achternaam }}<br>
-                        Assistent-Trainer</p></td>
+                        Assistent-Trainer</p></a></td>
             {% endfor %}
 
         </tr>

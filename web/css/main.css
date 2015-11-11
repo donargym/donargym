@@ -135,7 +135,7 @@ body {
 #content .uitslagen a:link {
     color: #FFFF00;
     text-decoration: none;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255,255,255,0.5);
     display: block;
     float: right;
     border-radius: 5px;
@@ -146,7 +146,7 @@ body {
 #content .uitslagen a:visited {
     color: #FFFF00;
     text-decoration: none;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255,255,255,0.5);
     display: block;
     float: right;
     border-radius: 5px;
@@ -155,7 +155,7 @@ body {
 }
 
 #content .uitslagen a:hover, .uitslagen a:active {
-    background: rgba(255, 255, 0, 0.5);
+    background: rgba(255,255,0,0.5);
     color: #FFF;
     text-decoration: none;
     display: block;
@@ -334,6 +334,7 @@ a:hover, a:active {
 #primary_nav_wrap ul ul li {
     float: none;
     width: 200px;
+
 }
 
 #primary_nav_wrap ul ul a {
@@ -351,10 +352,6 @@ a:hover, a:active {
 }
 
 /* COMMENT LINE */
-
-#active_link {
-    border-bottom: 2px solid #FFFF00;
-}
 
 #inlogmenu {
     background: rgba(255, 255, 255, 0.5);
@@ -394,6 +391,44 @@ a:hover, a:active {
     border-radius: 5px;
 }
 
+/* COMMENT LINE */
+
+#active_link {
+    border-bottom: 2px solid #FFFF00;
+}
+
+#active_link2 {
+    border-bottom: 2px solid #FFF;
+}
+
+#content .button1 {
+    background: rgba(140,255,0,0.4);
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+#content .button a:link, #content .button a:visited {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+    margin: 5px;
+}
+
+#content .button a:hover, .uitslagen a:active {
+    background: rgba(255,255,0,0.5);
+    color: #FFF;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
 #inlog_nav {
     background: rgba(0,0,0,0.6);
     max-width: 770px;
@@ -422,3 +457,179 @@ a:hover, a:active {
     color: #FFFF00;
     text-decoration: none;
 }
+
+#nolink a:link, #nolink a:visited {
+    color: #FFF;
+    text-decoration: none;
+    font-size: 10pt;
+    display: block;
+}
+
+#nolink a:hover, #nolink a:active {
+    color: #FFFF00;
+    text-decoration: none;
+    font-size: 10pt;
+}
+
+#nolink tr:hover td {
+    background: #9E332F;
+    color: #FFFF00;
+}
+
+#nolink {
+    border-collapse: collapse;
+    border: 1px solid rgba(0,0,0,1);
+    border-radius: 5px;
+    color: #FFF;
+}
+
+#nolink tr, #nolink td {
+    border: 1px solid #000;
+}
+
+#nolink tr, #nolink td, #nolink th {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#nolink th {
+    background: rgba(0,0,0,0.3);
+    font-weight: normal;
+    border: 1px solid #000;
+}
+
+#nolink tr:nth-child(even) {
+    background: rgba(255,255,0,0.3);
+}
+
+#nolink tr:nth-child(odd) {
+    background: rgba(0,0,0,0.3);
+    border: 0px;
+    border-radius: 5px;
+}
+
+#presentie {
+    border-collapse: collapse;
+}
+
+#presentie th {
+    background: rgba(0,0,0,0.3);
+    font-weight: normal;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 1px solid rgba(0,0,0,0.6);
+}
+
+#presentie tr, #presentie td {
+    padding-left: 3px;
+    padding-right: 3px;
+    border: 1px solid rgba(0,0,0,0.6);
+}
+
+#menuzoveel {
+    float: right;
+    display: block;
+    background: rgba(0,0,0,0.5);
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#menuzoveel a:link {
+    margin-right: 15px;
+}
+
+#button3 {
+    float: right;
+    display: block;
+}
+
+#button3 a:link, #button3 a:visited {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+    margin: 5px;
+    margin-right: 0px;
+}
+
+#button3 a:hover, #button3 a:active {
+    background: rgba(255,255,0,0.5);
+    color: #FFF;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+#button4 {
+    text-align: center;
+    display: inline-block;
+}
+
+#button4 a:link, #button4 a:visited {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+    margin: 5px;
+    margin-right: 0px;
+}
+
+#button4 a:hover, #button4 a:active {
+    background: rgba(255,255,0,0.5);
+    color: #FFF;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+/* #inlogmenu {
+	color: #FFF;
+	text-decoration: none;
+	background: rgba(255,255,255,0.5);
+	display: block;
+	width: 700px;
+	border-radius: 5px;
+	text-align: left;
+	padding: 5px 10px;
+}
+
+#inlogmenu #nav {
+	margin: 5px;
+}
+
+#inlogmenu #nav h3 {
+	font-size: 14pt;
+	margin-bottom: 5px;
+	color: #FFF;
+	text-align: center;
+}
+
+#inlogmenu #nav hr {
+	background-color: #FFF;
+	margin-bottom: 5px;
+}
+
+#inlogmenu #nav a:link {
+	color: #FFF;
+	text-decoration: none;
+}
+
+#inlogmenu #nav a:visited {
+	color: #FFF;
+	text-decoration: none;
+}
+
+#inlogmenu #nav a:active, #inlogmenu #nav a:hover {
+	color: #FFFF00;
+	text-decoration: none;
+} */

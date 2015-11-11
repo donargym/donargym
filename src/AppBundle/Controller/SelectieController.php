@@ -351,14 +351,19 @@ class SelectieController extends BaseController
                     $persoonItems->functies[$i]->groepId = $groep->getId();
                     $persoonItems->functies[$i]->functie = $functies[$i]->getFunctie();
                     $persoonItems->functies[$i]->turnster = array();
-                    if ($persoonItems->functies[$i]->functie == 'Turnster') {
-                        $stukje = $persoon->getStukje();
-                        $persoonItems->stukje = $stukje->getAll();
+                    $stukje = $persoon->getStukje();
+                    if (!$stukje) {
+                        $stukje = new Stukje();
+                        $persoon->setStukje($stukje);
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($stukje);
+                        $em->flush();
                     }
+                    $persoonItems->stukje = $stukje->getAll();
                     if ($page == 'Index') {
                         $aanwezigheidPerPersoon = $this->getAanwezigheidPerPersoon($persoon, $groep->getId());
                         $persoonItems->functies[$i]->percentageAanwezig = $aanwezigheidPerPersoon->percentageAanwezig;
-                        $persoonItems->functies[$i]->percentageKleur = $aanwezigheidPerPersoon->percentageKleur;
+                        $persoonItems->functies[$i]->percentageKleur = $this->colorGenerator2($aanwezigheidPerPersoon->percentageAanwezig);
                         $persoonItems->functies[$i]->aantalAanwezig = $aanwezigheidPerPersoon->aantalAanwezig;
                         $persoonItems->functies[$i]->aantalTrainingen = $aanwezigheidPerPersoon->aantalTrainingen;
                     }
@@ -819,6 +824,75 @@ class SelectieController extends BaseController
                 return $persoon;
             }
         }
+    }
+
+    protected function ColorGenerator2($percentage)
+    {
+        if ($percentage >= 100) {
+            return 'rgba(0,255,0,0.4)';
+        } //Green
+        elseif ($percentage >= 99) {
+            return 'rgba(17,255,0,0.4)';
+        } elseif ($percentage >= 97) {
+            return 'rgba(34,255,0,0.4)';
+        } elseif ($percentage >= 96) {
+            return 'rgba(51,255,0,0.4)';
+        } elseif ($percentage >= 94) {
+            return 'rgba(68,255,0,0.4)';
+        } elseif ($percentage >= 93) {
+            return 'rgba(85,255,0,0.4)';
+        } elseif ($percentage >= 91) {
+            return 'rgba(102,255,0,0.4)';
+        } elseif ($percentage >= 90) {
+            return 'rgba(119,255,0,0.4)';
+        } elseif ($percentage >= 88) {
+            return 'rgba(136,255,0,0.4)';
+        } elseif ($percentage >= 87) {
+            return 'rgba(153,255,0,0.4)';
+        } elseif ($percentage >= 85) {
+            return 'rgba(170,255,0,0.4)';
+        } elseif ($percentage >= 84) {
+            return 'rgba(187,255,0,0.4)';
+        } elseif ($percentage >= 82) {
+            return 'rgba(204,255,0,0.4)';
+        } elseif ($percentage >= 81) {
+            return 'rgba(221,255,0,0.4)';
+        } elseif ($percentage >= 79) {
+            return 'rgba(238,255,0,0.4)';
+        } elseif ($percentage >= 78) {
+            return 'rgba(255,255,0,0.4)';
+        } //Yellow
+        elseif ($percentage >= 75) {
+            return 'rgba(255,238,0,0.4)';
+        } elseif ($percentage >= 70) {
+            return 'rgba(255,221,0,0.4)';
+        } elseif ($percentage >= 65) {
+            return 'rgba(255,204,0,0.4)';
+        } elseif ($percentage >= 60) {
+            return 'rgba(255,187,0,0.4)';
+        } elseif ($percentage >= 55) {
+            return 'rgba(255,170,0,0.4)';
+        } elseif ($percentage >= 50) {
+            return 'rgba(255,153,0,0.4)';
+        } elseif ($percentage >= 45) {
+            return 'rgba(255,136,0,0.4)';
+        } elseif ($percentage >= 40) {
+            return 'rgba(255,119,0,0.4)';
+        } elseif ($percentage >= 35) {
+            return 'rgba(255,102,0,0.4)';
+        } elseif ($percentage >= 30) {
+            return 'rgba(255,85,0,0.4)';
+        } elseif ($percentage >= 25) {
+            return 'rgba(255,68,0,0.4)';
+        } elseif ($percentage >= 20) {
+            return 'rgba(255,51,0,0.4)';
+        } elseif ($percentage >= 15) {
+            return 'rgba(255,34,0,0.4)';
+        } elseif ($percentage >= 10) {
+            return 'rgba(255,17,0,0.4)';
+        } else {
+            return 'rgba(255,0,0,0.4)';
+        } //Red
     }
 
     protected function colorGenerator($percentage)
@@ -2194,15 +2268,15 @@ class SelectieController extends BaseController
                         $groep = $functie->getGroep();
                         if ($groep->getId() == $groepId) {
                             $authorized = true;
+                            $response['authorized'] = $authorized;
+                            $response['groep'] = $groep;
+                            $response['functie'] = $functie->getFunctie();
                             break;
                         }
                     }
                 }
             }
         }
-        $response['authorized'] = $authorized;
-        $response['groep'] = $groep;
-        $response['functie'] = $functie->getFunctie();
         return $response;
     }
 
@@ -3482,6 +3556,8 @@ class SelectieController extends BaseController
                     'persoonItems' => $persoonItems,
                     'turnster' => $turnster,
                     'error' => $error,
+                    'functie' => $functie,
+                    'groepId' => $groepId,
                 ));
 
             }
