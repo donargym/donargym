@@ -15,8 +15,11 @@
 
 {% block body %}
 
-    <table border="1">
-        <tr style="font-weight: bold;"><td>Naam turnster</td><td>Luisteren</td><td>Uploaden</td></tr>
+    <table border="0" id="nolink">
+        <tr style="color:#FFFF00;">
+            <th>Naam turnster</th>
+            <th>Luisteren</th>
+            <th>Uploaden</th></tr>
     {% for persoon in vloermuziek %}
             <tr>
                 <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>

@@ -17,9 +17,18 @@
 {% for functie in persoonItems.functies %}
     {% if functie.groepId == groepId %}
         <h2>Trainers en Assistent-Trainers</h2>
-        <table border="1" style="font-size: 10px;">
-        <tr style="font-weight: bold">
-            <td>Naam</td><td>Geb. Datum</td><td>Straat + Nr</td><td>Postcode</td><td>Plaats</td><td>Tel 1</td><td>Tel 2</td><td>Tel 3</td><td>Email 1</td><td>Email 2</td>
+        <table border="0" id="nolink" style="font-size: 10px;">
+            <tr style="color: #FFFF00;">
+                <th>Naam</th>
+                <th>Geb. Datum</th>
+                <th>Straat + Nr</th>
+                <th>Postcode</th>
+                <th>Plaats</th>
+                <th>Tel 1</th>
+                <th>Tel 2</th>
+                <th>Tel 3</th>
+                <th>Email 1</th>
+                <th>Email 2</th>
         </tr>
         {% if functie.trainer is defined %}
             {% for persoon in functie.trainer %}
@@ -57,9 +66,18 @@
         </table>
 
         <h2>Turnsters</h2>
-        <table border="1" style="font-size: 10px;">
-            <tr style="font-weight: bold">
-                <td>Naam</td><td>Geb. Datum</td><td>Straat + Nr</td><td>Postcode</td><td>Plaats</td><td>Tel 1</td><td>Tel 2</td><td>Tel 3</td><td>Email 1</td><td>Email 2</td>
+        <table border="0" id="nolink" style="font-size: 10px;">
+            <tr style="color: #FFFF00;">
+                <th>Naam</th>
+                <th>Geb. Datum</th>
+                <th>Straat + Nr</th>
+                <th>Postcode</th>
+                <th>Plaats</th>
+                <th>Tel 1</th>
+                <th>Tel 2</th>
+                <th>Tel 3</th>
+                <th>Email 1</th>
+                <th>Email 2</th>
             </tr>
         {% if functie.turnster is defined %}
             {% for persoon in functie.turnster %}

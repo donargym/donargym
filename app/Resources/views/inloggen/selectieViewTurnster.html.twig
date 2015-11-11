@@ -38,15 +38,15 @@
         {{ turnster.tel3 }}<br>
     {% endif %}
 </p>
-<p><h2>Aanwezigheid</h2>
+<p><h2>Presentie</h2>
     {% for training in turnster.trainingen %}
         <h3>{{ training.dag }}: {{ training.tijdvan }} - {{ training.tijdtot }}</h3>
-        <table border="1">
+        <table border="0" id="presentie">
             <tr>
                 {% for trainingsdatum in training.trainingsdata %}
-                    <td style="font-size: 13px;">{{ trainingsdatum.lesdatum }}</td>
+                    <th style="font-size: 13px;">{{ trainingsdatum.lesdatum }}</th>
                 {% endfor %}
-                <td style="font-size: 13px;"><b>% Aanwezig</b></td>
+                <th style="font-size: 13px;"><b>% Aanwezig</b></th>
             </tr>
             <tr>
                 {% for trainingsdatum in training.trainingsdata %}
@@ -63,9 +63,10 @@
         </table>
     {% endfor %}
     </p>
-<p>Totaal {{ turnster.aantalAanwezig }} van {{ turnster.aantalTrainingen }} trainingen aanwezig: <span
-            style="font-weight: bold; background-color: #{{ turnster.percentageKleur }}; color: rgba(0,0,0,0.6);">
-        {{ turnster.percentageAanwezig | round }}%</span></p>
+
+    <p class="button1" style="background: {{ turnster.percentageKleur }};">Totaal {{ turnster.aantalAanwezig }} van {{ turnster.aantalTrainingen }} trainingen aanwezig:
+                <span style="font-weight: bold; color: #FFF;">
+                        {{ turnster.percentageAanwezig | round }}%</span></p>
 
 <p><h2>Doelen
 {% if (functie == 'Trainer') %}
@@ -79,9 +80,13 @@
     </a></p>
 {% endif %}
 {% for toestel, doelen in doelen %}
-    <h3>{{ toestel }} ({{ attribute(voortgang, toestel)|round }}%)</h3>
-    <table border="1">
-    <tr><th>Naam</th><th>Voortgang</th><th></th></tr>
+    <p><h3>{{ toestel }} ({{ attribute(voortgang, toestel)|round }}%)</h3>
+    <table border="0" id="nolink">
+    <tr style="color: #FFFF00;">
+        <th>Naam</th>
+        <th>Voortgang</th>
+        <th></th>
+    </tr>
     {% for id, doel in doelen %}
         <tr><td><a href="{{ path('viewSelectieTurnsterOneDoel', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': groepId, 'doelId': id }) }}">
             {{ doel }}
@@ -97,7 +102,7 @@
         <img src="{{ asset('images/remove.png') }}" width="15px"/>
         </a></td></tr>
     {% endfor %}
-    </table>
+    </table></p>
 {% endfor %}
 
 </p>

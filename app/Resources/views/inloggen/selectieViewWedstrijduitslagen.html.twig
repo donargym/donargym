@@ -21,8 +21,8 @@
     {% endif %}
 
     {% for key, value in wedstrijduitslagen %}
-        <p><b>{{ key }}-{{ key + 1 }}</b>
-            <table border="1">
+        <p><h3>{{ key }}-{{ key + 1 }}</h3>
+            <table border="0" id="nolink">
                 {% for wedstrijd in value %}
                 <tr>
                     <td>

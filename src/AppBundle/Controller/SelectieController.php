@@ -2772,7 +2772,7 @@ class SelectieController extends BaseController
         } else {
             $turnster->percentageAanwezig = 100;
         }
-        $turnster->percentageKleur = $this->colorGenerator($turnster->percentageAanwezig);
+        $turnster->percentageKleur = $this->colorGenerator2($turnster->percentageAanwezig);
         $turnster->aantalAanwezig = $aantalAanwezig;
         $turnster->aantalTrainingen = $aantalTrainingen;
         return $turnster;

@@ -17,12 +17,13 @@
     {% for training in aanwezigheid.trainingen %}
         <h2>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h2>
         <h3>(Assistent-)Trainers</h3>
-        <table border="1" style="font-size: 10px;">
-            <tr style="font-weight: bold;"><td>Naam\Datum</td>
+        <table border="0" id="presentie" style="font-size: 10px;">
+            <tr style="color:#FFFF00;">
+            <th>Naam\Datum</th>
                 {% for trainingsdatum in training.trainingsdata %}
-                    <td>{{ trainingsdatum.lesdatum }}</td>
+                    <th>{{ trainingsdatum.lesdatum }}</th>
                 {% endfor %}
-                <td>% aanwezig</td>
+                <th>% aanwezig</th>
             </tr>
             {% for persoon in training.trainers %}
                 <tr>
@@ -66,12 +67,13 @@
         </table>
 
         <h3>Turnsters</h3>
-        <table border="1" style="font-size: 10px;">
-            <tr style="font-weight: bold;"><td>Naam\Datum</td>
+        <table border="0" id="presentie" style="font-size: 10px;">
+            <tr style="color:#FFFF00;">
+                <th>Naam\Datum</th>
                 {% for trainingsdatum in training.trainingsdata %}
-                    <td>{{ trainingsdatum.lesdatum }}</td>
+                    <th>{{ trainingsdatum.lesdatum }}</th>
                 {% endfor %}
-                <td>% aanwezig</td>
+                <th>% aanwezig</th>
             </tr>
             {% for persoon in training.turnsters %}
                 <tr>
