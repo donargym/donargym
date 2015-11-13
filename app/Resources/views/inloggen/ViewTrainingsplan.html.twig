@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block body %}
-    <h2>{{ trainingsdata.dag }} {{ trainingsdata.lesdatum }}</h2>
+    <h2>{{ trainingsdata.dag }} {{ trainingsdata.lesdatum }} ({{ tijdschema.van }} - {{ tijdschema.tot }})</h2>
     <h3>Groepjes</h3>
         <table border="1" style="font-size: 11px;">
             <tr>
@@ -41,12 +41,27 @@
                 {% endfor %}
                 </tr>
         </table>
+
+        <h3>Tijdschema</h3>
+        <h6>Warming up</h6>
+        <ul style="margin-top: 3px; font-size: 10pt;">
+            <span style="color: #FFFF00;">{{ tijdschema.startBasis1 }} - {{ tijdschema.startKracht1 }}</span> Warming up basisrondje<br>
+            <span style="color: #FFFF00;">{{ tijdschema.startKracht1 }} - {{ tijdschema.startLenigheid1 }}</span> Warming up kracht<br>
+            <span style="color: #FFFF00;">{{ tijdschema.startLenigheid1 }} - {{ attribute(toestelTijden, 0) }}</span> Warming up lenigheid<br>
+        </ul>
+        <h6>Toestellen</h6>
+        <ul style="margin-top: 3px; font-size: 10pt;">
+            <span style="color: #FFFF00;">{{ attribute(toestelTijden, 0) }} - {{ attribute(toestelTijden, 1) }}</span> Toestel 1<br>
+            <span style="color: #FFFF00;">{{ attribute(toestelTijden, 1) }} - {{ attribute(toestelTijden, 2) }}</span> Toestel 2<br>
+            <span style="color: #FFFF00;">{{ attribute(toestelTijden, 2) }} - {{ attribute(toestelTijden, 3) }}</span> Toestel 3<br>
+            <span style="color: #FFFF00;">{{ attribute(toestelTijden, 3) }} - {{ attribute(toestelTijden, 4) }}</span> Toestel 4<br>
+        </ul>
     {% for groepsNummer, voorbereiding in trainingsplan %}
         <p><h3>Groepje {{ groepsNummer }}</h3>
         {% for key, toestel in attribute(toestelVolgorde, voorbereiding.begintoestel) %}
-            <h4>{{ toestel }}</h4>
+            <h4>{{ toestel }} ({{ attribute(toestelTijden, key) }} - {{ attribute(toestelTijden, (key+1)) }})</h4>
             {% for turnsterId, turnster in voorbereiding.turnsters %}
-                {{ turnster.naam }}
+                <h6>{{ turnster.naam }}</h6>
                 {% if attribute(turnster.trainingsDoelen, toestel) is defined %}
                     <ul style="margin-top: 3px;">
                     {% for key, doelen in attribute(turnster.trainingsDoelen, toestel) %}

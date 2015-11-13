@@ -3,6 +3,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\AppBundle;
 use AppBundle\Controller\FpdfController as FPDF;
+use AppBundle\Entity\Trainingsdata;
 use AppBundle\Entity\Trainingsplan;
 use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -124,6 +125,10 @@ class TrainingsPlanController extends SelectieController
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $persoonId);
         $trainingsdataObject = $this->getTrainingsdatumDetails($userObject, $persoonId, $groepId, $trainingId);
+        $training = $trainingsdataObject->getTrainingen();
+        $tijden = $this->getTijdschemaVoorTrainingen($training);
+        $tijdschema = $tijden[0];
+        $toestelTijden = $tijden[1];
         $trainingsdata = new \stdClass();
         $trainingsdata->id = $trainingsdataObject->getId();
         $lesdatum = $trainingsdataObject->getLesdatum();
@@ -146,6 +151,10 @@ class TrainingsPlanController extends SelectieController
                 }
                 $chosenHoofdDoelen[$value]['turnsters'][$key]['naam'] = $this->getNaamById($key);
                 $chosenHoofdDoelen[$value]['turnsters'][$key]['trainingsDoelen'] = $this->getTrainingsDoelPerTurnster($key, $seizoen);
+            }
+            if (empty($chosenHoofdDoelen))
+            {
+                $chosenHoofdDoelen = array();
             }
             ksort($chosenHoofdDoelen);
             if ($trainingsplanObject = $this->getTrainingsplanById($trainingId)) {
@@ -177,7 +186,45 @@ class TrainingsPlanController extends SelectieController
             'trainingsplan' => $chosenHoofdDoelen,
             'trainingsdata' => $trainingsdata,
             'toestelVolgorde' => $toestelVolgorde,
+            'tijdschema' => $tijdschema,
+            'toestelTijden' => $toestelTijden,
         ));
+    }
+
+    private function getTijdschemaVoorTrainingen($trainingObject)
+    {
+        $tijd['van'] = $trainingObject->getTijdvan();
+        $tijd['tot'] = $trainingObject->getTijdTot();
+        $timestampEind = strtotime($tijd['tot']);
+        $timestamp = strtotime($tijd['van']);
+        $tijd['startBasis1'] = date('H.i', $timestamp);
+        $timestamp += 3*60;
+        $tijd['startBasis2'] = date('H.i', $timestamp);
+        $timestamp += 3*60;
+        $tijd['startBasis3'] = date('H.i', $timestamp);
+        $timestamp += 4*60;
+        $tijd['startKracht1'] = date('H.i', $timestamp);
+        $timestamp += 5*60;
+        $tijd['startKracht2'] = date('H.i', $timestamp);
+        $timestamp += 5*60;
+        $tijd['startKracht3'] = date('H.i', $timestamp);
+        $timestamp += 5*60;
+        $tijd['startLenigheid1'] = date('H.i', $timestamp);
+        $timestamp += 5*60;
+        $tijd['startLenigheid2'] = date('H.i', $timestamp);
+        $timestamp += 5*60;
+        $tijd['startLenigheid3'] = date('H.i', $timestamp);
+        $timestamp += 5*60;
+        $secondsPerToestel = ($timestampEind - $timestamp)/4;
+        $toestelTijden[0] = date('H.i', $timestamp);
+        $timestamp += $secondsPerToestel;
+        $toestelTijden[1] = date('H.i', $timestamp);
+        $timestamp += $secondsPerToestel;
+        $toestelTijden[2] = date('H.i', $timestamp);
+        $timestamp += $secondsPerToestel;
+        $toestelTijden[3] = date('H.i', $timestamp);
+        $toestelTijden[4] = date('H.i', $timestampEind);
+        return array($tijd, $toestelTijden);
     }
 
     private function getTrainingsDoelPerTurnster($turnsterId, $seizoen)

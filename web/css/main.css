@@ -94,6 +94,14 @@ body {
     margin-bottom: 2px;
 }
 
+#content h6 {
+    font-size: 11pt;
+    color: #FFFF00;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+
 #content hr {
     background: #FFFF00;
     height: 1px;
