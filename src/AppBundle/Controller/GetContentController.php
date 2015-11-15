@@ -398,6 +398,13 @@ class GetContentController extends BaseController
                 /** @var Stukje $stukje */
                 $turnster = $persoon->getAll();
                 $stukje = $persoon->getStukje();
+                if (!$stukje) {
+                    $stukje = new Stukje();
+                    $persoon->setStukje($stukje);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($stukje);
+                    $em->flush();
+                }
                 $stukjeItems = $stukje->getAll();
                 return $this->render('wedstrijdturnen/stukje.html.twig', array(
                     'calendarItems' => $this->calendarItems,
