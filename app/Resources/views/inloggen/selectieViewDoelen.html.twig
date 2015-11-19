@@ -22,7 +22,7 @@
 
     {% for toestel in doelenPerToestel %}
         <h2>{{ toestel.naam }}</h2>
-        <table border="0" id="nolink">
+            <table border="0" id="nolink">
             {% for doel in toestel.doelen %}
                 <tr>
                     <td><a href="{{ path('viewOneDoel',

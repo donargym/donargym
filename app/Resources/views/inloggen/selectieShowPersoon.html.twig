@@ -66,10 +66,17 @@
                         {% endif %}
                         <a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen</a>
                         <a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid</a>
+                        {% if functie.groepId == 5 %}
+                            <a href="{{ path('EtenDrinkenIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Eten/Drinken Sinterklaas</a>
+                        {% endif %}
+
                     </div>
                 </center>
             {% else %}
                 <div id="button3">
+                    {% if functie.groepId == 5 %}
+                        <a href="{{ path('EtenDrinkenIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Eten/Drinken Sinterklaas</a>
+                    {% endif %}
                     <a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden</a>
                     {% if persoonItems.categorie == 'Jeugd 2' or persoonItems.categorie == 'Junior' or persoonItems.categorie == 'Senior' %}
                         <a href="{{ path('addSelectieVloermuziekPage', { 'persoonId': persoonItems.id, 'groepId': functie.groepId, 'turnsterId': persoonItems.id }) }}">

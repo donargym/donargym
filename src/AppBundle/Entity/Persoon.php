@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\PersoonRepository")
  * @ORM\Table(name="persoon")
  */
 class Persoon
@@ -62,6 +62,11 @@ class Persoon
      * @ORM\OneToMany(targetEntity="Functie", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
      */
     private $functie;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Voedsel", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $voedsel;
 
     /**
      * @ORM\OneToMany(targetEntity="SeizoensDoelen", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
@@ -125,6 +130,7 @@ class Persoon
         $this->seizoensdoelen = new ArrayCollection();
         $this->aanwezigheid = new ArrayCollection();
         $this->trainingen = new ArrayCollection();
+        $this->voedsel = new ArrayCollection();
     }
 
     /**
@@ -687,5 +693,38 @@ class Persoon
     public function getVoortgangTotaal()
     {
         return $this->voortgangTotaal;
+    }
+
+    /**
+     * Add voedsel
+     *
+     * @param \AppBundle\Entity\Voedsel $voedsel
+     * @return Persoon
+     */
+    public function addVoedsel(\AppBundle\Entity\Voedsel $voedsel)
+    {
+        $this->voedsel[] = $voedsel;
+
+        return $this;
+    }
+
+    /**
+     * Remove voedsel
+     *
+     * @param \AppBundle\Entity\Voedsel $voedsel
+     */
+    public function removeVoedsel(\AppBundle\Entity\Voedsel $voedsel)
+    {
+        $this->voedsel->removeElement($voedsel);
+    }
+
+    /**
+     * Get voedsel
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVoedsel()
+    {
+        return $this->voedsel;
     }
 }
