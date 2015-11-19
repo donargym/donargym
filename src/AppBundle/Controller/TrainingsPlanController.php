@@ -175,6 +175,7 @@ class TrainingsPlanController extends SelectieController
             $trainingsplanObject = $this->getTrainingsplanById($trainingId);
             $chosenHoofdDoelen = json_decode($trainingsplanObject->getTrainingsplan(), true);
         }
+        $tableWidth = (100/4)*(count($chosenHoofdDoelen));
         return $this->render('inloggen/ViewTrainingsplan.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
@@ -188,6 +189,7 @@ class TrainingsPlanController extends SelectieController
             'toestelVolgorde' => $toestelVolgorde,
             'tijdschema' => $tijdschema,
             'toestelTijden' => $toestelTijden,
+            'tableWidth' => $tableWidth,
         ));
     }
 

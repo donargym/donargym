@@ -17,7 +17,7 @@
 {% block body %}
     <h2>{{ trainingsdata.dag }} {{ trainingsdata.lesdatum }} ({{ tijdschema.van }} - {{ tijdschema.tot }})</h2>
     <h3>Groepjes</h3>
-        <table border="1" style="font-size: 11px;">
+        <table border="1" style="font-size: 11px; width: {{ tableWidth }}%">
             <tr>
             {% for groepsNummer, voorbereiding in trainingsplan %}
                 <th><h4>Groepje {{ groepsNummer }}</h4></th>
