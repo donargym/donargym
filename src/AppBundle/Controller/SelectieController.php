@@ -3092,13 +3092,19 @@ class SelectieController extends BaseController
                 $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
                 $subdoelCijfers = $subDoelObject->getCijfers();
                 $som = 0;
-                for ($i = 0; $i < 3; $i++) {
-                    if (count($subdoelCijfers) == 0) break;
+                for ($i = 0; $i < 2; $i++) {
                     if ((count($subdoelCijfers)-$i) == 0) break;
                     $som += 10*$subdoelCijfers[$i]->getCijfer();
                 }
-                $trededoelPercentages[] = $som/3;
-                $cijfers[$trededoel->id] = $som/3;
+                if (count($subdoelCijfers) > 2) {
+                    for ($i = 2; $i < count($subdoelCijfers); $i++) {
+                        $em->remove($subdoelCijfers[$i]);
+                        $em->flush();
+                    }
+                }
+
+                $trededoelPercentages[] = $som/2;
+                $cijfers[$trededoel->id] = $som/2;
             }
             $subdoelPercentages[] = array_sum($trededoelPercentages)/count($trededoelPercentages);
         }
@@ -3116,12 +3122,19 @@ class SelectieController extends BaseController
         $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
         $subdoelCijfers = $subDoelObject->getCijfers();
         $som = 0;
-        for ($i = (count($subdoelCijfers)-1); $i >= count($subdoelCijfers)-3; $i--) {
-            if ($i<0) break;
+        for ($i = 0; $i < 2; $i++) {
+            if ((count($subdoelCijfers)-$i) == 0) break;
             $som += 10*$subdoelCijfers[$i]->getCijfer();
         }
-        $hoofddoelPercentage = $som/3;
-        $cijfers[$doel->id] = $som/3;
+        if (count($subdoelCijfers) > 2) {
+            for ($i = 2; $i < count($subdoelCijfers); $i++) {
+                $em->remove($subdoelCijfers[$i]);
+                $em->flush();
+            }
+        }
+
+        $hoofddoelPercentage = $som/2;
+        $cijfers[$doel->id] = $som/2;
         $cijfers[$doel->id] = $hoofddoelPercentage;
         if (count($subdoelPercentages) > 0) {
             $doelPercentage = 0.6*(array_sum($subdoelPercentages)/count(($subdoelPercentages))) + 0.4*$hoofddoelPercentage;
@@ -3164,26 +3177,28 @@ class SelectieController extends BaseController
                         $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
                         $em = $this->getDoctrine()->getManager();
                         foreach ($toestellen as $toestel) {
-                            $query = $em->createQuery(
-                                'SELECT subdoelen
+                            if ($request->request->get('doel_' . $toestel) != '') {
+                                $query = $em->createQuery(
+                                    'SELECT subdoelen
                                 FROM AppBundle:SubDoelen subdoelen
                                 WHERE subdoelen.doel = :id
                                 AND subdoelen.persoon = :turnsterId')
-                                ->setParameter('id', $request->request->get('doel_' . $toestel))
-                                ->setParameter('turnsterId', $turnsterId);
-                            $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
-                            $counter = 1;
-                            if ($request->request->get('drie_keer_' . $toestel)) {
-                                $counter = 3;
-                            }
-                            while ($counter > 0) {
-                                $cijfer = new Cijfers();
-                                $cijfer->setCijfer($request->request->get('cijfer_' . $toestel));
-                                $cijfer->setSubdoel($subDoelObject);
-                                $cijfer->setDate(new \DateTime('NOW'));
-                                $em->persist($cijfer);
-                                $em->flush();
-                                $counter--;
+                                    ->setParameter('id', $request->request->get('doel_' . $toestel))
+                                    ->setParameter('turnsterId', $turnsterId);
+                                $subDoelObject = $query->setMaxResults(1)->getOneOrNullResult();
+                                $counter = 1;
+                                if ($request->request->get('twee_keer_' . $toestel)) {
+                                    $counter = 2;
+                                }
+                                while ($counter > 0) {
+                                    $cijfer = new Cijfers();
+                                    $cijfer->setCijfer($request->request->get('cijfer_' . $toestel));
+                                    $cijfer->setSubdoel($subDoelObject);
+                                    $cijfer->setDate(new \DateTime('NOW'));
+                                    $em->persist($cijfer);
+                                    $em->flush();
+                                    $counter--;
+                                }
                             }
                         }
                         $query = $em->createQuery(
