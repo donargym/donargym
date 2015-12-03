@@ -3098,8 +3098,10 @@ class SelectieController extends BaseController
                 }
                 if (count($subdoelCijfers) > 2) {
                     for ($i = 2; $i < count($subdoelCijfers); $i++) {
-                        $em->remove($subdoelCijfers[$i]);
-                        $em->flush();
+                        if ($subdoelCijfers[$i] != NULL) {
+                            $em->remove($subdoelCijfers[$i]);
+                            $em->flush();
+                        }
                     }
                 }
 
@@ -3128,8 +3130,10 @@ class SelectieController extends BaseController
         }
         if (count($subdoelCijfers) > 2) {
             for ($i = 2; $i < count($subdoelCijfers); $i++) {
-                $em->remove($subdoelCijfers[$i]);
-                $em->flush();
+                if ($subdoelCijfers[$i] != NULL) {
+                    $em->remove($subdoelCijfers[$i]);
+                    $em->flush();
+                }
             }
         }
 
