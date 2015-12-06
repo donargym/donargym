@@ -43,11 +43,17 @@ class Groepen
      */
     private $seizoensdoelen;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Wedstrijdkalender", mappedBy="groep", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     */
+    private $wedstrijdkalender;
+
     public function __construct()
     {
         $this->functies = new ArrayCollection();
         $this->wedstrijduitslagen = new ArrayCollection();
         $this->trainingen = new ArrayCollection();
+        $this->wedstrijdkalender = new ArrayCollection();
     }
 
     public function getIdName()
@@ -229,5 +235,38 @@ class Groepen
     public function getSeizoensdoelen()
     {
         return $this->seizoensdoelen;
+    }
+
+    /**
+     * Add wedstrijdkalender
+     *
+     * @param \AppBundle\Entity\Wedstrijdkalender $wedstrijdkalender
+     * @return Groepen
+     */
+    public function addWedstrijdkalender(\AppBundle\Entity\Wedstrijdkalender $wedstrijdkalender)
+    {
+        $this->wedstrijdkalender[] = $wedstrijdkalender;
+
+        return $this;
+    }
+
+    /**
+     * Remove wedstrijdkalender
+     *
+     * @param \AppBundle\Entity\Wedstrijdkalender $wedstrijdkalender
+     */
+    public function removeWedstrijdkalender(\AppBundle\Entity\Wedstrijdkalender $wedstrijdkalender)
+    {
+        $this->wedstrijdkalender->removeElement($wedstrijdkalender);
+    }
+
+    /**
+     * Get wedstrijdkalender
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWedstrijdkalender()
+    {
+        return $this->wedstrijdkalender;
     }
 }

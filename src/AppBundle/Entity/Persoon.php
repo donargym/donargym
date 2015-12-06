@@ -88,6 +88,15 @@ class Persoon
     private $trainingen;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Wedstrijdkalender", mappedBy="persoon")
+     * @ORM\JoinTable(name="personen_wedstrijdkalender",
+     *      joinColumns={@ORM\JoinColumn(name="wedstrijdkalender_id", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="persoon_id", referencedColumnName="id", onDelete="cascade")}
+     *      )
+     **/
+    private $wedstrijdkalender;
+
+    /**
      * @ORM\OneToMany(targetEntity="Aanwezigheid", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
      */
     private $aanwezigheid;
@@ -131,6 +140,7 @@ class Persoon
         $this->aanwezigheid = new ArrayCollection();
         $this->trainingen = new ArrayCollection();
         $this->voedsel = new ArrayCollection();
+        $this->wedstrijdkalender = new ArrayCollection();
     }
 
     /**
@@ -726,5 +736,38 @@ class Persoon
     public function getVoedsel()
     {
         return $this->voedsel;
+    }
+
+    /**
+     * Add wedstrijdkalender
+     *
+     * @param \AppBundle\Entity\Wedstrijdkalender $wedstrijdkalender
+     * @return Persoon
+     */
+    public function addWedstrijdkalender(\AppBundle\Entity\Wedstrijdkalender $wedstrijdkalender)
+    {
+        $this->wedstrijdkalender[] = $wedstrijdkalender;
+
+        return $this;
+    }
+
+    /**
+     * Remove wedstrijdkalender
+     *
+     * @param \AppBundle\Entity\Wedstrijdkalender $wedstrijdkalender
+     */
+    public function removeWedstrijdkalender(\AppBundle\Entity\Wedstrijdkalender $wedstrijdkalender)
+    {
+        $this->wedstrijdkalender->removeElement($wedstrijdkalender);
+    }
+
+    /**
+     * Get wedstrijdkalender
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWedstrijdkalender()
+    {
+        return $this->wedstrijdkalender;
     }
 }
