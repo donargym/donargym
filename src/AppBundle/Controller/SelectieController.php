@@ -738,10 +738,27 @@ class SelectieController extends BaseController
                         $turnsters[$i] = new \stdClass();
                         $turnsters[$i]->naam = $groepTurnsters[$i]->getVoornaam() . ' ' . $groepTurnsters[$i]->getAchternaam();
                         $turnsters[$i]->id = $groepTurnsters[$i]->getId();
+                        $turnsters[$i]->geboortedatum = $groepTurnsters[$i]->getGeboortedatum();
                         $turnsters[$i]->selected = false;
                     }
                 }
             }
+
+            usort($turnsters, function($a, $b)
+            {
+                if ($a->geboortedatum == $b->geboortedatum)
+                {
+                    return 0;
+                }
+                else if ($a->geboortedatum < $b->geboortedatum)
+                {
+                    return -1;
+                }
+                else {
+                    return 1;
+                }
+            });
+
             if ($request->getMethod() == 'POST') {
                 $postedToken = $request->request->get('token');
                 if (!empty($postedToken)) {
@@ -837,6 +854,7 @@ class SelectieController extends BaseController
                         $turnsters[$groepTurnsters[$i]->getId()] = new \stdClass();
                         $turnsters[$groepTurnsters[$i]->getId()]->naam = $groepTurnsters[$i]->getVoornaam() . ' ' . $groepTurnsters[$i]->getAchternaam();
                         $turnsters[$groepTurnsters[$i]->getId()]->id = $groepTurnsters[$i]->getId();
+                        $turnsters[$groepTurnsters[$i]->getId()]->geboortedatum = $groepTurnsters[$i]->getGeboortedatum();
                         $turnsters[$groepTurnsters[$i]->getId()]->selected = false;
                     }
                 }
@@ -844,6 +862,20 @@ class SelectieController extends BaseController
             foreach ($selectedTurnsters as $selectedTurnster) {
                 $turnsters[$selectedTurnster->getId()]->selected = true;
             }
+            usort($turnsters, function($a, $b)
+            {
+                if ($a->geboortedatum == $b->geboortedatum)
+                {
+                    return 0;
+                }
+                else if ($a->geboortedatum < $b->geboortedatum)
+                {
+                    return -1;
+                }
+                else {
+                    return 1;
+                }
+            });
             if ($request->getMethod() == 'POST') {
                 $postedToken = $request->request->get('token');
                 if (!empty($postedToken)) {
