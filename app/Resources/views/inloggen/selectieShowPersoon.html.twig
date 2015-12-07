@@ -277,7 +277,7 @@
             <h3>
                 Wedstrijdkalender
                 {% if functie.functie == 'Trainer' %}
-                    <a href="">
+                    <a href="{{ path('addKalenderItem', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
                         <img src="{{ asset('images/add.png') }}" width="18px"/>
                     </a>
                 {% endif %}
@@ -313,7 +313,7 @@
                         </td>
                         {% if functie.functie == 'Trainer' %}
                             <td>
-                                <a href="">
+                                <a href="{{ path('editKalenderItem', { 'persoonId': persoonItems.id, 'groepId': functie.groepId, "kalenderItemId": items.id }) }}">
                                     <img src="{{ asset('images/edit.png') }}" width="18px"/>
                                 </a>
                             </td>

@@ -18,6 +18,7 @@ use AppBundle\Entity\SubDoelen;
 use AppBundle\Entity\Trainingen;
 use AppBundle\Entity\Trainingsdata;
 use AppBundle\Entity\Vloermuziek;
+use AppBundle\Entity\Wedstrijdkalender;
 use AppBundle\Entity\Wedstrijduitslagen;
 use AppBundle\Form\Type\ContactgegevensType;
 use AppBundle\Form\Type\Email1Type;
@@ -50,12 +51,12 @@ class SelectieController extends BaseController
      * Creates a token usable in a form
      * @return string
      */
-    protected function getToken(){
+    protected function getToken()
+    {
         $token = sha1(mt_rand());
-        if(!isset($_SESSION['tokens'])){
+        if (!isset($_SESSION['tokens'])) {
             $_SESSION['tokens'] = array($token => 1);
-        }
-        else{
+        } else {
             $_SESSION['tokens'][$token] = 1;
         }
         return $token;
@@ -66,8 +67,9 @@ class SelectieController extends BaseController
      * @param string $token The token
      * @return bool
      */
-    protected function isTokenValid($token){
-        if(!empty($_SESSION['tokens'][$token])){
+    protected function isTokenValid($token)
+    {
+        if (!empty($_SESSION['tokens'][$token])) {
             unset($_SESSION['tokens'][$token]);
             return true;
         }
@@ -699,15 +701,233 @@ class SelectieController extends BaseController
                     }
                 }
                 foreach ($persoonItems->functies as $functie) {
-                    usort($functie->turnster, function($a, $b)
-                    {
+                    usort($functie->turnster, function ($a, $b) {
                         $t1 = strtotime($a->geboortedatum);
                         $t2 = strtotime($b->geboortedatum);
-                        return $t1-$t2;
+                        return $t1 - $t2;
                     });
                 }
                 return ($persoonItems);
             }
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/addKalenderItem/{persoonId}/{groepId}/", name="addKalenderItem")
+     * @Method({"GET", "POST"})
+     */
+    public function addWedstrijdkalenderItems($persoonId, $groepId, Request $request)
+    {
+        $this->setBasicPageData('wedstrijdturnen');
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $groepsnaam = $response['groep']->getName();
+            $groepTurnsters = $response['groep']->getPeople();
+            $turnsters = array();
+            for ($i = 0; $i < count($groepTurnsters); $i++) {
+                $functies = $groepTurnsters[$i]->getFunctie();
+                foreach ($functies as $functie) {
+                    /** @var Functie $functie */
+                    if ($functie->getGroep() == $response['groep'] && $functie->getFunctie() == 'Turnster') {
+                        $turnsters[$i] = new \stdClass();
+                        $turnsters[$i]->naam = $groepTurnsters[$i]->getVoornaam() . ' ' . $groepTurnsters[$i]->getAchternaam();
+                        $turnsters[$i]->id = $groepTurnsters[$i]->getId();
+                        $turnsters[$i]->selected = false;
+                    }
+                }
+            }
+            if ($request->getMethod() == 'POST') {
+                $postedToken = $request->request->get('token');
+                if (!empty($postedToken)) {
+                    if ($this->isTokenValid($postedToken)) {
+                        $em = $this->getDoctrine()->getManager();
+                        $wedstrijdkalenderItem = new Wedstrijdkalender();
+                        $wedstrijdkalenderItem->setWedstrijdnaam($request->get('wedstrijdnaam'));
+                        $datum = \DateTime::createFromFormat('Y-m-d', $request->get('datum'));
+                        $wedstrijdkalenderItem->setDatum($datum);
+                        $wedstrijdkalenderItem->setGroep($response['groep']);
+                        $wedstrijdkalenderItem->setLocatie($request->get('locatie'));
+                        $wedstrijdkalenderItem->setTijden($request->get('tijden'));
+                        foreach ($turnsters as $turnster) {
+                            if ($request->get('turnsters_' . $turnster->id)) {
+                                $query = $em->createQuery(
+                                'SELECT persoon
+                                FROM AppBundle:Persoon persoon
+                                WHERE persoon.id = :id')
+                                    ->setParameter('id', $turnster->id);
+                                $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+                                $wedstrijdkalenderItem->addPersoon($persoon);
+                            }
+                        }
+                        $em->persist($wedstrijdkalenderItem);
+                        $em->flush();
+                        return $this->redirectToRoute('showPersoon', array(
+                            'id' => $persoonId
+                        ));
+                    }
+                }
+            }
+            $token = $this->getToken();
+            return $this->render('inloggen/addEditKalendarItems.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'persoon' => $persoon,
+                'user' => $user,
+                'persoonItems' => $persoonItems,
+                'wedstrijdLinkItems' => $this->groepItems,
+                'groep' => $groepsnaam,
+                'groepId' => $groepId,
+                'persoonId' => $persoonId,
+                'token' => $token,
+                'action' => 'add',
+                'turnsters' => $turnsters,
+            ));
+        } else {
+            return $this->render('error/NotAuthorized.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
+            ));
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/editKalenderItem/{persoonId}/{groepId}/{kalenderItemId}", name="editKalenderItem")
+     * @Method({"GET", "POST"})
+     */
+    public function editWedstrijdkalenderItems($persoonId, $groepId, $kalenderItemId, Request $request)
+    {
+        $this->setBasicPageData('wedstrijdturnen');
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId);
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT wedstrijdkalender
+                FROM AppBundle:Wedstrijdkalender wedstrijdkalender
+                WHERE wedstrijdkalender.id = :id')
+                ->setParameter('id', $kalenderItemId);
+            /** @var Wedstrijdkalender $kalenderItem */
+            $kalenderItem = $query->setMaxResults(1)->getOneOrNullResult();
+            $wedstrijdnaam = $kalenderItem->getWedstrijdnaam();
+            $datum = $kalenderItem->getDatum();
+            $datum = $datum->format('Y-m-d');
+            $tijden = $kalenderItem->getTijden();
+            $locatie = $kalenderItem->getLocatie();
+            $selectedTurnsters = $kalenderItem->getPersoon();
+            $groepsnaam = $response['groep']->getName();
+            $groepTurnsters = $response['groep']->getPeople();
+            $turnsters = array();
+            for ($i = 0; $i < count($groepTurnsters); $i++) {
+                $functies = $groepTurnsters[$i]->getFunctie();
+                foreach ($functies as $functie) {
+                    /** @var Functie $functie */
+                    if ($functie->getGroep() == $response['groep'] && $functie->getFunctie() == 'Turnster') {
+                        $turnsters[$groepTurnsters[$i]->getId()] = new \stdClass();
+                        $turnsters[$groepTurnsters[$i]->getId()]->naam = $groepTurnsters[$i]->getVoornaam() . ' ' . $groepTurnsters[$i]->getAchternaam();
+                        $turnsters[$groepTurnsters[$i]->getId()]->id = $groepTurnsters[$i]->getId();
+                        $turnsters[$groepTurnsters[$i]->getId()]->selected = false;
+                    }
+                }
+            }
+            foreach ($selectedTurnsters as $selectedTurnster) {
+                $turnsters[$selectedTurnster->getId()]->selected = true;
+            }
+            if ($request->getMethod() == 'POST') {
+                $postedToken = $request->request->get('token');
+                if (!empty($postedToken)) {
+                    if ($this->isTokenValid($postedToken)) {
+                        $kalenderItem->setWedstrijdnaam($request->get('wedstrijdnaam'));
+                        $datum = \DateTime::createFromFormat('Y-m-d', $request->get('datum'));
+                        $kalenderItem->setDatum($datum);
+                        $kalenderItem->setGroep($response['groep']);
+                        $kalenderItem->setLocatie($request->get('locatie'));
+                        $kalenderItem->setTijden($request->get('tijden'));
+                        foreach ($selectedTurnsters as $selectedTurnster) {
+                            $kalenderItem->removePersoon($selectedTurnster);
+                        }
+                        foreach ($turnsters as $turnster) {
+                            if ($request->get('turnsters_' . $turnster->id)) {
+                                $query = $em->createQuery(
+                                    'SELECT persoon
+                                FROM AppBundle:Persoon persoon
+                                WHERE persoon.id = :id')
+                                    ->setParameter('id', $turnster->id);
+                                $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+                                $kalenderItem->addPersoon($persoon);
+                            }
+                        }
+                        $em->persist($kalenderItem);
+                        $em->flush();
+                        return $this->redirectToRoute('showPersoon', array(
+                            'id' => $persoonId
+                        ));
+                    }
+                }
+            }
+            $token = $this->getToken();
+            return $this->render('inloggen/addEditKalendarItems.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'persoon' => $persoon,
+                'user' => $user,
+                'persoonItems' => $persoonItems,
+                'wedstrijdLinkItems' => $this->groepItems,
+                'groep' => $groepsnaam,
+                'groepId' => $groepId,
+                'persoonId' => $persoonId,
+                'token' => $token,
+                'action' => 'edit',
+                'turnsters' => $turnsters,
+                'wedstrijdnaam' => $wedstrijdnaam,
+                'datum' => $datum,
+                'tijden' => $tijden,
+                'locatie' => $locatie,
+                'kalenderItemId' => $kalenderItemId,
+            ));
+        } else {
+            return $this->render('error/NotAuthorized.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
+            ));
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/removeKalenderItem/{persoonId}/{groepId}/{kalenderItemId}/", name="removeKalenderItem")
+     * @Method({"GET"})
+     */
+    public function removeWedstrijdkalenderItems($persoonId, $groepId, $kalenderItemId, Request $request)
+    {
+        $userObject = $this->getUser();
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT wedstrijdkalender
+                FROM AppBundle:Wedstrijdkalender wedstrijdkalender
+                WHERE wedstrijdkalender.id = :id')
+                ->setParameter('id', $kalenderItemId);
+            $kalenderItem = $query->setMaxResults(1)->getOneOrNullResult();
+            $em->remove($kalenderItem);
+            $em->flush();
+            return $this->redirectToRoute('showPersoon', array(
+                'id' => $persoonId
+            ));
         }
     }
 
