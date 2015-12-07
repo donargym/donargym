@@ -272,6 +272,56 @@
             <p class="button1" style="background: {{ functie.percentageKleur }};">Totaal {{ functie.aantalAanwezig }} van {{ functie.aantalTrainingen }} trainingen aanwezig:
                 <span style="font-weight: bold; color: #FFF;">
                         {{ functie.percentageAanwezig | round }}%</span></p>
+
+            <p>
+            <h3>
+                Wedstrijdkalender
+                {% if functie.functie == 'Trainer' %}
+                    <a href="">
+                        <img src="{{ asset('images/add.png') }}" width="18px"/>
+                    </a>
+                {% endif %}
+            </h3>
+            <table id="nolink" width="100%">
+                <tr>
+                    <th width="14%">Datum</th>
+                    <th width="21%">Wedstrijd</th>
+                    <th width="20%">Tijden</th>
+                    <th width="20%">Locatie</th>
+                    <th width="20%">turnsters</th>
+                    {% if functie.functie == 'Trainer' %}
+                        <th width="5%"></th>
+                    {% endif %}
+
+                </tr>
+                {% for items in functie.wedstrijdkalenderItems %}
+                    <tr>
+                        <td>{{ items.datum }}</td>
+                        <td>{{ items.wedstrijdnaam }}</td>
+                        <td>{{ items.tijden|raw }}</td>
+                        <td>{{ items.locatie|raw }}</td>
+                        <td>
+                        {% for turnsters in items.turnsters %}
+                            {% if persoonItems.id == turnsters.id %}
+                                <span style="color: #FFFF00; font-weight: bold;">
+                            {% endif %}
+                            {{ turnsters.voornaam }} {{ turnsters.achternaam }}
+                            {% if persoonItems.id == turnsters.id %}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                        </td>
+                        {% if functie.functie == 'Trainer' %}
+                            <td>
+                                <a href="">
+                                    <img src="{{ asset('images/edit.png') }}" width="18px"/>
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+            </p>
         </div>
     {% endfor %}
 {% endblock %}

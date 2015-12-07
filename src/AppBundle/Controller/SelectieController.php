@@ -351,6 +351,7 @@ class SelectieController extends BaseController
                     $persoonItems->functies[$i]->groepId = $groep->getId();
                     $persoonItems->functies[$i]->functie = $functies[$i]->getFunctie();
                     $persoonItems->functies[$i]->turnster = array();
+                    $persoonItems->functies[$i]->wedstrijdkalenderItems = $this->getWedstrijdkalenderItems($groep->getId());
                     $stukje = $persoon->getStukje();
                     if (!$stukje) {
                         $stukje = new Stukje();
@@ -710,6 +711,36 @@ class SelectieController extends BaseController
         }
     }
 
+    private function getWedstrijdkalenderItems($groepId)
+    {
+        $datum = new \DateTime('now');
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT wedstrijdkalender
+            FROM AppBundle:Wedstrijdkalender wedstrijdkalender
+            WHERE wedstrijdkalender.groep = :id
+            AND wedstrijdkalender.datum >= :datum
+            ORDER BY wedstrijdkalender.datum ASC')
+            ->setParameter('id', $groepId)
+            ->setParameter('datum', $datum);
+        $wedstrijdkalenderObjects = $query->getResult();
+        $wedstrijdkalender = array();
+        for ($i=0; $i<count($wedstrijdkalenderObjects); $i++) {
+            $wedstrijdkalender[$i] = $wedstrijdkalenderObjects[$i]->getAll();
+            $wedstrijdkalender[$i]->turnsters = array();
+            $turnsters = $wedstrijdkalenderObjects[$i]->getPersoon();
+            for ($j = 0; $j < count($turnsters); $j++) {
+                $wedstrijdkalender[$i]->turnsters[$j] = new \stdClass();
+                $wedstrijdkalender[$i]->turnsters[$j]->id = $turnsters[$j]->getId();
+                $wedstrijdkalender[$i]->turnsters[$j]->voornaam = $turnsters[$j]->getVoornaam();
+                $wedstrijdkalender[$i]->turnsters[$j]->achternaam = $turnsters[$j]->getAchternaam();
+                if ($j != count($turnsters) - 1) {
+                    $wedstrijdkalender[$i]->turnsters[$j]->achternaam .= ', ';
+                }
+            }
+        }
+        return $wedstrijdkalender;
+    }
 
     protected function updateDoelCijfersInDatabase($turnster)
     {
