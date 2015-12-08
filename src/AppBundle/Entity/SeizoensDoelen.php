@@ -29,6 +29,21 @@ class SeizoensDoelen
     protected $doel;
 
     /**
+     * @ORM\Column(type="integer", nullable=TRUE)
+     */
+    protected $cijfer;
+
+    /**
+    * @ORM\Column(type="boolean", nullable=TRUE)
+    **/
+    protected $tachtigProcent;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=TRUE)
+     **/
+    protected $negentigProcent;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Persoon", inversedBy="seizoensdoelen")
      * @ORM\JoinColumn(name="persoon_id", referencedColumnName="id")
      **/
@@ -66,6 +81,75 @@ class SeizoensDoelen
     public function getSeizoen()
     {
         return $this->seizoen;
+    }
+
+    /**
+     * Set cijfer
+     *
+     * @param string $cijfer
+     * @return SeizoensDoelen
+     */
+    public function setCijfer($cijfer)
+    {
+        $this->cijfer = $cijfer;
+
+        return $this;
+    }
+
+    /**
+     * Get cijfer
+     *
+     * @return integer
+     */
+    public function getCijfer()
+    {
+        return $this->cijfer;
+    }
+
+    /**
+     * Set tachtigProcent
+     *
+     * @param string $tachtigProcent
+     * @return SeizoensDoelen
+     */
+    public function setTachtigProcent($tachtigProcent)
+    {
+        $this->seizoen = $tachtigProcent;
+
+        return $this;
+    }
+
+    /**
+     * Get tachtigProcent
+     *
+     * @return boolean
+     */
+    public function getTachtigProcent()
+    {
+        return $this->tachtigProcent;
+    }
+
+    /**
+     * Set negentigProcent
+     *
+     * @param string $negentigProcent
+     * @return SeizoensDoelen
+     */
+    public function setNegentigProcent($negentigProcent)
+    {
+        $this->negentigProcent = $negentigProcent;
+
+        return $this;
+    }
+
+    /**
+     * Get negentigProcent
+     *
+     * @return boolean
+     */
+    public function getNegentigProcent()
+    {
+        return $this->negentigProcent;
     }
 
     /**

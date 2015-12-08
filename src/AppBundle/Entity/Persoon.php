@@ -132,6 +132,11 @@ class Persoon
      */
     private $voortgangTotaal;
 
+    /**
+     * @ORM\Column(length=255, nullable=TRUE)
+     */
+    private $lastUpdatedAtSeizoen;
+
     public function __construct()
     {
         $this->functie = new ArrayCollection();
@@ -696,9 +701,32 @@ class Persoon
     }
 
     /**
+     * Get lastUpdatedAtSeizoen
+     *
+     * @return string
+     */
+    public function getLastUpdatedAtSeizoen()
+    {
+        return $this->lastUpdatedAtSeizoen;
+    }
+
+    /**
+     * Set lastUpdatedAtSeizoen
+     *
+     * @param string $lastUpdatedAtSeizoen
+     * @return Persoon
+     */
+    public function setLastUpdatedAtSeizoen($lastUpdatedAtSeizoen)
+    {
+        $this->lastUpdatedAtSeizoen = $lastUpdatedAtSeizoen;
+
+        return $this;
+    }
+
+    /**
      * Get voortgangTotaal
      *
-     * @return integer 
+     * @return integer
      */
     public function getVoortgangTotaal()
     {
