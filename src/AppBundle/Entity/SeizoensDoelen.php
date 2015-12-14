@@ -44,6 +44,11 @@ class SeizoensDoelen
     protected $negentigProcent;
 
     /**
+     * @ORM\Column(type="datetime", nullable=TRUE)
+     */
+    protected $updatedCijfersAt;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Persoon", inversedBy="seizoensdoelen")
      * @ORM\JoinColumn(name="persoon_id", referencedColumnName="id")
      **/
@@ -196,5 +201,28 @@ class SeizoensDoelen
     public function getPersoon()
     {
         return $this->persoon;
+    }
+
+    /**
+     * Set updatedCijfersAt
+     *
+     * @param \DateTime $updatedCijfersAt
+     * @return SeizoensDoelen
+     */
+    public function setUpdatedCijfersAt($updatedCijfersAt)
+    {
+        $this->updatedCijfersAt = $updatedCijfersAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedCijfersAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedCijfersAt()
+    {
+        return $this->updatedCijfersAt;
     }
 }

@@ -137,6 +137,11 @@ class Persoon
      */
     private $lastUpdatedAtSeizoen;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=TRUE)
+     */
+    protected $updatedCijfersAt;
+
     public function __construct()
     {
         $this->functie = new ArrayCollection();
@@ -797,5 +802,28 @@ class Persoon
     public function getWedstrijdkalender()
     {
         return $this->wedstrijdkalender;
+    }
+
+    /**
+     * Set updatedCijfersAt
+     *
+     * @param \DateTime $updatedCijfersAt
+     * @return Persoon
+     */
+    public function setUpdatedCijfersAt($updatedCijfersAt)
+    {
+        $this->updatedCijfersAt = $updatedCijfersAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedCijfersAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedCijfersAt()
+    {
+        return $this->updatedCijfersAt;
     }
 }

@@ -379,8 +379,16 @@ class SelectieController extends BaseController
                             $turnster = $groepFuncties[$j]->getPersoon();
                             if ($turnster->getVoortgangTotaal() === null) {
                                 $this->updateDoelCijfersInDatabase($turnster);
+                            } if ($turnster->getLastUpdatedAtSeizoen() != $this->getSeizoen()) {
+                                $turnster = $this->resetVoortgang($turnster);
+                            } if (!$turnster->getUpdatedCijfersAt()) {
+                                $turnster->setUpdatedCijfersAt(new \DateTime('now'));
+                                $em = $this->getDoctrine()->getManager();
+                                $em->persist($turnster);
+                                $em->flush();
                             }
                             $persoonItems->functies[$i]->turnster[$j]->percentageVoortgang = $turnster->getVoortgangTotaal();
+                            $persoonItems->functies[$i]->turnster[$j]->updatedAt = $turnster->getUpdatedCijfersAt();
                             $persoonItems->functies[$i]->turnster[$j]->percentageVoortgangKleur = $this->colorGenerator($persoonItems->functies[$i]->turnster[$j]->percentageVoortgang);
                             if ($page == 'Index') {
                                 $aantalAanwezig = 0;
@@ -1042,6 +1050,8 @@ class SelectieController extends BaseController
         $turnster->setVoortgangBalk($voortgang['Balk']);
         $turnster->setVoortgangVloer($voortgang['Vloer']);
         $turnster->setVoortgangTotaal($voortgang['totaal']);
+        $turnster->setLastUpdatedAtSeizoen($this->getSeizoen());
+        $turnster->setUpdatedCijfersAt(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($turnster);
         $em->flush();
@@ -1264,45 +1274,11 @@ class SelectieController extends BaseController
         $seizoen = $this->getSeizoen();
         foreach ($persoonItems->functies as $functie) {
             if ($functie->functie == 'Turnster') {
-                $doelenObject = $this->getDoelenVoorSeizoen($id, $seizoen);
-                $doelen = $this->getDoelDetails($doelenObject);
-                $doelenIdArray = array();
-                foreach ($doelen as $doelenData) {
-                    foreach ($doelenData as $doelId => $doelNaam) {
-                        $doelenIdArray[] = $doelId;
-                    }
-                }
-                $subdoelIds = array();
-                $collectedDoelen = array();
-                $cijfers = array();
-                foreach ($doelenIdArray as $doelId) {
-                    $collectedDoelen[] = $doelId;
-                    $array = $this->getDoelOpbouw($doelId, $subdoelIds);
-                    $doelOpbouw = $array[0];
-                    $subdoelIds = $array[1];
-                    $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
-                    $subdoelIds = $result[0];
-                    $extraDoelen = $result[1];
-                    $reveseExtraDoelen = array_reverse($extraDoelen);
-                    $repeat = true;
-                    while ($repeat) {
-                        $repeat = false;
-                        foreach ($reveseExtraDoelen as $DoelId => $extraDoel) {
-                            if ($result = $this->getPercentages($extraDoel, $cijfers, $id)) {
-                                $cijfers = $result;
-                                unset ($reveseExtraDoelen[$DoelId]);
-                                continue;
-                            }
-                            $repeat = true;
-                        }
-                    }
-                    $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $id);
-                    foreach ($cijfers as $DoelId => $percentage) {
-                        $kleuren[$DoelId] = $this->colorGenerator($percentage);
-                    }
-                }
                 /** @var Persoon $persoonObject */
                 $persoonObject = $this->getPersoonObject($userObject, $id);
+                if ($persoonObject->getLastUpdatedAtSeizoen() != $this->getSeizoen()) {
+                    $persoonObject = $this->resetVoortgang($persoonObject);
+                }
                 $voortgang = array();
                 $voortgang['Sprong'] = $persoonObject->getVoortgangSprong();
                 $voortgang['Brug'] = $persoonObject->getVoortgangBrug();
@@ -1330,6 +1306,20 @@ class SelectieController extends BaseController
         ));
     }
 
+    private function resetVoortgang(Persoon $persoonObject)
+    {
+        $persoonObject->setLastUpdatedAtSeizoen($this->getSeizoen());
+        $persoonObject->setVoortgangSprong(null);
+        $persoonObject->setVoortgangBrug(null);
+        $persoonObject->setVoortgangBalk(null);
+        $persoonObject->setVoortgangVloer(null);
+        $persoonObject->setVoortgangTotaal(null);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($persoonObject);
+        $em->flush();
+        return $persoonObject;
+    }
+
     /**
      * @Security("has_role('ROLE_TURNSTER')")
      * @Route("/inloggen/selectie/{persoonId}/Doelen/{toestel}/", name="showPersoonDoelenPerToestel")
@@ -1340,50 +1330,69 @@ class SelectieController extends BaseController
         $this->setBasicPageData('wedstrijdturnen');
         /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
+        $personenObject = $userObject->getPersoon();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
         $persoonItems = $this->getOnePersoon($userObject, $persoonId);
         $seizoen = $this->getSeizoen();
         foreach ($persoonItems->functies as $functie) {
             if ($functie->functie == 'Turnster') {
+                /** @var Persoon $persoonObject */
+                foreach ($personenObject as $persoonObject) {
+                    if ($persoonObject->getId() == $persoonId) {
+                        $gevondenPersoonObject = $persoonObject;
+                        break;
+                    }
+                }
                 $doelenObject = $this->getDoelenVoorSeizoen($persoonId, $seizoen);
                 $doelen = $this->getDoelDetails($doelenObject);
-                $doelenIdArray = array();
-                foreach ($doelen as $doelenData) {
-                    foreach ($doelenData as $doelId => $doelNaam) {
-                        $doelenIdArray[] = $doelId;
-                    }
-                }
+                /** @var SeizoensDoelen $doelObject */
+                $cijfers = array();
                 $subdoelIds = array();
                 $collectedDoelen = array();
-                $cijfers = array();
-                foreach ($doelenIdArray as $doelId) {
-                    $collectedDoelen[] = $doelId;
-                    $array = $this->getDoelOpbouw($doelId, $subdoelIds);
-                    $doelOpbouw = $array[0];
-                    $subdoelIds = $array[1];
-                    $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
-                    $subdoelIds = $result[0];
-                    $extraDoelen = $result[1];
-                    $reveseExtraDoelen = array_reverse($extraDoelen);
-                    $repeat = true;
-                    while ($repeat) {
-                        $repeat = false;
-                        foreach ($reveseExtraDoelen as $DoelId => $extraDoel) {
-                            if ($result = $this->getPercentages($extraDoel, $cijfers, $persoonId)) {
-                                $cijfers = $result;
-                                unset ($reveseExtraDoelen[$DoelId]);
-                                continue;
+                foreach ($doelenObject as $doelObject) {
+                    $doel = $doelObject->getDoel();
+                    if ($doelObject->getCijfer() && $doelObject->getUpdatedCijfersAt() > $gevondenPersoonObject->getUpdatedCijfersAt()) {
+                        $cijfers[$doel->getId() . '_hoofd'] = $doelObject->getCijfer();
+                    } else {
+                        $collectedDoelen[] = $doel->getId();
+                        $array = $this->getDoelOpbouw($doel->getId(), $subdoelIds);
+                        $doelOpbouw = $array[0];
+                        $subdoelIds = $array[1];
+                        $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+                        $subdoelIds = $result[0];
+                        $extraDoelen = $result[1];
+                        $reveseExtraDoelen = array_reverse($extraDoelen);
+                        $repeat = true;
+                        while ($repeat) {
+                            $repeat = false;
+                            foreach ($reveseExtraDoelen as $id => $extraDoel) {
+                                if ($result = $this->getPercentages($extraDoel, $cijfers, $persoonId)) {
+                                    $cijfers = $result;
+                                    unset ($reveseExtraDoelen[$id]);
+                                    continue;
+                                }
+                                $repeat = true;
                             }
-                            $repeat = true;
                         }
-                    }
-                    $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $persoonId);
-                    foreach ($cijfers as $DoelId => $percentage) {
-                        $kleuren[$DoelId] = $this->colorGenerator($percentage);
+                        $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $persoonId);
+                        $doelObject->setCijfer($cijfers[$doel->getId() . '_hoofd']);
+                        $date = date('Y-m-d', time());
+                        $datum = \DateTime::createFromFormat('Y-m-d', $date);
+                        $doelObject->setUpdatedCijfersAt($datum);
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($doelObject);
+                        $em->flush();
                     }
                 }
+                $kleuren = array();
+                foreach ($cijfers as $DoelId => $percentage) {
+                    $kleuren[$DoelId] = $this->colorGenerator($percentage);
+                }
                 $persoonObject = $this->getPersoonObject($userObject, $persoonId);
+                if ($persoonObject->getLastUpdatedAtSeizoen() != $this->getSeizoen()) {
+                    $persoonObject = $this->resetVoortgang($persoonObject);
+                }
                 $voortgang = array();
                 $voortgang['Sprong'] = $persoonObject->getVoortgangSprong();
                 $voortgang['Brug'] = $persoonObject->getVoortgangBrug();
@@ -1401,8 +1410,8 @@ class SelectieController extends BaseController
             'persoonItems' => $persoonItems,
             'wedstrijdLinkItems' => $this->groepItems,
             'voortgang' => $voortgang,
-            'toestel' => $toestel,
             'doelen' => $doelen,
+            'toestel' => $toestel,
             'kleuren' => $kleuren,
             'cijfers' => $cijfers,
         ));
@@ -3132,6 +3141,18 @@ class SelectieController extends BaseController
         return $doelen;
     }
 
+    private function getPersoonById($persoonId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :turnsterId')
+            ->setParameter('turnsterId', $persoonId);
+        $persoonObject = $query->setMaxResults(1)->getOneOrNullResult();
+        return $persoonObject;
+    }
+
     /**
      * @Security("has_role('ROLE_ASSISTENT')")
      * @Route("/inloggen/selectie/{persoonId}/viewTurnster/{turnsterId}/{groepId}/", name="viewSelectieTurnster")
@@ -3151,46 +3172,52 @@ class SelectieController extends BaseController
         if ($response['authorized']) {
             $functie = $response['functie'];
             $groepObject = $response['groep'];
+            $turnsterObject = $this->getPersoonById($turnsterId);
             $turnster = $this->getSelectieTurnsterInfo($turnsterId, $groepObject, "Index");
             $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
             $doelen = $this->getDoelDetails($doelenObject);
-            $doelenIdArray = array();
-            foreach ($doelen as $doelenData) {
-                foreach ($doelenData as $doelId => $doelNaam) {
-                    $doelenIdArray[] = $doelId;
-                }
-            }
+            $cijfers = array();
             $subdoelIds = array();
             $collectedDoelen = array();
-            $cijfers = array();
-            $kleuren = array();
-            foreach ($doelenIdArray as $doelId) {
-                $collectedDoelen[] = $doelId;
-                $array = $this->getDoelOpbouw($doelId, $subdoelIds);
-                $doelOpbouw = $array[0];
-                $subdoelIds = $array[1];
-                $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
-                $subdoelIds = $result[0];
-                $extraDoelen = $result[1];
-                $reveseExtraDoelen = array_reverse($extraDoelen);
-                $repeat = true;
-                while ($repeat) {
-                    $repeat = false;
-                    foreach ($reveseExtraDoelen as $id => $extraDoel) {
-                        if ($result = $this->getPercentages($extraDoel, $cijfers, $turnsterId)) {
-                            $cijfers = $result;
-                            unset ($reveseExtraDoelen[$id]);
-                            continue;
+            foreach ($doelenObject as $doelObject) {
+                $doel = $doelObject->getDoel();
+                if ($doelObject->getCijfer() && $doelObject->getUpdatedCijfersAt() > $turnsterObject->getUpdatedCijfersAt()) {
+                    $cijfers[$doel->getId() . '_hoofd'] = $doelObject->getCijfer();
+                } else {
+                    $collectedDoelen[] = $doel->getId();
+                    $array = $this->getDoelOpbouw($doel->getId(), $subdoelIds);
+                    $doelOpbouw = $array[0];
+                    $subdoelIds = $array[1];
+                    $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+                    $subdoelIds = $result[0];
+                    $extraDoelen = $result[1];
+                    $reveseExtraDoelen = array_reverse($extraDoelen);
+                    $repeat = true;
+                    while ($repeat) {
+                        $repeat = false;
+                        foreach ($reveseExtraDoelen as $id => $extraDoel) {
+                            if ($result = $this->getPercentages($extraDoel, $cijfers, $turnsterId)) {
+                                $cijfers = $result;
+                                unset ($reveseExtraDoelen[$id]);
+                                continue;
+                            }
+                            $repeat = true;
                         }
-                        $repeat = true;
                     }
-                }
-                $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnsterId);
-                foreach ($cijfers as $id => $percentage) {
-                    $kleuren[$id] = $this->colorGenerator($percentage);
+                    $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnsterId);
+                    $doelObject->setCijfer($cijfers[$doel->getId() . '_hoofd']);
+                    $date = date('Y-m-d', time());
+                    $datum = \DateTime::createFromFormat('Y-m-d', $date);
+                    $doelObject->setUpdatedCijfersAt($datum);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($doelObject);
+                    $em->flush();
                 }
             }
-
+            $kleuren = array();
+            foreach ($cijfers as $DoelId => $percentage) {
+                $kleuren[$DoelId] = $this->colorGenerator($percentage);
+            }
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT persoon
@@ -3198,6 +3225,9 @@ class SelectieController extends BaseController
                 WHERE persoon.id = :turnsterId')
                 ->setParameter('turnsterId', $turnsterId);
             $persoonObject = $query->setMaxResults(1)->getOneOrNullResult();
+            if ($persoonObject->getLastUpdatedAtSeizoen() != $this->getSeizoen()) {
+                $persoonObject = $this->resetVoortgang($persoonObject);
+            }
             $voortgang = array();
             $voortgang['Sprong'] = $persoonObject->getVoortgangSprong();
             $voortgang['Brug'] = $persoonObject->getVoortgangBrug();
@@ -3493,6 +3523,7 @@ class SelectieController extends BaseController
                             FROM AppBundle:Persoon persoon
                             WHERE persoon.id = :turnsterId')
                             ->setParameter('turnsterId', $turnsterId);
+                        /** @var Persoon $turnster */
                         $turnster = $query->setMaxResults(1)->getOneOrNullResult();
                         $this->updateDoelCijfersInDatabase($turnster);
                     }
