@@ -66,6 +66,13 @@
                         {% endif %}
                         <a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen</a>
                         <a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid</a>
+                        <a href="">
+                            {% if functie.doelenPrijzenAantal > 0 %}
+                                <b>Toestelprijzen ({{ functie.doelenPrijzenAantal }})</b>
+                            {% else %}
+                                Toestelprijzen
+                            {% endif %}
+                        </a>
                         {% if functie.groepId == 5 %}
                             {#<a href="{{ path('EtenDrinkenIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Eten/Drinken Sinterklaas</a>#}
                         {% endif %}
