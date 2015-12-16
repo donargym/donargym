@@ -371,6 +371,8 @@ class SelectieController extends BaseController
                         $persoonItems->functies[$i]->aantalTrainingen = $aanwezigheidPerPersoon->aantalTrainingen;
                     }
                     $countDoelenPrijzen = 0;
+                    $countMedailles = 0;
+                    $countBekers = 0;
 
                     $groepFuncties = $groep->getFuncties();
                     for ($j = 0; $j < count($groepFuncties); $j++) {
@@ -468,11 +470,13 @@ class SelectieController extends BaseController
                                     $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter] = new \stdClass();
                                     $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->tachtigProcent = $result;
                                     $countDoelenPrijzen++;
+                                    $countMedailles++;
                                     $check = true;
                                 }
                                 if ($result = $this->getDoelVoorPrijzenNegentigProcent($doelId, $turnster->getId())) {
                                     $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->negentigProcent = $result;
                                     $countDoelenPrijzen++;
+                                    $countBekers++;
                                     $check = true;
                                 }
                                 if ($check) $doelCounter++;
@@ -765,12 +769,12 @@ class SelectieController extends BaseController
         /** @var SeizoensDoelen $result */
         $result = $query->setMaxResults(1)->getOneOrNullResult();
         if (count($result) == 1) {
-            $doel = new \stdClass();
+            $doelPrijs = new \stdClass();
             $helper = $result->getDoel();
-            $doel->naam = $helper->getNaam();
-            $doel->toestel = $helper->getToestel();
-            $doel->cijfer = $result->getCijfer();
-            return $doel;
+            $doelPrijs->naam = $helper->getNaam();
+            $doelPrijs->toestel = $helper->getToestel();
+            $doelPrijs->cijfer = $result->getCijfer();
+            return $doelPrijs;
         } else {
             return false;
         }
@@ -1391,6 +1395,34 @@ class SelectieController extends BaseController
             'wedstrijdLinkItems' => $this->groepItems,
             'voortgang' => $voortgang,
         ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_ASSISTENT')")
+     * @Route("/inloggen/selectie/showDoelPrijzen/{persoonId}/{groepId}/", name="showDoelPrijzen")
+     * @Method({"GET"})
+     */
+    public
+    function showDoelPrijzen($persoonId, $groepId)
+    {
+        $this->setBasicPageData('wedstrijdturnen');
+        /** @var \AppBundle\Entity\User $userObject */
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $persoonItems = $this->getOnePersoon($userObject, $persoonId, false, 'Index');
+        $roles = array('Trainer', 'Assistent-Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            return $this->render('inloggen/selectieShowDoelPrijzen.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'persoon' => $persoon,
+                'user' => $user,
+                'persoonItems' => $persoonItems,
+                'wedstrijdLinkItems' => $this->groepItems,
+            ));
+        }
     }
 
     private function resetVoortgang(Persoon $persoonObject)
