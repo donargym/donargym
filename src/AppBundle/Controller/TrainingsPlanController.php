@@ -232,7 +232,8 @@ class TrainingsPlanController extends SelectieController
     private function getTrainingsDoelPerTurnster($turnsterId, $seizoen)
     {
         $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $seizoen);
-        $doelen = $this->getDoelDetails($doelenObject);
+        $result1 = $this->getDoelDetails($doelenObject);
+        $doelen = $result1[0];
         $doelenIdArray = array();
         foreach ($doelen as $doelenData) {
             foreach ($doelenData as $doelId => $doelNaam) {
