@@ -371,6 +371,8 @@ class SelectieController extends BaseController
                         $persoonItems->functies[$i]->aantalTrainingen = $aanwezigheidPerPersoon->aantalTrainingen;
                     }
                     $countDoelenPrijzen = 0;
+                    $countMedailles = 0;
+                    $countBekers = 0;
 
                     $groepFuncties = $groep->getFuncties();
                     for ($j = 0; $j < count($groepFuncties); $j++) {
@@ -468,11 +470,13 @@ class SelectieController extends BaseController
                                     $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter] = new \stdClass();
                                     $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->tachtigProcent = $result;
                                     $countDoelenPrijzen++;
+                                    $countMedailles++;
                                     $check = true;
                                 }
                                 if ($result = $this->getDoelVoorPrijzenNegentigProcent($doelId, $turnster->getId())) {
                                     $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->negentigProcent = $result;
                                     $countDoelenPrijzen++;
+                                    $countBekers++;
                                     $check = true;
                                 }
                                 if ($check) $doelCounter++;
