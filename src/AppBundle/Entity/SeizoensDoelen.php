@@ -119,7 +119,7 @@ class SeizoensDoelen
      */
     public function setTachtigProcent($tachtigProcent)
     {
-        $this->seizoen = $tachtigProcent;
+        $this->tachtigProcent = $tachtigProcent;
 
         return $this;
     }

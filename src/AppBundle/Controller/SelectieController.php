@@ -318,7 +318,7 @@ class SelectieController extends BaseController
         }
     }
 
-    protected function getOnePersoon($userObject, $id, $afmelden = false, $page = null)
+    protected function getOnePersoon($userObject, $id, $afmelden = false, $page = null, $doelprijzen = false)
     {
         $personen = $userObject->getPersoon();
         foreach ($personen as $persoon) {
@@ -462,24 +462,26 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j]->voortgang = $response[2];
                             $persoonItems->functies[$i]->turnster[$j]->doelen = $response[3];
                             $doelIds = $response[4];
-                            $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen = array();
-                            $doelCounter = 0;
-                            foreach ($doelIds as $doelId) {
-                                $check = false;
-                                if ($result = $this->getDoelVoorPrijzenTachtigProcent($doelId, $turnster->getId())) {
-                                    $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter] = new \stdClass();
-                                    $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->tachtigProcent = $result;
-                                    $countDoelenPrijzen++;
-                                    $countMedailles++;
-                                    $check = true;
+                            if ($doelprijzen) {
+                                $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen = array();
+                                $doelCounter = 0;
+                                foreach ($doelIds as $doelId) {
+                                    $check = false;
+                                    if ($result = $this->getDoelVoorPrijzenTachtigProcent($doelId, $turnster->getId())) {
+                                        $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter] = new \stdClass();
+                                        $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->tachtigProcent = $result;
+                                        $countDoelenPrijzen++;
+                                        $countMedailles++;
+                                        $check = true;
+                                    }
+                                    if ($result = $this->getDoelVoorPrijzenNegentigProcent($doelId, $turnster->getId())) {
+                                        $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->negentigProcent = $result;
+                                        $countDoelenPrijzen++;
+                                        $countBekers++;
+                                        $check = true;
+                                    }
+                                    if ($check) $doelCounter++;
                                 }
-                                if ($result = $this->getDoelVoorPrijzenNegentigProcent($doelId, $turnster->getId())) {
-                                    $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->negentigProcent = $result;
-                                    $countDoelenPrijzen++;
-                                    $countBekers++;
-                                    $check = true;
-                                }
-                                if ($check) $doelCounter++;
                             }
 
                         } elseif ($groepFuncties[$j]->getFunctie() == 'Trainer') {
@@ -615,6 +617,8 @@ class SelectieController extends BaseController
                         }
                     }
                     $persoonItems->functies[$i]->doelenPrijzenAantal = $countDoelenPrijzen;
+                    $persoonItems->functies[$i]->bekersAantal = $countBekers;
+                    $persoonItems->functies[$i]->medaillesAantal = $countMedailles;
                 }
                 /** @var Trainingen $trainingen */
                 if ($page == 'Index' || $afmelden) {
@@ -1361,7 +1365,7 @@ class SelectieController extends BaseController
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
-        $persoonItems = $this->getOnePersoon($userObject, $id, false, 'Index');
+        $persoonItems = $this->getOnePersoon($userObject, $id, false, 'Index', true);
         $seizoen = $this->getSeizoen();
         foreach ($persoonItems->functies as $functie) {
             if ($functie->functie == 'Turnster') {
@@ -1414,6 +1418,32 @@ class SelectieController extends BaseController
         $roles = array('Trainer', 'Assistent-Trainer');
         $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
         if ($response['authorized']) {
+            /** @var Groepen $groep */
+            $groep = $response['groep'];
+            $people = $groep->getPeople();
+            $countMedailles = 0;
+            $countBekers = 0;
+            $turnsters = array();
+            $number = 0;
+            foreach ($people as $person) {
+                /** @var Persoon $person */
+                /** @var Functie $functie */
+                $functies = $person->getFunctie();
+                foreach ($functies as $functie) {
+                    if ($functie->getGroep() != $groep) continue;
+                    if ($functie->getFunctie() == 'Turnster') {
+                        $turnsters[$number] = new \stdClass();
+                        $result = $this->getToestelPrijzen($person->getId());
+                        $turnsters[$number]->doelenTachtigProcent = $result[0];
+                        $turnsters[$number]->doelenNegentigProcent = $result[1];
+                        $turnsters[$number]->doelenIds = $result[2];
+                        $turnsters[$number]->naam = $person->getVoornaam() . ' ' . $person->getAchternaam();
+                        $countMedailles += $result[3];
+                        $countBekers += $result[4];
+                        $number++;
+                    }
+                }
+            }
             return $this->render('inloggen/selectieShowDoelPrijzen.html.twig', array(
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
@@ -1421,6 +1451,45 @@ class SelectieController extends BaseController
                 'user' => $user,
                 'persoonItems' => $persoonItems,
                 'wedstrijdLinkItems' => $this->groepItems,
+                'aantalMedailles' => $countMedailles,
+                'aantalBekers' => $countBekers,
+                'turnsters' => $turnsters,
+                'groepId' => $groepId,
+            ));
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_TRAINER')")
+     * @Route("/inloggen/selectie/showDoelPrijzen/{persoonId}/{groepId}/updateDoelPrijs/{doelId}/{percentage}/", name="updateDoelPrijzen")
+     * @Method({"GET"})
+     */
+    public
+    function updateDoelPrijzen($persoonId, $groepId, $doelId, $percentage)
+    {
+        $userObject = $this->getUser();
+        $roles = array('Trainer');
+        $response = $this->checkGroupAuthorization($userObject, $persoonId, $groepId, $roles);
+        if ($response['authorized']) {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT seizoensdoelen
+                FROM AppBundle:SeizoensDoelen seizoensdoelen
+                WHERE seizoensdoelen.id = :id')
+                ->setParameter('id', $doelId);
+            /** @var SeizoensDoelen $seizoensdoel */
+            $seizoensdoel = $query->setMaxResults(1)->getOneOrNullResult();
+            if ($percentage == 80) {
+                $seizoensdoel->setTachtigProcent(true);
+            }
+            else {
+                $seizoensdoel->setNegentigProcent(true);
+            }
+            $em->persist($seizoensdoel);
+            $em->flush();
+            return $this->redirectToRoute('showDoelPrijzen', array(
+                'persoonId' => $persoonId,
+                'groepId' => $groepId,
             ));
         }
     }
@@ -3226,38 +3295,7 @@ class SelectieController extends BaseController
         $collectedDoelen = array();
         foreach ($doelenObject as $doelObject) {
             $doel = $doelObject->getDoel();
-            if ($doelObject->getCijfer() && $doelObject->getUpdatedCijfersAt() > $turnsterObject->getUpdatedCijfersAt()) {
-                $cijfers[$doel->getId() . '_hoofd'] = $doelObject->getCijfer();
-            } else {
-                $collectedDoelen[] = $doel->getId();
-                $array = $this->getDoelOpbouw($doel->getId(), $subdoelIds);
-                $doelOpbouw = $array[0];
-                $subdoelIds = $array[1];
-                $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
-                $subdoelIds = $result[0];
-                $extraDoelen = $result[1];
-                $reveseExtraDoelen = array_reverse($extraDoelen);
-                $repeat = true;
-                while ($repeat) {
-                    $repeat = false;
-                    foreach ($reveseExtraDoelen as $id => $extraDoel) {
-                        if ($result = $this->getPercentages($extraDoel, $cijfers, $turnsterId)) {
-                            $cijfers = $result;
-                            unset ($reveseExtraDoelen[$id]);
-                            continue;
-                        }
-                        $repeat = true;
-                    }
-                }
-                $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnsterId);
-                $doelObject->setCijfer($cijfers[$doel->getId() . '_hoofd']);
-                $date = date('Y-m-d', time());
-                $datum = \DateTime::createFromFormat('Y-m-d', $date);
-                $doelObject->setUpdatedCijfersAt($datum);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($doelObject);
-                $em->flush();
-            }
+            $cijfers[$doel->getId() . '_hoofd'] = $doelObject->getCijfer();
         }
         $kleuren = array();
         foreach ($cijfers as $DoelId => $percentage) {
@@ -3280,6 +3318,105 @@ class SelectieController extends BaseController
         $voortgang['Vloer'] = $persoonObject->getVoortgangVloer();
         $voortgang['Totaal'] = $persoonObject->getVoortgangTotaal();
         return array($cijfers, $kleuren, $voortgang, $doelen, $doelIds);
+    }
+
+    private function getToestelPrijzen($turnsterId)
+    {
+        $aantalMedailles = 0;
+        $aantalBekers = 0;
+        $percentages = array(80, 90);
+        $em = $this->getDoctrine()->getManager();
+        $doelenTachtigProcent = array();
+        $doelenNegentigProcent = array();
+        $doelenIds = array();
+        $seizoen = $this->getSeizoen();
+        foreach ($percentages as $percentage) {
+            if ($percentage == 80) {
+                $query = $em->createQuery(
+                    'SELECT seizoensdoelen
+                FROM AppBundle:SeizoensDoelen seizoensdoelen
+                WHERE seizoensdoelen.persoon = :turnsterId
+                AND seizoensdoelen.cijfer >= :percentage
+                AND seizoensdoelen.seizoen = :seizoen
+                AND seizoensdoelen.tachtigProcent IS NULL')
+                    ->setParameter('turnsterId', $turnsterId)
+                    ->setParameter('percentage', $percentage)
+                    ->setParameter('seizoen', $seizoen);
+                $seizoensdoelenObject = $query->getResult();
+                foreach ($seizoensdoelenObject as $seizoensdoelObject) {
+                    $doelObject = $seizoensdoelObject->getDoel();
+                    $doelenTachtigProcent[$seizoensdoelObject->getId()]['doelNaam'] = $doelObject->getNaam();
+                    $doelenTachtigProcent[$seizoensdoelObject->getId()]['toestel'] = $doelObject->getToestel();
+                    $doelenTachtigProcent[$seizoensdoelObject->getId()]['cijfer'] = $seizoensdoelObject->getCijfer();
+                    $doelenTachtigProcent[$seizoensdoelObject->getId()]['id'] = $seizoensdoelObject->getId();
+                    $aantalMedailles++;
+                    if (!in_array($seizoensdoelObject->getId(), $doelenIds)) {
+                        $doelenIds[] = $seizoensdoelObject->getId();
+                    }
+                }
+            } else {
+                $query = $em->createQuery(
+                    'SELECT seizoensdoelen
+                FROM AppBundle:SeizoensDoelen seizoensdoelen
+                WHERE seizoensdoelen.persoon = :turnsterId
+                AND seizoensdoelen.cijfer >= :percentage
+                AND seizoensdoelen.seizoen = :seizoen
+                AND seizoensdoelen.negentigProcent IS NULL')
+                    ->setParameter('turnsterId', $turnsterId)
+                    ->setParameter('percentage', $percentage)
+                    ->setParameter('seizoen', $seizoen);
+                $seizoensdoelenObject = $query->getResult();
+                foreach ($seizoensdoelenObject as $seizoensdoelObject) {
+                    /** @var SeizoensDoelen $seizoensdoelObject */
+                    $doelObject = $seizoensdoelObject->getDoel();
+                    $doelenNegentigProcent[$seizoensdoelObject->getId()]['doelNaam'] = $doelObject->getNaam();
+                    $doelenNegentigProcent[$seizoensdoelObject->getId()]['toestel'] = $doelObject->getToestel();
+                    $doelenNegentigProcent[$seizoensdoelObject->getId()]['cijfer'] = $seizoensdoelObject->getCijfer();
+                    $doelenNegentigProcent[$seizoensdoelObject->getId()]['id'] = $seizoensdoelObject->getId();
+                    $aantalBekers++;
+                }
+            }
+        }
+        return array($doelenTachtigProcent, $doelenNegentigProcent, $doelenIds, $aantalMedailles, $aantalBekers);
+    }
+
+    private function updateHoofdDoelCijfersInDatabase($turnsterId)
+    {
+        $doelenObject = $this->getDoelenVoorSeizoen($turnsterId, $this->getSeizoen());
+        $cijfers = array();
+        $subdoelIds = array();
+        $collectedDoelen = array();
+        foreach ($doelenObject as $doelObject) {
+            $doel = $doelObject->getDoel();
+            $collectedDoelen[] = $doel->getId();
+            $array = $this->getDoelOpbouw($doel->getId(), $subdoelIds);
+            $doelOpbouw = $array[0];
+            $subdoelIds = $array[1];
+            $result = $this->getSubdoelIds($subdoelIds, $collectedDoelen);
+            $subdoelIds = $result[0];
+            $extraDoelen = $result[1];
+            $reveseExtraDoelen = array_reverse($extraDoelen);
+            $repeat = true;
+            while ($repeat) {
+                $repeat = false;
+                foreach ($reveseExtraDoelen as $id => $extraDoel) {
+                    if ($result = $this->getPercentages($extraDoel, $cijfers, $turnsterId)) {
+                        $cijfers = $result;
+                        unset ($reveseExtraDoelen[$id]);
+                        continue;
+                    }
+                    $repeat = true;
+                }
+            }
+            $cijfers = $this->getPercentages($doelOpbouw, $cijfers, $turnsterId);
+            $doelObject->setCijfer($cijfers[$doel->getId() . '_hoofd']);
+            $date = date('Y-m-d', time());
+            $datum = \DateTime::createFromFormat('Y-m-d', $date);
+            $doelObject->setUpdatedCijfersAt($datum);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($doelObject);
+            $em->flush();
+        }
     }
 
     /**
@@ -3589,6 +3726,7 @@ class SelectieController extends BaseController
                                     $em->flush();
                                     $counter--;
                                 }
+                                $this->updateHoofdDoelCijfersInDatabase($turnsterId);
                             }
                         }
                         $query = $em->createQuery(

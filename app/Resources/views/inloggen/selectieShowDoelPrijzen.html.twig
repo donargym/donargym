@@ -14,5 +14,75 @@
 {% endblock %}
 
 {% block body %}
+    <h2>Bekers ({{ aantalBekers }})</h2>
+    <table border="0" id="nolink">
+        <tr>
+            <th>
+                Naam turnster
+            </th>
+            <th>
+                Doelnaam
+            </th>
+            <th>
+                Percentage
+            </th>
+            <th></th>
+        </tr>
+        {% for turnster in turnsters %}
+            {% if turnster.doelenNegentigProcent|length > 0 %}
+                {% for doel in turnster.doelenNegentigProcent %}
+                    <tr>
+                        <td>{{ turnster.naam }}</td>
+                        <td>
+                            {{ doel.doelNaam }} {{ doel.toestel }}
+                        </td>
+                        <td align="center">
+                            {{ doel.cijfer }}%
+                        </td>
+                        <td>
+                            <a href="{{ path('updateDoelPrijzen', { 'persoonId': persoonItems.id, 'groepId': groepId, 'doelId': doel.id, 'percentage': 90 }) }}">
+                                <img src="{{ asset('images/check.png') }}" width="18px"/>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            {% endfor %}
+    </table>
 
+    <h2>Medailles ({{ aantalMedailles }})</h2>
+    <table border="0" id="nolink">
+        <tr>
+            <th>
+                Naam turnster
+            </th>
+            <th>
+                Doelnaam
+            </th>
+            <th>
+                Percentage
+            </th>
+            <th></th>
+        </tr>
+        {% for turnster in turnsters %}
+            {% if turnster.doelenTachtigProcent|length > 0 %}
+                {% for doel in turnster.doelenTachtigProcent %}
+                <tr>
+                    <td>{{ turnster.naam }}</td>
+                    <td>
+                        {{ doel.doelNaam }} {{ doel.toestel }}
+                    </td>
+                    <td align="center">
+                        {{ doel.cijfer }}%
+                    </td>
+                    <td>
+                        <a href="{{ path('updateDoelPrijzen', { 'persoonId': persoonItems.id, 'groepId': groepId, 'doelId': doel.id, 'percentage': 80 }) }}">
+                            <img src="{{ asset('images/check.png') }}" width="18px"/>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </table>
 {% endblock %}
