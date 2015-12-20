@@ -3726,7 +3726,6 @@ class SelectieController extends BaseController
                                     $em->flush();
                                     $counter--;
                                 }
-                                $this->updateHoofdDoelCijfersInDatabase($turnsterId);
                             }
                         }
                         $query = $em->createQuery(
@@ -3737,6 +3736,7 @@ class SelectieController extends BaseController
                         /** @var Persoon $turnster */
                         $turnster = $query->setMaxResults(1)->getOneOrNullResult();
                         $this->updateDoelCijfersInDatabase($turnster);
+                        $this->updateHoofdDoelCijfersInDatabase($turnsterId);
                     }
                     if ($request->request->get('repeat')) {
                         $repeat = true;
@@ -3881,6 +3881,7 @@ class SelectieController extends BaseController
                         $em->flush();
 
                         $this->updateDoelCijfersInDatabase($turnserObject);
+                        $this->updateHoofdDoelCijfersInDatabase($turnsterId);
 
                         if ($request->request->get('repeat')) {
                             $repeat = true;
