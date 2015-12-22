@@ -170,6 +170,19 @@ class SelectieController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($userObject);
             $em->flush();
+            $oud = $user->straatnr . "\n"
+                . $user->postcode . "\n"
+                . $user->plaats . "\n"
+                . $user->tel1 . "\n"
+                . $user->tel2 . "\n"
+                . $user->tel3;
+            $nieuw = $userObject->getStraatnr() . "\n"
+                . $userObject->getPostcode() . "\n"
+                . $userObject->getPlaats() . "\n"
+                . $userObject->getTel1() . "\n"
+                . $userObject->getTel2() . "\n"
+                . $userObject->getTel3();
+            $this->sendNotificationMailEdit('Contactgegevens', $oud, $nieuw, $userObject);
             return $this->redirectToRoute('getSelectieIndexPage');
         } else {
             return $this->render('inloggen/editContactgegevens.html.twig', array(
@@ -183,6 +196,79 @@ class SelectieController extends BaseController
         }
     }
 
+    private function sendNotificationMailEdit($watGewijzigd, $oud = null, $nieuw = null, \AppBundle\Entity\User $userObject)
+    {
+        $personen = $userObject->getPersoon();
+        /** @var Persoon $persoon */
+        foreach ($personen as $persoon ) {
+            $voornaam = $persoon->getVoornaam();
+            $achternaam = $persoon->getAchternaam();
+            $functies = $persoon->getFunctie();
+            /** @var Functie $functie */
+            foreach ($functies as $functie) {
+                /** @var Groepen $groep */
+                $groep = $functie->getGroep();
+                $personenInGroep = $groep->getPeople();
+                /** @var Persoon $persoonInGroep */
+                foreach ($personenInGroep as $persoonInGroep) {
+                    /** @var Functie $persoonFunctieInGroep */
+                    $persoonFunctiesInGroep = $persoonInGroep->getFunctie();
+                    foreach ($persoonFunctiesInGroep as $persoonFunctieInGroep) {
+                        if ($persoonFunctieInGroep->getFunctie() == 'Trainer') {
+                            /** @var Persoon $trainer */
+                            $trainer = $persoonFunctieInGroep->getPersoon();
+                            /** @var \AppBundle\Entity\User $user */
+                            $user = $trainer->getUser();
+                            $subject = 'Wijziging ' . $watGewijzigd . ' ' . $voornaam . ' ' . $achternaam;
+                            $from = 'webmaster@donargym.nl';
+                            $to = $user->getUsername();
+                            $message = \Swift_Message::newInstance()
+                                ->setSubject($subject)
+                                ->setFrom($from)
+                                ->setTo($to)
+                                ->setBody(
+                                    $this->renderView(
+                                        'mails/wijziging.txt.twig',
+                                        array(
+                                            'voornaam' => $voornaam,
+                                            'achternaam' => $achternaam,
+                                            'watGewijzigd' => $watGewijzigd,
+                                            'oud' => $oud,
+                                            'nieuw' => $nieuw,
+                                        )
+                                    ),
+                                    'text/plain'
+                                );
+                            $this->get('mailer')->send($message);
+
+                            if ($user->getEmail2()) {
+                                $to = $user->getEmail2();
+                                $message = \Swift_Message::newInstance()
+                                    ->setSubject($subject)
+                                    ->setFrom($from)
+                                    ->setTo($to)
+                                    ->setBody(
+                                        $this->renderView(
+                                            'mails/wijziging.txt.twig',
+                                            array(
+                                                'voornaam' => $voornaam,
+                                                'achternaam' => $achternaam,
+                                                'watGewijzigd' => $watGewijzigd,
+                                                'oud' => $oud,
+                                                'nieuw' => $nieuw,
+                                            )
+                                        ),
+                                        'text/plain'
+                                    );
+                                $this->get('mailer')->send($message);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @Security("has_role('ROLE_TURNSTER')")
      * @Route("/inloggen/selectie/editEmail/", name="editEmail")
@@ -191,6 +277,7 @@ class SelectieController extends BaseController
     public function editEmail(Request $request)
     {
         $this->setBasicPageData('wedstrijdturnen');
+        /** @var \AppBundle\Entity\User $userObject */
         $userObject = $this->getUser();
         $user = $this->getBasisUserGegevens($userObject);
         $persoon = $this->getBasisPersoonsGegevens($userObject);
@@ -201,6 +288,7 @@ class SelectieController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($userObject);
             $em->flush();
+            $this->sendNotificationMailEdit('Emailadres 1', $user->email . "\n", $userObject->getUsername(), $userObject);
             return $this->redirectToRoute('getSelectieIndexPage');
         } else {
             return $this->render('inloggen/editEmail.html.twig', array(
@@ -232,6 +320,7 @@ class SelectieController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($userObject);
             $em->flush();
+            $this->sendNotificationMailEdit('Emailadres 2', $user->email2 . "\n", $userObject->getEmail2(), $userObject);
             return $this->redirectToRoute('getSelectieIndexPage');
         } else {
             return $this->render('inloggen/editEmail2.html.twig', array(
