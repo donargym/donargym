@@ -45,11 +45,14 @@ class BaseController extends Controller
                 FROM AppBundle:Groepen groepen
                 ORDER BY groepen.id ASC');
         $groepen = $query->getResult();
-        $groepItems = array();
-        for($i=0;$i<count($groepen);$i++)
-        {
-            $groepItems[$i] = $groepen[$i]->getIdName();
-            $groepId[] = $groepen[$i]->getId();
+        if (count ($groepen) > 0) {
+            $groepItems = array();
+            $groepId = array();
+            for($i=0;$i<count($groepen);$i++)
+            {
+                $groepItems[$i] = $groepen[$i]->getIdName();
+                $groepId[] = $groepen[$i]->getId();
+            }
         }
         return array($groepItems, $groepId);
     }
