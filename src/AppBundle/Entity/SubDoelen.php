@@ -15,19 +15,19 @@ class SubDoelen
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Doelen", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Doelen", cascade={"persist", "remove"}, orphanRemoval=TRUE)
      * @ORM\JoinColumn(name="doel_id", referencedColumnName="id")
      **/
     protected $doel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Persoon", inversedBy="subdoelen", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Persoon", inversedBy="subdoelen", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="persoon_id", referencedColumnName="id")
      **/
     private $persoon;
 
     /**
-     * @ORM\OneToMany(targetEntity="Cijfers", mappedBy="subdoel")
+     * @ORM\OneToMany(targetEntity="Cijfers", mappedBy="subdoel", cascade={"persist", "remove"}, orphanRemoval=TRUE)
      * @ORM\OrderBy({"id" = "DESC"})
      */
     private $cijfers;
