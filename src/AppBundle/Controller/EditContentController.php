@@ -624,7 +624,7 @@ class EditContentController extends BaseController
 
         if ($form->isValid()) {
             $nieuwsbericht->setDatumtijd(date('d-m-Y: H:i', time()));
-            $nieuwsbericht->setJaar(date('Y', time()));
+            $nieuwsbericht->setJaar(date("Y", time()));
             $nieuwsbericht->setBericht(str_replace("\n","<br />",$nieuwsbericht->getBericht()));
             $em = $this->getDoctrine()->getManager();
             $em->persist($nieuwsbericht);

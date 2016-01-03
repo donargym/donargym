@@ -42,7 +42,7 @@ class Clubblad
     {
         $items = new \stdClass();
         $items->id = $this->id;
-        $items->datum = $this->datum->format('d-m-Y');
+        $items->datum = $this->datum->format("d-m-Y");
         $items->locatie = $this->locatie;
         return $items;
     }
@@ -110,7 +110,7 @@ class Clubblad
 
     public function getDatumFormat()
     {
-        return $this->datum->format('d-m-Y');
+        return $this->datum->format("d-m-Y");
     }
 
     /**

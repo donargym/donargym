@@ -54,7 +54,7 @@ class Wedstrijdkalender
     {
         $items = new \stdClass();
         $items->id = $this->id;
-        $items->datum = $this->datum->format('d-m-Y');
+        $items->datum = $this->datum->format("d-m-Y");
         $items->tijden = $this->tijden;
         $items->wedstrijdnaam = $this->wedstrijdnaam;
         $items->locatie = $this->locatie;

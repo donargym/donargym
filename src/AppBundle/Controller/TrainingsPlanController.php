@@ -66,7 +66,7 @@ class TrainingsPlanController extends SelectieController
         $trainingsdata = new \stdClass();
         $trainingsdata->id = $trainingsdataObject->getId();
         $lesdatum = $trainingsdataObject->getLesdatum();
-        $trainingsdata->lesdatum = $lesdatum->format('d-m-Y');
+        $trainingsdata->lesdatum = $lesdatum->format("d-m-Y");
         $trainingsdata->dag = $this->dayToDutch($lesdatum->getTimestamp());
         return $this->render('inloggen/TrainingsplanMakeGroepjes.html.twig', array(
             'calendarItems' => $this->calendarItems,
@@ -132,7 +132,7 @@ class TrainingsPlanController extends SelectieController
         $trainingsdata = new \stdClass();
         $trainingsdata->id = $trainingsdataObject->getId();
         $lesdatum = $trainingsdataObject->getLesdatum();
-        $trainingsdata->lesdatum = $lesdatum->format('d-m-Y');
+        $trainingsdata->lesdatum = $lesdatum->format("d-m-Y");
         $trainingsdata->dag = $this->dayToDutch($lesdatum->getTimestamp());
         $toestelVolgorde['Sprong'] = array('Sprong', 'Brug', 'Balk', 'Vloer');
         $toestelVolgorde['Brug'] = array('Brug', 'Balk', 'Vloer', 'Sprong');

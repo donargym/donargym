@@ -163,19 +163,19 @@ class GetContentController extends BaseController
             FROM AppBundle:Clubblad clubblad
             WHERE clubblad.datum >= :datum
             ORDER BY clubblad.datum DESC')
-            ->setParameter('datum', (date('Y',time())-2).'-01-01');
+            ->setParameter('datum', (date("Y",time())-2).'-01-01');
         $content = $query->getResult();
         $clubbladItems = array();$j=0;$k=0;
         for($i=0;$i<count($content);$i++)
         {
-            if(date('Y', time()) - date('Y', strtotime($content[$i]->getDatumFormat())) != $k)
+            if(date("Y", time()) - date("Y", strtotime($content[$i]->getDatumFormat())) != $k)
             {
                 $j=0;
             }
-            $k = (date('Y', time()) - date('Y', strtotime($content[$i]->getDatumFormat())));
+            $k = (date("Y", time()) - date("Y", strtotime($content[$i]->getDatumFormat())));
             $clubbladItems[$k][$j] = $content[$i]->getAll();
-            $clubbladItems[$k][$j]->jaar = date('Y', strtotime($content[$i]->getDatumFormat()));
-            $clubbladItems[$k][$j]->maandJaar = $this->maand(date('m', strtotime($content[$i]->getDatumFormat()))).' '.date('Y', strtotime($content[$i]->getDatumFormat()));
+            $clubbladItems[$k][$j]->jaar = date("Y", strtotime($content[$i]->getDatumFormat()));
+            $clubbladItems[$k][$j]->maandJaar = $this->maand(date("m", strtotime($content[$i]->getDatumFormat()))).' '.date("Y", strtotime($content[$i]->getDatumFormat()));
             $j++;
         }
         return $this->render('default/clubblad.html.twig', array(
@@ -219,7 +219,7 @@ class GetContentController extends BaseController
                 ORDER BY nieuwsbericht.jaar ASC');
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             $jaren = array();
-            for($i = date('Y', time()); $i >= $content->getJaar(); $i--)
+            for($i = date("Y", time()); $i >= $content->getJaar(); $i--)
             {
                 array_push($jaren, $i);
             }
@@ -341,10 +341,10 @@ class GetContentController extends BaseController
                 $wedstrijduitslagen = array();
                 $uitslagen = $groep->getWedstrijduitslagen();
                 for ($counter=(count($uitslagen)-1); $counter>=0;$counter--) {
-                    if ($uitslagen[$counter]->getDatum()->format('m')>7) {
-                        $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format('Y')][] = $uitslagen[$counter]->getAll();
+                    if ($uitslagen[$counter]->getDatum()->format("m")>7) {
+                        $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format("Y")][] = $uitslagen[$counter]->getAll();
                     } else {
-                        $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format('Y')-1)][] = $uitslagen[$counter]->getAll();
+                        $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format("Y")-1)][] = $uitslagen[$counter]->getAll();
                     }
                 }
                 return $this->render('wedstrijdturnen/wedstrijduitslagen.html.twig', array(

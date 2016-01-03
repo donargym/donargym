@@ -430,7 +430,7 @@ class SelectieController extends BaseController
                     $persoonItems->vloermuziek = $vloermuziek->getLocatie();
                 }
                 $geboortedatum = $persoon->getGeboortedatum();
-                $persoonItems->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+                $persoonItems->geboortedatum = date("d-m-Y", strtotime($geboortedatum));
                 $persoonItems->categorie = $persoon->categorie(strtotime($geboortedatum));
                 $functies = $persoon->getFunctie();
                 $persoonItems->functies = array();
@@ -496,17 +496,17 @@ class SelectieController extends BaseController
                                     /** @var Groepen $trainingGroep */
                                     $trainingGroep = $training->getGroep();
                                     if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
-                                        if (date('m', time()) < '08') {
-                                            if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                                ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                        if (date("m", time()) < '08') {
+                                            if (($lesdatum->format("Y") == date("Y", time()) && $lesdatum->format("m") < '08') ||
+                                                ($lesdatum->format("Y") == (date("Y", time()) - 1) && $lesdatum->format("m") >= '08')
                                             ) {
                                                 $check = true;
                                             } else {
                                                 break;
                                             }
                                         } else {
-                                            if ($lesdatum->format('Y') == date('Y', time())) {
-                                                if ($lesdatum->format('m') < '08') {
+                                            if ($lesdatum->format("Y") == date("Y", time())) {
+                                                if ($lesdatum->format("m") < '08') {
                                                     break;
                                                 } else {
                                                     $check = true;
@@ -544,7 +544,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j]->tel1 = $turnsterUser->getTel1();
                             $persoonItems->functies[$i]->turnster[$j]->tel2 = $turnsterUser->getTel2();
                             $persoonItems->functies[$i]->turnster[$j]->tel3 = $turnsterUser->getTel3();
-                            $persoonItems->functies[$i]->turnster[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+                            $persoonItems->functies[$i]->turnster[$j]->geboortedatum = date("d-m-Y", strtotime($geboortedatum));
                             $response = $this->getDoelCijfersForTurnster($turnster->getId());
                             $persoonItems->functies[$i]->turnster[$j]->cijfers = $response[0];
                             $persoonItems->functies[$i]->turnster[$j]->kleuren = $response[1];
@@ -564,6 +564,7 @@ class SelectieController extends BaseController
                                         $check = true;
                                     }
                                     if ($result = $this->getDoelVoorPrijzenNegentigProcent($doelId, $turnster->getId())) {
+                                        $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter] = new \stdClass();
                                         $persoonItems->functies[$i]->turnster[$j]->doelenPrijzen[$doelCounter]->negentigProcent = $result;
                                         $countDoelenPrijzen++;
                                         $countBekers++;
@@ -591,17 +592,17 @@ class SelectieController extends BaseController
                                 /** @var Groepen $trainingGroep */
                                 $trainingGroep = $training->getGroep();
                                 if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
-                                    if (date('m', time()) < '08') {
-                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                    if (date("m", time()) < '08') {
+                                        if (($lesdatum->format("Y") == date("Y", time()) && $lesdatum->format("m") < '08') ||
+                                            ($lesdatum->format("Y") == (date("Y", time()) - 1) && $lesdatum->format("m") >= '08')
                                         ) {
                                             $check = true;
                                         } else {
                                             break;
                                         }
                                     } else {
-                                        if ($lesdatum->format('Y') == date('Y', time())) {
-                                            if ($lesdatum->format('m') < '08') {
+                                        if ($lesdatum->format("Y") == date("Y", time())) {
+                                            if ($lesdatum->format("m") < '08') {
                                                 break;
                                             } else {
                                                 $check = true;
@@ -637,7 +638,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->trainer[$j]->tel1 = $trainerUser->getTel1();
                             $persoonItems->functies[$i]->trainer[$j]->tel2 = $trainerUser->getTel2();
                             $persoonItems->functies[$i]->trainer[$j]->tel3 = $trainerUser->getTel3();
-                            $persoonItems->functies[$i]->trainer[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+                            $persoonItems->functies[$i]->trainer[$j]->geboortedatum = date("d-m-Y", strtotime($geboortedatum));
                         } elseif ($groepFuncties[$j]->getFunctie() == 'Assistent-Trainer') {
                             $persoonItems->functies[$i]->assistent[$j] = new \stdClass();
                             /** @var Persoon $assistent */
@@ -656,17 +657,17 @@ class SelectieController extends BaseController
                                 /** @var Groepen $trainingGroep */
                                 $trainingGroep = $training->getGroep();
                                 if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $persoonItems->functies[$i]->groepId) {
-                                    if (date('m', time()) < '08') {
-                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                    if (date("m", time()) < '08') {
+                                        if (($lesdatum->format("Y") == date("Y", time()) && $lesdatum->format("m") < '08') ||
+                                            ($lesdatum->format("Y") == (date("Y", time()) - 1) && $lesdatum->format("m") >= '08')
                                         ) {
                                             $check = true;
                                         } else {
                                             break;
                                         }
                                     } else {
-                                        if ($lesdatum->format('Y') == date('Y', time())) {
-                                            if ($lesdatum->format('m') < '08') {
+                                        if ($lesdatum->format("Y") == date("Y", time())) {
+                                            if ($lesdatum->format("m") < '08') {
                                                 break;
                                             } else {
                                                 $check = true;
@@ -702,7 +703,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->assistent[$j]->tel1 = $assistentUser->getTel1();
                             $persoonItems->functies[$i]->assistent[$j]->tel2 = $assistentUser->getTel2();
                             $persoonItems->functies[$i]->assistent[$j]->tel3 = $assistentUser->getTel3();
-                            $persoonItems->functies[$i]->assistent[$j]->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+                            $persoonItems->functies[$i]->assistent[$j]->geboortedatum = date("d-m-Y", strtotime($geboortedatum));
                         }
                     }
                     $persoonItems->functies[$i]->doelenPrijzenAantal = $countDoelenPrijzen;
@@ -733,7 +734,7 @@ class SelectieController extends BaseController
                                 if (($timestampPlusDag) > time()) {
                                     $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                     $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
-                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format("d-m-Y");
                                     /** @var Aanwezigheid $aanwezig */
                                     foreach ($aanwezigheid as $aanwezig) {
                                         if ($aanwezig->getTrainingsdata() == $trainingsdata[$j]) {
@@ -781,20 +782,20 @@ class SelectieController extends BaseController
                             $aanwezigheid = $persoon->getAanwezigheid();
                             for ($j = (count($trainingsdata) - 4); $j >= 0; $j--) {
                                 $lesdatum = $trainingsdata[$j]->getLesdatum();
-                                if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
+                                if (strtotime($lesdatum->format("d-m-Y")) <= time()) {
                                     for ($k = (count($aanwezigheid) - 1); $k >= 0; $k--) {
                                         $check = false;
-                                        if (date('m', time()) < '08') {
-                                            if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                                ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                        if (date("m", time()) < '08') {
+                                            if (($lesdatum->format("Y") == date("Y", time()) && $lesdatum->format("m") < '08') ||
+                                                ($lesdatum->format("Y") == (date("Y", time()) - 1) && $lesdatum->format("m") >= '08')
                                             ) {
                                                 $check = true;
                                             } else {
                                                 break;
                                             }
                                         } else {
-                                            if ($lesdatum->format('Y') == date('Y', time())) {
-                                                if ($lesdatum->format('m') < '08') {
+                                            if ($lesdatum->format("Y") == date("Y", time())) {
+                                                if ($lesdatum->format("m") < '08') {
                                                     break;
                                                 } else {
                                                     $check = true;
@@ -807,7 +808,7 @@ class SelectieController extends BaseController
                                                 if ($counter < 7) {
                                                     $persoonItems->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                                     $persoonItems->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
-                                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                                    $persoonItems->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format("d-m-Y");
                                                     $persoonItems->trainingen[$i]->trainingsdata[$j]->aanwezigheid = $aanwezigheid[$k]->getAanwezig();
                                                     $counter++;
                                                 }
@@ -1258,17 +1259,17 @@ class SelectieController extends BaseController
             /** @var Groepen $trainingGroep */
             $trainingGroep = $training->getGroep();
             if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $groepId) {
-                if (date('m', time()) < '08') {
-                    if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                if (date("m", time()) < '08') {
+                    if (($lesdatum->format("Y") == date("Y", time()) && $lesdatum->format("m") < '08') ||
+                        ($lesdatum->format("Y") == (date("Y", time()) - 1) && $lesdatum->format("m") >= '08')
                     ) {
                         $check = true;
                     } else {
                         break;
                     }
                 } else {
-                    if ($lesdatum->format('Y') == date('Y', time())) {
-                        if ($lesdatum->format('m') < '08') {
+                    if ($lesdatum->format("Y") == date("Y", time())) {
+                        if ($lesdatum->format("m") < '08') {
                             break;
                         } else {
                             $check = true;
@@ -1767,7 +1768,7 @@ class SelectieController extends BaseController
                                 /** @var Trainingen $training */
                                 $training = $trainingsdatum->getTrainingen();
                                 $trainingsdag = $training->getDag();
-                                $afmeldingsData[] = $trainingsdag . " " . $lesdatum->format('d-m-Y');;
+                                $afmeldingsData[] = $trainingsdag . " " . $lesdatum->format("d-m-Y");;
                                 $em->persist($persoonObject);
                                 $em->flush();
                             } elseif ($key == "reden") {
@@ -1924,17 +1925,17 @@ class SelectieController extends BaseController
                                                 $timestamp = $lesdatum->getTimestamp();
                                                 if ($aanwezigTrainingsdata->getTrainingen() == $trainingen[$i] && $timestamp < time()) {
                                                     $check = false;
-                                                    if (date('m', time()) < '08') {
-                                                        if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('m') < '08') ||
-                                                            ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('m') >= '08')
+                                                    if (date("m", time()) < '08') {
+                                                        if (($lesdatum->format("Y") == date("Y", time()) && $lesdatum->format("m") < '08') ||
+                                                            ($lesdatum->format("Y") == (date("Y", time()) - 1) && $lesdatum->format("m") >= '08')
                                                         ) {
                                                             $check = true;
                                                         } else {
                                                             break;
                                                         }
                                                     } else {
-                                                        if ($lesdatum->format('Y') == date('Y', time())) {
-                                                            if ($lesdatum->format('m') < '08') {
+                                                        if ($lesdatum->format("Y") == date("Y", time())) {
+                                                            if ($lesdatum->format("m") < '08') {
                                                                 break;
                                                             } else {
                                                                 $check = true;
@@ -1988,7 +1989,7 @@ class SelectieController extends BaseController
                                         $timestampPlusDag = ((int)$timestamp + 86400);
                                         if ($timestampPlusDag > time()) {
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j] = new \stdClass();
-                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format("d-m-Y");
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j]->aanwezigheid = array();
                                             $aanwezigheidPersonen = $trainingsdata[$j]->getAanwezigheid();
                                             /** @var Aanwezigheid $aanwezigheidPersoon */
@@ -2007,7 +2008,7 @@ class SelectieController extends BaseController
                                         $timestamp = $lesdatum->getTimestamp();
                                         if ($timestamp < time()) {
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j] = new \stdClass();
-                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                            $aanwezigheid->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format("d-m-Y");
                                             $aanwezigheid->trainingen[$i]->trainingsdata[$j]->aanwezigheid = array();
                                             $aanwezigheidPersonen = $trainingsdata[$j]->getAanwezigheid();
                                             /** @var Aanwezigheid $aanwezigheidPersoon */
@@ -2144,7 +2145,7 @@ class SelectieController extends BaseController
                                     if (($timestamp) > (time() - 604800)) {
                                         $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i] = new \stdClass();
                                         $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i]->id = $trainingsdata[$i]->getId();
-                                        $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i]->datum = $lesdatum->format('d-m-Y');
+                                        $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata[$i]->datum = $lesdatum->format("d-m-Y");
                                     }
                                 }
                                 $trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata = array_reverse($trainingsdataVoorKruisjeslijst->trainingen[$j]->trainingsdata);
@@ -2241,7 +2242,7 @@ class SelectieController extends BaseController
         $trainingsdata = new \stdClass();
         $trainingsdata->id = $trainingsdataObject->getId();
         $lesdatum = $trainingsdataObject->getLesdatum();
-        $trainingsdata->lesdatum = $lesdatum->format('d-m-Y');
+        $trainingsdata->lesdatum = $lesdatum->format("d-m-Y");
         return $this->render('inloggen/removeTrainingsdatum.html.twig', array(
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
@@ -2374,7 +2375,7 @@ class SelectieController extends BaseController
         $trainingsdata = new \stdClass();
         $trainingsdata->id = $trainingsdataObject->getId();
         $lesdatum = $trainingsdataObject->getLesdatum();
-        $trainingsdata->lesdatum = $lesdatum->format('d-m-Y');
+        $trainingsdata->lesdatum = $lesdatum->format("d-m-Y");
         $trainingsdata->dag = $this->dayToDutch($lesdatum->getTimestamp());
         return $this->render('inloggen/kruisjeslijstInvullen.html.twig', array(
             'calendarItems' => $this->calendarItems,
@@ -2847,10 +2848,10 @@ class SelectieController extends BaseController
             $functie = $response['functie'];
             $uitslagen = $groepObject->getWedstrijduitslagen();
             for ($counter = (count($uitslagen) - 1); $counter >= 0; $counter--) {
-                if ($uitslagen[$counter]->getDatum()->format('m') > 7) {
-                    $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format('Y')][] = $uitslagen[$counter]->getAll();
+                if ($uitslagen[$counter]->getDatum()->format("m") > 7) {
+                    $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format("Y")][] = $uitslagen[$counter]->getAll();
                 } else {
-                    $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format('Y') - 1)][] = $uitslagen[$counter]->getAll();
+                    $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format("Y") - 1)][] = $uitslagen[$counter]->getAll();
                 }
             }
         }
@@ -3225,20 +3226,20 @@ class SelectieController extends BaseController
                     $aanwezigheid = $persoonObject->getAanwezigheid();
                     for ($j = (count($trainingsdata) - 4); $j >= 0; $j--) {
                         $lesdatum = $trainingsdata[$j]->getLesdatum();
-                        if (strtotime($lesdatum->format('d-m-Y')) <= time()) {
+                        if (strtotime($lesdatum->format("d-m-Y")) <= time()) {
                             for ($k = (count($aanwezigheid) - 1); $k >= 0; $k--) {
                                 $check = false;
-                                if (date('m', time()) < '08') {
-                                    if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                                if (date("m", time()) < '08') {
+                                    if (($lesdatum->format("Y") == date("Y", time()) && $lesdatum->format("m") < '08') ||
+                                        ($lesdatum->format("Y") == (date("Y", time()) - 1) && $lesdatum->format("m") >= '08')
                                     ) {
                                         $check = true;
                                     } else {
                                         break;
                                     }
                                 } else {
-                                    if ($lesdatum->format('Y') == date('Y', time())) {
-                                        if ($lesdatum->format('m') < '08') {
+                                    if ($lesdatum->format("Y") == date("Y", time())) {
+                                        if ($lesdatum->format("m") < '08') {
                                             break;
                                         } else {
                                             $check = true;
@@ -3251,7 +3252,7 @@ class SelectieController extends BaseController
                                         if ($counter < 7) {
                                             $turnster->trainingen[$i]->trainingsdata[$j] = new \stdClass();
                                             $turnster->trainingen[$i]->trainingsdata[$j]->id = $trainingsdata[$j]->getId();
-                                            $turnster->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format('d-m-Y');
+                                            $turnster->trainingen[$i]->trainingsdata[$j]->lesdatum = $lesdatum->format("d-m-Y");
                                             $turnster->trainingen[$i]->trainingsdata[$j]->aanwezigheid = $aanwezigheid[$k]->getAanwezig();
                                             $counter++;
                                         }
@@ -3288,17 +3289,17 @@ class SelectieController extends BaseController
             /** @var Groepen $trainingGroep */
             $trainingGroep = $training->getGroep();
             if ($lesdatum->getTimestamp() <= time() && $trainingGroep->getId() == $groepObject->getId()) {
-                if (date('m', time()) < '08') {
-                    if (($lesdatum->format('Y') == date('Y', time()) && $lesdatum->format('Y') < '08') ||
-                        ($lesdatum->format('Y') == (date('Y', time()) - 1) && $lesdatum->format('Y') >= '08')
+                if (date("m", time()) < '08') {
+                    if (($lesdatum->format("Y") == date("Y", time()) && $lesdatum->format("m") < '08') ||
+                        ($lesdatum->format("Y") == (date("Y", time()) - 1) && $lesdatum->format("m") >= '08')
                     ) {
                         $check = true;
                     } else {
                         break;
                     }
                 } else {
-                    if ($lesdatum->format('Y') == date('Y', time())) {
-                        if ($lesdatum->format('m') < '08') {
+                    if ($lesdatum->format("Y") == date("Y", time())) {
+                        if ($lesdatum->format("m") < '08') {
                             break;
                         } else {
                             $check = true;
@@ -3329,10 +3330,10 @@ class SelectieController extends BaseController
         if ($timestamp == null) {
             $timestamp = time();
         }
-        if (date('m', $timestamp) > '08') {
-            $seizoen = date('Y', $timestamp);
+        if (date("m", $timestamp) > '08') {
+            $seizoen = date("Y", $timestamp);
         } else {
-            $seizoen = (int)date('Y', $timestamp) - 1;
+            $seizoen = (int)date("Y", $timestamp) - 1;
         }
         return $seizoen;
     }

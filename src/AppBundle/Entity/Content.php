@@ -36,7 +36,7 @@ class Content
     {
         $items = new \stdClass();
         $items->id = $this->id;
-        $items->gewijzigd = $this->gewijzigd->format('d-m-Y');
+        $items->gewijzigd = $this->gewijzigd->format("d-m-Y");
         $items->pagina = $this->pagina;
         $items->content = $this->content;
         return $items;
@@ -62,7 +62,7 @@ class Content
      */
     public function getGewijzigd()
     {
-        return $this->gewijzigd->format('d-m-Y');
+        return $this->gewijzigd->format("d-m-Y");
     }
 
     /**

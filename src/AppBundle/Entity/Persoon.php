@@ -166,7 +166,7 @@ class Persoon
         $persoon->voornaam = $this->getVoornaam();
         $persoon->achternaam = $this->getAchternaam();
         $geboortedatum = $this->getGeboortedatum();
-        $persoon->geboortedatum = date('d-m-Y', strtotime($geboortedatum));
+        $persoon->geboortedatum = date("d-m-Y", strtotime($geboortedatum));
         $foto = $this->getFoto();
         $vloermuziek = $this->getVloermuziek();
         if ($vloermuziek == null) {$persoon->vloermuziek = null;}
@@ -179,37 +179,37 @@ class Persoon
 
     public function categorie($geboortedatum)
     {
-        if(date('m',time()) < 8)
+        if(date("m",time()) < 8)
         {
-            if((date('Y',time())-date("Y",$geboortedatum))<8)
+            if((date("Y",time())-date("Y",$geboortedatum))<8)
             {
                 return "Voorinstap";
             }
-            if((date('Y',time())-date("Y",$geboortedatum))==8)
+            if((date("Y",time())-date("Y",$geboortedatum))==8)
             {
                 return "Voorinstap";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==9)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==9)
             {
                 return "Instap";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==10)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==10)
             {
                 return "Pupil 1";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==11)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==11)
             {
                 return "Pupil 2";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==12)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==12)
             {
                 return "Jeugd 1";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==13)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==13)
             {
                 return "Jeugd 2";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==14 || (date(Y,time())-date("Y",$geboortedatum))==15)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==14 || (date("Y",time())-date("Y",$geboortedatum))==15)
             {
                 return "Junior";
             }
@@ -221,35 +221,35 @@ class Persoon
         else
         {
 
-            if((date('Y',time())-date("Y",$geboortedatum))<7)
+            if((date("Y",time())-date("Y",$geboortedatum))<7)
             {
                 return "Voorinstap";
             }
-            if((date('Y',time())-date("Y",$geboortedatum))==7)
+            if((date("Y",time())-date("Y",$geboortedatum))==7)
             {
                 return "Voorinstap";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==8)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==8)
             {
                 return "Instap";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==9)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==9)
             {
                 return "Pupil 1";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==10)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==10)
             {
                 return "Pupil 2";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==11)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==11)
             {
                 return "Jeugd 1";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==12)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==12)
             {
                 return "Jeugd 2";
             }
-            elseif((date('Y',time())-date("Y",$geboortedatum))==13 || (date("Y",time())-date("Y",$geboortedatum))==14)
+            elseif((date("Y",time())-date("Y",$geboortedatum))==13 || (date("Y",time())-date("Y",$geboortedatum))==14)
             {
                 return "Junior";
             }
