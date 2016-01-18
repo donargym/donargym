@@ -173,6 +173,16 @@ body {
     padding: 5px 10px;
 }
 
+#content #wedstrijduitslagen a:link, #content #wedstrijduitslagen a:visited {
+	color: #FFFF00;
+    text-decoration: none;
+}
+
+#content #wedstrijduitslagen a:hover, #content #wedstrijduitslagen a:active {
+	color: #FFAE00;
+    text-decoration: none;
+}
+
 .date {
     font-size: 9pt;
     color: rgba(255, 255, 255, 0.8);
