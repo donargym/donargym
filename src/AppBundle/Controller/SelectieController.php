@@ -2125,7 +2125,7 @@ class SelectieController extends BaseController
                 $functies = $persoon->getFunctie();
                 foreach ($functies as $functie) {
                     /** @var Functie $functie */
-                    if ($functie->getFunctie() == 'Trainer') {
+                    if ($functie->getFunctie() == 'Trainer' || $functie->getFunctie() == 'Assistent-Trainer') {
                         /** @var Groepen $groep */
                         $groep = $functie->getGroep();
                         if ($groep->getId() == $groepId) {
@@ -2194,7 +2194,7 @@ class SelectieController extends BaseController
                 $functies = $persoon->getFunctie();
                 foreach ($functies as $functie) {
                     /** @var Functie $functie */
-                    if ($functie->getFunctie() == 'Trainer') {
+                    if ($functie->getFunctie() == 'Trainer' || $functie->getFunctie() == 'Assistent-Trainer') {
                         /** @var Groepen $groep */
                         $groep = $functie->getGroep();
                         if ($groep->getId() == $groepId) {
