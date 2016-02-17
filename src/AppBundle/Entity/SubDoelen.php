@@ -15,7 +15,7 @@ class SubDoelen
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Doelen", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Doelen")
      * @ORM\JoinColumn(name="doel_id", referencedColumnName="id")
      **/
     protected $doel;
