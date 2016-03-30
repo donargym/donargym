@@ -336,7 +336,7 @@ class BaseController extends Controller
                 try {
                     $result->setUitslagGepubliceerd(true);
                     $this->addToDB($result);
-                    header('location: ' . $this->getParameter('returnLocation'));
+                    header('location: ' . $this->getParameter('returnLocation2'));
                     return new Response('ok', 200);
                 } catch (\Exception $e) {
                     return new Response($e->getMessage(), $e->getCode());
