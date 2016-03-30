@@ -21,8 +21,8 @@ class UitslagenController extends BaseController
 {
     private function formatScoresForPrijswinnaars($turnsters)
     {
-        $waardes = [];
-        $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer', ''];
+        $waardes = array();
+        $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer', '');
         $count = 0;
         foreach ($toestellen as $toestel) {
             usort($turnsters, function ($a, $b) use ($toestel) {
@@ -33,12 +33,12 @@ class UitslagenController extends BaseController
             });
             foreach ($turnsters as $turnster) {
                 if ($turnster['rank' . $toestel] < 4) {
-                    $waardes[$count][] = [
+                    $waardes[$count][] = array(
                         0 => $turnster['naam'],
                         1 => $turnster['vereniging'],
                         2 => $turnster['totaal' . $toestel],
                         3 => $turnster['rank' . $toestel],
-                    ];
+                    );
                 } else {
                     break;
                 }
@@ -59,9 +59,9 @@ class UitslagenController extends BaseController
         $pdf->Table($turnsters, $userId);
         return new Response($pdf->Output(
             $request->query->get('categorie') . "_" . $request->query->get('niveau') . ".pdf", "I"
-        ), 200, [
+        ), 200, array(
             'Content-Type' => 'application/pdf'
-        ]);
+        ));
     }
 
     private function prijswinnaarsPdf(Request $request, $turnsters)
@@ -74,9 +74,9 @@ class UitslagenController extends BaseController
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->Table($waardes);
-        return new Response($pdf->Output(), 200, [
+        return new Response($pdf->Output(), 200, array(
             'Content-Type' => 'application/pdf'
-        ]);
+        ));
     }
 
     /**
@@ -96,10 +96,10 @@ class UitslagenController extends BaseController
             if ($request->query->get('order')) {
                 $order = $request->query->get('order');
             }
-            /** @var Turnster[] $results */
+            /** @var Turnster array() $results */
             $results = $this->getDoctrine()->getRepository("AppBundle:Turnster")
                 ->getIngeschrevenTurnstersCatNiveau($request->query->get('categorie'), $request->query->get('niveau'));
-            $turnsters = [];
+            $turnsters = array();
             foreach ($results as $result) {
                 $turnsters[] = $result->getUitslagenLijst();
             }
@@ -109,11 +109,11 @@ class UitslagenController extends BaseController
             } elseif ($request->query->get('pdf')) {
                 return $this->uitslagenPdf($request, $turnsters, $userId);
             }
-            return $this->render('uitslagen/showUitslag.html.twig', [
+            return $this->render('uitslagen/showUitslag.html.twig', array(
                 'order' => $order,
                 'turnsters' => $turnsters,
                 'userId' => $userId,
-            ]);
+            ));
         }
         $niveaus = $this->getToegestaneNiveaus();
         return $this->render('uitslagen/index.html.twig', array(
@@ -127,15 +127,15 @@ class UitslagenController extends BaseController
      */
     public function diplomaWedstrijdnummerPdf()
     {
-        /** @var Turnster[] $results */
+        /** @var Turnster array() $results */
         $results = $this->getDoctrine()->getRepository("AppBundle:Turnster")
-            ->findBy([
+            ->findBy(array(
                 'wachtlijst' => 0,
                 'afgemeld' => 0,
-            ]);
-        $turnsters = [];
+            ));
+        $turnsters = array();
         foreach ($results as $result) {
-            $turnsters[] = [
+            $turnsters[] = array(
                 'id'  => $result->getId(),
                 'categorie' => $result->getCategorie(),
                 'niveau' => $result->getNiveau(),
@@ -143,7 +143,7 @@ class UitslagenController extends BaseController
                 'vereniging' => $result->getUser()->getVereniging()->getNaam() . ' ' .$result->getUser()
                         ->getVereniging()->getPlaats(),
                 'wedstrijdnummer' => $result->getScores()->getWedstrijdnummer(),
-            ];
+            );
         }
         usort($turnsters, function ($a, $b) {
             return ($a['wedstrijdnummer'] < $b['wedstrijdnummer']) ? -1 : 1;
@@ -162,9 +162,9 @@ class UitslagenController extends BaseController
             $pdf->FooterDiploma(self::DATUM_HBC);
             $pdf->ContentDiploma($turnster);
         }
-        return new Response($pdf->Output(), 200, [
+        return new Response($pdf->Output(), 200, array(
             'Content-Type' => 'application/pdf'
-        ]);
+        ));
     }
 
     /**
@@ -176,16 +176,16 @@ class UitslagenController extends BaseController
         $activeBaan = '';
         $banen = $this->getDoctrine()->getRepository("AppBundle:Scores")
             ->getBanen();
-        $turnsters = [];
+        $turnsters = array();
         foreach ($banen as $baan) {
             if ($baan['baan'] == $request->query->get('baan')) {
                 $activeBaan = $request->query->get('baan');
                 /** @var ScoresRepository $repo */
                 $repo = $this->getDoctrine()->getRepository("AppBundle:Scores");
-                $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer'];
+                $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer');
                 foreach ($toestellen as $toestel) {
-                    $turnsters[$toestel] = [];
-                    /** @var Scores[] $results */
+                    $turnsters[$toestel] = array();
+                    /** @var Scores array() $results */
                     $results = $repo->getLiveScoresPerBaanPerToestel($activeBaan, $toestel);
                     foreach ($results as $result) {
                         $turnsters[$toestel][] = $result->getScores();
@@ -194,10 +194,10 @@ class UitslagenController extends BaseController
                 break;
             }
         }
-        return $this->render('uitslagen/scores.html.twig', [
+        return $this->render('uitslagen/scores.html.twig', array(
             'banen' => $banen,
             'activeBaan' => $activeBaan,
             'turnsters' => $turnsters,
-        ]);
+        ));
     }
 }

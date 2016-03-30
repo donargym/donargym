@@ -34,11 +34,11 @@ class Vereniging
 
     public function getAll()
     {
-        return [
+        return array(
             'id' => $this->id,
             'naam' => $this->naam,
             'plaats' => $this->plaats,
-        ];
+        );
     }
 
     /**

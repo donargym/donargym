@@ -817,7 +817,7 @@ class AdminController extends BaseController
         if ($request->getMethod() == 'POST') {
             /** @var UserRepository $repo */
             $repo = $this->getDoctrine()->getRepository('AppBundle:User');
-            $result = $repo->findOneBy(['username' => 'OWJurySysteem']);
+            $result = $repo->findOneBy(array('username' => 'OWJurySysteem'));
             if (!$result) {
                 $user = new User();
                 $user->setUsername('OWJurySysteem');
@@ -834,7 +834,7 @@ class AdminController extends BaseController
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $this->addToDB($user);
             }
-            $result = $repo->findOneBy(['username' => 'OWJuryLid']);
+            $result = $repo->findOneBy(array('username' => 'OWJuryLid'));
             if (!$result) {
                 $user = new User();
                 $user->setUsername('OWJuryLid');
@@ -876,7 +876,7 @@ class AdminController extends BaseController
                                     $repo = $this->getDoctrine()->getRepository('AppBundle:User');
                                     $lineData = explode(";", $line);
                                     /** @var User $user */
-                                    $user = $repo->findOneBy(['username' => trim($lineData[2])]);
+                                    $user = $repo->findOneBy(array('username' => trim($lineData[2])));
                                     if (!$user) {
                                         $user = new User();
                                         $user->setUsername(trim($lineData[2]));
@@ -930,7 +930,7 @@ class AdminController extends BaseController
                                 foreach ($results as $result) {
                                     $new = new ToegestaneNiveaus();
                                     $new->setCategorie($result['categorie']);
-                                    $new->setNiveau($result[ 'niveau']);
+                                    $new->setNiveau($result['niveau']);
                                     $new->setUitslagGepubliceerd(0);
                                     $this->addToDB($new);
                                 }

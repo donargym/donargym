@@ -236,7 +236,7 @@ class Scores
             floatval($this->getESprong2()) - floatval($this->getNSprong2()) : 0;
         $totaalSprong = ($totaalSprong1 + $totaalSprong2) / 2;
         $totaal = $totaalSprong + $totaalBrug + $totaalBalk + $totaalVloer;
-        return [
+        return array(
             'userId' => $this->getTurnster()->getUser()->getId(),
             'wedstrijdnummer' => $this->getWedstrijdnummer(),
             'naam' => $this->getTurnster()->getVoornaam() . ' ' . $this->getTurnster()->getAchternaam(),
@@ -261,7 +261,7 @@ class Scores
             'totaalSprong2' => number_format($totaalSprong2, 3, ",", "."),
             'totaalSprong' => number_format($totaalSprong, 3, ",", "."),
             'totaal' => number_format($totaal, 3, ",", "."),
-        ];
+        );
     }
 
     /**

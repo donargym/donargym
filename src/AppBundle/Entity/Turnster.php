@@ -125,7 +125,7 @@ class Turnster
             floatval($this->getScores()->getESprong2()) - floatval($this->getScores()->getNSprong2()) : 0;
         $totaalSprong = ($totaalSprong1 + $totaalSprong2) / 2;
         $totaal = $totaalSprong + $totaalBrug + $totaalBalk + $totaalVloer;
-        return [
+        return array(
             'id' => $this->getId(),
             'userId' => $this->getUser()->getId(),
             'wedstrijdnummer' => $this->getScores()->getWedstrijdnummer(),
@@ -151,7 +151,7 @@ class Turnster
             'totaalSprong2' => number_format($totaalSprong2, 3, ",", "."),
             'totaalSprong' => number_format($totaalSprong, 3, ",", "."),
             'totaal' => number_format($totaal, 3, ",", "."),
-        ];
+        );
     }
 
     public function getId()

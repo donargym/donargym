@@ -78,7 +78,7 @@ class UitslagenPdfController extends AlphaPDFController
             $this->Cell(8,6,$turnster['nSprong2'],1,0, "", $fill);
             $this->Cell(11,6,$turnster['totaalSprong2'],1,0, "", $fill);
             $this->Cell(11,6,$turnster['totaalSprong'],1,0, "", $fill);
-            if(in_array($turnster['rankSprong'],[1,2,3])) {
+            if(in_array($turnster['rankSprong'],array(1,2,3))) {
                 $this->SetFont('Helvetica','B',7);
                 $this->SetFillColor(255,255,0);
                 $this->Cell(5,6,$turnster['rankSprong'],1,0, "", true);
@@ -91,7 +91,7 @@ class UitslagenPdfController extends AlphaPDFController
             $this->Cell(8,6,$turnster['dBrug'],1,0, "", $fill);
             $this->Cell(8,6,$turnster['nBrug'],1,0, "", $fill);
             $this->Cell(11,6,$turnster['totaalBrug'],1,0, "", $fill);
-            if(in_array($turnster['rankBrug'],[1,2,3])) {
+            if(in_array($turnster['rankBrug'],array(1,2,3))) {
                 $this->SetFont('Helvetica','B',7);
                 $this->SetFillColor(255,255,0);
                 $this->Cell(5,6,$turnster['rankBrug'],1,0, "", true);
@@ -104,7 +104,7 @@ class UitslagenPdfController extends AlphaPDFController
             $this->Cell(8,6,$turnster['dBalk'],1,0, "", $fill);
             $this->Cell(8,6,$turnster['nBalk'],1,0, "", $fill);
             $this->Cell(11,6,$turnster['totaalBalk'],1,0, "", $fill);
-            if(in_array($turnster['rankBalk'],[1,2,3])) {
+            if(in_array($turnster['rankBalk'],array(1,2,3))) {
                 $this->SetFont('Helvetica','B',7);
                 $this->SetFillColor(255,255,0);
                 $this->Cell(5,6,$turnster['rankBalk'],1,0, "", true);
@@ -117,7 +117,7 @@ class UitslagenPdfController extends AlphaPDFController
             $this->Cell(8,6,$turnster['dVloer'],1,0, "", $fill);
             $this->Cell(8,6,$turnster['nVloer'],1,0, "", $fill);
             $this->Cell(11,6,$turnster['totaalVloer'],1,0, "", $fill);
-            if(in_array($turnster['rankVloer'],[1,2,3])) {
+            if(in_array($turnster['rankVloer'],array(1,2,3))) {
                 $this->SetFont('Helvetica','B',7);
                 $this->SetFillColor(255,255,0);
                 $this->Cell(5,6,$turnster['rankVloer'],1,0, "", true);
@@ -128,7 +128,7 @@ class UitslagenPdfController extends AlphaPDFController
             }
 
             $this->Cell(11,6,$turnster['totaal'],1,0, "", $fill);
-            if(in_array($turnster['rank'],[1,2,3])) {
+            if(in_array($turnster['rank'],array(1,2,3))) {
                 $this->SetFont('Helvetica','B',7);
                 $this->SetFillColor(255,255,0);
                 $this->Cell(5,6,$turnster['rank'],1,0, "", true);

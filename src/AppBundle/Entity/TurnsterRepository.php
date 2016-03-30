@@ -59,10 +59,10 @@ class TurnsterRepository extends EntityRepository
             ->andWhere('u.wachtlijst = 0')
             ->andWhere('u.geboortejaar = :geboortejaar')
             ->andWhere('u.niveau = :niveau')
-            ->setParameters([
+            ->setParameters(array(
                 'geboortejaar' => $geboortejaar,
                 'niveau' => $niveau,
-            ])
+            ))
             ->getQuery()
             ->getSingleScalarResult();
         return $turnsters;
@@ -76,10 +76,10 @@ class TurnsterRepository extends EntityRepository
             ->andWhere('u.wachtlijst = 1')
             ->andWhere('u.geboortejaar = :geboortejaar')
             ->andWhere('u.niveau = :niveau')
-            ->setParameters([
+            ->setParameters(array(
                 'geboortejaar' => $geboortejaar,
                 'niveau' => $niveau,
-            ])
+            ))
             ->getQuery()
             ->getSingleScalarResult();
         return $turnsters;
@@ -166,10 +166,10 @@ class TurnsterRepository extends EntityRepository
             ->andWhere('u.categorie = :categorie')
             ->andWhere('u.niveau = :niveau')
             ->orderBy('u.user')
-            ->setParameters([
+            ->setParameters(array(
                 'niveau' => $niveau,
                 'categorie' => $categorie,
-            ])
+            ))
             ->getQuery()
             ->getResult();
         return $ingeschrevenTurnsters;
@@ -183,10 +183,10 @@ class TurnsterRepository extends EntityRepository
             ->andWhere('u.categorie = :categorie')
             ->andWhere('u.niveau = :niveau')
             ->orderBy('u.id')
-            ->setParameters([
+            ->setParameters(array(
                 'niveau' => $niveau,
                 'categorie' => $categorie,
-            ])
+            ))
             ->getQuery()
             ->getResult();
         return $ingeschrevenTurnsters;

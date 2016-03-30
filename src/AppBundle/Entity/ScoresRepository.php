@@ -72,10 +72,10 @@ class ScoresRepository extends EntityRepository
             ->where('cc.wedstrijdronde IS NOT NULL')
             ->andWhere('cc.wedstrijddag = :dag')
             ->andWhere('u.id = :userId')
-            ->setParameters([
+            ->setParameters(array(
                 'userId' => $userId,
                 'dag' => $dag,
-            ])
+            ))
             ->orderBy('cc.wedstrijdronde')
             ->distinct()
             ->getQuery()
@@ -103,11 +103,11 @@ class ScoresRepository extends EntityRepository
             ->andWhere('cc.wedstrijddag = :dag')
             ->andWhere('cc.wedstrijdronde = :ronde')
             ->andWhere('cc.baan = :baan')
-            ->setParameters([
+            ->setParameters(array(
                 'dag' => $dag,
                 'ronde' => $ronde,
                 'baan' => $baan
-            ])
+            ))
             ->distinct()
             ->getQuery()
             ->getResult();
@@ -125,12 +125,12 @@ class ScoresRepository extends EntityRepository
             ->andWhere('cc.wedstrijdronde = :ronde')
             ->andWhere('cc.baan = :baan')
             ->andWhere('u.id = :userId')
-            ->setParameters([
+            ->setParameters(array(
                 'dag' => $dag,
                 'ronde' => $ronde,
                 'baan' => $baan,
                 'userId' => $userId,
-            ])
+            ))
             ->distinct()
             ->getQuery()
             ->getResult();
@@ -160,10 +160,10 @@ class ScoresRepository extends EntityRepository
             ->where('cc.baan IS NOT NULL')
             ->andWhere('cc.wedstrijddag = :dag')
             ->andWhere('u.id = :userId')
-            ->setParameters([
+            ->setParameters(array(
                 'userId' => $userId,
                 'dag' => $dag,
-            ])
+            ))
             ->orderBy('cc.baan')
             ->distinct()
             ->getQuery()
@@ -200,10 +200,10 @@ class ScoresRepository extends EntityRepository
         $results = $this->createQueryBuilder('cc')
             ->where('cc.baan = :baan')
             ->andWhere('cc.updated' . $toestel . ' > :tijd')
-            ->setParameters([
+            ->setParameters(array(
                 'tijd' => $tijd,
                 'baan' => $baan,
-            ])
+            ))
             ->getQuery()
             ->getResult();
         return $results;

@@ -126,10 +126,10 @@ class BaseController extends Controller
     {
         /** @var ToegestaneNiveaus $result */
         $result = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
-            ->findOneBy([
+            ->findOneBy(array(
                 'categorie' => $categorie,
                 'niveau' => $niveau,
-            ]);
+            ));
         if (!$result) {
             return false;
         }
@@ -168,7 +168,7 @@ class BaseController extends Controller
 
     protected function getRanking($scores, $order = '')
     {
-        $toestellen = ['Sprong', 'Brug', 'Balk', 'Vloer', ''];
+        $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer', '');
         foreach ($toestellen as $toestel) {
             usort($scores, function ($a, $b) use ($toestel) {
                 if ($a['totaal' . $toestel] == $b['totaal' . $toestel]) {
@@ -197,22 +197,22 @@ class BaseController extends Controller
 
     protected function getToegestaneNiveaus()
     {
-        $toegestaneNiveaus = [];
+        $toegestaneNiveaus = array();
         $repo = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus');
         /** @var ToegestaneNiveaus[] $results */
         if ($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') {
             $results = $repo->findAll();
         } else {
-            $results = $repo->findBy([
+            $results = $repo->findBy(array(
                 'uitslagGepubliceerd' => 1,
-            ]);
+            ));
         }
         foreach ($results as $result) {
             /** @var ToegestaneNiveaus[] $results */
-            $toegestaneNiveaus[$result->getCategorie()][$result->getId()] = [
+            $toegestaneNiveaus[$result->getCategorie()][$result->getId()] = array(
                 'niveau' => $result->getNiveau(),
                 'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
-            ];
+            );
         }
         return $toegestaneNiveaus;
     }
@@ -224,11 +224,11 @@ class BaseController extends Controller
     public function updateScores(Request $request, $wedstrijdnummer)
     {
         if ($request->query->get('key') && $request->query->get('key') === $this->getParameter('update_scores_string')) {
-            $toestellen = ['sprong', 'brug', 'balk', 'vloer'];
+            $toestellen = array('sprong', 'brug', 'balk', 'vloer');
             if ($request->query->get('toestel') && in_array(strtolower($request->query->get('toestel')), $toestellen)) {
                 /** @var Scores $score */
                 $score = $this->getDoctrine()->getRepository('AppBundle:Scores')
-                    ->findOneBy(['wedstrijdnummer' => $wedstrijdnummer]);
+                    ->findOneBy(array('wedstrijdnummer' => $wedstrijdnummer));
                 if ($score) {
                     switch (strtolower($request->query->get('toestel'))) {
                         case 'sprong':
@@ -324,10 +324,10 @@ class BaseController extends Controller
         if ($request->query->get('key') && $request->query->get('key') === $this->getParameter('update_scores_string')) {
             /** @var ToegestaneNiveaus $result */
             $result = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
-                ->findOneBy([
+                ->findOneBy(array(
                     'categorie' => $categorie,
                     'niveau' => $niveau,
-                ]);
+                ));
             if ($result) {
                 try {
                     $result->setUitslagGepubliceerd(true);

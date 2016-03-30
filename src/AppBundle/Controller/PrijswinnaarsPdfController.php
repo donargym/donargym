@@ -49,7 +49,7 @@ class PrijswinnaarsPdfController extends AlphaPDFController
         $this->Ln();
         $w = array(33, 48, 9, 4, 1, 33, 48, 9, 4, 1, 33, 48, 9, 4);
         $this->SetFont('Helvetica', 'B', 6.5);
-        $header2 = [
+        $header2 = array(
             'Naam',
             'Vereniging',
             'Score',
@@ -64,7 +64,7 @@ class PrijswinnaarsPdfController extends AlphaPDFController
             'Vereniging',
             'Score',
             'Pl',
-        ];
+        );
         for ($i = 0; $i < count($header2); $i++) {
             if (($i + 1) % 5 == 0) {
                 $this->Cell($w[$i], 7, $header2[$i], 0, 0);
