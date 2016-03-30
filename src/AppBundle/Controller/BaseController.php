@@ -247,6 +247,7 @@ class BaseController extends Controller
                                 } catch (\Exception $e) {
                                     return new Response($e->getMessage(), $e->getCode());
                                 }
+                                header('location: ' . $this->getParameter('returnLocation'));
                                 return new Response('ok', 200);
                             } else {
                                 return new Response('Niet alle verplichte gegevens zijn opgegeven', 500);
@@ -264,6 +265,7 @@ class BaseController extends Controller
                                 } catch (\Exception $e) {
                                     return new Response($e->getMessage(), $e->getCode());
                                 }
+                                header('location: ' . $this->getParameter('returnLocation'));
                                 return new Response('ok', 200);
                             } else {
                                 return new Response('Niet alle verplichte gegevens zijn opgegeven', 500);
@@ -281,6 +283,7 @@ class BaseController extends Controller
                                 } catch (\Exception $e) {
                                     return new Response($e->getMessage(), $e->getCode());
                                 }
+                                header('location: ' . $this->getParameter('returnLocation'));
                                 return new Response('ok', 200);
                             } else {
                                 return new Response('Niet alle verplichte gegevens zijn opgegeven', 500);
@@ -298,6 +301,7 @@ class BaseController extends Controller
                                 } catch (\Exception $e) {
                                     return new Response($e->getMessage(), $e->getCode());
                                 }
+                                header('location: ' . $this->getParameter('returnLocation'));
                                 return new Response('ok', 200);
                             } else {
                                 return new Response('Niet alle verplichte gegevens zijn opgegeven', 500);
@@ -332,6 +336,7 @@ class BaseController extends Controller
                 try {
                     $result->setUitslagGepubliceerd(true);
                     $this->addToDB($result);
+                    header('location: ' . $this->getParameter('returnLocation'));
                     return new Response('ok', 200);
                 } catch (\Exception $e) {
                     return new Response($e->getMessage(), $e->getCode());
