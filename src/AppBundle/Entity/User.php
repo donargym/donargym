@@ -102,10 +102,78 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $persoon;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Vereniging", inversedBy="user")
+     *
+     */
+    private $vereniging;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Turnster", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $turnster;
+
     public function __construct()
     {
         $this->persoon = new ArrayCollection();
+        $this->turnster = new ArrayCollection();
         $this->isActive = true;
+    }
+
+    /**
+     * Add turnster
+     *
+     * @param \AppBundle\Entity\Turnster $turnster
+     * @return User
+     */
+    public function addTurnster(\AppBundle\Entity\Turnster $turnster)
+    {
+        $this->turnster[] = $turnster;
+
+        return $this;
+    }
+
+    /**
+     * Remove turnster
+     *
+     * @param \AppBundle\Entity\Turnster $turnster
+     */
+    public function removeTurnster(\AppBundle\Entity\Turnster $turnster)
+    {
+        $this->turnster->removeElement($turnster);
+    }
+
+    /**
+     * Get turnster
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTurnster()
+    {
+        return $this->turnster;
+    }
+
+    /**
+     * Set vereniging
+     *
+     * @param \AppBundle\Entity\Vereniging $vereniging
+     * @return User
+     */
+    public function setVereniging(\AppBundle\Entity\Vereniging $vereniging = null)
+    {
+        $this->vereniging = $vereniging;
+
+        return $this;
+    }
+
+    /**
+     * Get vereniging
+     *
+     * @return \AppBundle\Entity\Vereniging
+     */
+    public function getVereniging()
+    {
+        return $this->vereniging;
     }
 
     public function getUsername()

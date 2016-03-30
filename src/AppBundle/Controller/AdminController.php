@@ -7,7 +7,14 @@ use AppBundle\Entity\FotoUpload;
 use AppBundle\Entity\Functie;
 use AppBundle\Entity\Groepen;
 use AppBundle\Entity\Persoon;
+use AppBundle\Entity\Scores;
+use AppBundle\Entity\ScoresRepository;
+use AppBundle\Entity\ToegestaneNiveaus;
 use AppBundle\Entity\Trainingen;
+use AppBundle\Entity\Turnster;
+use AppBundle\Entity\User;
+use AppBundle\Entity\UserRepository;
+use AppBundle\Entity\Vereniging;
 use AppBundle\Form\Type\UserType;
 use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Security\Core\User\User;
 
 
 /**
@@ -786,5 +792,189 @@ class AdminController extends BaseController
                 'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
+    }
+
+    /**
+     * @Route("/admin/getAdminOwPage/index/", name="getAdminOwPage")
+     * @Method({"GET", "POST"})
+     */
+    public function getAdminOwPage(Request $request)
+    {
+        $this->setBasicPageData();
+        return $this->render('inloggen/adminOwIndexPage.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+        ));
+    }
+
+    /**
+     * @Route("/admin/getAdminOwPage/uploadWedstrijdindelingen/", name="uploadWedstrijdindelingen")
+     * @Method({"GET", "POST"})
+     */
+    public function uploadWedstrijdindelingen(Request $request)
+    {
+        if ($request->getMethod() == 'POST') {
+            /** @var UserRepository $repo */
+            $repo = $this->getDoctrine()->getRepository('AppBundle:User');
+            $result = $repo->findOneBy(['username' => 'OWJurySysteem']);
+            if (!$result) {
+                $user = new User();
+                $user->setUsername('OWJurySysteem');
+                $user->setRole('ROLE_ORGANISATIE');
+                $user->setIsActive(true);
+                $user->setStraatnr(' ');
+                $user->setPostcode(' ');
+                $user->setPlaats(' ');
+                $user->setTel1(' ');
+                $password = $this->getParameter('JurySysteemWachtwoord');
+                $encoder = $this->container
+                    ->get('security.encoder_factory')
+                    ->getEncoder($user);
+                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                $this->addToDB($user);
+            }
+            $result = $repo->findOneBy(['username' => 'OWJuryLid']);
+            if (!$result) {
+                $user = new User();
+                $user->setUsername('OWJuryLid');
+                $user->setRole('ROLE_JURY');
+                $user->setIsActive(true);
+                $user->setStraatnr(' ');
+                $user->setPostcode(' ');
+                $user->setPlaats(' ');
+                $user->setTel1(' ');
+                $password = $this->getParameter('JurySysteemWachtwoord');
+                $encoder = $this->container
+                    ->get('security.encoder_factory')
+                    ->getEncoder($user);
+                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                $this->addToDB($user);
+            }
+            if ($_FILES["userfile"])
+            {
+                if (!empty($_FILES['userfile']['name']))
+                {
+                    $allow[0] = "csv";
+                    $extentie = strtolower(substr($_FILES['userfile']['name'], -3));
+                    if ($extentie == $allow[0])
+                    {
+                        if (is_uploaded_file($_FILES['userfile']['tmp_name']))
+                        {
+                            if($_FILES['userfile']['size']<5000000)
+                            {
+                                $localfile = $_FILES['userfile']['tmp_name'];
+                                $fp = fopen($localfile, 'r');
+                                $data = fread($fp, filesize($localfile));
+                                fclose($fp);
+                                $lines = explode("\n", $data);
+                                $turnsters = $this->getDoctrine()->getRepository('AppBundle:Turnster')->findAll();
+                                foreach ($turnsters as $turnster) {
+                                    $this->removeFromDB($turnster);
+                                }
+                                foreach ($lines as $line) {
+                                    $repo = $this->getDoctrine()->getRepository('AppBundle:User');
+                                    $lineData = explode(";", $line);
+                                    /** @var User $user */
+                                    $user = $repo->findOneBy(['username' => trim($lineData[2])]);
+                                    if (!$user) {
+                                        $user = new User();
+                                        $user->setUsername(trim($lineData[2]));
+                                        $user->setRole('ROLE_CONTACT');
+                                        $user->setIsActive(true);
+                                        $user->setStraatnr(' ');
+                                        $user->setPostcode(' ');
+                                        $user->setPlaats(' ');
+                                        $user->setTel1(' ');
+                                        $password = ' ';
+                                        $encoder = $this->container
+                                            ->get('security.encoder_factory')
+                                            ->getEncoder($user);
+                                        $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                                        $vereniging = new Vereniging();
+                                        $vereniging->setNaam(trim($lineData[2]));
+                                        $vereniging->setPlaats(' ');
+                                        $this->addToDB($vereniging);
+                                        $user->setVereniging($vereniging);
+                                        $this->addToDB($user);
+                                    }
+                                    $turnster = new Turnster();
+                                    $scores = new Scores();
+                                    $turnster->setWachtlijst(false);
+                                    $turnster->setCreationDate(new \DateTime('now'));
+                                    $turnster->setScores($scores);
+                                    $turnster->setVoornaam(trim($lineData[1]));
+                                    $turnster->setAchternaam(' ');
+                                    $turnster->setNiveau(trim($lineData[4]));
+                                    $turnster->setCategorie(trim($lineData[3]));
+                                    $turnster->setIngevuld(true);
+                                    $turnster->setUser($user);
+                                    $user->addTurnster($turnster);
+                                    /** @var Turnster $turnster */
+                                    $scores->setWedstrijdnummer(trim($lineData[5]));
+                                    $scores->setWedstrijddag(trim($lineData[6]));
+                                    $scores->setWedstrijdronde(trim($lineData[7]));
+                                    $scores->setBaan(trim($lineData[8]));
+                                    $scores->setGroep(trim($lineData[9]));
+                                    $this->addToDB($scores);
+                                    $this->addToDB($turnster);
+                                }
+                                /** @var ScoresRepository $repo */
+                                $repo = $this->getDoctrine()->getRepository('AppBundle:Scores');
+                                $results = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
+                                    ->findAll();
+                                foreach ($results as $result) {
+                                    $this->removeFromDB($result);
+                                }
+                                $results = $repo->getDistinctNiveaus();
+                                foreach ($results as $result) {
+                                    $new = new ToegestaneNiveaus();
+                                    $new->setCategorie($result['categorie']);
+                                    $new->setNiveau($result[ 'niveau']);
+                                    $new->setUitslagGepubliceerd(0);
+                                    $this->addToDB($new);
+                                }
+
+                                return $this->redirectToRoute('getAdminOwPage');
+                            }
+                            else
+                            {
+                                $this->addFlash(
+                                    'error',
+                                    'Helaas, de upload is mislukt: het bestand is te groot.'
+                                );
+                            }
+                        }
+                        else
+                        {
+                            $this->addFlash(
+                                'error',
+                                'Helaas, de upload is mislukt.'
+                            );
+                        }
+                    }
+                    else
+                    {
+                        $this->addFlash(
+                            'error',
+                            'Helaas, de upload is mislukt: het bestand moet .csv zijn.'
+                        );
+                    }
+                }
+                else
+                {
+                    $this->addFlash(
+                        'error',
+                        'Selecteer een bestand.'
+                    );
+                }
+            }
+        }
+        $this->setBasicPageData();
+        return $this->render('inloggen/uploadWedstrijdindelingen.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+        ));
     }
 }
