@@ -34,7 +34,7 @@ class FotoUpload
 
     /**
      * @Assert\File(
-     *      maxSize="10M",
+     *      maxSize="5M",
      *      mimeTypes = {"image/gif", "image/jpeg", "image/pjpeg", "image/png"},
      *      mimeTypesMessage = "Please upload a valid image: gif, jpg or png"
      *      )
@@ -69,7 +69,7 @@ class FotoUpload
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        return __DIR__.'/../../../web/'.$this->getUploadDir();
+        return __DIR__.'/../../../httpdocs/'.$this->getUploadDir();
     }
 
     protected function getUploadDir()

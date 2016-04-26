@@ -1,0 +1,45 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Wedstrijduitslagen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Wedstrijduitslagen</h1>
+{% endblock %}
+
+{% block body %}
+    {% if (functie == 'Trainer') %}
+        <a href="{{ path('addWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': groepId }) }}">
+            Uitslag uploaden: <img src="{{ asset('images/add.png') }}" width="18px"/>
+        </a>
+    {% endif %}
+
+    {% for key, value in wedstrijduitslagen %}
+        <p><h3>{{ key }}-{{ key + 1 }}</h3>
+            <table border="0" id="nolink">
+                {% for wedstrijd in value %}
+                <tr>
+                    <td>
+                        <a href="/uploads/wedstrijduitslagen/{{ wedstrijd.locatie }}" target="blank">{{ wedstrijd.naam }}</a>
+                    </td>
+                    {% if (functie == 'Trainer') %}
+                        <td>
+                            <a href="{{ path('removeWedstrijduitslagen', { 'persoonId': persoonItems.id,
+                             'groepId': groepId,
+                               'wedstrijduitslagId': wedstrijd.id }) }}">
+                                <img src="{{ asset('images/remove.png') }}" width="12px"/>
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </p>
+    {% endfor %}
+{% endblock %}

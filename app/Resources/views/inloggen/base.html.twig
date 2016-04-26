@@ -1,11 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block inloggen %}
-    <a href="{{ path('getInloggenPage') }}"><b>Inloggen</b></a>
+    <a href="{{ path('getInloggenPage') }}"><span id="active_link">Inloggen</span></a>
 {% endblock %}
 
-{% block menu %}
-    <div id="items">
-        <a href="{{ path('getNieuwsPage', { 'page': 'index' }) }}">Home</a>
-    </div>
+{% block inlogmenu %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="http://www.donargym.nl/js/jquery.js"></script>
+    <script src="http://www.donargym.nl/js/highcharts.js"></script>
+    <script src="http://www.donargym.nl/js/highcharts-more.js"></script>
+    <script src="http://www.donargym.nl/js/solid-gauge.js"></script>
 {% endblock %}

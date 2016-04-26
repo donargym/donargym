@@ -37,8 +37,8 @@ class Vakanties
         $items = new \stdClass();
         $items->id = $this->id;
         $items->naam = $this->naam;
-        $items->van = $this->van->format('d-m-Y');
-        $items->tot = $this->tot->format('d-m-Y');
+        $items->van = $this->van->format("d-m-Y");
+        $items->tot = $this->tot->format("d-m-Y");
         return $items;
     }
 

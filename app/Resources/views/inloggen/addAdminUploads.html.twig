@@ -1,9 +1,11 @@
 {% extends 'inloggen/adminIndex.html.twig' %}
 
 {% block inlogNavigation %}
-    <div class="inlognavigation">
-        <a href="{{ path('getAdminBestandenPage') }}">Overige Bestanden</a>
-        > <b><i>Bestand uploaden</i></b>
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getAdminBestandenPage') }}">Overige Bestanden</a>
+            > <i>Bestand uploaden</i>
+        </div>
     </div>
 {% endblock %}
 

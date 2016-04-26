@@ -1,0 +1,51 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Trainingsplan</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Trainingsplan</h1>
+{% endblock %}
+
+{% block body %}
+    {% for training in trainingsdata.trainingen %}
+        <h2>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h2>
+        <table border="1">
+            {% for trainingsdatum in training.trainingsdata %}
+                <tr><td>
+                        {% if attribute(trainingsplannen, trainingsdatum.id) is defined %}
+                            <a href="{{  path('makeTrainingsplan', { 'persoonId': persoonItems.id,
+                                'groepId': groepId,
+                                'trainingId': trainingsdatum.id }) }}">
+                                {{ trainingsdatum.datum }}
+                            </a>
+                        {% else %}
+                            <a href="{{  path('TrainingsplanmakeGroepjes', { 'persoonId': persoonItems.id,
+                                'groepId': groepId,
+                                'trainingsdatumId': trainingsdatum.id }) }}">
+                                {{ trainingsdatum.datum }}
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if attribute(trainingsplannen, trainingsdatum.id) is defined %}
+                            <a href="{{  path('TrainingsplanmakeGroepjes', { 'persoonId': persoonItems.id,
+                                'groepId': groepId,
+                                'trainingsdatumId': trainingsdatum.id }) }}">
+                                <img src="{{ asset('images/refresh.png') }}" width="18px"/>
+                            </a>
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+
+{% endblock %}

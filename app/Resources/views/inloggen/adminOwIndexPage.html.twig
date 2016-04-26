@@ -1,0 +1,24 @@
+{% extends 'inloggen/adminIndex.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <i>Onderlinge Wedstrijden</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Onderlinge Wedstrijden</h1>
+{% endblock %}
+
+{% block body %}
+    <p><h2>Gegevens jurysysteem:</h2>
+        Wedstrijdtafel inlognaam: OWJurySysteem<br/>
+        Wedstrijdtafel wachtwoord: Donar1904<br/>
+        <br/>
+        Jury inlognaam: OWJuryLid<br/>
+        Jury wachtwoord: Donar1904</p>
+<a href="{{ path('uploadWedstrijdindelingen') }}">Upload wedstrijdindelingen</a>
+
+        {% endblock %}

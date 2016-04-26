@@ -1,9 +1,11 @@
 {% extends 'inloggen/adminIndex.html.twig' %}
 
 {% block inlogNavigation %}
-    <div class="inlognavigation">
-        <a href="{{ path('getAdminFotoPage') }}">Foto's</a>
-        > <b><i>Foto uploaden</i></b>
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getAdminFotoPage') }}">Foto's</a>
+            > <i>Foto uploaden</i>
+        </div>
     </div>
 {% endblock %}
 
@@ -14,7 +16,7 @@
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         <a href="{{ path('getAdminFotoPage') }}">Annuleer</a>
-        <p>Let op: het bestand mag maximaal 10 Mb zijn!</p>
+        <p>Let op: het bestand mag maximaal 5 Mb zijn!</p>
         {{ form_start(form) }}
         {{ form_errors(form) }}
         <table>

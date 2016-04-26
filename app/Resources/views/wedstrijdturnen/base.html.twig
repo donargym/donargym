@@ -1,16 +1,5 @@
 {% extends 'base.html.twig' %}
 
 {% block wedstrijdturnen %}
-    <a href="{{ path('getWedstrijdturnenPage') }}"><b>Wedstrijdturnen</b></a>
-{% endblock %}
-
-{% block menu %}
-    <div id="items">
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'voorselectiedenhaag' }) }}">Voorselectie Dames</a>
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'voorselectieleidschendam' }) }}">Voorselectie Dames L'dam</a>
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'aselectiedenhaag' }) }}">A-selectie Dames</a>
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'aselectieleidschendam' }) }}">A-selectie Dames L'dam</a>
-        <a href="{{ path('getWedstrijdturnenPage', { 'page': 'bselectiedenhaag' }) }}">B-selectie Dames</a>
-        <a href="http://www.donargym.nl/topturnen/" target="_blank">Topturnen Heren</a>
-    </div>
+    <a href="#"><span id="active_link">Wedstrijdturnen</span></a>
 {% endblock %}

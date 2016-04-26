@@ -5,16 +5,19 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class SecurityController extends BaseController
 {
-    private $calendarItems;
 
     /**
      * @Route("/login", name="login_route")
      */
     public function loginAction(Request $request)
     {
+        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
+        $this->groepItems = $this->wedstrijdLinkItems[0];
+        $this->header = $this->getHeader();
         $this->calendarItems = $this->getCalendarItems();
         $authenticationUtils = $this->get('security.authentication_utils');
 
@@ -31,7 +34,8 @@ class SecurityController extends BaseController
                 'last_username' => $lastUsername,
                 'error'         => $error,
                 'calendarItems' => $this->calendarItems,
-                'header'        => 'bannerhome'.rand(1,2)
+                'header'        => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -41,5 +45,14 @@ class SecurityController extends BaseController
      */
     public function loginCheckAction()
     {
+    }
+
+    /**
+     * @Route("/pre_logout", name="pre_logout")
+     */
+    public function preLogout()
+    {
+        unset($_SESSION['username']);
+        return $this->redirectToRoute('logout');
     }
 }

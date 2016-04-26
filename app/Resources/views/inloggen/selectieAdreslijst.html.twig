@@ -1,0 +1,125 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Adreslijst</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Adreslijst</h1>
+{% endblock %}
+
+{% block body %}
+    {% for functie in persoonItems.functies %}
+        {% if functie.groepId == groepId %}
+            <h2>Trainers en Assistent-Trainers</h2>
+            <table width="100%" border="0" id="nolink" style="font-size: 10px;">
+                <tr style="color: #FFFF00;">
+                    <th>Naam</th>
+                    <th>Geb. Datum</th>
+                    <th>Straat + Nr</th>
+                    <th>Postcode</th>
+                    <th>Plaats</th>
+                    <th>Tel 1</th>
+                    <th>Tel 2</th>
+                    <th>Tel 3</th>
+                    <th>Email 1</th>
+                    <th>Email 2</th>
+                </tr>
+                {% if functie.trainer is defined %}
+                    {% for persoon in functie.trainer %}
+                        <tr>
+                            <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
+                            <td>{{ persoon.geboortedatum }}</td>
+                            <td>{{ persoon.straatNr }}</td>
+                            <td>{{ persoon.postcode }}</td>
+                            <td>{{ persoon.plaats }}</td>
+                            <td>{{ persoon.tel1 }}</td>
+                            <td>{{ persoon.tel2 }}</td>
+                            <td>{{ persoon.tel3 }}</td>
+                            <td>{{ persoon.email }}</td>
+                            <td>{{ persoon.email2 }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+
+                {% if functie.assistent is defined %}
+                    {% for persoon in functie.assistent %}
+                        <tr>
+                            <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
+                            <td>{{ persoon.geboortedatum }}</td>
+                            <td>{{ persoon.straatNr }}</td>
+                            <td>{{ persoon.postcode }}</td>
+                            <td>{{ persoon.plaats }}</td>
+                            <td>{{ persoon.tel1 }}</td>
+                            <td>{{ persoon.tel2 }}</td>
+                            <td>{{ persoon.tel3 }}</td>
+                            <td>{{ persoon.email }}</td>
+                            <td>{{ persoon.email2 }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+
+            <h2>Turnsters</h2>
+            <table border="0" id="nolink" style="font-size: 10px;">
+                <tr style="color: #FFFF00;">
+                    <th>Naam</th>
+                    <th>Geb. Datum</th>
+                    <th>Straat + Nr</th>
+                    <th>Postcode</th>
+                    <th>Plaats</th>
+                    <th>Tel 1</th>
+                    <th>Tel 2</th>
+                    <th>Tel 3</th>
+                    <th>Email 1</th>
+                    <th>Email 2</th>
+                </tr>
+                {% if functie.turnster is defined %}
+                    {% for persoon in functie.turnster %}
+                        <tr>
+                            <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
+                            <td>{{ persoon.geboortedatum }}</td>
+                            <td>{{ persoon.straatNr }}</td>
+                            <td>{{ persoon.postcode }}</td>
+                            <td>{{ persoon.plaats }}</td>
+                            <td>{{ persoon.tel1 }}</td>
+                            <td>{{ persoon.tel2 }}</td>
+                            <td>{{ persoon.tel3 }}</td>
+                            <td>{{ persoon.email }}</td>
+                            <td>{{ persoon.email2 }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+
+<p><label><h4>Alle mailadressen, gescheiden met ;</h4>
+<textarea rows="15" cols="60">
+{% if functie.trainer is defined %}
+{% for persoon in functie.trainer %}
+{% if persoon.email %}{{ persoon.email }};{% endif %}
+{% if persoon.email2 %}{{ persoon.email2 }};{% endif %}
+{% endfor %}
+{% endif %}
+{% if functie.assistent is defined %}
+{% for persoon in functie.assistent %}
+{% if persoon.email %}{{ persoon.email }};{% endif %}
+{% if persoon.email2 %}{{ persoon.email2 }};{% endif %}
+{% endfor %}
+{% endif %}
+{% if functie.turnster is defined %}
+{% for persoon in functie.turnster %}
+{% if persoon.email %}{{ persoon.email }};{% endif %}
+{% if persoon.email2 %}{{ persoon.email2 }};{% endif %}
+{% endfor %}
+{% endif %}
+</textarea>
+</label></p>
+
+        {% endif %}
+    {% endfor %}
+{% endblock %}

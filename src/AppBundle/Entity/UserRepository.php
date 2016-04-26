@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * UserRepository
@@ -30,7 +31,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 'Dit is geen geldige inlognaam.');
             throw new UsernameNotFoundException($message);
         }
-
+        $_SESSION['username'] = $username;
         return $user;
     }
 

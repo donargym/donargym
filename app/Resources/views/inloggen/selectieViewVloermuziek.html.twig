@@ -1,0 +1,41 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Vloermuziek</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Vloermuziek</h1>
+{% endblock %}
+
+{% block body %}
+
+    <table border="0" id="nolink">
+        <tr style="color:#FFFF00;">
+            <th>Naam turnster</th>
+            <th>Luisteren</th>
+            <th>Uploaden</th></tr>
+    {% for persoon in vloermuziek %}
+            <tr>
+                <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
+                <td style="text-align: center;">{% if persoon.vloermuziek %}
+                    <a href="http://www.donargym.nl/uploads/vloermuziek/{{ persoon.vloermuziek }}" target="blank">
+                        <img src="{{ asset('images/listen.png') }}" width="18px"/>
+                    </a>
+                    {% endif %}
+                </td>
+                <td style="text-align: center;">
+                    <a href="{{ path('addSelectieVloermuziekPage', { 'persoonId': persoonItems.id, 'groepId': groepId, 'turnsterId': persoon.id }) }}">
+                        <img src="{{ asset('images/upload.png') }}" width="18px"/>
+                    </a>
+                </td>
+            </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}

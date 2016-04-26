@@ -24,7 +24,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=190, unique=true)
      */
     private $username;
 
@@ -36,7 +36,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="email2", type="string", length=60, unique=true, nullable=true)
+     * @ORM\Column(name="email2", type="string", length=190, unique=true, nullable=true)
      */
     private $email2;
 
@@ -97,17 +97,83 @@ class User implements AdvancedUserInterface, \Serializable
     private $tel3;
 
     /**
-     * @ORM\OneToMany(targetEntity="persoon", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Persoon", mappedBy="user")
      *
      */
     private $persoon;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Vereniging", inversedBy="user")
+     *
+     */
+    private $vereniging;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Turnster", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $turnster;
+
     public function __construct()
     {
         $this->persoon = new ArrayCollection();
+        $this->turnster = new ArrayCollection();
         $this->isActive = true;
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid(null, true));
+    }
+
+    /**
+     * Add turnster
+     *
+     * @param \AppBundle\Entity\Turnster $turnster
+     * @return User
+     */
+    public function addTurnster(\AppBundle\Entity\Turnster $turnster)
+    {
+        $this->turnster[] = $turnster;
+
+        return $this;
+    }
+
+    /**
+     * Remove turnster
+     *
+     * @param \AppBundle\Entity\Turnster $turnster
+     */
+    public function removeTurnster(\AppBundle\Entity\Turnster $turnster)
+    {
+        $this->turnster->removeElement($turnster);
+    }
+
+    /**
+     * Get turnster
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTurnster()
+    {
+        return $this->turnster;
+    }
+
+    /**
+     * Set vereniging
+     *
+     * @param \AppBundle\Entity\Vereniging $vereniging
+     * @return User
+     */
+    public function setVereniging(\AppBundle\Entity\Vereniging $vereniging = null)
+    {
+        $this->vereniging = $vereniging;
+
+        return $this;
+    }
+
+    /**
+     * Get vereniging
+     *
+     * @return \AppBundle\Entity\Vereniging
+     */
+    public function getVereniging()
+    {
+        return $this->vereniging;
     }
 
     public function getUsername()
@@ -127,8 +193,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function getSalt()
     {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
         return null;
     }
 
@@ -140,7 +204,11 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function setEmail2($email2)
     {
-        $this->email2 = $email2;
+        if ($email2 == "") {
+            $this->email2 = null;
+        } else {
+            $this->email2 = $email2;
+        }
 
         return $this;
     }
@@ -197,7 +265,6 @@ class User implements AdvancedUserInterface, \Serializable
     public function getRoles()
     {
         return array($this->role);
-        //return array('ROLE_USER');
     }
 
     /**
@@ -256,8 +323,6 @@ class User implements AdvancedUserInterface, \Serializable
             $this->username,
             $this->password,
             $this->isActive
-            // see section on salt below
-            // $this->salt,
         ));
     }
 
@@ -269,8 +334,6 @@ class User implements AdvancedUserInterface, \Serializable
             $this->username,
             $this->password,
             $this->isActive
-            // see section on salt below
-            // $this->salt
             ) = unserialize($serialized);
     }
 

@@ -1,8 +1,10 @@
 {% extends 'inloggen/adminIndex.html.twig' %}
 
 {% block inlogNavigation %}
-    <div class="inlognavigation">
-        <b><i>Overige Bestanden</i></b>
+    <div id="inlog_nav">
+        <div id="text">
+            <i>Overige bestanden</i>
+        </div>
     </div>
 {% endblock %}
 
@@ -12,23 +14,21 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('addAdminBestandenPage') }}">Bestand Uploaden: <img src="{{ asset('images/add.png') }}" width="18px" /></a>
+        <a href="{{ path('addAdminBestandenPage') }}">Bestand Uploaden: <img src="{{ asset('images/add.png') }}"
+                                                                             width="18px"/></a>
     {% endif %}
-    <table>
+    <table border="1">
         <tr>
             <td><b>Naam</b></td>
             <td><b>Locatie</b></td>
             <td></td>
         </tr>
         {% for item in contentItems %}
-            {% if loop.index0 is divisibleby(2) %}
-                <tr style="background:#EFEFEF">
-            {% else %}
-                <tr style="background: lightyellow">
-            {% endif %}
-            <td>{{ item.naam }}</td>
-            <td style="font-size: 12px;">http://www.donargym.nl/uploads/files/{{ item.locatie }}</td>
-            <td><a href="{{ path('removeAdminBestandenPage', { 'id': item.id }) }}"><img src="{{ asset('images/remove.png') }}" width="18px" /></a></td>
+            <tr>
+                <td>{{ item.naam }}</td>
+                <td style="font-size: 12px;">http://www.donargym.nl/uploads/files/{{ item.locatie }}</td>
+                <td><a href="{{ path('removeAdminBestandenPage', { 'id': item.id }) }}"><img
+                                src="{{ asset('images/remove.png') }}" width="18px"/></a></td>
             </tr>
         {% endfor %}
     </table>

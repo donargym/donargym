@@ -1,0 +1,35 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <a href="{{ path('EtenDrinkenIndex', { 'persoonId': persoonItems.id, 'groepId': groepId }) }}">Eten/drinken Sinterklaas 2 december 2015</a>
+            > <i>Eten/drinken toevoegen/wijzigen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Eten/drinken toevoegen/wijzigen</h1>
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_errors(form.voedsel) }}<br>
+    <b>{{ form_label(form.voedsel) }}</b><br>
+    {{ form_widget(form.voedsel) }}<br>
+
+    {{ form_errors(form.hoeveelheid) }}<br>
+    <b>{{ form_label(form.hoeveelheid) }}</b><br>
+    {{ form_widget(form.hoeveelheid) }}<br>
+
+    {{ form_errors(form.overig) }}<br>
+    <b>{{ form_label(form.overig) }}</b><br>
+    {{ form_widget(form.overig) }}<br><br>
+
+    {{ form_widget(form.Verstuur) }}
+    {{ form_end(form) }}
+{% endblock %}

@@ -9,11 +9,11 @@
 /composer.phar
 /vendor/
 /web/bundles/
-/.idea
+/.idea/*
 /web/images/*
-/web/images/headers/*
-/web/images/Selectie/*
 /web/adminuploads/*
 /web/uploads/*
 /web/nieuws/*
 /src/AppBundle/DataFixtures/ORM/LoadUserData.php
+/httpdocs/*
+/src/AppBundle/Controller/font/*

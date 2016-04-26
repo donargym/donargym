@@ -1,187 +1,653 @@
 body {
-    background-color: lightyellow;
+    background: #C1C1C1 url(http://www.donargym.nl/images/background2.jpg) no-repeat; /* Blur-> unfocus 4 || opacity: 50 zwart */
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: Verdana, Calibri;
 }
 
-body {
-    font-family: Calibri;
-    font-size: 15px;
-    margin: 0px;
+#container {
+    width: 1050px;
+    box-shadow: 0px 0px 10px #000;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.55);
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    overflow: hidden;
 }
 
-body h1 {
-    margin: 0px;
-    font-size: 20px;
+#header {
+    margin-top: 20px;
+    width: 1000px;
+    height: 373px;
 }
 
-body h2 {
-    margin-bottom: 3px;
-    font-size: 18px;
+#header img {
+    border-radius: 5px;
+    width: 1000px;
 }
 
-body b {
-    font-weight: bold;
-}
-
-body img {
-    border: 0;
-}
-
-body a {
-    text-decoration: none;
-    color: #19007D;
-    font-weight: bold;
-}
-
-body div.line {
-    height: 1px;
-    background: #000000;
-}
-
-body div.line2 {
-    height: 12px;
-    background-image: url("/donargym/web/images/lijn.jpg");
-}
-
-body #post-title {
-    font-size: 13px;
-    margin: 0px;
-    background: lightyellow;
-}
-
-body #blog-post-content {
-    margin-bottom: 15px;
-}
-
-body #post-content {
+#c {
+    background: rgba(255, 255, 255, 0.4);
+    border: 0px solid #FFF;
+    width: 770px;
+    float: left;
+    min-height: 550px;
+    margin-top: 10px;
+    margin-left: 25px;
     margin-bottom: 30px;
+    border-radius: 5px;
 }
 
-body #header {
-    width: 980px;
-    height: 380px;
-    margin-left: auto;
-    margin-right: auto;
+#content {
+    color: rgba(255, 255, 255, 0.93);
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 11pt;
+    overflow: hidden;
 }
 
-body #header #title {
-    height: 210px;
-    line-height: 210px;
-    color: black;
-    font-size: 60px;
+#content p {
+    margin-bottom: 20px;
 }
 
-body #header #logo {
-    float: right;
-}
-
-body #navigator {
-    width: 980px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-body #navigator a {
-    font-size: 16px;
-    padding: 8px;
+#content h1 {
+    font-size: 20pt;
+    color: #FFFF00;
     font-weight: normal;
-}
-
-body #article {
-    width: 980px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-body #article #menu {
-    width: 175px;
-    float: left;
-}
-
-body #article #menu #items a {
-    width: 167px;
-    height: 17px;
-    line-height: 17px;
-    display: block;
-    background: url("/donargym/web/images/button.png") 0px 0px no-repeat;
-    margin-right: 8px;
-    margin-bottom: 8px;
-    color: black;
-    padding: 4px;
-    font-size: 12px;
-    font-weight: normal;
-}
-
-.currentLink {
-    width: 167px;
-    height: 17px;
-    line-height: 17px;
-    display: block;
-    background: url("/donargym/web/images/button.png") 0px 0px no-repeat;
-    margin-right: 8px;
-    margin-bottom: 8px;
-    color: black;
-    padding: 4px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-body #article #page {
-    width: 597px;
-    float: left;
-    background: #FFF;
-    margin-left: 5px;
-    padding: 14px;
-    background-color: lightyellow
-}
-
-body #article #page #formulier {
-    width: 597px;
-    float: left;
-    background: #FFF;
-    margin-left: 0px;
-    padding: 0px;
-    background-color: lightyellow
-}
-
-body #article #page #formulier #left {
-    width: 293px;
-    float: left;
-    background: #FFF;
-    margin-left: 0px;
-    padding: 0px;
-    background-color: lightyellow
-}
-
-body #article #page #formulier #right {
-    width: 293px;
-    float: right;
-    background: #FFF;
-    margin-left: 10px;
-    padding: 0px;
-    background-color: lightyellow
-}
-
-body #article #page #wizardmenu {
-    height: 50px;
-    line-height: 50px;
-}
-
-body #article #agenda {
-    width: 175px;
-    float: right;
-    background: #F0F0CC;
-}
-
-body #article #agenda #text {
-    padding: 5px;
-}
-
-.inlognavigation {
-    width: 585px;
-    float: left;
     margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    padding: 5px;
-    background-color: #F0F0CC;
+    margin-bottom: 5px;
 }
+
+#content h2 {
+    font-size: 16pt;
+    color: #FFFF00;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+#content h3 {
+    font-size: 14pt;
+    color: #FFFF00;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+
+#content h4 {
+    font-size: 12pt;
+    color: #FFFF00;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+
+#content h5 {
+    font-size: 10pt;
+    color: #FFFF00;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+
+#content h6 {
+    font-size: 11pt;
+    color: #FFFF00;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+
+#content hr {
+    background: #FFFF00;
+    height: 1px;
+    border: 0px;
+    margin-bottom: 0px;
+}
+
+#content img {
+    max-width: 700px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+#article {
+    overflow: hidden;
+}
+
+#article img {
+    max-width: 500px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+#content a:link {
+    color: #FFFF00;
+    text-decoration: underline;
+}
+
+#content a:visited {
+    color: #FFFF00;
+    text-decoration: underline;
+}
+
+#content a:hover, a:active {
+    color: #FFAE00;
+    text-decoration: underline;
+}
+
+#content .uitslagen a:link {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(255,255,255,0.5);
+    display: block;
+    float: right;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+#content .uitslagen a:visited {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(255,255,255,0.5);
+    display: block;
+    float: right;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+#content .uitslagen a:hover, .uitslagen a:active {
+    background: rgba(255,255,0,0.5);
+    color: #FFF;
+    text-decoration: none;
+    display: block;
+    float: right;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+#content #wedstrijduitslagen a:link, #content #wedstrijduitslagen a:visited {
+	color: #FFFF00;
+    text-decoration: none;
+}
+
+#content #wedstrijduitslagen a:hover, #content #wedstrijduitslagen a:active {
+	color: #FFAE00;
+    text-decoration: none;
+}
+
+.date {
+    font-size: 9pt;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+}
+
+#agenda {
+    background: rgba(0, 0, 0, 0.3);
+    border: 0px solid #000;
+    width: 200px;
+    min-height: 300px;
+    float: right;
+    margin-top: 10px;
+    margin-right: 25px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+}
+
+#agenda .agenda {
+    color: #FFF;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 10pt;
+}
+
+#agenda .agenda hr {
+    background: #FFF;
+    height: 1px;
+    border: 0px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#agenda .agenda h1 {
+    font-size: 16pt;
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+#agenda .agenda h2 {
+    font-size: 10pt;
+    font-weight: normal;
+    margin-top: 0px;
+    margin-bottom: 2px;
+}
+
+#agenda .agenda a:link {
+    color: #FFF;
+    text-decoration: none;
+}
+
+#agenda .agenda a:visited {
+    color: #FFF;
+    text-decoration: none;
+}
+
+#agenda .agenda a:hover, a:active {
+    color: #FFFF00;
+    text-decoration: none;
+}
+
+#agenda .a_date {
+    color: #FFFF00;
+    font-size: 10pt;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+#agenda .a_date a:link {
+    color: #FFFF00;
+    font-size: 10pt;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+#agenda .a_date a:visited {
+    color: #FFFF00;
+    font-size: 10pt;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+#agenda .a_date a:hover {
+    color: #FFFF00;
+    font-size: 10pt;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+#agenda .a_date a:active {
+    color: #FFFF00;
+    font-size: 10pt;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+a:link {
+    color: #FFF;
+}
+
+a:visited {
+    color: #FFF;
+}
+
+a:hover, a:active {
+    color: #FFF;
+}
+
+/* ---------------------- */
+
+#primary_nav_wrap {
+    color: #FFF;
+    background: rgba(255, 255, 0, 0.6);
+    height: 35px;
+    max-width: 1000px;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    font-size: 11pt;
+}
+
+#primary_nav_wrap ul {
+    list-style: none;
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#primary_nav_wrap ul a {
+    display: block;
+    color: #FFF;
+    text-decoration: none;
+    line-height: 35px;
+    padding: 0 15px;
+}
+
+#primary_nav_wrap ul li {
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#primary_nav_wrap ul li:hover {
+    background: rgba(255, 255, 0, 0.7);
+    border-radius: 5px;
+}
+
+#primary_nav_wrap ul ul {
+    color: #FF0000;
+    text-align: left;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #333333;
+    padding: 0;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+#primary_nav_wrap ul ul li {
+    float: none;
+    width: 200px;
+
+}
+
+#primary_nav_wrap ul ul a {
+    line-height: 120%;
+    padding: 10px 15px;
+}
+
+#primary_nav_wrap ul ul ul {
+    top: 0;
+    left: 100%;
+}
+
+#primary_nav_wrap ul li:hover > ul {
+    display: block;
+}
+
+/* COMMENT LINE */
+
+#inlogmenu {
+    background: rgba(255, 255, 255, 0.5);
+    height: 35px;
+    max-width: 1000px;
+    display: block;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    font-size: 11pt;
+}
+
+#inlogmenu ul {
+    list-style: none;
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#inlogmenu ul a:link, #inlogmenu ul a:visited {
+    display: block;
+    color: #FFF;
+    text-decoration: none;
+    line-height: 35px;
+    padding: 0 15px;
+}
+
+#inlogmenu ul li {
+    position: relative;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#inlogmenu ul li:hover {
+    background: #7F7F7F; /*rgba(255, 255, 0, 0.7);*/
+    border-radius: 5px;
+}
+
+/* COMMENT LINE */
+
+#active_link {
+    border-bottom: 2px solid #FFFF00;
+}
+
+#active_link2 {
+    border-bottom: 2px solid #FFF;
+}
+
+#content .button1 {
+    background: rgba(140,255,0,0.4);
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+#content .button a:link, #content .button a:visited {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+    margin: 5px;
+}
+
+#content .button a:hover, .uitslagen a:active {
+    background: rgba(255,255,0,0.5);
+    color: #FFF;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+#inlog_nav {
+    background: rgba(0,0,0,0.6);
+    max-width: 770px;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#inlog_nav #text {
+    color: #FFF;
+    padding: 7px;
+    padding-left: 10px;
+}
+
+#inlog_nav #text a:link {
+    color: #FFF;
+    text-decoration: none;
+}
+
+#inlog_nav #text a:visited {
+    color: #FFF;
+    text-decoration: none;
+}
+
+#inlog_nav #text a:hover, #inlog_nav #text a:active {
+    color: #FFFF00;
+    text-decoration: none;
+}
+
+#nolink a:link, #nolink a:visited {
+    color: #FFF;
+    text-decoration: none;
+    font-size: 10pt;
+    display: block;
+}
+
+#nolink a:hover, #nolink a:active {
+    color: #FFFF00;
+    text-decoration: none;
+    font-size: 10pt;
+}
+
+#nolink tr:hover td {
+    background: #9E332F;
+    color: #FFFF00;
+}
+
+#nolink {
+    border-collapse: collapse;
+    border: 1px solid rgba(0,0,0,1);
+    border-radius: 5px;
+    color: #FFF;
+}
+
+#nolink tr, #nolink td {
+    border: 1px solid #000;
+}
+
+#nolink tr, #nolink td, #nolink th {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#nolink th {
+    background: rgba(0,0,0,0.3);
+    font-weight: normal;
+    border: 1px solid #000;
+}
+
+#nolink tr:nth-child(even) {
+    background: rgba(255,255,0,0.3);
+}
+
+#nolink tr:nth-child(odd) {
+    background: rgba(0,0,0,0.3);
+    border: 0px;
+    border-radius: 5px;
+}
+
+#presentie {
+    border-collapse: collapse;
+}
+
+#presentie th {
+    background: rgba(0,0,0,0.3);
+    font-weight: normal;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 1px solid rgba(0,0,0,0.6);
+}
+
+#presentie tr, #presentie td {
+    padding-left: 3px;
+    padding-right: 3px;
+    border: 1px solid rgba(0,0,0,0.6);
+}
+
+#menuzoveel {
+    float: right;
+    display: block;
+    background: rgba(0,0,0,0.5);
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#menuzoveel a:link {
+    margin-right: 15px;
+}
+
+#button3 {
+    float: right;
+    display: block;
+}
+
+#button3 a:link, #button3 a:visited {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+    margin: 5px;
+    margin-right: 0px;
+}
+
+#button3 a:hover, #button3 a:active {
+    background: rgba(255,255,0,0.5);
+    color: #FFF;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+#button4 {
+    text-align: center;
+    display: inline-block;
+}
+
+#button4 a:link, #button4 a:visited {
+    color: #FFFF00;
+    text-decoration: none;
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+    margin: 5px;
+    margin-right: 0px;
+}
+
+#button4 a:hover, #button4 a:active {
+    background: rgba(255,255,0,0.5);
+    color: #FFF;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px 10px;
+}
+
+/* #inlogmenu {
+	color: #FFF;
+	text-decoration: none;
+	background: rgba(255,255,255,0.5);
+	display: block;
+	width: 700px;
+	border-radius: 5px;
+	text-align: left;
+	padding: 5px 10px;
+}
+
+#inlogmenu #nav {
+	margin: 5px;
+}
+
+#inlogmenu #nav h3 {
+	font-size: 14pt;
+	margin-bottom: 5px;
+	color: #FFF;
+	text-align: center;
+}
+
+#inlogmenu #nav hr {
+	background-color: #FFF;
+	margin-bottom: 5px;
+}
+
+#inlogmenu #nav a:link {
+	color: #FFF;
+	text-decoration: none;
+}
+
+#inlogmenu #nav a:visited {
+	color: #FFF;
+	text-decoration: none;
+}
+
+#inlogmenu #nav a:active, #inlogmenu #nav a:hover {
+	color: #FFFF00;
+	text-decoration: none;
+} */

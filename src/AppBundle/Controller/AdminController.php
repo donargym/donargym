@@ -4,6 +4,19 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\FileUpload;
 use AppBundle\Entity\FotoUpload;
+use AppBundle\Entity\Functie;
+use AppBundle\Entity\Groepen;
+use AppBundle\Entity\Persoon;
+use AppBundle\Entity\Scores;
+use AppBundle\Entity\ScoresRepository;
+use AppBundle\Entity\ToegestaneNiveaus;
+use AppBundle\Entity\Trainingen;
+use AppBundle\Entity\Turnster;
+use AppBundle\Entity\User;
+use AppBundle\Entity\UserRepository;
+use AppBundle\Entity\Vereniging;
+use AppBundle\Form\Type\UserType;
+use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Httpfoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -21,9 +34,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class AdminController extends BaseController
 {
-    protected $header;
-    protected $calendarItems;
-
     public function __construct()
     {
     }
@@ -34,11 +44,11 @@ class AdminController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $this->header = 'bannerhome'.rand(1,2);
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         return $this->render('inloggen/adminIndex.html.twig', array(
             'calendarItems' => $this->calendarItems,
-            'header' => $this->header
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -48,8 +58,7 @@ class AdminController extends BaseController
      */
     public function getAdminFotoPage()
     {
-        $this->header = 'bannerhome'.rand(1,2);
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT fotoupload
@@ -64,7 +73,8 @@ class AdminController extends BaseController
         return $this->render('inloggen/adminFotos.html.twig', array(
             'contentItems' => $contentItems,
             'calendarItems' => $this->calendarItems,
-            'header' => $this->header
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -75,8 +85,7 @@ class AdminController extends BaseController
      */
     public function addAdminFotoPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $foto = new FotoUpload();
         $form = $this->createFormBuilder($foto)
             ->add('naam')
@@ -97,6 +106,7 @@ class AdminController extends BaseController
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -109,8 +119,7 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT fotoupload
@@ -124,13 +133,15 @@ class AdminController extends BaseController
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
                     'content' => $foto->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -151,7 +162,8 @@ class AdminController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -162,8 +174,7 @@ class AdminController extends BaseController
      */
     public function getAdminBestandenPage()
     {
-        $this->header = 'bannerhome'.rand(1,2);
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT fileupload
@@ -178,7 +189,8 @@ class AdminController extends BaseController
         return $this->render('inloggen/adminUploads.html.twig', array(
             'contentItems' => $contentItems,
             'calendarItems' => $this->calendarItems,
-            'header' => $this->header
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 
@@ -189,8 +201,7 @@ class AdminController extends BaseController
      */
     public function addAdminBestandenPageAction(Request $request)
     {
-        $this->header = 'bannerhome'.rand(1,2);
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
         $file = new FileUpload();
         $form = $this->createFormBuilder($file)
             ->add('naam')
@@ -210,6 +221,7 @@ class AdminController extends BaseController
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView(),
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -222,8 +234,7 @@ class AdminController extends BaseController
     {
         if($request->getMethod() == 'GET')
         {
-            $this->header = 'bannerhome'.rand(1,2);
-            $this->calendarItems = $this->getCalendarItems();
+            $this->setBasicPageData();
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT fileupload
@@ -237,13 +248,15 @@ class AdminController extends BaseController
                     'calendarItems' => $this->calendarItems,
                     'header' => $this->header,
                     'content' => $file->getAll(),
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
             else
             {
                 return $this->render('error/pageNotFound.html.twig', array(
                     'calendarItems' => $this->calendarItems,
-                    'header' => $this->header
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
                 ));
             }
         }
@@ -264,7 +277,8 @@ class AdminController extends BaseController
         {
             return $this->render('error/pageNotFound.html.twig', array(
                 'calendarItems' => $this->calendarItems,
-                'header' => $this->header
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
             ));
         }
     }
@@ -275,11 +289,692 @@ class AdminController extends BaseController
      */
     public function getAdminSelectiePage()
     {
-        $this->header = 'bannerhome'.rand(1,2);
-        $this->calendarItems = $this->getCalendarItems();
+        $this->setBasicPageData();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT functie
+                FROM AppBundle:Functie functie
+                WHERE functie.functie = :functie
+                OR functie.functie = :functie2')
+            ->setParameter('functie', 'Trainer')
+            ->setParameter('functie2', 'Assistent-Trainer');
+        /** @var Functie $functies */
+        $functies = $query->getResult();
+        $persoonItems = array();
+        $ids = array();
+        for($i=0;$i<count($functies);$i++)
+        {
+            $persoon = $functies[$i]->getPersoon();
+            if(!(in_array($persoon->getId(), $ids)))
+            {
+                $ids[] = $persoon->getId();
+                $persoonItems[$i] = new \stdClass();
+                $persoonItems[$i]->id = $persoon->getId();
+                $persoonItems[$i]->voornaam = $persoon->getVoornaam();
+                $persoonItems[$i]->achternaam = $persoon->getAchternaam();
+            }
+        }
         return $this->render('inloggen/adminSelectie.html.twig', array(
             'calendarItems' => $this->calendarItems,
-            'header' => $this->header
+            'header' => $this->header,
+            'personen' => $persoonItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+        ));
+    }
+
+    /**
+     * @Route("/admin/selectie/add/", name="addAdminTrainerPage")
+     * @Method({"GET", "POST"})
+     */
+    public function addAdminTrainerPageAction(Request $request)
+    {
+        $this->setBasicPageData();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT groepen
+                FROM AppBundle:Groepen groepen');
+        $groepen = $query->getResult();
+        $groepenItems = array();
+        for($i=0;$i<count($groepen);$i++)
+        {
+            $groepenItems[$i] = new \stdClass();
+            $groepenItems[$i]->id = $groepen[$i]->getId();
+            $groepenItems[$i]->naam = $groepen[$i]->getName();
+            $groepenItems[$i]->trainingen = array();
+            $query = $em->createQuery(
+                'SELECT trainingen
+                FROM AppBundle:Trainingen trainingen
+                WHERE trainingen.groep = :id')
+                ->setParameter('id', $groepen[$i]->getId());
+            $trainingen = $query->getResult();
+            for($j=0;$j<count($trainingen);$j++) {
+                $groepenItems[$i]->trainingen[$j] = new \stdClass();
+                $groepenItems[$i]->trainingen[$j]->dag = $trainingen[$j]->getDag();
+                $groepenItems[$i]->trainingen[$j]->tijdVan = $trainingen[$j]->getTijdVan();
+                $groepenItems[$i]->trainingen[$j]->tijdTot = $trainingen[$j]->getTijdTot();
+                $groepenItems[$i]->trainingen[$j]->id = $trainingen[$j]->getId();
+            }
+        }
+        if($request->getMethod() == 'POST') {
+            $role = 'ROLE_ASSISTENT';
+            $query = $em->createQuery(
+                'SELECT user
+                FROM AppBundle:User user
+                WHERE user.username = :email
+                OR user.email2 = :email')
+                ->setParameter('email', $this->get('request')->request->get('username'));
+            $user = $query->setMaxResults(1)->getOneOrNullResult();
+            if (count($user) == 0) {
+                $query = $em->createQuery(
+                    'SELECT user
+                FROM AppBundle:User user
+                WHERE user.username = :email
+                OR user.email2 = :email')
+                    ->setParameter('email', $this->get('request')->request->get('email2'));
+                $user = $query->setMaxResults(1)->getOneOrNullResult();
+            }
+
+
+            if (count($user) > 0) {
+                $role = $user->getRole();
+                $newuser = false;
+            } else {
+                $user = new \AppBundle\Entity\User();
+                $newuser = true;
+            }
+            $persoon = new Persoon();
+
+            $k = 0;
+            $postGroepen = array();
+            foreach ($groepen as $groep) {
+                if ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Trainer' || $this->get('request')->request->get('groep_' . $groep->getId()) == 'Assistent-Trainer') {
+                    if ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Trainer') {
+                        $role = 'ROLE_TRAINER';
+                    } elseif ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Assistent-Trainer' && $role != 'ROLE_TRAINER') {
+                        $role = 'ROLE_ASSISTENT';
+                    }
+                    $query = $em->createQuery(
+                        'SELECT groepen
+                        FROM AppBundle:Groepen groepen
+                        WHERE groepen.id = :id')
+                        ->setParameter('id', $groep->getId());
+                    $result = $query->setMaxResults(1)->getOneOrNullResult();
+                    $postGroepen[$k] = $result;
+                    $functie = new Functie();
+                    $functie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
+                    $postGroepen[$k]->addFunctie($functie);
+                    $persoon->addFunctie($functie);
+                    $query = $em->createQuery(
+                        'SELECT trainingen
+                        FROM AppBundle:Trainingen trainingen
+                        WHERE trainingen.groep = :id')
+                        ->setParameter('id', $groep->getId());
+                    $trainingen = $query->getResult();
+                    foreach ($trainingen as $training) {
+                        if ($this->get('request')->request->get('trainingen_' . $training->getId()) == 'on') {
+                            $query = $em->createQuery(
+                                'SELECT trainingen
+                                FROM AppBundle:Trainingen trainingen
+                                WHERE trainingen.id = :id')
+                                ->setParameter('id', $training->getId());
+                            $result = $query->setMaxResults(1)->getOneOrNullResult();
+                            $persoon->addTrainingen($result);
+                        }
+                    }
+                }
+            }
+            $persoon->setVoornaam($this->get('request')->request->get('voornaam'));
+            $persoon->setAchternaam($this->get('request')->request->get('achternaam'));
+            $persoon->setGeboortedatum($this->get('request')->request->get('geboortedatum'));
+            $user->setRole($role);
+            $user->setUsername($this->get('request')->request->get('username'));
+            if ($this->get('request')->request->get('email2')) {
+                $user->setEmail2($this->get('request')->request->get('email2'));
+            }
+            $user->setStraatnr($this->get('request')->request->get('straatnr'));
+            $user->setPostcode($this->get('request')->request->get('postcode'));
+            $user->setPlaats($this->get('request')->request->get('plaats'));
+            $user->setTel1($this->get('request')->request->get('tel1'));
+            if ($this->get('request')->request->get('tel2')) {
+                $user->setTel2($this->get('request')->request->get('tel2'));
+            }
+            if ($this->get('request')->request->get('tel3')) {
+                $user->setTel3($this->get('request')->request->get('tel3'));
+            }
+
+            $persoon->setUser($user);
+
+            if ($newuser) {
+                $password = $this->generatePassword();
+                $encoder = $this->container
+                    ->get('security.encoder_factory')
+                    ->getEncoder($user);
+                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                $em->persist($user);
+            }
+            else{
+                $password = 'over een wachtwoord beschik je als het goed is al';
+            }
+            $this->addSubDoelenAanPersoon($persoon);
+            $user->addPersoon($persoon);
+            $em->persist($persoon);
+            $em->flush();
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Inloggegevens website Donar')
+                ->setFrom('webmaster@donargym.nl')
+                ->setTo($user->getUsername())
+                ->setBody(
+                    $this->renderView(
+                        'mails/new_user.txt.twig',
+                        array(
+                            'voornaam' => $persoon->getVoornaam(),
+                            'email1' => $user->getUsername(),
+                            'email2' =>$user->getEmail2(),
+                            'password' => $password
+                        )
+                    ),
+                    'text/plain'
+                );
+            $this->get('mailer')->send($message);
+
+            if($user->getEmail2())
+            {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Inloggegevens website Donar')
+                    ->setFrom('webmaster@donargym.nl')
+                    ->setTo($user->getEmail2())
+                    ->setBody(
+                        $this->renderView(
+                            'mails/new_user.txt.twig',
+                            array(
+                                'voornaam' => $persoon->getVoornaam(),
+                                'email1' => $user->getUsername(),
+                                'email2' =>$user->getEmail2(),
+                                'password' => $password
+                            )
+                        ),
+                        'text/plain'
+                    );
+                $this->get('mailer')->send($message);
+            }
+            return $this->redirectToRoute('getAdminSelectiePage');
+        }
+        return $this->render('inloggen/adminAddTrainer.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'groepen' => $groepenItems,
+            'wedstrijdLinkItems' => $this->groepItems,
+        ));
+    }
+
+    /**
+     * @Route("/admin/selectie/edit/{id}/", name="editAdminTrainerPage")
+     * @Method({"GET", "POST"})
+     */
+    public function editAdminTrainerPageAction(Request $request, $id)
+    {
+        $this->setBasicPageData();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :id')
+            ->setParameter('id', $id);
+        $result = $query->setMaxResults(1)->getOneOrNullResult();
+        $persoonEdit = new \stdClass();
+        $persoonEdit->voornaam = $result->getVoornaam();
+        $persoonEdit->achternaam = $result->getAchternaam();
+        $persoonEdit->geboortedatum = $result->getGeboortedatum();
+        $user = $result->getUser();
+        $persoonEdit->username = $user->getUsername();
+        $persoonEdit->email2 = $user->getEmail2();
+        $persoonEdit->userId = $user->getId();
+        $persoonEdit->straatnr = $user->getStraatnr();
+        $persoonEdit->postcode = $user->getPostcode();
+        $persoonEdit->plaats = $user->getPlaats();
+        $persoonEdit->tel1 = $user->getTel1();
+        $persoonEdit->tel2 = $user->getTel2();
+        $persoonEdit->tel3 = $user->getTel3();
+        $functies = $result->getFunctie();
+        $persoonEdit->functie = array();
+        for($i=0;$i<count($functies);$i++) {
+            $persoonEdit->functie[$i] = new \stdClass();
+            $persoonEdit->functie[$i]->functie = $functies[$i]->getFunctie();
+            $groep = $functies[$i]->getGroep();
+            $persoonEdit->functie[$i]->groepNaam = $groep->getName();
+            $persoonEdit->functie[$i]->groepId = $groep->getId();
+            $trainingen = $groep->getTrainingen();
+            $persoonEdit->functie[$i]->trainingen = array();
+            for($j=0;$j<count($trainingen);$j++) {
+                $persoonTrainingen = $result->getTrainingen();
+                for($k=0;$k<count($persoonTrainingen);$k++) {
+                    if($trainingen[$j]->getId() == $persoonTrainingen[$k]->getId()) {
+                        $persoonEdit->functie[$i]->trainingen[$k] = new \stdClass();
+                        $persoonEdit->functie[$i]->trainingen[$k]->trainingId = $persoonTrainingen[$k]->getId();
+                    }
+                }
+            }
+        }
+
+        $query = $em->createQuery(
+            'SELECT groepen
+                FROM AppBundle:Groepen groepen');
+        /** @var Groepen $groepen */
+        $groepen = $query->getResult();
+        $groepenItems = array();
+        for($i=0;$i<count($groepen);$i++)
+        {
+            $groepenItems[$i] = new \stdClass();
+            $groepenItems[$i]->id = $groepen[$i]->getId();
+            $groepenItems[$i]->naam = $groepen[$i]->getName();
+            $groepenItems[$i]->trainingen = array();
+            $query = $em->createQuery(
+                'SELECT trainingen
+                FROM AppBundle:Trainingen trainingen
+                WHERE trainingen.groep = :id')
+                ->setParameter('id', $groepen[$i]->getId());
+            $trainingen = $query->getResult();
+            for($j=0;$j<count($trainingen);$j++) {
+                $groepenItems[$i]->trainingen[$j] = new \stdClass();
+                $groepenItems[$i]->trainingen[$j]->dag = $trainingen[$j]->getDag();
+                $groepenItems[$i]->trainingen[$j]->tijdVan = $trainingen[$j]->getTijdVan();
+                $groepenItems[$i]->trainingen[$j]->tijdTot = $trainingen[$j]->getTijdTot();
+                $groepenItems[$i]->trainingen[$j]->id = $trainingen[$j]->getId();
+            }
+        }
+        if($request->getMethod() == 'POST') {
+            $query = $em->createQuery(
+                'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :id')
+                ->setParameter('id', $id);
+
+            /** @var Persoon $persoon */
+            $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+            $persoon->setVoornaam($this->get('request')->request->get('voornaam'));
+            $persoon->setAchternaam($this->get('request')->request->get('achternaam'));
+            $persoon->setGeboortedatum($this->get('request')->request->get('geboortedatum'));
+
+            /** @var Functie $functie */
+            $functies = $persoon->getFunctie();
+            foreach ($functies as $functie) {
+                /** @var Groepen $groep */
+                $groep = $functie->getGroep();
+                if (!($this->get('request')->request->get('groep_' . $groep->getId()) == 'Trainer' || $this->get('request')->request->get('groep_' . $groep->getId()) == 'Assistent-Trainer')) {
+                    $persoon->removeFunctie($functie);
+                    $query = $em->createQuery(
+                        'SELECT trainingen
+                    FROM AppBundle:Trainingen trainingen
+                    WHERE trainingen.groep = :id')
+                        ->setParameter('id', $groep->getId());
+
+                    /** @var Trainingen $removeTrainingen */
+                    /** @var Trainingen $removeTraining */
+                    $removeTrainingen = $query->getResult();
+                    foreach ($removeTrainingen as $removeTraining) {
+                        $persoon->removeTrainingen($removeTraining);
+                    }
+                }
+            }
+
+            /** @var Trainingen $trainingen */
+            $trainingen = $persoon->getTrainingen();
+            foreach ($trainingen as $training) {
+                if (!($this->get('request')->request->get('trainingen_' . $training->getId()) == 'on')) {
+                    $persoon->removeTrainingen($training);
+                }
+            }
+
+            /** @var \AppBundle\Entity\User $user */
+            $user = $persoon->getUser();
+            $user->setUsername($this->get('request')->request->get('username'));
+            $user->setEmail2($this->get('request')->request->get('email2'));
+            $user->setStraatnr($this->get('request')->request->get('straatnr'));
+            $user->setPostcode($this->get('request')->request->get('postcode'));
+            $user->setPlaats($this->get('request')->request->get('plaats'));
+            $user->setTel1($this->get('request')->request->get('tel1'));
+            $user->setTel2($this->get('request')->request->get('tel2'));
+            $user->setTel3($this->get('request')->request->get('tel3'));
+
+            foreach ($groepen as $groep) {
+                $check = false;
+                if ($this->get('request')->request->get('groep_' . $groep->getId()) == 'Trainer' ||
+                    $this->get('request')->request->get('groep_' . $groep->getId()) == 'Assistent-Trainer') {
+                    foreach ($functies as &$functie) {
+                        /** @var Groepen $functieGroep */
+                        $functieGroep = $functie->getGroep();
+                        if ($functieGroep->getId() == $groep->getId()) {
+                            $functie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
+                            $check = true;
+                        }
+                    }
+                    if(!$check) {
+                        $newFunctie = new Functie();
+                        $newFunctie->setFunctie($this->get('request')->request->get('groep_' . $groep->getId()));
+                        $newFunctie->setGroep($groep);
+                        $newFunctie->setPersoon($persoon);
+                        $persoon->addFunctie($newFunctie);
+                    }
+
+                    $query = $em->createQuery(
+                        'SELECT trainingen
+                    FROM AppBundle:Trainingen trainingen
+                    WHERE trainingen.groep = :id')
+                        ->setParameter('id', $groep->getId());
+
+                    /** @var Trainingen $dbTrainingen */
+                    /** @var Trainingen $dbTraining */
+                    $dbTrainingen = $query->getResult();
+                        foreach ($dbTrainingen as $dbTraining) {
+                            $trainingenCheck = false;
+                            if ($this->get('request')->request->get('trainingen_' . $dbTraining->getId()) == 'on') {
+                                foreach ($trainingen as $training) {
+                                    if ($dbTraining->getId() == $training->getId()) {
+                                        $trainingenCheck = true;
+                                    }
+                                }
+                                if (!$trainingenCheck) {
+                                    $persoon->addTrainingen($dbTraining);
+                                }
+                            }
+                        }
+                }
+            }
+            $role = 'ROLE_TURNSTER';
+            $personen = $user->getPersoon();
+            foreach($personen as $persoonItem) {
+                $functie = $persoonItem->getFunctie();
+                if(count($functie)>0) {
+                    foreach ($functie as $functieItem) {
+                        if($functieItem->getFunctie() == 'Trainer') {
+                            $role = 'ROLE_TRAINER';
+                        }
+                        elseif($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
+                            $role = 'ROLE_ASSISTENT';
+                        }
+                    }
+                }
+            }
+            $user->setRole($role);
+
+            $em->persist($persoon);
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('getAdminSelectiePage');
+        }
+        return $this->render('inloggen/adminEditTrainer.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'groepen' => $groepenItems,
+            'persoonEdit' => $persoonEdit,
+            'wedstrijdLinkItems' => $this->groepItems,
+        ));
+    }
+
+    /**
+     * @Route("/admin/selectie/remove/{id}/", name="removeAdminTrainerPage")
+     * @Method({"GET", "POST"})
+     */
+    public function removeAdminTrainerPage($id, Request $request)
+    {
+        if($request->getMethod() == 'GET')
+        {
+            $this->setBasicPageData();
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :id')
+                ->setParameter('id', $id);
+            $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+            if(count($persoon) > 0)
+            {
+                return $this->render('inloggen/adminRemoveTrainer.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'voornaam' => $persoon->getVoornaam(),
+                    'achternaam' => $persoon->getAchternaam(),
+                    'id' => $persoon->getId(),
+                    'wedstrijdLinkItems' => $this->groepItems,
+                ));
+            }
+            else
+            {
+                return $this->render('error/pageNotFound.html.twig', array(
+                    'calendarItems' => $this->calendarItems,
+                    'header' => $this->header,
+                    'wedstrijdLinkItems' => $this->groepItems,
+                ));
+            }
+        }
+        elseif($request->getMethod() == 'POST')
+        {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+                'SELECT persoon
+                FROM AppBundle:Persoon persoon
+                WHERE persoon.id = :id')
+                ->setParameter('id', $id);
+            $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+            $user = $persoon->getUser();
+            $personen = $user->getPersoon();
+            $em->remove($persoon);
+            $em->flush();
+            $role = 'ROLE_TURNSTER';
+            if(count($personen) == 0) {
+                $em->remove($user);
+                $em->flush();
+            }
+            else {
+                foreach($personen as $persoonItem) {
+                    $functie = $persoonItem->getFunctie();
+                    foreach ($functie as $functieItem) {
+                        if($functieItem->getFunctie() == 'Trainer') {
+                            $role = 'ROLE_TRAINER';
+                        }
+                        elseif($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
+                            $role = 'ROLE_ASSISTENT';
+                        }
+                    }
+                }
+                $user->setRole($role);
+                $em->flush();
+            }
+            return $this->redirectToRoute('getAdminSelectiePage');
+        }
+        else
+        {
+            return $this->render('error/pageNotFound.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'wedstrijdLinkItems' => $this->groepItems,
+            ));
+        }
+    }
+
+    /**
+     * @Route("/admin/getAdminOwPage/index/", name="getAdminOwPage")
+     * @Method({"GET", "POST"})
+     */
+    public function getAdminOwPage(Request $request)
+    {
+        $this->setBasicPageData();
+        return $this->render('inloggen/adminOwIndexPage.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
+        ));
+    }
+
+    /**
+     * @Route("/admin/getAdminOwPage/uploadWedstrijdindelingen/", name="uploadWedstrijdindelingen")
+     * @Method({"GET", "POST"})
+     */
+    public function uploadWedstrijdindelingen(Request $request)
+    {
+        if ($request->getMethod() == 'POST') {
+            /** @var UserRepository $repo */
+            $repo = $this->getDoctrine()->getRepository('AppBundle:User');
+            $result = $repo->findOneBy(array('username' => 'OWJurySysteem'));
+            if (!$result) {
+                $user = new User();
+                $user->setUsername('OWJurySysteem');
+                $user->setRole('ROLE_ORGANISATIE');
+                $user->setIsActive(true);
+                $user->setStraatnr(' ');
+                $user->setPostcode(' ');
+                $user->setPlaats(' ');
+                $user->setTel1(' ');
+                $password = $this->getParameter('JurySysteemWachtwoord');
+                $encoder = $this->container
+                    ->get('security.encoder_factory')
+                    ->getEncoder($user);
+                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                $this->addToDB($user);
+            }
+            $result = $repo->findOneBy(array('username' => 'OWJuryLid'));
+            if (!$result) {
+                $user = new User();
+                $user->setUsername('OWJuryLid');
+                $user->setRole('ROLE_JURY');
+                $user->setIsActive(true);
+                $user->setStraatnr(' ');
+                $user->setPostcode(' ');
+                $user->setPlaats(' ');
+                $user->setTel1(' ');
+                $password = $this->getParameter('JurySysteemWachtwoord');
+                $encoder = $this->container
+                    ->get('security.encoder_factory')
+                    ->getEncoder($user);
+                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                $this->addToDB($user);
+            }
+            if ($_FILES["userfile"])
+            {
+                if (!empty($_FILES['userfile']['name']))
+                {
+                    $allow[0] = "csv";
+                    $extentie = strtolower(substr($_FILES['userfile']['name'], -3));
+                    if ($extentie == $allow[0])
+                    {
+                        if (is_uploaded_file($_FILES['userfile']['tmp_name']))
+                        {
+                            if($_FILES['userfile']['size']<5000000)
+                            {
+                                $localfile = $_FILES['userfile']['tmp_name'];
+                                $fp = fopen($localfile, 'r');
+                                $data = fread($fp, filesize($localfile));
+                                fclose($fp);
+                                $lines = explode("\n", $data);
+                                $turnsters = $this->getDoctrine()->getRepository('AppBundle:Turnster')->findAll();
+                                foreach ($turnsters as $turnster) {
+                                    $this->removeFromDB($turnster);
+                                }
+                                foreach ($lines as $line) {
+                                    $repo = $this->getDoctrine()->getRepository('AppBundle:User');
+                                    $lineData = explode(";", $line);
+                                    /** @var User $user */
+                                    $user = $repo->findOneBy(array('username' => trim($lineData[2])));
+                                    if (!$user) {
+                                        $user = new User();
+                                        $user->setUsername(trim($lineData[2]));
+                                        $user->setRole('ROLE_CONTACT');
+                                        $user->setIsActive(true);
+                                        $user->setStraatnr(' ');
+                                        $user->setPostcode(' ');
+                                        $user->setPlaats(' ');
+                                        $user->setTel1(' ');
+                                        $password = ' ';
+                                        $encoder = $this->container
+                                            ->get('security.encoder_factory')
+                                            ->getEncoder($user);
+                                        $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                                        $vereniging = new Vereniging();
+                                        $vereniging->setNaam(trim($lineData[2]));
+                                        $vereniging->setPlaats(' ');
+                                        $this->addToDB($vereniging);
+                                        $user->setVereniging($vereniging);
+                                        $this->addToDB($user);
+                                    }
+                                    $turnster = new Turnster();
+                                    $scores = new Scores();
+                                    $turnster->setWachtlijst(false);
+                                    $turnster->setCreationDate(new \DateTime('now'));
+                                    $turnster->setScores($scores);
+                                    $turnster->setVoornaam(trim($lineData[1]));
+                                    $turnster->setAchternaam(' ');
+                                    $turnster->setNiveau(trim($lineData[4]));
+                                    $turnster->setCategorie(trim($lineData[3]));
+                                    $turnster->setIngevuld(true);
+                                    $turnster->setUser($user);
+                                    $user->addTurnster($turnster);
+                                    /** @var Turnster $turnster */
+                                    $scores->setWedstrijdnummer(trim($lineData[5]));
+                                    $scores->setWedstrijddag(trim($lineData[6]));
+                                    $scores->setWedstrijdronde(trim($lineData[7]));
+                                    $scores->setBaan(trim($lineData[8]));
+                                    $scores->setGroep(trim($lineData[9]));
+                                    $this->addToDB($scores);
+                                    $this->addToDB($turnster);
+                                }
+                                /** @var ScoresRepository $repo */
+                                $repo = $this->getDoctrine()->getRepository('AppBundle:Scores');
+                                $results = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
+                                    ->findAll();
+                                foreach ($results as $result) {
+                                    $this->removeFromDB($result);
+                                }
+                                $results = $repo->getDistinctNiveaus();
+                                foreach ($results as $result) {
+                                    $new = new ToegestaneNiveaus();
+                                    $new->setCategorie($result['categorie']);
+                                    $new->setNiveau($result['niveau']);
+                                    $new->setUitslagGepubliceerd(0);
+                                    $this->addToDB($new);
+                                }
+
+                                return $this->redirectToRoute('getAdminOwPage');
+                            }
+                            else
+                            {
+                                $this->addFlash(
+                                    'error',
+                                    'Helaas, de upload is mislukt: het bestand is te groot.'
+                                );
+                            }
+                        }
+                        else
+                        {
+                            $this->addFlash(
+                                'error',
+                                'Helaas, de upload is mislukt.'
+                            );
+                        }
+                    }
+                    else
+                    {
+                        $this->addFlash(
+                            'error',
+                            'Helaas, de upload is mislukt: het bestand moet .csv zijn.'
+                        );
+                    }
+                }
+                else
+                {
+                    $this->addFlash(
+                        'error',
+                        'Selecteer een bestand.'
+                    );
+                }
+            }
+        }
+        $this->setBasicPageData();
+        return $this->render('inloggen/uploadWedstrijdindelingen.html.twig', array(
+            'calendarItems' => $this->calendarItems,
+            'header' => $this->header,
+            'wedstrijdLinkItems' => $this->groepItems,
         ));
     }
 }

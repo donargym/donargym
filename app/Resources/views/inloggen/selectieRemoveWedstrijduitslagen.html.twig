@@ -1,0 +1,35 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <a href="{{ path('viewWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': groepId }) }}">Wedstrijduitslagen</a>
+            > <i>Wedstrijduitslag verwijderen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Wedstrijduitslag verwijderen</h1>
+{% endblock %}
+
+{% block body %}
+    {% if functie == 'Trainer' %}
+        <p>Weet u zeker dat u de uitslag: <span style="color:#FFFF00; font-weight: bold;">"{{ uitslag.naam }}"</span> wilt verwijderen?</p>
+        <table>
+            <tr>
+                <td>
+                    <form method="post" action="">
+                        <input name="bevestig" type="submit" value="Bevestig">
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ path('viewWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': groepId }) }}">
+                        <input type="button" value="Annuleren">
+                    </a>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+{% endblock %}
