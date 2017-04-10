@@ -3330,7 +3330,7 @@ class SelectieController extends BaseController
         if ($timestamp == null) {
             $timestamp = time();
         }
-        if (date("m", $timestamp) > '08') {
+        if (date("m", $timestamp) >= '08') {
             $seizoen = date("Y", $timestamp);
         } else {
             $seizoen = (int)date("Y", $timestamp) - 1;

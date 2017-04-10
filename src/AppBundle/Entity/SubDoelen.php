@@ -119,10 +119,27 @@ class SubDoelen
     /**
      * Get cijfers
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
-    public function getCijfers()
+    public function getCijfers($timestamp = null)
     {
-        return $this->cijfers;
+        if ($timestamp == null) {
+            $timestamp = time();
+        }
+        if (date("m", $timestamp) >= '08') {
+            $seizoen = date("Y", $timestamp);
+        } else {
+            $seizoen = (int)date("Y", $timestamp) - 1;
+        }
+
+        $cijfers = array();
+        /** @var Cijfers $cijfer */
+        foreach ($this->cijfers as $cijfer) {
+            if (($cijfer->getDate()->format('Y') == $seizoen && $cijfer->getDate()->format('m') >= 8)
+                || ($cijfer->getDate()->format('Y') == ($seizoen + 1) && $cijfer->getDate()->format('m') < 8)) {
+                $cijfers[] = $cijfer;
+            }
+        }
+        return $cijfers;
     }
 }

@@ -92,29 +92,27 @@
                     <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
                 </div>
             {% endif %}
-            {% if functie.groepId == 3 or functie.groepId == 5 %}
-                {% if functie.functie == 'Turnster' %}
-                    <p>
-                        <h2>Voortgang</h2>
+            {% if functie.functie == 'Turnster' %}
+                <p>
+                    <h2>Voortgang</h2>
 
-                        <div style="width: 600px; height: 200px; margin: 0 auto">
-                            <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Sprong' }) }}">
-                                <div id="sprong" style="width: 300px; height: 200px; float: left"></div>
-                            </a>
-                            <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Brug' }) }}">
-                                <div id="brug" style="width: 300px; height: 200px; float: left"></div>
-                            </a>
-                        </div>
-                        <div style="width: 600px; height: 200px; margin: 0 auto">
-                            <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Balk' }) }}">
-                                <div id="balk" style="width: 300px; height: 200px; float: left"></div>
-                            </a>
-                            <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Vloer' }) }}">
-                                <div id="vloer" style="width: 300px; height: 200px; float: left"></div>
-                            </a>
-                        </div>
-                    </p>
-                {% endif %}
+                    <div style="width: 600px; height: 200px; margin: 0 auto">
+                        <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Sprong' }) }}">
+                            <div id="sprong" style="width: 300px; height: 200px; float: left"></div>
+                        </a>
+                        <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Brug' }) }}">
+                            <div id="brug" style="width: 300px; height: 200px; float: left"></div>
+                        </a>
+                    </div>
+                    <div style="width: 600px; height: 200px; margin: 0 auto">
+                        <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Balk' }) }}">
+                            <div id="balk" style="width: 300px; height: 200px; float: left"></div>
+                        </a>
+                        <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Vloer' }) }}">
+                            <div id="vloer" style="width: 300px; height: 200px; float: left"></div>
+                        </a>
+                    </div>
+                </p>
             {% endif %}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
             <p><h3>(Assistent-)Trainers</h3>
@@ -188,9 +186,7 @@
                     <tr style="color: #FFFF00;">
                         <th>Naam</th>
                         <th>Geboortedatum</th>
-                        {% if functie.groepId == 3 or functie.groepId == 5 %}
-                            <th>Voortgang</th>
-                        {% endif %}
+                        <th>Voortgang</th>
                         <th>% aanwezig</th>
                         {% if functie.functie == 'Trainer' %}
                             <th></th>
@@ -211,16 +207,14 @@
                                         {{ turnster.geboortedatum }}
                                     </a>
                                 </td>
-                                {% if functie.groepId == 3 or functie.groepId == 5 %}
-                                    <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageVoortgangKleur }};">
-                                        <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
-                                        style="text-decoration: none">
-                                            <span style="color: rgba(0,0,0,0.6);">
-                                            {{ turnster.percentageVoortgang | round }}%
-                                        </span>
-                                        </a>
-                                    </td>
-                                {% endif %}
+                                <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageVoortgangKleur }};">
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
+                                    style="text-decoration: none">
+                                        <span style="color: rgba(0,0,0,0.6);">
+                                        {{ turnster.percentageVoortgang | round }}%
+                                    </span>
+                                    </a>
+                                </td>
                                 <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
                                     <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
                                     style="text-decoration: none">
@@ -295,7 +289,7 @@
                     <th width="21%">Wedstrijd</th>
                     <th width="20%">Tijden</th>
                     <th width="20%">Locatie</th>
-                    <th width="20%">turnsters</th>
+                    <th width="20%">Turnsters</th>
                     {% if functie.functie == 'Trainer' %}
                         <th width="5%"></th>
                     {% endif %}

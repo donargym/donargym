@@ -864,61 +864,64 @@ class AdminController extends BaseController
                             if($_FILES['userfile']['size']<5000000)
                             {
                                 $localfile = $_FILES['userfile']['tmp_name'];
-                                $fp = fopen($localfile, 'r');
-                                $data = fread($fp, filesize($localfile));
-                                fclose($fp);
-                                $lines = explode("\n", $data);
-                                $turnsters = $this->getDoctrine()->getRepository('AppBundle:Turnster')->findAll();
-                                foreach ($turnsters as $turnster) {
-                                    $this->removeFromDB($turnster);
-                                }
-                                foreach ($lines as $line) {
-                                    $repo = $this->getDoctrine()->getRepository('AppBundle:User');
-                                    $lineData = explode(";", $line);
-                                    /** @var User $user */
-                                    $user = $repo->findOneBy(array('username' => trim($lineData[2])));
-                                    if (!$user) {
-                                        $user = new User();
-                                        $user->setUsername(trim($lineData[2]));
-                                        $user->setRole('ROLE_CONTACT');
-                                        $user->setIsActive(true);
-                                        $user->setStraatnr(' ');
-                                        $user->setPostcode(' ');
-                                        $user->setPlaats(' ');
-                                        $user->setTel1(' ');
-                                        $password = ' ';
-                                        $encoder = $this->container
-                                            ->get('security.encoder_factory')
-                                            ->getEncoder($user);
-                                        $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-                                        $vereniging = new Vereniging();
-                                        $vereniging->setNaam(trim($lineData[2]));
-                                        $vereniging->setPlaats(' ');
-                                        $this->addToDB($vereniging);
-                                        $user->setVereniging($vereniging);
-                                        $this->addToDB($user);
+
+                                ini_set("auto_detect_line_endings", "1");
+                                if (($handle = fopen($localfile, "r")) !== FALSE) {
+                                    $turnsters = $this->getDoctrine()->getRepository('AppBundle:Turnster')->findAll();
+                                    foreach ($turnsters as $turnster) {
+                                        $this->removeFromDB($turnster);
                                     }
-                                    $turnster = new Turnster();
-                                    $scores = new Scores();
-                                    $turnster->setWachtlijst(false);
-                                    $turnster->setCreationDate(new \DateTime('now'));
-                                    $turnster->setScores($scores);
-                                    $turnster->setVoornaam(trim($lineData[1]));
-                                    $turnster->setAchternaam(' ');
-                                    $turnster->setNiveau(trim($lineData[4]));
-                                    $turnster->setCategorie(trim($lineData[3]));
-                                    $turnster->setIngevuld(true);
-                                    $turnster->setUser($user);
-                                    $user->addTurnster($turnster);
-                                    /** @var Turnster $turnster */
-                                    $scores->setWedstrijdnummer(trim($lineData[5]));
-                                    $scores->setWedstrijddag(trim($lineData[6]));
-                                    $scores->setWedstrijdronde(trim($lineData[7]));
-                                    $scores->setBaan(trim($lineData[8]));
-                                    $scores->setGroep(trim($lineData[9]));
-                                    $this->addToDB($scores);
-                                    $this->addToDB($turnster);
+
+                                    $repo = $this->getDoctrine()->getRepository('AppBundle:User');
+                                    while (($lineData = fgetcsv($handle, 0, ";")) !== FALSE) {
+                                        /** @var User $user */
+                                        $user = $repo->findOneBy(array('username' => trim($lineData[2])));
+                                        if (!$user) {
+                                            $user = new User();
+                                            $user->setUsername(trim($lineData[2]));
+                                            $user->setRole('ROLE_CONTACT');
+                                            $user->setIsActive(true);
+                                            $user->setStraatnr(' ');
+                                            $user->setPostcode(' ');
+                                            $user->setPlaats(' ');
+                                            $user->setTel1(' ');
+                                            $password = ' ';
+                                            $encoder = $this->container
+                                                ->get('security.encoder_factory')
+                                                ->getEncoder($user);
+                                            $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+                                            $vereniging = new Vereniging();
+                                            $vereniging->setNaam(trim($lineData[2]));
+                                            $vereniging->setPlaats(' ');
+                                            $this->addToDB($vereniging);
+                                            $user->setVereniging($vereniging);
+                                            $this->addToDB($user);
+                                        }
+                                        $turnster = new Turnster();
+                                        $scores = new Scores();
+                                        $turnster->setWachtlijst(false);
+                                        $turnster->setCreationDate(new \DateTime('now'));
+                                        $turnster->setScores($scores);
+                                        $turnster->setVoornaam(trim($lineData[1]));
+                                        $turnster->setAchternaam(' ');
+                                        $turnster->setNiveau(trim($lineData[4]));
+                                        $turnster->setCategorie(trim($lineData[3]));
+                                        $turnster->setIngevuld(true);
+                                        $turnster->setUser($user);
+                                        $user->addTurnster($turnster);
+                                        /** @var Turnster $turnster */
+                                        $scores->setWedstrijdnummer(trim($lineData[5]));
+                                        $scores->setWedstrijddag(trim($lineData[6]));
+                                        $scores->setWedstrijdronde(trim($lineData[7]));
+                                        $scores->setBaan(trim($lineData[8]));
+                                        $scores->setGroep(trim($lineData[9]));
+                                        $scores->setBegintoestel(trim($lineData[9]));
+                                        $this->addToDB($scores);
+                                        $this->addToDB($turnster);
+                                    }
+                                    fclose($handle);
                                 }
+
                                 /** @var ScoresRepository $repo */
                                 $repo = $this->getDoctrine()->getRepository('AppBundle:Scores');
                                 $results = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
