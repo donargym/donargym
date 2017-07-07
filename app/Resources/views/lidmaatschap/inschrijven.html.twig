@@ -1,0 +1,146 @@
+{% extends 'lidmaatschap/base.html.twig' %}
+
+{% block body %}
+    <h1>Lid worden</h1>
+    {{ form_start(form) }}
+    <table>
+        <tr>
+            <td>{{ form_label(form.firstname) }}</td>
+            <td>{{ form_widget(form.firstname) }}</td>
+            <td>{{ form_errors(form.firstname) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.lastname) }}</td>
+            <td>{{ form_widget(form.lastname) }}</td>
+            <td>{{ form_errors(form.lastname) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.nameletters) }}</td>
+            <td>{{ form_widget(form.nameletters) }}</td>
+            <td>{{ form_errors(form.nameletters) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.dateofbirth) }}</td>
+            <td>{{ form_widget(form.dateofbirth) }}</td>
+            <td>{{ form_errors(form.dateofbirth) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.gender) }}</td>
+            <td>{{ form_widget(form.gender) }}</td>
+            <td>{{ form_errors(form.gender) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.address) }}</td>
+            <td>{{ form_widget(form.address) }}</td>
+            <td>{{ form_errors(form.address) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.postcode) }}</td>
+            <td>{{ form_widget(form.postcode) }}</td>
+            <td>{{ form_errors(form.postcode) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.city) }}</td>
+            <td>{{ form_widget(form.city) }}</td>
+            <td>{{ form_errors(form.city) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone1) }}</td>
+            <td>{{ form_widget(form.phone1) }}</td>
+            <td>{{ form_errors(form.phone1) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone2) }}</td>
+            <td>{{ form_widget(form.phone2) }}</td>
+            <td>{{ form_errors(form.phone2) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.bankaccountnumber) }}</td>
+            <td>{{ form_widget(form.bankaccountnumber) }}</td>
+            <td>{{ form_errors(form.bankaccountnumber) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.bankaccountholder) }}</td>
+            <td>{{ form_widget(form.bankaccountholder) }}</td>
+            <td>{{ form_errors(form.bankaccountholder) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.emailaddress) }}</td>
+            <td>{{ form_widget(form.emailaddress) }}</td>
+            <td>{{ form_errors(form.emailaddress) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.category) }}</td>
+            <td>{{ form_widget(form.category) }}</td>
+            <td>{{ form_errors(form.category) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.days) }}</td>
+            <td>
+                {% for key, day in form.days.children %}
+                    {{ form_widget(day) }}{{ form_label(day) }}<br>
+                {% endfor %}
+            </td>
+            <td>{{ form_errors(form.days) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.locations) }}</td>
+            <td>
+                {% for key, location in form.locations.children %}
+                    {{ form_widget(location) }}{{ form_label(location) }}{% if not loop.last %}<br>{% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ form_errors(form.locations) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.starttime) }}</td>
+            <td>{{ form_widget(form.starttime) }}</td>
+            <td>{{ form_errors(form.starttime) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.trainer) }}</td>
+            <td>{{ form_widget(form.trainer) }}</td>
+            <td>{{ form_errors(form.trainer) }}</td>
+        </tr>
+    </table>
+    <br>
+    <table>
+        <tr>
+            <td>{{ form_label(form.havebeensubscribed) }}</td>
+            <td>{{ form_widget(form.havebeensubscribed) }}</td>
+            <td>{{ form_errors(form.havebeensubscribed) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.subscribedfrom) }}</td>
+            <td>{{ form_widget(form.subscribedfrom) }}</td>
+            <td>{{ form_errors(form.subscribedfrom) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.subscribeduntil) }}</td>
+            <td>{{ form_widget(form.subscribeduntil) }}</td>
+            <td>{{ form_errors(form.subscribeduntil) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.otherclub) }}</td>
+            <td>{{ form_widget(form.otherclub) }}</td>
+            <td>{{ form_errors(form.otherclub) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.whatotherclub) }}</td>
+            <td>{{ form_widget(form.whatotherclub) }}</td>
+            <td>{{ form_errors(form.whatotherclub) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.bondscontributiebetaald) }}</td>
+            <td>{{ form_widget(form.bondscontributiebetaald) }}</td>
+            <td>{{ form_errors(form.bondscontributiebetaald) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.how) }}</td>
+            <td>{{ form_widget(form.how) }}</td>
+            <td>{{ form_errors(form.how) }}</td>
+        </tr>
+    </table>
+    {{ form_widget(form.accept) }}{{ form_label(form.accept) }}
+    {{ form_end(form) }}
+{% endblock %}

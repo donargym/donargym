@@ -72,6 +72,7 @@
                 </li>
                 <li>{% block lidmaatschap %}<a href="#">Lidmaatschap</a>{% endblock %}
                     <ul>
+                        <li><a href="{{ path('subscribe') }}">Lid worden</a></li>
                         <li><a href="{{ path('getLidmaatschapPage') }}">Inlichtingen</a></li>
                         <li><a href="{{ path('getLidmaatschapPage', { 'page': 'contributie' }) }}">Contributie</a></li>
                         <li><a href="{{ path('getLidmaatschapPage', { 'page': 'formulieren' }) }}">Formulieren</a></li>
@@ -123,6 +124,25 @@
             {% endblock %}
         </div>#}
         {#<div class="line2" style="width:980px;margin-left:auto;margin-right:auto;margin-top:20px;margin-bottom:20px;"></div>#}
+        <div id="error_container">
+            {% if app.session.flashbag.get('error') is defined %}
+                {% for flash_message in app.session.flashbag.get('error') %}
+                    <div id="error">
+                        {{ flash_message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div id="error_success_container">
+            {% if app.session.flashbag.get('success') is defined %}
+                {% for flash_message in app.session.flashbag.get('success') %}
+                    <div id="error_success">
+                        {{ flash_message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
         <div id="c">
             {#<div id="menu">
                 {% block menu %}{% endblock %}

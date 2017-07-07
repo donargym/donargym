@@ -464,7 +464,7 @@ class GetContentController extends BaseController
             }
 
         }
-        elseif($page =  'formulieren')
+        elseif($page === 'formulieren')
         {
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(

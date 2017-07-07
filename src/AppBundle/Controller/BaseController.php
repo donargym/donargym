@@ -3,24 +3,20 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Scores;
+use AppBundle\Entity\SendMail;
+use AppBundle\Entity\SubDoelen;
 use AppBundle\Entity\ToegestaneNiveaus;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Httpfoundation\Response;
+use Doctrine\ORM\EntityManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use AppBundle\Entity\Calendar;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use AppBundle\Entity\Content;
-use AppBundle\Entity\Nieuwsbericht;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception;
-use AppBundle\Entity\SubDoelen;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Httpfoundation\Response;
 
 
 class BaseController extends Controller
 {
-    const DATUM_HBC = '17 april 2016';
+    const DATUM_HBC   = '17 april 2016';
     const LOCATIE_HBC = 'Sporthal Overbosch';
 
     protected $calendarItems;
@@ -34,28 +30,34 @@ class BaseController extends Controller
 
     public function getHeader($page = null)
     {
-        switch($page) {
-            case 'wedstrijdturnen': return 'wedstrijdturnen'.rand(1,12); break;
-            case 'recreatie': return 'bannerrecreatie'.rand(1,4); break;
-            default: return 'bannerhome'.rand(1,4); break;
+        switch ($page) {
+            case 'wedstrijdturnen':
+                return 'wedstrijdturnen' . rand(1, 12);
+                break;
+            case 'recreatie':
+                return 'bannerrecreatie' . rand(1, 4);
+                break;
+            default:
+                return 'bannerhome' . rand(1, 4);
+                break;
         }
     }
 
     public function getwedstrijdLinkItems()
     {
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
+        $em      = $this->getDoctrine()->getManager();
+        $query   = $em->createQuery(
             'SELECT groepen
                 FROM AppBundle:Groepen groepen
-                ORDER BY groepen.id ASC');
+                ORDER BY groepen.id ASC'
+        );
         $groepen = $query->getResult();
-        if (count ($groepen) > 0) {
+        if (count($groepen) > 0) {
             $groepItems = array();
-            $groepId = array();
-            for($i=0;$i<count($groepen);$i++)
-            {
+            $groepId    = array();
+            for ($i = 0; $i < count($groepen); $i++) {
                 $groepItems[$i] = $groepen[$i]->getIdName();
-                $groepId[] = $groepen[$i]->getId();
+                $groepId[]      = $groepen[$i]->getId();
             }
         }
         return array($groepItems, $groepId);
@@ -63,58 +65,77 @@ class BaseController extends Controller
 
     public function getCalendarItems()
     {
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
+        $em            = $this->getDoctrine()->getManager();
+        $query         = $em->createQuery(
             'SELECT calendar
                 FROM AppBundle:Calendar calendar
                 WHERE calendar.datum >= :datum
-                ORDER BY calendar.datum ASC')
-            ->setParameter('datum', date('Y-m-d',time()));
-        $calendar = $query->getResult();
+                ORDER BY calendar.datum ASC'
+        )
+            ->setParameter('datum', date('Y-m-d', time()));
+        $calendar      = $query->getResult();
         $calendarItems = array();
-        for($i=0;$i<count($calendar);$i++)
-        {
+        for ($i = 0; $i < count($calendar); $i++) {
             $calendarItems[$i] = $calendar[$i]->getAll();
         }
         return $calendarItems;
     }
 
 
-
     public function maand($maandNummer)
     {
-        switch($maandNummer)
-        {
-            case '01': return 'Januari'; break;
-            case '02': return 'Februari'; break;
-            case '03': return 'Maart'; break;
-            case '04': return 'April'; break;
-            case '05': return 'Mei'; break;
-            case '06': return 'Juni'; break;
-            case '07': return 'Juli'; break;
-            case '08': return 'Augustus'; break;
-            case '09': return 'September'; break;
-            case '10': return 'Oktober'; break;
-            case '11': return 'November'; break;
-            case '12': return 'December'; break;
+        switch ($maandNummer) {
+            case '01':
+                return 'Januari';
+                break;
+            case '02':
+                return 'Februari';
+                break;
+            case '03':
+                return 'Maart';
+                break;
+            case '04':
+                return 'April';
+                break;
+            case '05':
+                return 'Mei';
+                break;
+            case '06':
+                return 'Juni';
+                break;
+            case '07':
+                return 'Juli';
+                break;
+            case '08':
+                return 'Augustus';
+                break;
+            case '09':
+                return 'September';
+                break;
+            case '10':
+                return 'Oktober';
+                break;
+            case '11':
+                return 'November';
+                break;
+            case '12':
+                return 'December';
+                break;
         }
     }
 
     public function generatePassword($length = 8)
     {
-        $password = "";
-        $possible = "2346789bcdfghjkmnpqrtvwxyzBCDFGHJKLMNPQRTVWXYZ";
+        $password  = "";
+        $possible  = "2346789bcdfghjkmnpqrtvwxyzBCDFGHJKLMNPQRTVWXYZ";
         $maxlength = strlen($possible);
-        if ($length > $maxlength)
-        {
+        if ($length > $maxlength) {
             $length = $maxlength;
         }
         $i = 0;
-        while ($i < $length)
-        {
-            $char = substr($possible, mt_rand(0, $maxlength-1), 1);
-            if (!strstr($password, $char))
-            {
+        while ($i < $length) {
+            $char = substr($possible, mt_rand(0, $maxlength - 1), 1);
+            if (!strstr($password, $char)) {
                 $password .= $char;
                 $i++;
             }
@@ -126,15 +147,18 @@ class BaseController extends Controller
     {
         /** @var ToegestaneNiveaus $result */
         $result = $this->getDoctrine()->getRepository("AppBundle:ToegestaneNiveaus")
-            ->findOneBy(array(
-                'categorie' => $categorie,
-                'niveau' => $niveau,
-            ));
+            ->findOneBy(
+                array(
+                    'categorie' => $categorie,
+                    'niveau'    => $niveau,
+                )
+            );
         if (!$result) {
             return false;
         }
         if (($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') ||
-            $result->getUitslagGepubliceerd()) {
+            $result->getUitslagGepubliceerd()
+        ) {
             return true;
         }
         return false;
@@ -142,11 +166,12 @@ class BaseController extends Controller
 
     protected function addSubDoelenAanPersoon($persoon)
     {
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
+        $em     = $this->getDoctrine()->getManager();
+        $query  = $em->createQuery(
             'SELECT doelen
         FROM AppBundle:Doelen doelen
-        WHERE doelen.trede IS NULL');
+        WHERE doelen.trede IS NULL'
+        );
         $doelen = $query->getResult();
         foreach ($doelen as $doel) {
             $subdoelEntity = new SubDoelen();
@@ -159,10 +184,10 @@ class BaseController extends Controller
 
     protected function setBasicPageData($page = null)
     {
-        $wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $wedstrijdLinkItems[0];
-        $this->groepIds = $wedstrijdLinkItems[1];
-        $this->header = $this->getHeader($page);
+        $wedstrijdLinkItems  = $this->getwedstrijdLinkItems();
+        $this->groepItems    = $wedstrijdLinkItems[0];
+        $this->groepIds      = $wedstrijdLinkItems[1];
+        $this->header        = $this->getHeader($page);
         $this->calendarItems = $this->getCalendarItems();
     }
 
@@ -170,49 +195,60 @@ class BaseController extends Controller
     {
         $toestellen = array('Sprong', 'Brug', 'Balk', 'Vloer', '');
         foreach ($toestellen as $toestel) {
-            usort($scores, function ($a, $b) use ($toestel) {
-                $epsilon = 0.00001;
-                if (abs($a['totaal' . $toestel] - $b['totaal' . $toestel]) < $epsilon) {
-                    return 0;
+            usort(
+                $scores,
+                function ($a, $b) use ($toestel) {
+                    $epsilon = 0.00001;
+                    if (abs($a['totaal' . $toestel] - $b['totaal' . $toestel]) < $epsilon) {
+                        return 0;
+                    }
+                    return ($a['totaal' . $toestel] > $b['totaal' . $toestel]) ? -1 : 1;
                 }
-                return ($a['totaal' . $toestel] > $b['totaal' . $toestel]) ? -1 : 1;
-            });
+            );
             $epsilon = 0.00001;
             for ($i = 1; $i <= count($scores); $i++) {
                 if ($i == 1) {
                     $scores[($i - 1)]['rank' . $toestel] = $i;
-                } elseif (abs($scores[($i - 1)]['totaal' . $toestel] - $scores[($i - 2)]['totaal' . $toestel]) < $epsilon) {
+                } elseif (abs(
+                        $scores[($i - 1)]['totaal' . $toestel] - $scores[($i - 2)]['totaal' . $toestel]
+                    ) < $epsilon
+                ) {
                     $scores[($i - 1)]['rank' . $toestel] = $scores[($i - 2)]['rank' . $toestel];
                 } else {
                     $scores[($i - 1)]['rank' . $toestel] = $i;
                 }
             }
         }
-        usort($scores, function ($a, $b) use ($order) {
-            if ($a['totaal' . $order] == $b['totaal' . $order]) {
-                return 0;
+        usort(
+            $scores,
+            function ($a, $b) use ($order) {
+                if ($a['totaal' . $order] == $b['totaal' . $order]) {
+                    return 0;
+                }
+                return ($a['totaal' . $order] > $b['totaal' . $order]) ? -1 : 1;
             }
-            return ($a['totaal' . $order] > $b['totaal' . $order]) ? -1 : 1;
-        });
+        );
         return $scores;
     }
 
     protected function getToegestaneNiveaus()
     {
         $toegestaneNiveaus = array();
-        $repo = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus');
+        $repo              = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus');
         /** @var ToegestaneNiveaus[] $results */
         if ($this->getUser() && $this->getUser()->getRole() == 'ROLE_ORGANISATIE') {
             $results = $repo->findAll();
         } else {
-            $results = $repo->findBy(array(
-                'uitslagGepubliceerd' => 1,
-            ));
+            $results = $repo->findBy(
+                array(
+                    'uitslagGepubliceerd' => 1,
+                )
+            );
         }
         foreach ($results as $result) {
             /** @var ToegestaneNiveaus[] $results */
             $toegestaneNiveaus[$result->getCategorie()][$result->getId()] = array(
-                'niveau' => $result->getNiveau(),
+                'niveau'              => $result->getNiveau(),
                 'uitslagGepubliceerd' => $result->getUitslagGepubliceerd(),
             );
         }
@@ -225,7 +261,10 @@ class BaseController extends Controller
      */
     public function updateScores(Request $request, $wedstrijdnummer)
     {
-        if ($request->query->get('key') && $request->query->get('key') === $this->getParameter('update_scores_string')) {
+        if ($request->query->get('key') && $request->query->get('key') === $this->getParameter(
+                'update_scores_string'
+            )
+        ) {
             $toestellen = array('sprong', 'brug', 'balk', 'vloer');
             if ($request->query->get('toestel') && in_array(strtolower($request->query->get('toestel')), $toestellen)) {
                 /** @var Scores $score */
@@ -234,9 +273,14 @@ class BaseController extends Controller
                 if ($score) {
                     switch (strtolower($request->query->get('toestel'))) {
                         case 'sprong':
-                            if ($request->query->get('dSprong1') !== null && $request->query->get('eSprong1') !== null &&
-                                $request->query->get('nSprong1') !== null && $request->query->get('dSprong2') !== null &&
-                                $request->query->get('eSprong2') !== null && $request->query->get('nSprong2') !== null) {
+                            if ($request->query->get('dSprong1') !== null && $request->query->get(
+                                    'eSprong1'
+                                ) !== null &&
+                                $request->query->get('nSprong1') !== null && $request->query->get(
+                                    'dSprong2'
+                                ) !== null &&
+                                $request->query->get('eSprong2') !== null && $request->query->get('nSprong2') !== null
+                            ) {
                                 try {
                                     $score->setDSprong1($request->query->get('dSprong1'));
                                     $score->setESprong1($request->query->get('eSprong1'));
@@ -257,7 +301,8 @@ class BaseController extends Controller
                             break;
                         case 'brug':
                             if ($request->query->get('dBrug') !== null && $request->query->get('eBrug') !== null &&
-                                $request->query->get('nBrug') !== null) {
+                                $request->query->get('nBrug') !== null
+                            ) {
                                 try {
                                     $score->setDBrug($request->query->get('dBrug'));
                                     $score->setEBrug($request->query->get('eBrug'));
@@ -275,7 +320,8 @@ class BaseController extends Controller
                             break;
                         case 'balk':
                             if ($request->query->get('dBalk') !== null && $request->query->get('eBalk') !== null &&
-                                $request->query->get('nBalk') !== null) {
+                                $request->query->get('nBalk') !== null
+                            ) {
                                 try {
                                     $score->setDBalk($request->query->get('dBalk'));
                                     $score->setEBalk($request->query->get('eBalk'));
@@ -293,7 +339,8 @@ class BaseController extends Controller
                             break;
                         case 'vloer':
                             if ($request->query->get('dVloer') !== null && $request->query->get('eVloer') !== null &&
-                                $request->query->get('nVloer') !== null) {
+                                $request->query->get('nVloer') !== null
+                            ) {
                                 try {
                                     $score->setDVloer($request->query->get('dVloer'));
                                     $score->setEVloer($request->query->get('eVloer'));
@@ -327,13 +374,18 @@ class BaseController extends Controller
      */
     public function publiceerUitslag(Request $request, $categorie, $niveau)
     {
-        if ($request->query->get('key') && $request->query->get('key') === $this->getParameter('update_scores_string')) {
+        if ($request->query->get('key') && $request->query->get('key') === $this->getParameter(
+                'update_scores_string'
+            )
+        ) {
             /** @var ToegestaneNiveaus $result */
             $result = $this->getDoctrine()->getRepository('AppBundle:ToegestaneNiveaus')
-                ->findOneBy(array(
-                    'categorie' => $categorie,
-                    'niveau' => $niveau,
-                ));
+                ->findOneBy(
+                    array(
+                        'categorie' => $categorie,
+                        'niveau'    => $niveau,
+                    )
+                );
             if ($result) {
                 try {
                     $result->setUitslagGepubliceerd(true);
@@ -352,6 +404,7 @@ class BaseController extends Controller
 
     protected function addToDB($object, $detach = null)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
         if ($detach) {
             $em->detach($detach);
@@ -365,5 +418,36 @@ class BaseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
         $em->flush();
+    }
+
+    /**
+     * @param string $subject
+     * @param string $to
+     * @param string $view twig template
+     * @param array  $parameters
+     * @param string $from
+     */
+    protected function sendEmail($subject, $to, $view, array $parameters = array(), $from = 'info@donargym.nl')
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody(
+                $this->renderView(
+                    $view,
+                    array('parameters' => $parameters)
+                ),
+                'text/plain'
+            );
+        $this->get('mailer')->send($message);
+//echo($message->getBody());die;
+        $sendMail = new SendMail();
+        $sendMail->setDatum(new \DateTime())
+            ->setVan($from)
+            ->setAan($to)
+            ->setOnderwerp($subject)
+            ->setBericht($message->getBody());
+        $this->addToDB($sendMail);
     }
 }
