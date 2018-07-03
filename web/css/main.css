@@ -662,6 +662,22 @@ a:hover, a:active {
     padding: 5px 10px;
 }
 
+#footer {
+	width: 100%;
+	font-size: .8em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+#footer a:link, #footer a:visited {
+	color: #FFFF00;
+	text-decoration: none;
+}
+
+#footer a:hover, #footer a:active {
+	color: #FFAE00;
+}
+
 /* #inlogmenu {
 	color: #FFF;
 	text-decoration: none;
