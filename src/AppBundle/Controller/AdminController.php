@@ -304,6 +304,7 @@ class AdminController extends BaseController
         $ids = array();
         for($i=0;$i<count($functies);$i++)
         {
+            /** @var Persoon $persoon */
             $persoon = $functies[$i]->getPersoon();
             if(!(in_array($persoon->getId(), $ids)))
             {
@@ -312,6 +313,7 @@ class AdminController extends BaseController
                 $persoonItems[$i]->id = $persoon->getId();
                 $persoonItems[$i]->voornaam = $persoon->getVoornaam();
                 $persoonItems[$i]->achternaam = $persoon->getAchternaam();
+                $persoonItems[$i]->username = $persoon->getUser()->getUsername();
             }
         }
         return $this->render('inloggen/adminSelectie.html.twig', array(

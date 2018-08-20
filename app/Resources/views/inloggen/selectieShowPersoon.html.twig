@@ -121,6 +121,9 @@
                     <th>Naam</th>
                     <th>Geboortedatum</th>
                     <th>% aanwezig</th>
+                    {% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                        <th></th>
+                    {% endif %}
                 </tr>
 
                 {% if functie.trainer is defined %}
@@ -144,6 +147,13 @@
                                     </span>
                                 </a>
                             </td>
+                            {% if not is_granted('ROLE_PREVIOUS_ALLOWED_TO_SWITCH') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                                <td>
+                                    <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
+                                        <img src="{{ asset('images/login_as.png') }}" width="18px"/>
+                                    </a>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -169,6 +179,13 @@
                                         </span>
                                 </a>
                             </td>
+                            {% if not is_granted('ROLE_PREVIOUS_ALLOWED_TO_SWITCH') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                                <td>
+                                    <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
+                                        <img src="{{ asset('images/login_as.png') }}" width="18px"/>
+                                    </a>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -190,6 +207,9 @@
                         <th>% aanwezig</th>
                         {% if functie.functie == 'Trainer' %}
                             <th></th>
+                            <th></th>
+                        {% endif %}
+                        {% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
                             <th></th>
                         {% endif %}
                     </tr>
@@ -232,6 +252,13 @@
                                     <td>
                                         <a href="{{ path('removeSelectieTurnsterPage', { 'trainerId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
                                             <img src="{{ asset('images/remove.png') }}" width="18px"/>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                                {% if not is_granted('ROLE_PREVIOUS_ALLOWED_TO_SWITCH') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                                    <td>
+                                        <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
+                                            <img src="{{ asset('images/login_as.png') }}" width="18px"/>
                                         </a>
                                     </td>
                                 {% endif %}

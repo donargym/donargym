@@ -417,6 +417,7 @@ class SelectieController extends BaseController
                 $persoonItems->id = $persoon->getId();
                 $persoonItems->voornaam = $persoon->getVoornaam();
                 $persoonItems->achternaam = $persoon->getAchternaam();
+                $persoonItems->username = $persoon->getUser()->getUsername();
                 $foto = $persoon->getFoto();
                 if ($foto == null) {
                     $persoonItems->foto = "plaatje.jpg";
@@ -534,6 +535,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->turnster[$j]->voornaam = $turnster->getVoornaam();
                             $persoonItems->functies[$i]->turnster[$j]->achternaam = $turnster->getAchternaam();
                             $persoonItems->functies[$i]->turnster[$j]->id = $turnster->getId();
+                            $persoonItems->functies[$i]->turnster[$j]->username = $turnster->getUser()->getUsername();
                             $geboortedatum = $turnster->getGeboortedatum();
                             $turnsterUser = $turnster->getUser();
                             $persoonItems->functies[$i]->turnster[$j]->email = $turnsterUser->getUsername();
@@ -628,6 +630,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->trainer[$j]->voornaam = $trainer->getVoornaam();
                             $persoonItems->functies[$i]->trainer[$j]->achternaam = $trainer->getAchternaam();
                             $persoonItems->functies[$i]->trainer[$j]->id = $trainer->getId();
+                            $persoonItems->functies[$i]->trainer[$j]->username = $trainer->getUser()->getUsername();
                             $geboortedatum = $trainer->getGeboortedatum();
                             $trainerUser = $trainer->getUser();
                             $persoonItems->functies[$i]->trainer[$j]->email = $trainerUser->getUsername();
@@ -693,6 +696,7 @@ class SelectieController extends BaseController
                             $persoonItems->functies[$i]->assistent[$j]->voornaam = $assistent->getVoornaam();
                             $persoonItems->functies[$i]->assistent[$j]->achternaam = $assistent->getAchternaam();
                             $persoonItems->functies[$i]->assistent[$j]->id = $assistent->getId();
+                            $persoonItems->functies[$i]->assistent[$j]->username = $assistent->getUser()->getUsername();
                             $geboortedatum = $assistent->getGeboortedatum();
                             $assistentUser = $assistent->getUser();
                             $persoonItems->functies[$i]->assistent[$j]->email = $assistentUser->getUsername();
