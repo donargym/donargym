@@ -743,6 +743,7 @@ class SelectieController extends BaseController
                                     foreach ($aanwezigheid as $aanwezig) {
                                         if ($aanwezig->getTrainingsdata() == $trainingsdata[$j]) {
                                             $persoonItems->trainingen[$i]->trainingsdata[$j]->afmelding = $aanwezig->getAanwezig();
+                                            $persoonItems->trainingen[$i]->trainingsdata[$j]->afmeldingId = $aanwezig->getId();
                                         }
                                     }
                                     $counter++;
@@ -1732,6 +1733,88 @@ class SelectieController extends BaseController
 
     /**
      * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/{id}/afmelden_annuleren/{groepId}/{aanwezigheidId}", name="afmelding_annuleren")
+     * @Method("GET")
+     */
+    public function Afmelding_annuleren($id, $groepId, $aanwezigheidId)
+    {
+        $userObject = $this->getUser();
+        /** @var Aanwezigheid $aanwezigheid */
+        $aanwezigheid = $this->getDoctrine()->getManager()->find('AppBundle:Aanwezigheid', $aanwezigheidId);
+        $datum = $aanwezigheid->getTrainingsdata()->getLesdatum()->format('d-m-Y');
+        if ($aanwezigheid->getPersoon()->getUser() == $userObject)
+        {
+            $this->removeFromDB($aanwezigheid);
+        }
+
+        $persoonItems = $this->getOnePersoon($userObject, $id, true);
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT functie
+                        FROM AppBundle:Functie functie
+                        WHERE functie.groep = :id
+                        AND functie.functie = :functie')
+            ->setParameter('id', $groepId)
+            ->setParameter('functie', 'Trainer');
+        $trainers = $query->getResult();
+        foreach ($trainers as $trainer) {
+            $persoon = $trainer->getPersoon();
+            /** @var User $user */
+            $user = $persoon->getUser();
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
+                ->setFrom('afmeldingen@donargym.nl')
+                ->setTo($user->getUsername())
+                ->setBody(
+                    $this->renderView(
+                        'mails/afmelding_ingetrokken.txt.twig',
+                        array(
+                            'voornaam' => $persoonItems->voornaam,
+                            'achternaam' => $persoonItems->achternaam,
+                            'datum' => $datum,
+                        )
+                    ),
+                    'text/plain'
+                );
+            $this->get('mailer')->send($message);
+            $subject = 'Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
+            $from = 'afmeldingen@donargym.nl';
+            $to = $user->getUsername();
+            $body = $message->getBody();
+            $afmeldingsObject = new Afmeldingen();
+            $afmeldingsObject->setBericht('FROM: ' . $from . ', TO: ' . $to . ', SUBJECT: ' . $subject . ', BERICHT: ' . $body);
+            $afmeldingsObject->setTurnster($persoonItems->voornaam . ' ' . $persoonItems->achternaam);
+            $afmeldingsObject->setDatum(new \DateTime('now'));
+            $em->persist($afmeldingsObject);
+            $em->flush();
+
+            if ($user->getEmail2()) {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
+                    ->setFrom('afmeldingen@donargym.nl')
+                    ->setTo($user->getEmail2())
+                    ->setBody(
+                        $this->renderView(
+                            'mails/afmelding_ingetrokken.txt.twig',
+                            array(
+                                'voornaam' => $persoonItems->voornaam,
+                                'achternaam' => $persoonItems->achternaam,
+                                'afmeldingsData' => $datum,
+                            )
+                        ),
+                        'text/plain'
+                    );
+                $this->get('mailer')->send($message);
+            }
+
+        }
+
+        return $this->redirectToRoute('Afmelding', array('id' => $id, 'groepId' => $groepId));
+    }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
      * @Route("/inloggen/selectie/{id}/afmelden/{groepId}/", name="Afmelding")
      * @Method({"GET", "POST"})
      */
@@ -1875,6 +1958,7 @@ class SelectieController extends BaseController
             }
         }
         return $this->render('inloggen/selectieAfmelden.html.twig', array(
+            'id' => $id,
             'calendarItems' => $this->calendarItems,
             'header' => $this->header,
             'persoon' => $persoon,
