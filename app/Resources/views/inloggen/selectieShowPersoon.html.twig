@@ -10,14 +10,6 @@
 
 {% block pageHeader %}
 
-    {% for functie in persoonItems.functies %}
-        {% if functie.groepId == 5 %}
-            <a href="http://www.facebook.com/groups/selectieleidschendam/" target="blank">Word lid van de Facebookgroep
-                van
-                de selectie Leidschendam!</a>
-        {% endif %}
-    {% endfor %}
-
     <div style="height: 200px;">
         <a href="{{ path('addSelectieFotoPage', { 'persoonId': persoonItems.id }) }}">
             <img src="https://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
@@ -51,9 +43,9 @@
             {% if functie.functie == 'Trainer' or functie.functie == 'Assistent-Trainer' %}
                 <center>
                     <div id="button4">
-                        <a href="{{ path('TrainingsplanIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
-                            Trainingsplan</a>
-                        <a href="{{ path('viewDoelen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Doelen</a>
+                        {#<a href="{{ path('TrainingsplanIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">#}
+                            {#Trainingsplan</a>#}
+                        {#<a href="{{ path('viewDoelen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Doelen</a>#}
                         <a href="{{ path('viewWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
                             Uitslagen
                         </a>
@@ -66,13 +58,13 @@
                         {% endif %}
                         <a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen</a>
                         <a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid</a>
-                        <a href="{{ path('showDoelPrijzen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
-                            {% if functie.doelenPrijzenAantal > 0 %}
-                                <b>Toestelprijzen ({{ functie.doelenPrijzenAantal }})</b>
-                            {% else %}
-                                Toestelprijzen
-                            {% endif %}
-                        </a>
+                        {#<a href="{{ path('showDoelPrijzen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">#}
+                            {#{% if functie.doelenPrijzenAantal > 0 %}#}
+                                {#<b>Toestelprijzen ({{ functie.doelenPrijzenAantal }})</b>#}
+                            {#{% else %}#}
+                                {#Toestelprijzen#}
+                            {#{% endif %}#}
+                        {#</a>#}
                         {% if functie.groepId == 5 %}
                             {#<a href="{{ path('EtenDrinkenIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Eten/Drinken Sinterklaas</a>#}
                         {% endif %}
@@ -92,28 +84,28 @@
                     <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
                 </div>
             {% endif %}
-            {% if functie.functie == 'Turnster' %}
-                <p>
-                    <h2>Voortgang</h2>
+            {#{% if functie.functie == 'Turnster' %}#}
+                {#<p>#}
+                    {#<h2>Voortgang</h2>#}
 
-                    <div style="width: 600px; height: 200px; margin: 0 auto">
-                        <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Sprong' }) }}">
-                            <div id="sprong" style="width: 300px; height: 200px; float: left"></div>
-                        </a>
-                        <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Brug' }) }}">
-                            <div id="brug" style="width: 300px; height: 200px; float: left"></div>
-                        </a>
-                    </div>
-                    <div style="width: 600px; height: 200px; margin: 0 auto">
-                        <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Balk' }) }}">
-                            <div id="balk" style="width: 300px; height: 200px; float: left"></div>
-                        </a>
-                        <a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Vloer' }) }}">
-                            <div id="vloer" style="width: 300px; height: 200px; float: left"></div>
-                        </a>
-                    </div>
-                </p>
-            {% endif %}
+                    {#<div style="width: 600px; height: 200px; margin: 0 auto">#}
+                        {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Sprong' }) }}">#}
+                            {#<div id="sprong" style="width: 300px; height: 200px; float: left"></div>#}
+                        {#</a>#}
+                        {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Brug' }) }}">#}
+                            {#<div id="brug" style="width: 300px; height: 200px; float: left"></div>#}
+                        {#</a>#}
+                    {#</div>#}
+                    {#<div style="width: 600px; height: 200px; margin: 0 auto">#}
+                        {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Balk' }) }}">#}
+                            {#<div id="balk" style="width: 300px; height: 200px; float: left"></div>#}
+                        {#</a>#}
+                        {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Vloer' }) }}">#}
+                            {#<div id="vloer" style="width: 300px; height: 200px; float: left"></div>#}
+                        {#</a>#}
+                    {#</div>#}
+                {#</p>#}
+            {#{% endif %}#}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
             <p><h3>(Assistent-)Trainers</h3>
             <table border="0" id="nolink">
@@ -203,7 +195,7 @@
                     <tr style="color: #FFFF00;">
                         <th>Naam</th>
                         <th>Geboortedatum</th>
-                        <th>Voortgang</th>
+                        {#<th>Voortgang</th>#}
                         <th>% aanwezig</th>
                         {% if functie.functie == 'Trainer' %}
                             <th></th>
@@ -227,14 +219,16 @@
                                         {{ turnster.geboortedatum }}
                                     </a>
                                 </td>
-                                <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageVoortgangKleur }};">
-                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
-                                    style="text-decoration: none">
-                                        <span style="color: rgba(0,0,0,0.6);">
-                                        {{ turnster.percentageVoortgang | round }}%
-                                    </span>
-                                    </a>
-                                </td>
+                                {#{% if functie.groepId == 3 or functie.groepId == 5 %}#}
+                                    {#<td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageVoortgangKleur }};">#}
+                                        {#<a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"#}
+                                           {#style="text-decoration: none">#}
+                                            {#<span style="color: rgba(0,0,0,0.6);">#}
+                                            {#{{ turnster.percentageVoortgang | round }}%#}
+                                        {#</span>#}
+                                        {#</a>#}
+                                    {#</td>#}
+                                {#{% endif %}#}
                                 <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
                                     <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
                                     style="text-decoration: none">
@@ -311,7 +305,7 @@
                 {% endif %}
             </h3>
             <table id="nolink" width="100%">
-                <tr>
+                <tr id="wedstrijdkalender" style="cursor: pointer">
                     <th width="14%">Datum</th>
                     <th width="21%">Wedstrijd</th>
                     <th width="20%">Tijden</th>
@@ -323,7 +317,7 @@
 
                 </tr>
                 {% for items in functie.wedstrijdkalenderItems %}
-                    <tr>
+                    <tr class="wedstrijdkalender-item"{% if functie.functie != 'Turnster' %} style="display: none"{% endif %}>
                         <td>{{ items.datum }}</td>
                         <td>{{ items.wedstrijdnaam }}</td>
                         <td>{{ items.tijden|raw }}</td>
@@ -357,181 +351,186 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        $(function () {
-            var gaugeOptions = {
-                chart: {
-                    type: 'solidgauge',
-                    backgroundColor: 'rgba(255, 255, 255, 0)'
-                },
+        {#$(function () {#}
+            {#var gaugeOptions = {#}
+                {#chart: {#}
+                    {#type: 'solidgauge',#}
+                    {#backgroundColor: 'rgba(255, 255, 255, 0)'#}
+                {#},#}
 
-                title: null,
-                pane: {
-                    center: ['50%', '85%'],
-                    size: '140%',
-                    startAngle: -90,
-                    endAngle: 90,
-                    background: {
-                        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
-                        innerRadius: '60%',
-                        outerRadius: '100%',
-                        shape: 'arc'
-                    }
-                },
-                tooltip: {
-                    enabled: false
-                },
-                // the value axis
-                yAxis: {
-                    stops: [
-                        [0.1, '#DF5353'], // red
-                        [0.5, '#DDDF0D'], // yellow
-                        [0.9, '#55BF3B'] // green
-                    ],
-                    lineWidth: 0,
-                    minorTickInterval: null,
-                    tickPixelInterval: 400,
-                    tickWidth: 0,
-                    title: {
-                        y: -70
-                    },
-                    labels: {
-                        y: 16
-                    }
-                },
-                plotOptions: {
-                    solidgauge: {
-                        dataLabels: {
-                            y: 5,
-                            borderWidth: 0,
-                            useHTML: true
-                        }
-                    }
-                }
-            };
-            // Sprong
-            $('#sprong').highcharts(Highcharts.merge(gaugeOptions, {
-                yAxis: {
-                    min: 0,
-                    max: 100,
-                    title: {
-                        text: 'Sprong',
-                        style: {
-                            fontSize: '14pt',
-                            color: '#FFFF00',
-                            fontWeight: 'normal',
-                            fontFamily: 'Verdana, Calibri'
-                        }
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: 'Sprong',
-                    {% if voortgang is defined %}
-                        data: [{{ voortgang.Sprong|round }}],
-                    {% else %}
-                        data: [{{ 0 }}],
-                    {% endif %}
-                    dataLabels: {
-                        format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'
-                    }
-                }]
-            }));
-            // Brug
-            $('#brug').highcharts(Highcharts.merge(gaugeOptions, {
-                yAxis: {
-                    min: 0,
-                    max: 100,
-                    title: {
-                        text: 'Brug',
-                        style: {
-                            fontSize: '14pt',
-                            color: '#FFFF00',
-                            fontWeight: 'normal',
-                            fontFamily: 'Verdana, Calibri'
-                        }
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: 'Brug',
-                    {% if voortgang is defined %}
-                        data: [{{ voortgang.Brug|round }}],
-                    {% else %}
-                        data: [{{ 0 }}],
-                    {% endif %}
-                    dataLabels: {
-                        format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'
-                    }
-                }]
-            }));
-            // Balk
-            $('#balk').highcharts(Highcharts.merge(gaugeOptions, {
-                yAxis: {
-                    min: 0,
-                    max: 100,
-                    title: {
-                        text: 'Balk',
-                        style: {
-                            fontSize: '14pt',
-                            color: '#FFFF00',
-                            fontWeight: 'normal',
-                            fontFamily: 'Verdana, Calibri'
-                        }
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: 'Balk',
-                    {% if voortgang is defined %}
-                        data: [{{ voortgang.Balk|round }}],
-                    {% else %}
-                        data: [{{ 0 }}],
-                    {% endif %}
-                    dataLabels: {
-                        format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'
-                    }
-                }]
-            }));
-            // Vloer
-            $('#vloer').highcharts(Highcharts.merge(gaugeOptions, {
-                yAxis: {
-                    min: 0,
-                    max: 100,
-                    title: {
-                        text: 'Vloer',
-                        style: {
-                            fontSize: '14pt',
-                            color: '#FFFF00',
-                            fontWeight: 'normal',
-                            fontFamily: 'Verdana, Calibri'
-                        }
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: 'Vloer',
-                    {% if voortgang is defined %}
-                        data: [{{ voortgang.Vloer|round }}],
-                    {% else %}
-                        data: [{{ 0 }}],
-                    {% endif %}
-                    dataLabels: {
-                        format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'
-                    }
-                }]
-            }));
+                {#title: null,#}
+                {#pane: {#}
+                    {#center: ['50%', '85%'],#}
+                    {#size: '140%',#}
+                    {#startAngle: -90,#}
+                    {#endAngle: 90,#}
+                    {#background: {#}
+                        {#backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',#}
+                        {#innerRadius: '60%',#}
+                        {#outerRadius: '100%',#}
+                        {#shape: 'arc'#}
+                    {#}#}
+                {#},#}
+                {#tooltip: {#}
+                    {#enabled: false#}
+                {#},#}
+                {#// the value axis#}
+                {#yAxis: {#}
+                    {#stops: [#}
+                        {#[0.1, '#DF5353'], // red#}
+                        {#[0.5, '#DDDF0D'], // yellow#}
+                        {#[0.9, '#55BF3B'] // green#}
+                    {#],#}
+                    {#lineWidth: 0,#}
+                    {#minorTickInterval: null,#}
+                    {#tickPixelInterval: 400,#}
+                    {#tickWidth: 0,#}
+                    {#title: {#}
+                        {#y: -70#}
+                    {#},#}
+                    {#labels: {#}
+                        {#y: 16#}
+                    {#}#}
+                {#},#}
+                {#plotOptions: {#}
+                    {#solidgauge: {#}
+                        {#dataLabels: {#}
+                            {#y: 5,#}
+                            {#borderWidth: 0,#}
+                            {#useHTML: true#}
+                        {#}#}
+                    {#}#}
+                {#}#}
+            {#};#}
+            {#// Sprong#}
+            {#$('#sprong').highcharts(Highcharts.merge(gaugeOptions, {#}
+                {#yAxis: {#}
+                    {#min: 0,#}
+                    {#max: 100,#}
+                    {#title: {#}
+                        {#text: 'Sprong',#}
+                        {#style: {#}
+                            {#fontSize: '14pt',#}
+                            {#color: '#FFFF00',#}
+                            {#fontWeight: 'normal',#}
+                            {#fontFamily: 'Verdana, Calibri'#}
+                        {#}#}
+                    {#}#}
+                {#},#}
+                {#credits: {#}
+                    {#enabled: false#}
+                {#},#}
+                {#series: [{#}
+                    {#name: 'Sprong',#}
+                    {#{% if voortgang is defined %}#}
+                        {#data: [{{ voortgang.Sprong|round }}],#}
+                    {#{% else %}#}
+                        {#data: [{{ 0 }}],#}
+                    {#{% endif %}#}
+                    {#dataLabels: {#}
+                        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
+                        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
+                    {#}#}
+                {#}]#}
+            {#}));#}
+            {#// Brug#}
+            {#$('#brug').highcharts(Highcharts.merge(gaugeOptions, {#}
+                {#yAxis: {#}
+                    {#min: 0,#}
+                    {#max: 100,#}
+                    {#title: {#}
+                        {#text: 'Brug',#}
+                        {#style: {#}
+                            {#fontSize: '14pt',#}
+                            {#color: '#FFFF00',#}
+                            {#fontWeight: 'normal',#}
+                            {#fontFamily: 'Verdana, Calibri'#}
+                        {#}#}
+                    {#}#}
+                {#},#}
+                {#credits: {#}
+                    {#enabled: false#}
+                {#},#}
+                {#series: [{#}
+                    {#name: 'Brug',#}
+                    {#{% if voortgang is defined %}#}
+                        {#data: [{{ voortgang.Brug|round }}],#}
+                    {#{% else %}#}
+                        {#data: [{{ 0 }}],#}
+                    {#{% endif %}#}
+                    {#dataLabels: {#}
+                        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
+                        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
+                    {#}#}
+                {#}]#}
+            {#}));#}
+            {#// Balk#}
+            {#$('#balk').highcharts(Highcharts.merge(gaugeOptions, {#}
+                {#yAxis: {#}
+                    {#min: 0,#}
+                    {#max: 100,#}
+                    {#title: {#}
+                        {#text: 'Balk',#}
+                        {#style: {#}
+                            {#fontSize: '14pt',#}
+                            {#color: '#FFFF00',#}
+                            {#fontWeight: 'normal',#}
+                            {#fontFamily: 'Verdana, Calibri'#}
+                        {#}#}
+                    {#}#}
+                {#},#}
+                {#credits: {#}
+                    {#enabled: false#}
+                {#},#}
+                {#series: [{#}
+                    {#name: 'Balk',#}
+                    {#{% if voortgang is defined %}#}
+                        {#data: [{{ voortgang.Balk|round }}],#}
+                    {#{% else %}#}
+                        {#data: [{{ 0 }}],#}
+                    {#{% endif %}#}
+                    {#dataLabels: {#}
+                        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
+                        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
+                    {#}#}
+                {#}]#}
+            {#}));#}
+            {#// Vloer#}
+            {#$('#vloer').highcharts(Highcharts.merge(gaugeOptions, {#}
+                {#yAxis: {#}
+                    {#min: 0,#}
+                    {#max: 100,#}
+                    {#title: {#}
+                        {#text: 'Vloer',#}
+                        {#style: {#}
+                            {#fontSize: '14pt',#}
+                            {#color: '#FFFF00',#}
+                            {#fontWeight: 'normal',#}
+                            {#fontFamily: 'Verdana, Calibri'#}
+                        {#}#}
+                    {#}#}
+                {#},#}
+                {#credits: {#}
+                    {#enabled: false#}
+                {#},#}
+                {#series: [{#}
+                    {#name: 'Vloer',#}
+                    {#{% if voortgang is defined %}#}
+                        {#data: [{{ voortgang.Vloer|round }}],#}
+                    {#{% else %}#}
+                        {#data: [{{ 0 }}],#}
+                    {#{% endif %}#}
+                    {#dataLabels: {#}
+                        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
+                        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
+                    {#}#}
+                {#}]#}
+            {#}));#}
+        {#});#}
+
+        $('#wedstrijdkalender').click(function () {
+            $('.wedstrijdkalender-item').toggle();
         });
+
     </script>
 {% endblock %}
