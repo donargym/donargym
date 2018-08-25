@@ -177,6 +177,46 @@ van DONAR, te vinden onder het kopje formulieren in het lidmaatschap menu. U ver
 Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje formulieren.',
                 )
             )
+            ->add(
+                'acceptPrivacyPolicy',
+                'checkbox',
+                array(
+                    'required' => true,
+                    'label'    => 'Door dit vakje aan te klikken verklaart u op de hoogte te zijn van het privacy beleid van de vereniging, en hiermee akkoord te gaan.',
+                )
+            )
+            ->add(
+                'acceptPrivacyPolicy',
+                'checkbox',
+                array(
+                    'required' => true,
+                    'label'    => 'Door dit vakje aan te klikken verklaart u op de hoogte te zijn van het privacy beleid van de vereniging, en hiermee akkoord te gaan.',
+                )
+            )
+            ->add(
+                'acceptNamePublished',
+                'radio',
+                array(
+                    'required' => true,
+                    'label'    => 'Gaat u ermee akkoord dat de naam van het aankomend lid gepubliceerd wordt op de website, in het krantje of op social media?',
+                    'choices'  => array(
+                        'Ja' => true,
+                        'Nee' => false,
+                    ),
+                )
+            )
+            ->add(
+                'acceptPicturesPublished',
+                'radio',
+                array(
+                    'required' => true,
+                    'label'    => 'Gaat u ermee akkoord dat beeldmateriaal van het aankomend lid gepubliceerd wordt op de website, in het krantje of op social media?',
+                    'choices'  => array(
+                        'Ja' => true,
+                        'Nee' => false,
+                    ),
+                )
+            )
             ->add('save', 'submit', array('label' => 'Verstuur formulier'));
     }
 

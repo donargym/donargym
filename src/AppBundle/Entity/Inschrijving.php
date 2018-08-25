@@ -250,6 +250,27 @@ final class Inschrijving
     private $accept;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $acceptPrivacyPolicy;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $acceptNamePublished;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $acceptPicturesPublished;
+
+    /**
      * @return string
      */
     public function getFirstName()
@@ -663,5 +684,53 @@ final class Inschrijving
     public function setAccept($accept)
     {
         $this->accept = $accept;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAcceptPrivacyPolicy()
+    {
+        return $this->acceptPrivacyPolicy;
+    }
+
+    /**
+     * @param bool $acceptPrivacyPolicy
+     */
+    public function setAcceptPrivacyPolicy($acceptPrivacyPolicy)
+    {
+        $this->acceptPrivacyPolicy = $acceptPrivacyPolicy;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAcceptNamePublished()
+    {
+        return $this->acceptNamePublished;
+    }
+
+    /**
+     * @param bool $acceptNamePublished
+     */
+    public function setAcceptNamePublished($acceptNamePublished)
+    {
+        $this->acceptNamePublished = $acceptNamePublished;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAcceptPicturesPublished()
+    {
+        return $this->acceptPicturesPublished;
+    }
+
+    /**
+     * @param bool $acceptPicturesPublished
+     */
+    public function setAcceptPicturesPublished($acceptPicturesPublished)
+    {
+        $this->acceptPicturesPublished = $acceptPicturesPublished;
     }
 }

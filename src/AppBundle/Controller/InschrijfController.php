@@ -35,40 +35,45 @@ final class InschrijfController extends BaseController
                 $this->container->getParameter('database_host')
             );
 
-            $subject = 'Inschrijving';
+            $subject           = 'Inschrijving';
             $inschrijfDateTime = new \DateTime();
             $this->sendEmail(
                 $subject,
                 'ledensecretariaat@donargym.nl',
                 'mails/inschrijving_naar_ledensecretariaat.txt.twig',
                 array(
-                    'inschrijfdatetime'  => $inschrijfDateTime->format('d-m-Y h:i'),
-                    'voornaam'           => $inschrijving->getFirstName(),
-                    'achternaam'         => $inschrijving->getLastname(),
-                    'initialen'          => $inschrijving->getNameletters(),
-                    'geboortedatum'      => $inschrijving->getDateofbirth()->format('d-m-Y'),
-                    'geslacht'           => $inschrijving->getGender(),
-                    'adres'              => $inschrijving->getAddress(),
-                    'postcode'           => $inschrijving->getPostcode(),
-                    'plaats'             => $inschrijving->getCity(),
-                    'tel1'               => $inschrijving->getPhone1(),
-                    'tel2'               => $inschrijving->getPhone2(),
-                    'rekeningnummer'     => $inschrijving->getBankaccountnumber(),
-                    'rekeninghouder'     => $inschrijving->getBankaccountholder(),
-                    'emailadres'         => $inschrijving->getEmailaddress(),
-                    'eerderingeschreven' => $inschrijving->isHavebeensubscribed(),
-                    'ingeschrevenvan'    => $inschrijving->getSubscribedfrom() ? $inschrijving->getSubscribedfrom()->format('d-m-Y') : null,
-                    'ingeschreventot'    => $inschrijving->getSubscribeduntil() ? $inschrijving->getSubscribeduntil()->format('d-m-Y') : null,
-                    'andereclub'         => $inschrijving->isOtherclub(),
-                    'welkeclub'          => $inschrijving->getWhatotherclub(),
-                    'bondscontributie'   => $inschrijving->isBondscontributiebetaald(),
-                    'categorie'          => $inschrijving->getCategory(),
-                    'dagen'              => implode(", ", $inschrijving->getDays()),
-                    'locaties'           => implode(", ", $inschrijving->getLocations()),
-                    'starttijd'          => $inschrijving->getStarttime(),
-                    'leiding'            => $inschrijving->getTrainer(),
-                    'hoe'                => $inschrijving->getHow(),
-                    'accept'             => $inschrijving->isAccept(),
+                    'inschrijfdatetime'       => $inschrijfDateTime->format('d-m-Y h:i'),
+                    'voornaam'                => $inschrijving->getFirstName(),
+                    'achternaam'              => $inschrijving->getLastname(),
+                    'initialen'               => $inschrijving->getNameletters(),
+                    'geboortedatum'           => $inschrijving->getDateofbirth()->format('d-m-Y'),
+                    'geslacht'                => $inschrijving->getGender(),
+                    'adres'                   => $inschrijving->getAddress(),
+                    'postcode'                => $inschrijving->getPostcode(),
+                    'plaats'                  => $inschrijving->getCity(),
+                    'tel1'                    => $inschrijving->getPhone1(),
+                    'tel2'                    => $inschrijving->getPhone2(),
+                    'rekeningnummer'          => $inschrijving->getBankaccountnumber(),
+                    'rekeninghouder'          => $inschrijving->getBankaccountholder(),
+                    'emailadres'              => $inschrijving->getEmailaddress(),
+                    'eerderingeschreven'      => $inschrijving->isHavebeensubscribed(),
+                    'ingeschrevenvan'         => $inschrijving->getSubscribedfrom() ?
+                        $inschrijving->getSubscribedfrom()->format('d-m-Y') : null,
+                    'ingeschreventot'         => $inschrijving->getSubscribeduntil() ?
+                        $inschrijving->getSubscribeduntil()->format('d-m-Y') : null,
+                    'andereclub'              => $inschrijving->isOtherclub(),
+                    'welkeclub'               => $inschrijving->getWhatotherclub(),
+                    'bondscontributie'        => $inschrijving->isBondscontributiebetaald(),
+                    'categorie'               => $inschrijving->getCategory(),
+                    'dagen'                   => implode(", ", $inschrijving->getDays()),
+                    'locaties'                => implode(", ", $inschrijving->getLocations()),
+                    'starttijd'               => $inschrijving->getStarttime(),
+                    'leiding'                 => $inschrijving->getTrainer(),
+                    'hoe'                     => $inschrijving->getHow(),
+                    'accept'                  => $inschrijving->isAccept(),
+                    'acceptPrivacy'           => $inschrijving->isAcceptPrivacyPolicy(),
+                    'acceptNamePublished'     => $inschrijving->isAcceptNamePublished(),
+                    'acceptPicturesPublished' => $inschrijving->isAcceptPicturesPublished(),
                 )
             );
 
