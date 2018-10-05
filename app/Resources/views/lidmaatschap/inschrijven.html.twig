@@ -141,6 +141,18 @@
             <td>{{ form_errors(form.how) }}</td>
         </tr>
     </table>
-    {{ form_widget(form.accept) }}{{ form_label(form.accept) }}
+
+    <p>
+        {{ form_errors(form.vrijwilligerstaken) }}<br />
+        {{ form_label(form.vrijwilligerstaken) }}
+    </p>
+    <p>
+        {{ form_widget(form.vrijwilligerstaken) }}
+    </p>
+
+    <p>{{ form_widget(form.accept) }}{{ form_label(form.accept) }}</p>
+    <p>{{ form_widget(form.acceptPrivacyPolicy) }}{{ form_label(form.acceptPrivacyPolicy) }}</p>
+    <p>{{ form_label(form.acceptNamePublished) }}{{ form_widget(form.acceptNamePublished) }}</p>
+    <p>{{ form_label(form.acceptPicturesPublished) }}{{ form_widget(form.acceptPicturesPublished) }}</p>
     {{ form_end(form) }}
 {% endblock %}

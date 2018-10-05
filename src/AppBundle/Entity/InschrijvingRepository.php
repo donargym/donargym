@@ -54,7 +54,11 @@ SET
   starttime = :starttime,
   trainer = :trainer,
   how = :how,
-  accept = :accept
+  vrijwilligerstaken = :vrijwilligerstaken,
+  accept = :accept,
+  accept_privacy_policy = :acceptPrivacyPolicy,
+  accept_name_published = :acceptNamePublished,
+  accept_pictures_published = :acceptPicturesPublished
 EOQ;
 
         $connection->executeQuery(
@@ -85,7 +89,11 @@ EOQ;
                 'starttime'               => $inschrijving->getStarttime(),
                 'trainer'                 => $inschrijving->getTrainer(),
                 'how'                     => $inschrijving->getHow(),
+                'vrijwilligerstaken'      => $inschrijving->getVrijwilligerstaken(),
                 'accept'                  => $inschrijving->isAccept(),
+                'acceptPrivacyPolicy'     => $inschrijving->isacceptPrivacyPolicy(),
+                'acceptNamePublished'     => $inschrijving->isacceptNamePublished(),
+                'acceptPicturesPublished' => $inschrijving->isacceptPicturesPublished(),
             )
         );
     }

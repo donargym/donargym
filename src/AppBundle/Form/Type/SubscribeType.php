@@ -167,6 +167,15 @@ final class SubscribeType extends AbstractType
             ->add('starttime', 'time', array('empty_value' => '', 'label' => 'Starttijd les*',))
             ->add('trainer', 'text', array('label' => 'Leiding*',))
             ->add('how', 'textarea', array('required' => false, 'label' => 'Hoe bent u bij Donar terecht gekomen?',))
+            ->add('vrijwilligerstaken', 'textarea', array(
+                'required' => true,
+                'label' => 'Bij aanmelding gaan wij ervan uit dat u zich als meerderjarige of als ouder van een minderjarige 
+                1 à 2 maal per jaar wil inzetten als vrijwilliger zodat wij als vereniging wedstrijden en evenementen
+                kunnen blijven organiseren. U kunt zich aanmelden als vrijwilliger voor: Telcommissie (optellen
+                cijfers tijdens wedstrijden), kassa, catering, bestuur, opbouwen en afbouwen van turntoestellen
+                tijdens wedstrijden, juryleden (cursus wordt vergoed!!), onderhoud gebouwen.
+                Hieronder kunt u aangeven wat uw voorkeur heeft. Meerdere opties zijn mogelijk:',
+                ))
             ->add(
                 'accept',
                 'checkbox',
@@ -182,20 +191,12 @@ Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje for
                 'checkbox',
                 array(
                     'required' => true,
-                    'label'    => 'Door dit vakje aan te klikken verklaart u op de hoogte te zijn van het privacy beleid van de vereniging, en hiermee akkoord te gaan.',
-                )
-            )
-            ->add(
-                'acceptPrivacyPolicy',
-                'checkbox',
-                array(
-                    'required' => true,
-                    'label'    => 'Door dit vakje aan te klikken verklaart u op de hoogte te zijn van het privacy beleid van de vereniging, en hiermee akkoord te gaan.',
+                    'label'    => 'Door dit vakje aan te klikken verklaart u op de hoogte te zijn van het privacy beleid van de vereniging, en hiermee akkoord te gaan. Het privacy beleid is onder aan deze pagina te vinden.',
                 )
             )
             ->add(
                 'acceptNamePublished',
-                'radio',
+                'choice',
                 array(
                     'required' => true,
                     'label'    => 'Gaat u ermee akkoord dat de naam van het aankomend lid gepubliceerd wordt op de website, in het krantje of op social media?',
@@ -203,11 +204,13 @@ Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje for
                         'Ja' => true,
                         'Nee' => false,
                     ),
+                    'choices_as_values' => true,
+                    'expanded' => true,
                 )
             )
             ->add(
                 'acceptPicturesPublished',
-                'radio',
+                'choice',
                 array(
                     'required' => true,
                     'label'    => 'Gaat u ermee akkoord dat beeldmateriaal van het aankomend lid gepubliceerd wordt op de website, in het krantje of op social media?',
@@ -215,6 +218,8 @@ Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje for
                         'Ja' => true,
                         'Nee' => false,
                     ),
+                    'choices_as_values' => true,
+                    'expanded' => true,
                 )
             )
             ->add('save', 'submit', array('label' => 'Verstuur formulier'));

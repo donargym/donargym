@@ -11,6 +11,37 @@ use Doctrine\ORM\Mapping as ORM;
  */
 final class Inschrijving
 {
+    public static function trainerOptions()
+    {
+        return array(
+            'webmaster@donargym.nl'     => 'Mijn leiding staat er niet bij',
+            'jufamber@donargym.nl'      => 'Amber',
+            'jufamy@donargym.nl'        => 'Amy',
+            'jufanchella@donargym.nl'   => 'Anchella',
+            'jufcindy@donargym.nl'      => 'Cindy',
+            'jufclaudia@donargym.nl'    => 'Claudia',
+            'jufdaphne@donargym.nl'     => 'Daphne',
+            'jufdemi@donargym.nl'       => 'Demi',
+            'jufdunya@donargym.nl'      => 'Dunya',
+            'Ericcastens@donargym.nl'   => 'Eric',
+            'flodijkhuizen@hotmail.com' => 'Flo',
+            'jufilse@donargym.nl'       => 'Ilse',
+            'loestrompet@hotmail.com'   => 'Loes',
+            'mark@donargym.nl'          => 'Mark',
+            'jufmartine@donargym.nl'    => 'Martine',
+            'marvin@donargym.nl'        => 'Marvin',
+            'jufmerel@donargym.nl'      => 'Merel',
+            'jufmieke@donargym.nl'      => 'Mieke',
+            'jufnour@donargym.nl'       => 'Nour',
+            'jufpatricia@donargym.nl'   => 'Patricia',
+            'jufrachel@donargym.nl'     => 'Rachel',
+            'jufrenske@donargym.nl'     => 'Renske',
+            'jufsaskia@donargym.nl'     => 'Saskia',
+            'Verawessels@donargym.nl'   => 'Vera',
+            'jufyascha@donargym.nl'     => 'Yascha',
+        );
+    }
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -239,6 +270,13 @@ final class Inschrijving
      * @ORM\Column(length=300, nullable=true)
      */
     private $how = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=300)
+     */
+    private $vrijwilligerstaken;
 
     /**
      * @var boolean
@@ -732,5 +770,21 @@ final class Inschrijving
     public function setAcceptPicturesPublished($acceptPicturesPublished)
     {
         $this->acceptPicturesPublished = $acceptPicturesPublished;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVrijwilligerstaken()
+    {
+        return $this->vrijwilligerstaken;
+    }
+
+    /**
+     * @param string $vrijwilligerstaken
+     */
+    public function setVrijwilligerstaken($vrijwilligerstaken)
+    {
+        $this->vrijwilligerstaken = $vrijwilligerstaken;
     }
 }
