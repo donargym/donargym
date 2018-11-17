@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh vagrant@vps2.markmeijerman.loc -i ~/.vagrant.d/insecure_private_key -t "cd /vagrant/donargym; bash --login"

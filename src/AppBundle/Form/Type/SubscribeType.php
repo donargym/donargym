@@ -168,6 +168,7 @@ final class SubscribeType extends AbstractType
             ->add('trainer', 'text', array('label' => 'Leiding*',))
             ->add('how', 'textarea', array('required' => false, 'label' => 'Hoe bent u bij Donar terecht gekomen?',))
             ->add('vrijwilligerstaken', 'textarea', array(
+                'attr' => array('rows'=> '4', 'cols' => '50'),
                 'required' => true,
                 'label' => 'Bij aanmelding gaan wij ervan uit dat u zich als meerderjarige of als ouder van een minderjarige 
                 1 à 2 maal per jaar wil inzetten als vrijwilliger zodat wij als vereniging wedstrijden en evenementen
