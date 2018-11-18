@@ -74,6 +74,13 @@
         Emailadres toevoegen <a href="{{ path('editEmail2') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a>
         <br>
     {% endif %}
+    {% if user.email3 %}
+        {{ user.email3 }} <a href="{{ path('editEmail3') }}">
+        <img src="{{ asset('images/edit.png') }}" width="18px"/></a><br>
+    {% else %}
+        Emailadres toevoegen <a href="{{ path('editEmail3') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a>
+        <br>
+    {% endif %}
 
     ******** <a href="{{ path('editPassword') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a>
 {% endblock %}

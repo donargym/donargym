@@ -43,6 +43,13 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
+     * @ORM\Column(name="email3", type="string", length=190, unique=true, nullable=true)
+     */
+    private $email3;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
@@ -221,6 +228,33 @@ class User implements AdvancedUserInterface, \Serializable
     public function getEmail2()
     {
         return $this->email2;
+    }
+
+    /**
+     * Set email3
+     *
+     * @param string $email3
+     * @return User
+     */
+    public function setEmail3($email3)
+    {
+        if ($email3 == "") {
+            $this->email3 = null;
+        } else {
+            $this->email3 = $email3;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get email3
+     *
+     * @return string
+     */
+    public function getEmail3()
+    {
+        return $this->email3;
     }
 
     /**

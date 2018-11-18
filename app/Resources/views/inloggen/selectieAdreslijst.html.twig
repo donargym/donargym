@@ -29,6 +29,7 @@
                     <th>Tel 3</th>
                     <th>Email 1</th>
                     <th>Email 2</th>
+                    <th>Email 3</th>
                 </tr>
                 {% if functie.trainer is defined %}
                     {% for persoon in functie.trainer %}
@@ -43,6 +44,7 @@
                             <td>{{ persoon.tel3 }}</td>
                             <td>{{ persoon.email }}</td>
                             <td>{{ persoon.email2 }}</td>
+                            <td>{{ persoon.email3 }}</td>
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -60,6 +62,7 @@
                             <td>{{ persoon.tel3 }}</td>
                             <td>{{ persoon.email }}</td>
                             <td>{{ persoon.email2 }}</td>
+                            <td>{{ persoon.email3 }}</td>
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -78,6 +81,7 @@
                     <th>Tel 3</th>
                     <th>Email 1</th>
                     <th>Email 2</th>
+                    <th>Email 3</th>
                 </tr>
                 {% if functie.turnster is defined %}
                     {% for persoon in functie.turnster %}
@@ -92,6 +96,7 @@
                             <td>{{ persoon.tel3 }}</td>
                             <td>{{ persoon.email }}</td>
                             <td>{{ persoon.email2 }}</td>
+                            <td>{{ persoon.email3 }}</td>
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -103,18 +108,21 @@
 {% for persoon in functie.trainer %}
 {% if persoon.email %}{{ persoon.email }};{% endif %}
 {% if persoon.email2 %}{{ persoon.email2 }};{% endif %}
+{% if persoon.email3 %}{{ persoon.email3 }};{% endif %}
 {% endfor %}
 {% endif %}
 {% if functie.assistent is defined %}
 {% for persoon in functie.assistent %}
 {% if persoon.email %}{{ persoon.email }};{% endif %}
 {% if persoon.email2 %}{{ persoon.email2 }};{% endif %}
+{% if persoon.email3 %}{{ persoon.email3 }};{% endif %}
 {% endfor %}
 {% endif %}
 {% if functie.turnster is defined %}
 {% for persoon in functie.turnster %}
 {% if persoon.email %}{{ persoon.email }};{% endif %}
 {% if persoon.email2 %}{{ persoon.email2 }};{% endif %}
+{% if persoon.email3 %}{{ persoon.email3 }};{% endif %}
 {% endfor %}
 {% endif %}
 </textarea>

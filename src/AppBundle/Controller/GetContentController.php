@@ -702,7 +702,9 @@ class GetContentController extends BaseController
                 'SELECT user
                     FROM AppBundle:User user
                     WHERE user.username = :email
-                    OR user.email2 = :email')
+                    OR user.email2 = :email
+                    OR user.email3 = :email
+                    ')
                     ->setParameter('email', $email);
             $user = $query->setMaxResults(1)->getOneOrNullResult();
             if (count($user) == 0) {
@@ -725,6 +727,7 @@ class GetContentController extends BaseController
                             array(
                                 'email1' => $user->getUsername(),
                                 'email2' =>$user->getEmail2(),
+                                'email3' =>$user->getEmail3(),
                                 'password' => $password
                             )
                         ),
@@ -747,6 +750,7 @@ class GetContentController extends BaseController
                                 array(
                                     'email1' => $user->getUsername(),
                                     'email2' =>$user->getEmail2(),
+                                    'email3' =>$user->getEmail3(),
                                     'password' => $password
                                 )
                             ),
@@ -757,6 +761,31 @@ class GetContentController extends BaseController
                         var_dump($e->getMessage());die;
                     }
                 }
+
+                if($user->getEmail3())
+                {
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('Inloggegevens website Donar')
+                        ->setFrom('webmaster@donargym.nl')
+                        ->setTo($user->getEmail3())
+                        ->setBody(
+                            $this->renderView(
+                                'mails/new_password.txt.twig',
+                                array(
+                                    'email1' => $user->getUsername(),
+                                    'email2' =>$user->getEmail2(),
+                                    'email3' =>$user->getEmail3(),
+                                    'password' => $password
+                                )
+                            ),
+                            'text/plain'
+                        );
+                    try{$this->get('mailer')->send($message);}
+                    catch(\Exception $e){
+                        var_dump($e->getMessage());die;
+                    }
+                }
+
                 $error = 'Een nieuw wachtwoord is gemaild';
             }
         }

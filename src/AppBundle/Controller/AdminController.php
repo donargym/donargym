@@ -363,7 +363,8 @@ class AdminController extends BaseController
                 'SELECT user
                 FROM AppBundle:User user
                 WHERE user.username = :email
-                OR user.email2 = :email')
+                OR user.email2 = :email
+                OR user.email3 = :email')
                 ->setParameter('email', $this->get('request')->request->get('username'));
             $user = $query->setMaxResults(1)->getOneOrNullResult();
             if (count($user) == 0) {
@@ -371,8 +372,18 @@ class AdminController extends BaseController
                     'SELECT user
                 FROM AppBundle:User user
                 WHERE user.username = :email
-                OR user.email2 = :email')
+                OR user.email2 = :email
+                OR user.email3 = :email')
                     ->setParameter('email', $this->get('request')->request->get('email2'));
+                $user = $query->setMaxResults(1)->getOneOrNullResult();
+            } if (count($user) == 0) {
+                $query = $em->createQuery(
+                    'SELECT user
+                FROM AppBundle:User user
+                WHERE user.username = :email
+                OR user.email2 = :email
+                OR user.email3 = :email')
+                    ->setParameter('email', $this->get('request')->request->get('email3'));
                 $user = $query->setMaxResults(1)->getOneOrNullResult();
             }
 
@@ -433,6 +444,9 @@ class AdminController extends BaseController
             if ($this->get('request')->request->get('email2')) {
                 $user->setEmail2($this->get('request')->request->get('email2'));
             }
+            if ($this->get('request')->request->get('email3')) {
+                $user->setEmail3($this->get('request')->request->get('email3'));
+            }
             $user->setStraatnr($this->get('request')->request->get('straatnr'));
             $user->setPostcode($this->get('request')->request->get('postcode'));
             $user->setPlaats($this->get('request')->request->get('plaats'));
@@ -473,6 +487,7 @@ class AdminController extends BaseController
                             'voornaam' => $persoon->getVoornaam(),
                             'email1' => $user->getUsername(),
                             'email2' =>$user->getEmail2(),
+                            'email3' =>$user->getEmail3(),
                             'password' => $password
                         )
                     ),
@@ -493,6 +508,7 @@ class AdminController extends BaseController
                                 'voornaam' => $persoon->getVoornaam(),
                                 'email1' => $user->getUsername(),
                                 'email2' =>$user->getEmail2(),
+                                'email3' =>$user->getEmail3(),
                                 'password' => $password
                             )
                         ),
@@ -500,6 +516,29 @@ class AdminController extends BaseController
                     );
                 $this->get('mailer')->send($message);
             }
+
+            if($user->getEmail3())
+            {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Inloggegevens website Donar')
+                    ->setFrom('webmaster@donargym.nl')
+                    ->setTo($user->getEmail3())
+                    ->setBody(
+                        $this->renderView(
+                            'mails/new_user.txt.twig',
+                            array(
+                                'voornaam' => $persoon->getVoornaam(),
+                                'email1' => $user->getUsername(),
+                                'email2' =>$user->getEmail2(),
+                                'email3' =>$user->getEmail3(),
+                                'password' => $password
+                            )
+                        ),
+                        'text/plain'
+                    );
+                $this->get('mailer')->send($message);
+            }
+
             return $this->redirectToRoute('getAdminSelectiePage');
         }
         return $this->render('inloggen/adminAddTrainer.html.twig', array(
@@ -531,6 +570,7 @@ class AdminController extends BaseController
         $user = $result->getUser();
         $persoonEdit->username = $user->getUsername();
         $persoonEdit->email2 = $user->getEmail2();
+        $persoonEdit->email3 = $user->getEmail3();
         $persoonEdit->userId = $user->getId();
         $persoonEdit->straatnr = $user->getStraatnr();
         $persoonEdit->postcode = $user->getPostcode();
@@ -632,6 +672,7 @@ class AdminController extends BaseController
             $user = $persoon->getUser();
             $user->setUsername($this->get('request')->request->get('username'));
             $user->setEmail2($this->get('request')->request->get('email2'));
+            $user->setEmail3($this->get('request')->request->get('email3'));
             $user->setStraatnr($this->get('request')->request->get('straatnr'));
             $user->setPostcode($this->get('request')->request->get('postcode'));
             $user->setPlaats($this->get('request')->request->get('plaats'));

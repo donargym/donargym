@@ -23,6 +23,7 @@ use AppBundle\Entity\Wedstrijduitslagen;
 use AppBundle\Form\Type\ContactgegevensType;
 use AppBundle\Form\Type\Email1Type;
 use AppBundle\Form\Type\Email2Type;
+use AppBundle\Form\Type\Email3Type;
 use AppBundle\Form\Type\UserType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Func;
@@ -101,6 +102,7 @@ class SelectieController extends BaseController
         $user = new \stdClass();
         $user->email = $userObject->getUsername();
         $user->email2 = $userObject->getEmail2();
+        $user->email3 = $userObject->getEmail3();
         $user->straatnr = $userObject->getStraatnr();
         $user->postcode = $userObject->getPostcode();
         $user->plaats = $userObject->getPlaats();
@@ -262,6 +264,28 @@ class SelectieController extends BaseController
                                     );
                                 $this->get('mailer')->send($message);
                             }
+
+                            if ($user->getEmail3()) {
+                                $to = $user->getEmail3();
+                                $message = \Swift_Message::newInstance()
+                                    ->setSubject($subject)
+                                    ->setFrom($from)
+                                    ->setTo($to)
+                                    ->setBody(
+                                        $this->renderView(
+                                            'mails/wijziging.txt.twig',
+                                            array(
+                                                'voornaam' => $voornaam,
+                                                'achternaam' => $achternaam,
+                                                'watGewijzigd' => $watGewijzigd,
+                                                'oud' => $oud,
+                                                'nieuw' => $nieuw,
+                                            )
+                                        ),
+                                        'text/plain'
+                                    );
+                                $this->get('mailer')->send($message);
+                            }
                         }
                     }
                 }
@@ -324,6 +348,38 @@ class SelectieController extends BaseController
             return $this->redirectToRoute('getSelectieIndexPage');
         } else {
             return $this->render('inloggen/editEmail2.html.twig', array(
+                'calendarItems' => $this->calendarItems,
+                'header' => $this->header,
+                'form' => $form->createView(),
+                'persoon' => $persoon,
+                'user' => $user,
+                'wedstrijdLinkItems' => $this->groepItems,
+            ));
+        }
+    }
+
+    /**
+     * @Security("has_role('ROLE_TURNSTER')")
+     * @Route("/inloggen/selectie/editEmail3/", name="editEmail3")
+     * @Method({"GET", "POST"})
+     */
+    public function editEmail3(Request $request)
+    {
+        $this->setBasicPageData('wedstrijdturnen');
+        $userObject = $this->getUser();
+        $user = $this->getBasisUserGegevens($userObject);
+        $persoon = $this->getBasisPersoonsGegevens($userObject);
+        $form = $this->createForm(new Email3Type(), $userObject);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($userObject);
+            $em->flush();
+            $this->sendNotificationMailEdit('Emailadres 3', $user->email3 . "\n", $userObject->getEmail3(), $userObject);
+            return $this->redirectToRoute('getSelectieIndexPage');
+        } else {
+            return $this->render('inloggen/editEmail3.html.twig', array(
                 'calendarItems' => $this->calendarItems,
                 'header' => $this->header,
                 'form' => $form->createView(),
@@ -540,6 +596,7 @@ class SelectieController extends BaseController
                             $turnsterUser = $turnster->getUser();
                             $persoonItems->functies[$i]->turnster[$j]->email = $turnsterUser->getUsername();
                             $persoonItems->functies[$i]->turnster[$j]->email2 = $turnsterUser->getEmail2();
+                            $persoonItems->functies[$i]->turnster[$j]->email3 = $turnsterUser->getEmail3();
                             $persoonItems->functies[$i]->turnster[$j]->straatNr = $turnsterUser->getStraatnr();
                             $persoonItems->functies[$i]->turnster[$j]->postcode = $turnsterUser->getPostcode();
                             $persoonItems->functies[$i]->turnster[$j]->plaats = $turnsterUser->getPlaats();
@@ -635,6 +692,7 @@ class SelectieController extends BaseController
                             $trainerUser = $trainer->getUser();
                             $persoonItems->functies[$i]->trainer[$j]->email = $trainerUser->getUsername();
                             $persoonItems->functies[$i]->trainer[$j]->email2 = $trainerUser->getEmail2();
+                            $persoonItems->functies[$i]->trainer[$j]->email3 = $trainerUser->getEmail3();
                             $persoonItems->functies[$i]->trainer[$j]->straatNr = $trainerUser->getStraatnr();
                             $persoonItems->functies[$i]->trainer[$j]->postcode = $trainerUser->getPostcode();
                             $persoonItems->functies[$i]->trainer[$j]->plaats = $trainerUser->getPlaats();
@@ -701,6 +759,7 @@ class SelectieController extends BaseController
                             $assistentUser = $assistent->getUser();
                             $persoonItems->functies[$i]->assistent[$j]->email = $assistentUser->getUsername();
                             $persoonItems->functies[$i]->assistent[$j]->email2 = $assistentUser->getEmail2();
+                            $persoonItems->functies[$i]->assistent[$j]->email3 = $assistentUser->getEmail3();
                             $persoonItems->functies[$i]->assistent[$j]->straatNr = $assistentUser->getStraatnr();
                             $persoonItems->functies[$i]->assistent[$j]->postcode = $assistentUser->getPostcode();
                             $persoonItems->functies[$i]->assistent[$j]->plaats = $assistentUser->getPlaats();
@@ -1808,6 +1867,25 @@ class SelectieController extends BaseController
                 $this->get('mailer')->send($message);
             }
 
+            if ($user->getEmail3()) {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
+                    ->setFrom('afmeldingen@donargym.nl')
+                    ->setTo($user->getEmail3())
+                    ->setBody(
+                        $this->renderView(
+                            'mails/afmelding_ingetrokken.txt.twig',
+                            array(
+                                'voornaam' => $persoonItems->voornaam,
+                                'achternaam' => $persoonItems->achternaam,
+                                'afmeldingsData' => $datum,
+                            )
+                        ),
+                        'text/plain'
+                    );
+                $this->get('mailer')->send($message);
+            }
+
         }
 
         return $this->redirectToRoute('Afmelding', array('id' => $id, 'groepId' => $groepId));
@@ -1908,6 +1986,26 @@ class SelectieController extends BaseController
                                     ->setSubject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
                                     ->setFrom('afmeldingen@donargym.nl')
                                     ->setTo($user->getEmail2())
+                                    ->setBody(
+                                        $this->renderView(
+                                            'mails/afmelding.txt.twig',
+                                            array(
+                                                'voornaam' => $persoonItems->voornaam,
+                                                'achternaam' => $persoonItems->achternaam,
+                                                'afmeldingsData' => $afmeldingsData,
+                                                'reden' => $reden,
+                                            )
+                                        ),
+                                        'text/plain'
+                                    );
+                                $this->get('mailer')->send($message);
+                            }
+
+                            if ($user->getEmail3()) {
+                                $message = \Swift_Message::newInstance()
+                                    ->setSubject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
+                                    ->setFrom('afmeldingen@donargym.nl')
+                                    ->setTo($user->getEmail3())
                                     ->setBody(
                                         $this->renderView(
                                             'mails/afmelding.txt.twig',
@@ -2591,7 +2689,9 @@ class SelectieController extends BaseController
                 'SELECT user
                 FROM AppBundle:User user
                 WHERE user.username = :email
-                OR user.email2 = :email')
+                OR user.email2 = :email
+                OR user.email3 = :email
+                ')
                 ->setParameter('email', $this->get('request')->request->get('username'));
             $user = $query->setMaxResults(1)->getOneOrNullResult();
             if (count($user) == 0) {
@@ -2599,8 +2699,21 @@ class SelectieController extends BaseController
                     'SELECT user
                 FROM AppBundle:User user
                 WHERE user.username = :email
-                OR user.email2 = :email')
+                OR user.email2 = :email
+                OR user.email3 = :email
+                ')
                     ->setParameter('email', $this->get('request')->request->get('email2'));
+                $user = $query->setMaxResults(1)->getOneOrNullResult();
+            }
+            if (count($user) == 0) {
+                $query = $em->createQuery(
+                    'SELECT user
+                FROM AppBundle:User user
+                WHERE user.username = :email
+                OR user.email2 = :email
+                OR user.email3 = :email
+                ')
+                    ->setParameter('email', $this->get('request')->request->get('email3'));
                 $user = $query->setMaxResults(1)->getOneOrNullResult();
             }
 
@@ -2663,6 +2776,9 @@ class SelectieController extends BaseController
             if ($this->get('request')->request->get('email2')) {
                 $user->setEmail2($this->get('request')->request->get('email2'));
             }
+            if ($this->get('request')->request->get('email3')) {
+                $user->setEmail3($this->get('request')->request->get('email3'));
+            }
             $user->setStraatnr($this->get('request')->request->get('straatnr'));
             $user->setPostcode($this->get('request')->request->get('postcode'));
             $user->setPlaats($this->get('request')->request->get('plaats'));
@@ -2702,6 +2818,7 @@ class SelectieController extends BaseController
                             'voornaam' => $persoon->getVoornaam(),
                             'email1' => $user->getUsername(),
                             'email2' => $user->getEmail2(),
+                            'email3' => $user->getEmail3(),
                             'password' => $password
                         )
                     ),
@@ -2721,6 +2838,7 @@ class SelectieController extends BaseController
                                 'voornaam' => $persoon->getVoornaam(),
                                 'email1' => $user->getUsername(),
                                 'email2' => $user->getEmail2(),
+                                'email3' => $user->getEmail3(),
                                 'password' => $password
                             )
                         ),
@@ -2728,6 +2846,28 @@ class SelectieController extends BaseController
                     );
                 $this->get('mailer')->send($message);
             }
+
+            if ($user->getEmail3()) {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Inloggegevens website Donar')
+                    ->setFrom('webmaster@donargym.nl')
+                    ->setTo($user->getEmail3())
+                    ->setBody(
+                        $this->renderView(
+                            'mails/new_user.txt.twig',
+                            array(
+                                'voornaam' => $persoon->getVoornaam(),
+                                'email1' => $user->getUsername(),
+                                'email2' => $user->getEmail2(),
+                                'email3' => $user->getEmail3(),
+                                'password' => $password
+                            )
+                        ),
+                        'text/plain'
+                    );
+                $this->get('mailer')->send($message);
+            }
+
             return $this->redirectToRoute('showPersoon', array(
                 'id' => $id
             ));
@@ -3094,6 +3234,7 @@ class SelectieController extends BaseController
             $user = $result->getUser();
             $persoonEdit->username = $user->getUsername();
             $persoonEdit->email2 = $user->getEmail2();
+            $persoonEdit->email3 = $user->getEmail3();
             $persoonEdit->userId = $user->getId();
             $persoonEdit->straatnr = $user->getStraatnr();
             $persoonEdit->postcode = $user->getPostcode();
@@ -3193,6 +3334,7 @@ class SelectieController extends BaseController
                 $user = $persoon->getUser();
                 $user->setUsername($this->get('request')->request->get('username'));
                 $user->setEmail2($this->get('request')->request->get('email2'));
+                $user->setEmail3($this->get('request')->request->get('email3'));
                 $user->setStraatnr($this->get('request')->request->get('straatnr'));
                 $user->setPostcode($this->get('request')->request->get('postcode'));
                 $user->setPlaats($this->get('request')->request->get('plaats'));
@@ -3293,6 +3435,7 @@ class SelectieController extends BaseController
         $turnster->plaats = $userObject->getPlaats();
         $turnster->email = $userObject->getUsername();
         $turnster->email2 = $userObject->getEmail2();
+        $turnster->email3 = $userObject->getEmail3();
         $turnster->tel1 = $userObject->getTel1();
         $turnster->tel2 = $userObject->getTel2();
         $turnster->tel3 = $userObject->getTel3();
