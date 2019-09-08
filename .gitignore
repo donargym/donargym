@@ -17,3 +17,4 @@
 /src/AppBundle/DataFixtures/ORM/LoadUserData.php
 /httpdocs/*
 /src/AppBundle/Controller/font/*
+/data

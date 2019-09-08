@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Inschrijven trainingsstage</h1>
+    {{ form_start(form) }}
+    <table>
+        <tr>
+            <td>{{ form_label(form.name) }}</td>
+            <td>{{ form_widget(form.name) }}</td>
+            <td>{{ form_errors(form.name) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.dateofbirth) }}</td>
+            <td>{{ form_widget(form.dateofbirth) }}</td>
+            <td>{{ form_errors(form.dateofbirth) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.emailaddress) }}</td>
+            <td>{{ form_widget(form.emailaddress) }}</td>
+            <td>{{ form_errors(form.emailaddress) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone1) }}</td>
+            <td>{{ form_widget(form.phone1) }}</td>
+            <td>{{ form_errors(form.phone1) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone2) }}</td>
+            <td>{{ form_widget(form.phone2) }}</td>
+            <td>{{ form_errors(form.phone2) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.huisArts) }}</td>
+            <td>{{ form_widget(form.huisArts) }}</td>
+            <td>{{ form_errors(form.huisArts) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.insuranceCompany) }}</td>
+            <td>{{ form_widget(form.insuranceCompany) }}</td>
+            <td>{{ form_errors(form.insuranceCompany) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.insuranceCard) }}</td>
+            <td>{{ form_widget(form.insuranceCard) }}</td>
+            <td>{{ form_errors(form.insuranceCard) }}</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>{{ form_label(form.bankaccountholder) }}<a href="" target="_blank">deze link</a>*</td>
+            <td>{{ form_widget(form.bankaccountholder) }}</td>
+            <td>{{ form_errors(form.bankaccountholder) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.diet) }}</td>
+            <td>{{ form_widget(form.diet) }}</td>
+            <td>{{ form_errors(form.diet) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.medicines) }}</td>
+            <td>{{ form_widget(form.medicines) }}</td>
+            <td>{{ form_errors(form.medicines) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.other) }}</td>
+            <td>{{ form_widget(form.other) }}</td>
+            <td>{{ form_errors(form.other) }}</td>
+        </tr>
+    </table>
+
+    <p>{{ form_widget(form.accept) }}{{ form_label(form.accept) }}</p>
+    {{ form_end(form) }}
+{% endblock %}
