@@ -2,8 +2,8 @@
 
 {% block body %}
     <h1>Inschrijven trainingsstage</h1>
-    <p>De inschrijving is succesvol verstuurd. Er is een bevestigingsmail gestuurd naar {{ mailAddress }}.</p>
+    <p>De inschrijving is succesvol verstuurd. Er is een bevestigingsmail gestuurd naar het emailadres dat je hebt opgegeven.</p>
     {% if as == 'turnster' %}
-        <p>Je kunt het bedrag voor de trainingsstage over maken via de volgende link: <a href="" target="_blank">Betaal voor trainingsstage</a></p>
+        <p>Je kunt het bedrag voor de trainingsstage over maken via de volgende link: <a href="{{ paymentLink }}" target="_blank">Betaal voor trainingsstage</a></p>
     {% endif %}
 {% endblock %}

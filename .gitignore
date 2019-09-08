@@ -18,3 +18,4 @@
 /httpdocs/*
 /src/AppBundle/Controller/font/*
 /data
+/var/sessions/*

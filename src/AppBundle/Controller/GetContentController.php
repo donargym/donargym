@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GetContentController extends BaseController
 {
+    private $paymentLink = 'https://bunq.me/open-request/t/a8b04702-6632-47ca-9a96-7722edf8d25c';
 
     public function __construct()
     {
@@ -64,6 +65,16 @@ class GetContentController extends BaseController
 
                 $this->addToDB($trainingsstageTurnster);
 
+                $this->sendEmail(
+                    'Inschrijving trainingsstage',
+                    $trainingsstageTurnster->getEmailaddress(),
+                    'mails/trainingsstage_confirmation.txt.twig',
+                    array(
+                        'naam' => $trainingsstageTurnster->getName(),
+                        'paymentLink' => $this->paymentLink,
+                    )
+                );
+
                 return $this->redirectToRoute('trainingsstageSuccess', array('as' => $request->query->get('as')));
             }
 
@@ -74,6 +85,7 @@ class GetContentController extends BaseController
                     'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
+                    'paymentLink'        => $this->paymentLink,
                 )
             );
         }
@@ -98,7 +110,8 @@ class GetContentController extends BaseController
                 'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
-                'as'                 => $request->query->get('as')
+                'as'                 => $request->query->get('as'),
+                'paymentLink'        => $this->paymentLink,
             )
         );
     }

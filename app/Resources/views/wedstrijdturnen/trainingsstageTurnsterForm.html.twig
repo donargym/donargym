@@ -47,7 +47,7 @@
     </table>
     <table>
         <tr>
-            <td>{{ form_label(form.bankaccountholder) }}<a href="" target="_blank">deze link</a>*</td>
+            <td>{{ form_label(form.bankaccountholder) }}<a href="{{ paymentLink }}" target="_blank">deze link</a>*</td>
             <td>{{ form_widget(form.bankaccountholder) }}</td>
             <td>{{ form_errors(form.bankaccountholder) }}</td>
         </tr>
