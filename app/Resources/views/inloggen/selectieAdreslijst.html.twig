@@ -20,7 +20,6 @@
             <table width="100%" border="0" id="nolink" style="font-size: 10px;">
                 <tr style="color: #FFFF00;">
                     <th>Naam</th>
-                    <th>Geb. Datum</th>
                     <th>Straat + Nr</th>
                     <th>Postcode</th>
                     <th>Plaats</th>
@@ -35,7 +34,6 @@
                     {% for persoon in functie.trainer %}
                         <tr>
                             <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
-                            <td>{{ persoon.geboortedatum }}</td>
                             <td>{{ persoon.straatNr }}</td>
                             <td>{{ persoon.postcode }}</td>
                             <td>{{ persoon.plaats }}</td>
@@ -53,7 +51,6 @@
                     {% for persoon in functie.assistent %}
                         <tr>
                             <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
-                            <td>{{ persoon.geboortedatum }}</td>
                             <td>{{ persoon.straatNr }}</td>
                             <td>{{ persoon.postcode }}</td>
                             <td>{{ persoon.plaats }}</td>
@@ -72,7 +69,6 @@
             <table border="0" id="nolink" style="font-size: 10px;">
                 <tr style="color: #FFFF00;">
                     <th>Naam</th>
-                    <th>Geb. Datum</th>
                     <th>Straat + Nr</th>
                     <th>Postcode</th>
                     <th>Plaats</th>
@@ -87,7 +83,6 @@
                     {% for persoon in functie.turnster %}
                         <tr>
                             <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
-                            <td>{{ persoon.geboortedatum }}</td>
                             <td>{{ persoon.straatNr }}</td>
                             <td>{{ persoon.postcode }}</td>
                             <td>{{ persoon.plaats }}</td>
