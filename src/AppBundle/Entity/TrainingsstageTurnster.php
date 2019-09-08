@@ -132,6 +132,18 @@ final class TrainingsstageTurnster
      */
     private $accept;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_at")
+     */
+    private $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -202,6 +214,11 @@ final class TrainingsstageTurnster
         return $this->accept;
     }
 
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
     public function setId($id)
     {
         $this->id = $id;
@@ -270,5 +287,10 @@ final class TrainingsstageTurnster
     public function setAccept($accept)
     {
         $this->accept = $accept;
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
     }
 }
