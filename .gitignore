@@ -18,4 +18,5 @@
 /httpdocs/*
 /src/AppBundle/Controller/font/*
 /data
-/var/sessions/*
+/app/sessions/*
+.DS_Store

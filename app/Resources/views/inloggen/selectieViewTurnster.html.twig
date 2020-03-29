@@ -30,7 +30,7 @@
     {% if turnster.email2 %}
         {{ turnster.email2 }}<br>
     {% endif %}
-    {% if turnster.email3 %}
+	{% if turnster.email3 %}
         {{ turnster.email3 }}<br>
     {% endif %}
     {{ turnster.tel1 }}<br>
@@ -53,11 +53,15 @@
             </tr>
             <tr>
                 {% for trainingsdatum in training.trainingsdata %}
-                    <td style="text-align: center;
-                    {% if trainingsdatum.aanwezigheid == 'A' or trainingsdatum.aanwezigheid == '-' %}
-                            background-color: yellow; color: red; font-weight: bold;
-                    {% endif %}
-                            ">{{ trainingsdatum.aanwezigheid }}</td>
+                    <td style="text-align: center; font-size:1.5em">
+                    {% if trainingsdatum.aanwezigheid == 'A' %}
+							   ☹️
+					{% elseif trainingsdatum.aanwezigheid == '-' %}
+						       ☹️❓
+					{% elseif trainingsdatum.aanwezigheid == 'X' %}
+						🤸‍♀️
+					{% endif %}
+				</td>
                 {% endfor %}
                 <td style="text-align:center; font-weight: bold; background-color: #{{ training.percentageKleur }}; color: rgba(0,0,0,0.6);">
                     {{ training.percentageAanwezig |round }}%
@@ -143,7 +147,7 @@
                     {#type: 'solidgauge',#}
                     {#backgroundColor: 'rgba(255, 255, 255, 0)'#}
                 {#},#}
-
+        
                 {#title: null,#}
                 {#pane: {#}
                     {#center: ['50%', '85%'],#}

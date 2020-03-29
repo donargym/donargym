@@ -54,7 +54,7 @@
                         <br />
                         <a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden</a>
                         {% if functie.functie == "Trainer" %}
-                            <a href="{{ path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Kruisjeslijst</a>
+                            <a href="{{ path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Emojilijst</a>
                         {% endif %}
                         <a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen</a>
                         <a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid</a>
@@ -81,10 +81,13 @@
                         <a href="{{ path('addSelectieVloermuziekPage', { 'persoonId': persoonItems.id, 'groepId': functie.groepId, 'turnsterId': persoonItems.id }) }}">
                             Vloermuziek uploaden</a>
                     {% endif %}
-                    <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
+					{% if functie.functie == "Trainer" %}
+                        <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
+                    {% endif %}
                 </div>
             {% endif %}
-            {#{% if functie.functie == 'Turnster' %}#}
+            {% if functie.groepId == 3 or functie.groepId == 5 %}
+                {#{% if functie.functie == 'Turnster' %}#}
                 {#<p>#}
                     {#<h2>Voortgang</h2>#}
 
@@ -106,6 +109,7 @@
                     {#</div>#}
                 {#</p>#}
             {#{% endif %}#}
+            {% endif %}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
             <p><h3>(Assistent-)Trainers</h3>
             <table border="0" id="nolink">
@@ -113,9 +117,10 @@
                     <th>Naam</th>
                     <th>Geboortedatum</th>
                     <th>% aanwezig</th>
-                    {% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
-                        <th></th>
-                    {% endif %}
+					{% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+						<th></th>
+					{% endif %}
+
                 </tr>
 
                 {% if functie.trainer is defined %}
@@ -139,13 +144,13 @@
                                     </span>
                                 </a>
                             </td>
-                            {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+							{% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
                                 <td>
                                     <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
                                         <img src="{{ asset('images/login_as.png') }}" width="18px"/>
-                                    </a>
-                                </td>
-                            {% endif %}
+                                     </a>
+                                 </td>
+							{% endif %}
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -171,13 +176,13 @@
                                         </span>
                                 </a>
                             </td>
-                            {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+							{% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
                                 <td>
                                     <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
                                         <img src="{{ asset('images/login_as.png') }}" width="18px"/>
-                                    </a>
-                                </td>
-                            {% endif %}
+                                     </a>
+                                 </td>
+							{% endif %}
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -195,15 +200,17 @@
                     <tr style="color: #FFFF00;">
                         <th>Naam</th>
                         <th>Geboortedatum</th>
-                        {#<th>Voortgang</th>#}
+                        {% if functie.groepId == 3 or functie.groepId == 5 %}
+                            {#<th>Voortgang</th>#}
+                        {% endif %}
                         <th>% aanwezig</th>
                         {% if functie.functie == 'Trainer' %}
                             <th></th>
                             <th></th>
                         {% endif %}
-                        {% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
-                            <th></th>
-                        {% endif %}
+						{% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+							<th></th>
+						{% endif %}
                     </tr>
 
                     {% if functie.turnster is defined %}
@@ -249,13 +256,13 @@
                                         </a>
                                     </td>
                                 {% endif %}
-                                {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+								{% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
                                     <td>
                                         <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
                                             <img src="{{ asset('images/login_as.png') }}" width="18px"/>
-                                        </a>
-                                    </td>
-                                {% endif %}
+                                         </a>
+                                     </td>
+								{% endif %}
                             </tr>
                         {% endfor %}
                     {% endif %}
@@ -276,11 +283,15 @@
                         </tr>
                         <tr>
                             {% for trainingsdatum in training.trainingsdata %}
-                                <td style="text-align: center;
-                                {% if trainingsdatum.aanwezigheid == 'A' or trainingsdatum.aanwezigheid == '-' %}
-                                        background-color: yellow; color: red; font-weight: bold;
-                                {% endif %}
-                                        ">{{ trainingsdatum.aanwezigheid }}</td>
+                                <td style="text-align: center; font-size:1.5em">
+                    {% if trainingsdatum.aanwezigheid == 'A' %}
+							   ☹️
+					{% elseif trainingsdatum.aanwezigheid == '-' %}
+						       ☹️❓
+					{% elseif trainingsdatum.aanwezigheid == 'X' %}
+						🤸‍♀️
+					{% endif %}
+				</td>
                             {% endfor %}
                             <td style="text-align:center; font-weight: bold; background-color: #{{ training.percentageKleur }}; color: rgba(0,0,0,0.6);">
                                 {{ training.percentageAanwezig |round }}%
@@ -310,7 +321,7 @@
                     <th width="21%">Wedstrijd</th>
                     <th width="20%">Tijden</th>
                     <th width="20%">Locatie</th>
-                    <th width="20%">Turnsters</th>
+                    <th width="20%">turnsters</th>
                     {% if functie.functie == 'Trainer' %}
                         <th width="5%"></th>
                     {% endif %}
@@ -357,7 +368,7 @@
                     {#type: 'solidgauge',#}
                     {#backgroundColor: 'rgba(255, 255, 255, 0)'#}
                 {#},#}
-
+        
                 {#title: null,#}
                 {#pane: {#}
                     {#center: ['50%', '85%'],#}
@@ -527,10 +538,11 @@
                 {#}]#}
             {#}));#}
         {#});#}
-
+		
+		
         $('#wedstrijdkalender').click(function () {
             $('.wedstrijdkalender-item').toggle();
         });
-
+		
     </script>
 {% endblock %}

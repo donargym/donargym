@@ -20,29 +20,23 @@
             <table width="100%" border="0" id="nolink" style="font-size: 10px;">
                 <tr style="color: #FFFF00;">
                     <th>Naam</th>
-                    <th>Straat + Nr</th>
-                    <th>Postcode</th>
-                    <th>Plaats</th>
                     <th>Tel 1</th>
                     <th>Tel 2</th>
                     <th>Tel 3</th>
                     <th>Email 1</th>
                     <th>Email 2</th>
-                    <th>Email 3</th>
+					<th>Email 3</th>
                 </tr>
                 {% if functie.trainer is defined %}
                     {% for persoon in functie.trainer %}
                         <tr>
                             <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
-                            <td>{{ persoon.straatNr }}</td>
-                            <td>{{ persoon.postcode }}</td>
-                            <td>{{ persoon.plaats }}</td>
                             <td>{{ persoon.tel1 }}</td>
                             <td>{{ persoon.tel2 }}</td>
                             <td>{{ persoon.tel3 }}</td>
                             <td>{{ persoon.email }}</td>
                             <td>{{ persoon.email2 }}</td>
-                            <td>{{ persoon.email3 }}</td>
+						    <td>{{ persoon.email3 }}</td>
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -51,15 +45,12 @@
                     {% for persoon in functie.assistent %}
                         <tr>
                             <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
-                            <td>{{ persoon.straatNr }}</td>
-                            <td>{{ persoon.postcode }}</td>
-                            <td>{{ persoon.plaats }}</td>
                             <td>{{ persoon.tel1 }}</td>
                             <td>{{ persoon.tel2 }}</td>
                             <td>{{ persoon.tel3 }}</td>
                             <td>{{ persoon.email }}</td>
                             <td>{{ persoon.email2 }}</td>
-                            <td>{{ persoon.email3 }}</td>
+							<td>{{ persoon.email3 }}</td>
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -69,29 +60,23 @@
             <table border="0" id="nolink" style="font-size: 10px;">
                 <tr style="color: #FFFF00;">
                     <th>Naam</th>
-                    <th>Straat + Nr</th>
-                    <th>Postcode</th>
-                    <th>Plaats</th>
                     <th>Tel 1</th>
                     <th>Tel 2</th>
                     <th>Tel 3</th>
                     <th>Email 1</th>
                     <th>Email 2</th>
-                    <th>Email 3</th>
+					<th>Email 3</th>
                 </tr>
                 {% if functie.turnster is defined %}
                     {% for persoon in functie.turnster %}
                         <tr>
                             <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
-                            <td>{{ persoon.straatNr }}</td>
-                            <td>{{ persoon.postcode }}</td>
-                            <td>{{ persoon.plaats }}</td>
                             <td>{{ persoon.tel1 }}</td>
                             <td>{{ persoon.tel2 }}</td>
                             <td>{{ persoon.tel3 }}</td>
                             <td>{{ persoon.email }}</td>
                             <td>{{ persoon.email2 }}</td>
-                            <td>{{ persoon.email3 }}</td>
+							<td>{{ persoon.email3 }}</td>
                         </tr>
                     {% endfor %}
                 {% endif %}

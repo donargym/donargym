@@ -4,7 +4,7 @@
     <div id="inlog_nav">
         <div id="text">
             <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT' }) }}">{{ activeGroep.name }}</a>
-            > <i>{{ turnster.voornaam }} {{ turnster.achternaam }}</i>
+            > <i>{{ turnster.voornaam }}</i>
         </div>
     </div>
 {% endblock %}
@@ -18,7 +18,7 @@
 
                 <p>
 
-                <h2>{{ turnster.voornaam }} {{ turnster.achternaam }}</h2></p>
+                <h2>{{ turnster.voornaam }}</h2></p>
                 <p><b>Categorie:</b> {{ turnster.categorie }}</p></td>
         </tr>
     </table>

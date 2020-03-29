@@ -2,4 +2,48 @@
 
 {% block body %}
     <h1>Inschrijven trainingsstage</h1>
+    {{ form_start(form) }}
+    <table>
+        <tr>
+            <td>{{ form_label(form.name) }}</td>
+            <td>{{ form_widget(form.name) }}</td>
+            <td>{{ form_errors(form.name) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.emailaddress) }}</td>
+            <td>{{ form_widget(form.emailaddress) }}</td>
+            <td>{{ form_errors(form.emailaddress) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone1) }}</td>
+            <td>{{ form_widget(form.phone1) }}</td>
+            <td>{{ form_errors(form.phone1) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone2) }}</td>
+            <td>{{ form_widget(form.phone2) }}</td>
+            <td>{{ form_errors(form.phone2) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.huisArts) }}</td>
+            <td>{{ form_widget(form.huisArts) }}</td>
+            <td>{{ form_errors(form.huisArts) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.insuranceCompany) }}</td>
+            <td>{{ form_widget(form.insuranceCompany) }}</td>
+            <td>{{ form_errors(form.insuranceCompany) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.insuranceCard) }}</td>
+            <td>{{ form_widget(form.insuranceCard) }}</td>
+            <td>{{ form_errors(form.insuranceCard) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.diet) }}</td>
+            <td>{{ form_widget(form.diet) }}</td>
+            <td>{{ form_errors(form.diet) }}</td>
+        </tr>
+    </table>
+    {{ form_end(form) }}
 {% endblock %}

@@ -441,7 +441,7 @@ class BaseController extends Controller
                 'text/plain'
             );
         $this->get('mailer')->send($message);
-
+//echo($message->getBody());die;
         $sendMail = new SendMail();
         $sendMail->setDatum(new \DateTime())
             ->setVan($from)

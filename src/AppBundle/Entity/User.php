@@ -39,8 +39,8 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="email2", type="string", length=190, unique=true, nullable=true)
      */
     private $email2;
-
-    /**
+	
+	/**
      * @var string
      *
      * @ORM\Column(name="email3", type="string", length=190, unique=true, nullable=true)
@@ -229,8 +229,8 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->email2;
     }
-
-    /**
+	
+	/**
      * Set email3
      *
      * @param string $email3
@@ -243,10 +243,8 @@ class User implements AdvancedUserInterface, \Serializable
         } else {
             $this->email3 = $email3;
         }
-
         return $this;
     }
-
     /**
      * Get email3
      *

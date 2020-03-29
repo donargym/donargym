@@ -304,7 +304,6 @@ class AdminController extends BaseController
         $ids = array();
         for($i=0;$i<count($functies);$i++)
         {
-            /** @var Persoon $persoon */
             $persoon = $functies[$i]->getPersoon();
             if(!(in_array($persoon->getId(), $ids)))
             {
@@ -313,7 +312,7 @@ class AdminController extends BaseController
                 $persoonItems[$i]->id = $persoon->getId();
                 $persoonItems[$i]->voornaam = $persoon->getVoornaam();
                 $persoonItems[$i]->achternaam = $persoon->getAchternaam();
-                $persoonItems[$i]->username = $persoon->getUser()->getUsername();
+				$persoonItems[$i]->username = $persoon->getUser()->getUsername();
             }
         }
         return $this->render('inloggen/adminSelectie.html.twig', array(
@@ -364,7 +363,8 @@ class AdminController extends BaseController
                 FROM AppBundle:User user
                 WHERE user.username = :email
                 OR user.email2 = :email
-                OR user.email3 = :email')
+				OR user.email3 = :email
+				')
                 ->setParameter('email', $this->get('request')->request->get('username'));
             $user = $query->setMaxResults(1)->getOneOrNullResult();
             if (count($user) == 0) {
@@ -373,7 +373,8 @@ class AdminController extends BaseController
                 FROM AppBundle:User user
                 WHERE user.username = :email
                 OR user.email2 = :email
-                OR user.email3 = :email')
+				OR user.email3 = :email
+					')
                     ->setParameter('email', $this->get('request')->request->get('email2'));
                 $user = $query->setMaxResults(1)->getOneOrNullResult();
             } if (count($user) == 0) {
@@ -444,7 +445,7 @@ class AdminController extends BaseController
             if ($this->get('request')->request->get('email2')) {
                 $user->setEmail2($this->get('request')->request->get('email2'));
             }
-            if ($this->get('request')->request->get('email3')) {
+			if ($this->get('request')->request->get('email3')) {
                 $user->setEmail3($this->get('request')->request->get('email3'));
             }
             $user->setStraatnr($this->get('request')->request->get('straatnr'));
@@ -487,7 +488,7 @@ class AdminController extends BaseController
                             'voornaam' => $persoon->getVoornaam(),
                             'email1' => $user->getUsername(),
                             'email2' =>$user->getEmail2(),
-                            'email3' =>$user->getEmail3(),
+							'email3' =>$user->getEmail3(),
                             'password' => $password
                         )
                     ),
@@ -508,7 +509,7 @@ class AdminController extends BaseController
                                 'voornaam' => $persoon->getVoornaam(),
                                 'email1' => $user->getUsername(),
                                 'email2' =>$user->getEmail2(),
-                                'email3' =>$user->getEmail3(),
+								                                'email3' =>$user->getEmail3(),
                                 'password' => $password
                             )
                         ),
@@ -516,7 +517,6 @@ class AdminController extends BaseController
                     );
                 $this->get('mailer')->send($message);
             }
-
             if($user->getEmail3())
             {
                 $message = \Swift_Message::newInstance()
@@ -538,7 +538,6 @@ class AdminController extends BaseController
                     );
                 $this->get('mailer')->send($message);
             }
-
             return $this->redirectToRoute('getAdminSelectiePage');
         }
         return $this->render('inloggen/adminAddTrainer.html.twig', array(
@@ -570,7 +569,7 @@ class AdminController extends BaseController
         $user = $result->getUser();
         $persoonEdit->username = $user->getUsername();
         $persoonEdit->email2 = $user->getEmail2();
-        $persoonEdit->email3 = $user->getEmail3();
+		$persoonEdit->email3 = $user->getEmail3();
         $persoonEdit->userId = $user->getId();
         $persoonEdit->straatnr = $user->getStraatnr();
         $persoonEdit->postcode = $user->getPostcode();
@@ -672,7 +671,7 @@ class AdminController extends BaseController
             $user = $persoon->getUser();
             $user->setUsername($this->get('request')->request->get('username'));
             $user->setEmail2($this->get('request')->request->get('email2'));
-            $user->setEmail3($this->get('request')->request->get('email3'));
+			$user->setEmail3($this->get('request')->request->get('email3'));
             $user->setStraatnr($this->get('request')->request->get('straatnr'));
             $user->setPostcode($this->get('request')->request->get('postcode'));
             $user->setPlaats($this->get('request')->request->get('plaats'));
@@ -907,7 +906,6 @@ class AdminController extends BaseController
                             if($_FILES['userfile']['size']<5000000)
                             {
                                 $localfile = $_FILES['userfile']['tmp_name'];
-
                                 ini_set("auto_detect_line_endings", "1");
                                 if (($handle = fopen($localfile, "r")) !== FALSE) {
                                     $turnsters = $this->getDoctrine()->getRepository('AppBundle:Turnster')->findAll();
@@ -917,6 +915,7 @@ class AdminController extends BaseController
 
                                     $repo = $this->getDoctrine()->getRepository('AppBundle:User');
                                     while (($lineData = fgetcsv($handle, 0, ";")) !== FALSE) {
+var_dump($lineData);
                                         /** @var User $user */
                                         $user = $repo->findOneBy(array('username' => trim($lineData[2])));
                                         if (!$user) {
@@ -962,6 +961,7 @@ class AdminController extends BaseController
                                         $this->addToDB($scores);
                                         $this->addToDB($turnster);
                                     }
+die;
                                     fclose($handle);
                                 }
 

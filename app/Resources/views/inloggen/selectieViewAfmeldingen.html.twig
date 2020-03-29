@@ -27,17 +27,17 @@
                 <tr>
                     <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
                     {% for trainingsdatum in training.trainingsdata %}
+						<td style="text-align:center;font-size:1.5em;">
                         {% if trainingsdatum.aanwezigheid[persoon.id] is defined %}
-                            <td style="text-align: center;
-                            {% if trainingsdatum.aanwezigheid[persoon.id] != 'X' %}
-                                    font-weight: bold; color: red; background-color: yellow;
-                            {% endif %}
-                                    ">
-                                {{ trainingsdatum.aanwezigheid[persoon.id] }}
-                            </td>
-                        {% else %}
-                            <td></td>
+                            {% if trainingsdatum.aanwezigheid[persoon.id] == 'A' %}
+								☹️
+							{% elseif trainingsdatum.aanwezigheid[persoon.id] == '-' %}
+								☹️❓
+							{% elseif trainingsdatum.aanwezigheid[persoon.id] == 'X' %}
+								🤸‍♀️
+							{% endif %}
                         {% endif %}
+					</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -46,17 +46,17 @@
                 <tr>
                     <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
                     {% for trainingsdatum in training.trainingsdata %}
+					<td style="text-align:center;font-size:1.5em;">
                         {% if trainingsdatum.aanwezigheid[persoon.id] is defined %}
-                            <td style="text-align: center;
-                            {% if trainingsdatum.aanwezigheid[persoon.id] != 'X' %}
-                                    font-weight: bold; color: red; background-color: yellow;
-                            {% endif %}
-                                    ">
-                                {{ trainingsdatum.aanwezigheid[persoon.id] }}
-                            </td>
-                        {% else %}
-                            <td></td>
+                            {% if trainingsdatum.aanwezigheid[persoon.id] == 'A' %}
+								☹️
+							{% elseif trainingsdatum.aanwezigheid[persoon.id] == '-' %}
+								☹️❓
+							{% elseif trainingsdatum.aanwezigheid[persoon.id] == 'X' %}
+								🤸‍♀️
+							{% endif %}
                         {% endif %}
+					</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -74,17 +74,17 @@
                 <tr>
                     <td>{{ persoon.voornaam }} {{ persoon.achternaam }}</td>
                     {% for trainingsdatum in training.trainingsdata %}
+					<td style="text-align:center;font-size:1.5em;">
                         {% if trainingsdatum.aanwezigheid[persoon.id] is defined %}
-                            <td style="text-align: center;
-                                    {% if trainingsdatum.aanwezigheid[persoon.id] != 'X' %}
-                                            font-weight: bold; color: red; background-color: yellow;
-                                    {% endif %}
-                                    ">
-                                {{ trainingsdatum.aanwezigheid[persoon.id] }}
-                            </td>
-                        {% else %}
-                            <td></td>
+                            {% if trainingsdatum.aanwezigheid[persoon.id] == 'A' %}
+								☹️
+							{% elseif trainingsdatum.aanwezigheid[persoon.id] == '-' %}
+								☹️❓
+							{% elseif trainingsdatum.aanwezigheid[persoon.id] == 'X' %}
+								🤸‍♀️
+							{% endif %}
                         {% endif %}
+					</td>
                     {% endfor %}
                 </tr>
             {% endfor %}

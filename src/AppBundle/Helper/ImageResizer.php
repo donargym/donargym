@@ -6,6 +6,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ImageResizer
 {
+
     /**
      * Resize an image
      *

@@ -28,9 +28,9 @@
                     </a></li>
             {% endfor %}
             {% if is_granted('ROLE_PREVIOUS_ADMIN') or is_granted('ROLE_PREVIOUS_TRAINER') %}
-                <li><a href="{{ path('getInloggenPage', {'_switch_user': '_exit'}) }}">
+            	<li><a href="{{ path('getInloggenPage', {'_switch_user': '_exit'}) }}">
                     Uitloggen
-                </a></li>
+				</a></li>
             {% else %}
                 <li><a href="{{ path('pre_logout') }}">Uitloggen</a></li>
             {% endif %}
@@ -74,7 +74,7 @@
         Emailadres toevoegen <a href="{{ path('editEmail2') }}"><img src="{{ asset('images/edit.png') }}" width="18px"/></a>
         <br>
     {% endif %}
-    {% if user.email3 %}
+	{% if user.email3 %}
         {{ user.email3 }} <a href="{{ path('editEmail3') }}">
         <img src="{{ asset('images/edit.png') }}" width="18px"/></a><br>
     {% else %}

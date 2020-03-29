@@ -31,7 +31,13 @@
                 </td>
                 <td>
                     {% if personenAanwezigheid.aanwezigheid[persoon.id] is defined %}
-                        {{ personenAanwezigheid.aanwezigheid[persoon.id] }}
+                        {% if personenAanwezigheid.aanwezigheid[persoon.id] == 'A' %}
+							☹️
+						{% elseif personenAanwezigheid.aanwezigheid[persoon.id] == '-' %}
+							☹️❓
+						{% elseif personenAanwezigheid.aanwezigheid[persoon.id] == 'X' %}
+							🤸‍♀️
+						{% endif %}
                     {% endif %}
                 </td>
             </tr>
@@ -50,7 +56,13 @@
                     </td>
                     <td>
                         {% if personenAanwezigheid.aanwezigheid[persoon.id] is defined %}
-                            {{ personenAanwezigheid.aanwezigheid[persoon.id] }}
+                            {% if personenAanwezigheid.aanwezigheid[persoon.id] == 'A' %}
+								☹️
+							{% elseif personenAanwezigheid.aanwezigheid[persoon.id] == '-' %}
+								☹️❓
+							{% elseif personenAanwezigheid.aanwezigheid[persoon.id] == 'X' %}
+								🤸‍♀️
+							{% endif %}
                         {% endif %}
                     </td>
                 </tr>
@@ -72,7 +84,13 @@
                     </td>
                     <td>
                         {% if personenAanwezigheid.aanwezigheid[persoon.id] is defined %}
-                            {{ personenAanwezigheid.aanwezigheid[persoon.id] }}
+                        	    {% if personenAanwezigheid.aanwezigheid[persoon.id] == 'A' %}
+								☹️
+							{% elseif personenAanwezigheid.aanwezigheid[persoon.id] == '-' %}
+								☹️❓
+							{% elseif personenAanwezigheid.aanwezigheid[persoon.id] == 'X' %}
+								🤸‍♀️
+							{% endif %}
                         {% endif %}
                     </td>
                 </tr>

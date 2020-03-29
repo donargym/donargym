@@ -1,8 +1,12 @@
 body {
-    background: #C1C1C1 url(http://www.donargym.nl/images/background2.jpg) no-repeat; /* Blur-> unfocus 4 || opacity: 50 zwart */
+    background: #C1C1C1 url(https://www.donargym.nl/images/background2.jpg) no-repeat; /* Blur-> unfocus 4 || opacity: 50 zwart */
     background-size: cover;
     background-attachment: fixed;
     font-family: Verdana, Calibri;
+}
+
+img {
+    image-orientation: from-image;
 }
 
 /* ERROR */
@@ -660,6 +664,22 @@ a:hover, a:active {
     border-radius: 5px;
     text-align: center;
     padding: 5px 10px;
+}
+
+#footer {
+	width: 100%;
+	font-size: .8em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+#footer a:link, #footer a:visited {
+	color: #FFFF00;
+	text-decoration: none;
+}
+
+#footer a:hover, #footer a:active {
+	color: #FFAE00;
 }
 
 /* #inlogmenu {
