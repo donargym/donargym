@@ -1,0 +1,12 @@
+---
+
+- name: Install apt packages
+  apt:
+    pkg:
+      - acl
+      - git
+      - build-essential
+      - ghostscript
+      - python-apt
+      - xen-tools
+      - pdftk
