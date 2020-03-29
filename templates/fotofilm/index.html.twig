@@ -1,0 +1,8 @@
+{% extends 'fotofilm/base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('editFotofilmPage', { 'page': app.request.get('page') }) }}"><img src="{{ asset('images/edit.png') }}" /></a>
+    {% endif %}
+    {{ content|raw }}
+{% endblock %}

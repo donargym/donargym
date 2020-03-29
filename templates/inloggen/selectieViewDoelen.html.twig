@@ -1,0 +1,40 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Doelen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Doelen
+        {% if (functie == 'Trainer') and persoonItems.voornaam == 'Mark' and persoonItems.achternaam == 'Meijerman' %}
+            <a href="{{ path('addDoelen', { 'persoonId': persoonItems.id, 'groepId': groepId }) }}"><img
+                        src="{{ asset('images/add.png') }}" width="18px"/></a>
+        {% endif %}
+    </h1>
+{% endblock %}
+
+{% block body %}
+
+    {% for toestel in doelenPerToestel %}
+        <h2>{{ toestel.naam }}</h2>
+        <table border="0" id="nolink">
+            {% for doel in toestel.doelen %}
+                <tr>
+                    <td><a href="{{ path('viewOneDoel',
+                        { 'persoonId': persoonItems.id, 'groepId': groepId, 'doelId': doel.id }) }}">{{ doel.naam }} {% if doel.trede is defined %} {{ doel.trede }}{% endif %}</a></td>
+                    {% if (functie == 'Trainer') %}
+                        <td><img src="{{ asset('images/edit.png') }}" width="15px"/></td>
+                        <td><img src="{{ asset('images/remove.png') }}" width="15px"/></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+
+{% endblock %}
+

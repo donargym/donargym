@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block donar %}
+    <a href="#"><span id="active_link">Donar</span></a>
+{% endblock %}
+
+{% block menu %}
+    <div id="items">
+        <a href="{{ path('getDonarPage', { 'page': 'geschiedenis' }) }}">Geschiedenis</a>
+        <a href="{{ path('getDonarPage', { 'page': 'visie' }) }}">Visie</a>
+        <a href="{{ path('getDonarPage', { 'page': 'bestuur' }) }}">Bestuur</a>
+        <a href="{{ path('getDonarPage', { 'page': 'leiding' }) }}">Leiding</a>
+        <a href="{{ path('getDonarPage', { 'page': 'evenementen' }) }}">Evenementen</a>
+        <a href="{{ path('getDonarPage', { 'page': 'locaties' }) }}">Locaties</a>
+        <a href="{{ path('getDonarPage', { 'page': 'kleding' }) }}">Kleding</a>
+        <a href="{{ path('getDonarPage', { 'page': 'vacatures' }) }}">Vacatures</a>
+        <a href="{{ path('getDonarPage', { 'page': 'sponsors' }) }}">Sponsors</a>
+    </div>
+{% endblock %}

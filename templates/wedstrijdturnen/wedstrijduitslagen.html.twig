@@ -1,0 +1,25 @@
+{% extends 'wedstrijdturnen/base.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT' }) }}">{{ activeGroep.name }}</a>
+            > <i>Wedstrijduitslagen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+	<div id="wedstrijduitslagen">
+    <h1>{{ activeGroep.name }}</h1>
+    <h2>Wedstrijduitslagen</h2>
+    {% for key, value in wedstrijduitslagen %}
+        <p><b>{{ key }}-{{ key + 1 }}</b><br>
+        {% for wedstrijd in value %}
+            <a href="/uploads/wedstrijduitslagen/{{ wedstrijd.locatie }}" target="blank">{{ wedstrijd.naam }}</a><br>
+        {% endfor %}
+        </p>
+    {% endfor %}
+	</div>
+
+{% endblock %}

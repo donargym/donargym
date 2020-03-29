@@ -1,0 +1,36 @@
+{% extends 'inloggen/base.html.twig' %}
+
+{% block inlogmenu %}
+    <div id="inlogmenu">
+        <ul>
+            <li><a href="{{ path('getAdminIndexPage') }}">Index</a></li>
+            <li><a href="{{ path('getAdminFotoPage') }}">Foto's</a></li>
+            <li><a href="{{ path('getAdminBestandenPage') }}">Overige bestanden</a></li>
+            <li><a href="{{ path('getAdminSelectiePage') }}">Selectie</a></li>
+            <li><a href="{{ path('getAdminOwPage') }}">OW</a></li>
+            {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                <li><a href="{{ path('getInloggenPage', {'_switch_user': '_exit'}) }}">
+                    Uitloggen
+                </a></li>
+            {% else %}
+                <li><a href="{{ path('pre_logout') }}">Uitloggen</a></li>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <i>Index</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Inloggen</h1>
+{% endblock %}
+
+{% block body %}
+    <i>Ingelogd als Admin</i>
+{% endblock %}

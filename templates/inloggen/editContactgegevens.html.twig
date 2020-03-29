@@ -1,0 +1,68 @@
+{% extends 'inloggen/selectieIndexPage.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getSelectieIndexPage') }}">Algemene gegevens</a>
+            > <i>Contactgegevens wijzigen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Contactgegevens</h1>
+{% endblock %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_TURNSTER') %}
+            <a href="{{ path('getSelectieIndexPage') }}">Annuleer wijzigingen</a>
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <table>
+                <tr>
+                    <td></td><td>{{ form_errors(form.straatnr) }}</td>
+                </tr>
+                <tr>
+                    <td>Straat + Nr</td><td>{{ form_widget(form.straatnr) }}</td>
+                </tr>
+
+                <tr>
+                    <td></td><td>{{ form_errors(form.postcode) }}</td>
+                </tr>
+                <tr>
+                    <td>Postcode</td><td>{{ form_widget(form.postcode) }}</td>
+                </tr>
+
+                <tr>
+                    <td></td><td>{{ form_errors(form.plaats) }}</td>
+                </tr>
+                <tr>
+                    <td>Plaats</td><td>{{ form_widget(form.plaats) }}</td>
+                </tr>
+
+                <tr>
+                    <td></td><td>{{ form_errors(form.tel1) }}</td>
+                </tr>
+                <tr>
+                    <td>Tel 1</td><td>{{ form_widget(form.tel1) }}</td>
+                </tr>
+
+                <tr>
+                    <td></td><td>{{ form_errors(form.tel2) }}</td>
+                </tr>
+                <tr>
+                    <td>Tel 2</td><td>{{ form_widget(form.tel2) }}</td>
+                </tr>
+
+                <tr>
+                    <td></td><td>{{ form_errors(form.tel3) }}</td>
+                </tr>
+                <tr>
+                    <td>Tel 3</td><td>{{ form_widget(form.tel3) }}</td>
+                </tr>
+            </table>
+
+            {{ form_widget(form.Verstuur) }}
+            {{ form_end(form) }}
+    {% endif %}
+{% endblock %}

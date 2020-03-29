@@ -1,0 +1,32 @@
+{% extends 'inloggen/adminIndex.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('getAdminFotoPage') }}">Foto's</a>
+            > <i>Foto verwijderen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Foto verwijderen</h1>
+{% endblock %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        Weet u zeker dat u <span style="color:#FFFF00; font-weight: bold;">"{{ content.naam }}"</span> wilt verwijderen?
+        <table>
+            <tr>
+                <td>
+                    <form method="post" action="{{ path('removeAdminFotoPage', { id: app.request.get('id') }) }}">
+                        <input name="bevestig" type="submit" value="Bevestig">
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ path('getAdminFotoPage') }}"><input type="button" value="Annuleren"></a>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+{% endblock %}

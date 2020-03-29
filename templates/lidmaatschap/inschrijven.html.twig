@@ -1,0 +1,169 @@
+{% extends 'lidmaatschap/base.html.twig' %}
+
+{% block body %}
+    <h1>Lid worden</h1>
+<p>
+	Let op: kijk eerst even voor welke les je in wilt schrijven in het <a href="https://www.donargym.nl/lessen/lesrooster/">lesrooster</a>.
+	Als er een wachtlijst op een les is, neem dan eerst even via de mail contact op met de juf.
+</p>
+    {{ form_start(form) }}
+	<h2>Persoonsgegevens</h2>
+    <table>
+        <tr>
+            <td>{{ form_label(form.firstname) }}</td>
+            <td>{{ form_widget(form.firstname) }}</td>
+            <td>{{ form_errors(form.firstname) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.lastname) }}</td>
+            <td>{{ form_widget(form.lastname) }}</td>
+            <td>{{ form_errors(form.lastname) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.nameletters) }}</td>
+            <td>{{ form_widget(form.nameletters) }}</td>
+            <td>{{ form_errors(form.nameletters) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.dateofbirth) }}</td>
+            <td>{{ form_widget(form.dateofbirth) }}</td>
+            <td>{{ form_errors(form.dateofbirth) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.gender) }}</td>
+            <td>{{ form_widget(form.gender) }}</td>
+            <td>{{ form_errors(form.gender) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.address) }}</td>
+            <td>{{ form_widget(form.address) }}</td>
+            <td>{{ form_errors(form.address) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.postcode) }}</td>
+            <td>{{ form_widget(form.postcode) }}</td>
+            <td>{{ form_errors(form.postcode) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.city) }}</td>
+            <td>{{ form_widget(form.city) }}</td>
+            <td>{{ form_errors(form.city) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone1) }}</td>
+            <td>{{ form_widget(form.phone1) }}</td>
+            <td>{{ form_errors(form.phone1) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone2) }}</td>
+            <td>{{ form_widget(form.phone2) }}</td>
+            <td>{{ form_errors(form.phone2) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.bankaccountnumber) }}</td>
+            <td>{{ form_widget(form.bankaccountnumber) }}</td>
+            <td>{{ form_errors(form.bankaccountnumber) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.bankaccountholder) }}</td>
+            <td>{{ form_widget(form.bankaccountholder) }}</td>
+            <td>{{ form_errors(form.bankaccountholder) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.emailaddress) }}</td>
+            <td>{{ form_widget(form.emailaddress) }}</td>
+            <td>{{ form_errors(form.emailaddress) }}</td>
+        </tr>
+		    </table>
+		<br>
+		<h2>Les</h2>
+		<p>Selecteer hieronder de gegevens van de les waar je lid van wilt worden. Let op: er kan een wachtlijst op een les zijn. Voor een overzicht van de beschikbare lessen en om te zien of er een wachtlijst is kijk je op <a href="{{ path('getLessenPage', { 'page': 'lesrooster' }) }}" target="blank">de pagina met het lesrooster.</a></p>
+		<table>
+        <tr>
+            <td>{{ form_label(form.category) }}</td>
+            <td>{{ form_widget(form.category) }}</td>
+            <td>{{ form_errors(form.category) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.days) }}</td>
+            <td>
+                {% for key, day in form.days.children %}
+                    {{ form_widget(day) }}{{ form_label(day) }}<br>
+                {% endfor %}
+            </td>
+            <td>{{ form_errors(form.days) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.locations) }}</td>
+            <td>
+                {% for key, location in form.locations.children %}
+                    {{ form_widget(location) }}{{ form_label(location) }}{% if not loop.last %}<br>{% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ form_errors(form.locations) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.starttime) }}</td>
+            <td>{{ form_widget(form.starttime) }}</td>
+            <td>{{ form_errors(form.starttime) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.trainer) }}</td>
+            <td>{{ form_widget(form.trainer) }}</td>
+            <td>{{ form_errors(form.trainer) }}</td>
+        </tr>
+    </table>
+    <br>
+	<h2>Overig</h2>
+    <table>
+        <tr>
+            <td>{{ form_label(form.havebeensubscribed) }}</td>
+            <td>{{ form_widget(form.havebeensubscribed) }}</td>
+            <td>{{ form_errors(form.havebeensubscribed) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.subscribedfrom) }}</td>
+            <td>{{ form_widget(form.subscribedfrom) }}</td>
+            <td>{{ form_errors(form.subscribedfrom) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.subscribeduntil) }}</td>
+            <td>{{ form_widget(form.subscribeduntil) }}</td>
+            <td>{{ form_errors(form.subscribeduntil) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.otherclub) }}</td>
+            <td>{{ form_widget(form.otherclub) }}</td>
+            <td>{{ form_errors(form.otherclub) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.whatotherclub) }}</td>
+            <td>{{ form_widget(form.whatotherclub) }}</td>
+            <td>{{ form_errors(form.whatotherclub) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.bondscontributiebetaald) }}</td>
+            <td>{{ form_widget(form.bondscontributiebetaald) }}</td>
+            <td>{{ form_errors(form.bondscontributiebetaald) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.how) }}</td>
+            <td>{{ form_widget(form.how) }}</td>
+            <td>{{ form_errors(form.how) }}</td>
+        </tr>
+    </table>
+
+    <p>
+        {{ form_errors(form.vrijwilligerstaken) }}<br />
+        {{ form_label(form.vrijwilligerstaken) }}
+    </p>
+    <p>
+        {{ form_widget(form.vrijwilligerstaken) }}
+    </p>
+
+    <p>{{ form_widget(form.accept) }}{{ form_label(form.accept) }}</p>
+    <p>{{ form_widget(form.acceptPrivacyPolicy) }}{{ form_label(form.acceptPrivacyPolicy) }}</p>
+    <p>{{ form_label(form.acceptNamePublished) }}{{ form_widget(form.acceptNamePublished) }}</p>
+    <p>{{ form_label(form.acceptPicturesPublished) }}{{ form_widget(form.acceptPicturesPublished) }}</p>
+    {{ form_end(form) }}
+{% endblock %}

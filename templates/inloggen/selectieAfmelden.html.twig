@@ -1,0 +1,67 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Afmelden voor trainingen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Afmelden voor trainingen</h1>
+{% endblock %}
+
+{% block body %}
+{% if error is defined %}
+    <span style="color: #FFFF00; font-weight: bold; background-color: red;">{{ error }}</span>
+{% endif %}
+<form method="post" name="afmelden" action="">
+    {% for training in persoonItems.trainingen %}
+        {% if training.groepId == groepId %}
+            <p>
+            <h2>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h2>
+            <table border="1">
+            {% for trainingsdatum in training.trainingsdata %}
+                <tr>
+                    <td>{{ trainingsdatum.lesdatum }}</td>
+                    <td style="text-align: center">
+                    {% if trainingsdatum.afmelding is defined %}
+						{% if trainingsdatum.afmelding == 'A' %}
+							☹️
+						{% elseif trainingsdatum.afmelding == '-' %}
+							☹️❓
+						{% elseif trainingsdatum.afmelding == 'X' %}
+							🤸‍♀️
+						{% endif %}
+						{% if trainingsdatum.afmelding == 'A' %}
+						</td><td>
+                        <a href="{{ path('afmelding_annuleren', {'id': id, 'groepId': groepId, 'aanwezigheidId': trainingsdatum.afmeldingId}) }}">
+                            <img src="{{ asset('images/refresh.png') }}" width="18px" />
+                        </a>
+						{% endif %}
+                    {% else %}
+                        <input type="checkbox" name="{{ trainingsdatum.id }}"
+                         {% if afmeldingsData is defined %}
+                            {% for datumId in afmeldingsData %}
+                                {% if trainingsdatum.id == datumId %}
+                                    checked
+                                {% endif %}
+                            {% endfor %}
+                         {% endif %}
+                        />
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </table></p>
+        {% endif %}
+    {% endfor %}
+
+    <p><h3>Opmerking</h3>
+    <textarea name="reden" style="width: 300px; height: 150px;" required></textarea></p>
+    <input type="hidden" name="token" value="{{ token }}"/>
+    <input type="submit" value="Verstuur afmeldingen" />
+</form>
+{% endblock %}

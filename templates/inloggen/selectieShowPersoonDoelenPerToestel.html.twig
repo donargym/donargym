@@ -1,0 +1,40 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            > <i>Voortgang {{ toestel }}</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Voortgang {{ toestel }}</h1>
+{% endblock %}
+
+{% block body %}
+{% for toestellen, doelen in doelen %}
+    {% if toestellen == toestel %}
+    <h3>{{ toestel }} ({{ attribute(voortgang, toestel)|round }}%)</h3>
+        <table border="0" id="nolink">
+            <tr style="color: #FFFF00;"><th>Naam</th><th>Voortgang</th></tr>
+        {% for id, doel in doelen %}
+            <tr><td>
+                    <a href="{{  path ('showPersoonOneDoelPerToestel', { 'persoonId': persoonItems.id, 'toestel': toestel, 'doelId': id } ) }}">
+                        {{ doel }}
+                    </a>
+                </td>
+                <td style="text-align:center; font-weight: bold; background-color: #{{ attribute(kleuren, id~'_hoofd') }};">
+                    <a href="{{  path ('showPersoonOneDoelPerToestel', { 'persoonId': persoonItems.id, 'toestel': toestel, 'doelId': id } ) }}" style="text-decoration: none; color: rgba(0,0,0,0.6);">
+        <span style="text-decoration: none;">
+        {{ attribute(cijfers, id~'_hoofd')|round }} %
+    </span>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+{% endfor %}
+{% endblock %}

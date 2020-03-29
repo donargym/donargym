@@ -1,0 +1,20 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <h1>Clubblad verwijderen</h1>
+        <span style="color:red;">Weet u zeker dat u het clubblad van "{{ content.datum }}" wilt verwijderen?</span>
+        <table>
+            <tr>
+                <td>
+                    <form method="post" action="{{ path('removeClubbladPage', { id: app.request.get('id') }) }}">
+                        <input name="bevestig" type="submit" value="Bevestig">
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ path('getNieuwsPage', { 'page': 'clubblad' }) }}"><input type="button" value="Annuleren"></a>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+{% endblock %}

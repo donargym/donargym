@@ -1,23 +1,42 @@
 security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\User:
+            algorithm: auto
     providers:
-        users_in_memory: { memory: null }
+        db_provider:
+            entity:
+                class: App:User
+                property: 'username'
+
+    role_hierarchy:
+        ROLE_INGELOGD:    [ROLE_USER]
+        ROLE_TURNSTER:    [ROLE_INGELOGD]
+        ROLE_ASSISTENT:   [ROLE_TURNSTER]
+        ROLE_TRAINER:     [ROLE_ASSISTENT, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ADMIN:       [ROLE_INGELOGD, ROLE_ALLOWED_TO_SWITCH]
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
-            anonymous: lazy
-            provider: users_in_memory
+            pattern: ^/
+            http_basic: ~
+            provider: db_provider
+            anonymous:  true
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: /inloggen
+            switch_user: true
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
+            logout:
+                path:   /logout
+                target: /inloggen
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 2419200 # 4 weeks in seconds
+                path:     /

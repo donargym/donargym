@@ -1,0 +1,12 @@
+Beste trainer,
+
+{{ voornaam }} {{ achternaam }} is afgemeld voor de volgende trainingen:
+
+{% for training in afmeldingsData %}
+{{ training }}
+{% endfor %}
+
+Het volgende bericht werd meegezonden:
+
+{{ reden }}
+

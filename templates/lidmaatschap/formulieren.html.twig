@@ -1,0 +1,18 @@
+{% extends 'lidmaatschap/base.html.twig' %}
+
+{% block body %}
+    <h1>Formulieren</h1>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('addFormulierenPage') }}">Formulier toevoegen: <img src="{{ asset('images/add.png') }}" width="18px" /></a>
+    {% endif %}
+    <ul>
+        {% for item in contentItems %}
+            <li>
+                <a href="/uploads/formulieren/{{ item.locatie }}" target="blank">{{ item.naam }}</a>
+                {% if app.user and is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('removeFormulierenPage', { 'id': item.id }) }}"><img src="{{ asset('images/remove.png') }}" width="18px" /></a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

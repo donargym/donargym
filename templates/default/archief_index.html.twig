@@ -1,0 +1,9 @@
+{% extends 'default/base.html.twig' %}
+{% block body %}
+    <h1>Archief</h1>
+        {% for jaar in jaren %}
+           <li style="list-style: none;">
+               <a href="?jaar={{ jaar }}"> Archief {{ jaar }}</a>
+           </li>
+        {% endfor %}
+{% endblock %}

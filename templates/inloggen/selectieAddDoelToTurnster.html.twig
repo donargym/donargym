@@ -1,0 +1,38 @@
+{% extends 'inloggen/selectieShowPersoon.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showPersoon', { 'id': persoonItems.id }) }}">{{ persoonItems.voornaam }} {{ persoonItems.achternaam }}</a>
+            >
+            <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': groepId }) }}">{{ turnster.voornaam }} {{ turnster.achternaam }}</a>
+            > <i>Doel toevoegen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pageHeader %}
+    <h1>Doel toevoegen: {{ turnster.voornaam }} {{ turnster.achternaam }}</h1>
+{% endblock %}
+
+{% block body %}
+    <form method="post" action="">
+            {% for toestel, doelen in doelen %}
+                <p><h3>{{ toestel }}</h3>
+                    <select name="doel_{{ toestel }}">
+                    <option selected></option>
+                {% for id, doel in doelen %}
+                    <option value="{{ id }}">{{ doel }} {{ toestel }}</option>
+                {% endfor %}
+                    </select>
+                </p>
+            {% endfor %}
+        <p><label><input type="checkbox" name="repeat"
+            {% if repeat %}
+                checked
+            {% endif %}/>Hierna nog een doel toevoegen</label></p>
+        <input type="hidden" name="token" value="{{ token }}"/>
+        <input type="submit" value="Opslaan"/>
+    </form>
+
+{% endblock %}

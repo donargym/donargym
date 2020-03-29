@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block vrijwilligers %}
+    <a href="{{ path('getVrijwilligersPage') }}"><b>Vrijwilligers</b></a>
+{% endblock %}
+
+{% block menu %}
+    <div id="items">
+        <a href="{{ path('getVrijwilligersPage', { 'page': 'vrijwilligers' }) }}">Algemene informatie</a>
+        <a href="{{ path('getVrijwilligersPage', { 'page': 'taken' }) }}">Taken</a>
+        <a href="{{ path('getVrijwilligersPage', { 'page': 'vrijwilligersdag' }) }}">Vrijwilligersdag</a>
+    </div>
+{% endblock %}
