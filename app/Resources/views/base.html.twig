@@ -27,7 +27,6 @@
                         <li><a href="{{ path('getNieuwsPage', { 'page': 'vakanties' }) }}">Vakanties</a></li>
                         <li><a href="{{ path('getNieuwsPage', { 'page': 'clubblad' }) }}">Clubblad</a></li>
                         <li><a href="{{ path('getNieuwsPage', { 'page': 'archief' }) }}">Archief</a></li>
-                        <li><a href="http://www.gymfeestje.nl" target="blank">Donar Gymfeestje</a></li>
                     </ul>
                 </li>
 
@@ -55,8 +54,6 @@
                                 Conditie</a></li>
                         <li><a href="{{ path('getLessenPage', { 'page': 'aerobicsenbodyshape' }) }}">Aerobics &
                                 Bodyshape</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'badmintonenvolleybal' }) }}">Badminton &
-                                Volleybal</a></li>
                     </ul>
                 </li>
                 <li>{% block wedstrijdturnen %}<a href="#">Wedstrijdturnen</a>{% endblock %}
@@ -93,35 +90,6 @@
                 </li>
             </ul>
         </nav>
-
-        {#<div id="navigator">
-            {% block nieuws %}
-                <a href="{{ path('getNieuwsPage') }}">Nieuws</a>
-            {% endblock %}
-            {% block donar %}
-                <a href="{{ path('getDonarPage') }}">Donar</a>
-            {% endblock %}
-            {% block lessen %}
-                <a href="{{ path('getLessenPage') }}">Lessen</a>
-            {% endblock %}
-            {% block wedstrijdturnen %}
-                <a href="{{ path('getWedstrijdturnenPage') }}">Wedstrijdturnen</a>
-            {% endblock %}
-            {% block lidmaatschap %}
-                <a href="{{ path('getLidmaatschapPage') }}">Lidmaatschap</a>
-            {% endblock %}
-            {% block fotofilm %}
-                <a href="{{ path('getFotofilmPage') }}">Foto/Film</a>
-            {% endblock %}
-            {% block vrijwilligers %}
-                &#123;&#35; <a href="{{ path('getVrijwilligersPage') }}">Vrijwilligers</a> &#35;&#125;
-            {% endblock %}
-            {% block contact %}
-                <a href="{{ path('getContactPage') }}">Contact</a>
-            {% endblock %}
-            {% block inloggen %}
-                <a href="{{ path('getInloggenPage') }}">Inloggen</a>
-            {% endblock %}
         </div>#}
         {#<div class="line2" style="width:980px;margin-left:auto;margin-right:auto;margin-top:20px;margin-bottom:20px;"></div>#}
         <div id="error_container">
@@ -195,6 +163,9 @@
             <script src="https://www.donargym.nl/js/showvoortgang.js"></script>
         {% endblock %}
     </div>
+	<div id="footer">
+		<a href="{{ asset('uploads/privacy.pdf') }}" target="blank">Privacybeleid</a>
+	</div>
 </center>
 </body>
 </html>

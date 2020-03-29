@@ -11,37 +11,25 @@ use Doctrine\ORM\Mapping as ORM;
  */
 final class Inschrijving
 {
-    public static function trainerOptions()
+public static function trainerOptions()
     {
         return array(
             'webmaster@donargym.nl'     => 'Mijn leiding staat er niet bij',
-            'jufamber@donargym.nl'      => 'Amber',
-            'jufamy@donargym.nl'        => 'Amy',
             'jufanchella@donargym.nl'   => 'Anchella',
             'jufcindy@donargym.nl'      => 'Cindy',
-            'jufclaudia@donargym.nl'    => 'Claudia',
-            'jufdaphne@donargym.nl'     => 'Daphne',
             'jufdemi@donargym.nl'       => 'Demi',
-            'jufdunya@donargym.nl'      => 'Dunya',
             'Ericcastens@donargym.nl'   => 'Eric',
-            'flodijkhuizen@hotmail.com' => 'Flo',
             'jufilse@donargym.nl'       => 'Ilse',
             'loestrompet@hotmail.com'   => 'Loes',
-            'mark@donargym.nl'          => 'Mark',
             'jufmartine@donargym.nl'    => 'Martine',
-            'marvin@donargym.nl'        => 'Marvin',
             'jufmerel@donargym.nl'      => 'Merel',
-            'jufmieke@donargym.nl'      => 'Mieke',
-            'jufnour@donargym.nl'       => 'Nour',
-            'jufpatricia@donargym.nl'   => 'Patricia',
             'jufrachel@donargym.nl'     => 'Rachel',
             'jufrenske@donargym.nl'     => 'Renske',
-            'jufsaskia@donargym.nl'     => 'Saskia',
             'Verawessels@donargym.nl'   => 'Vera',
-            'jufyascha@donargym.nl'     => 'Yascha',
+			'jufcharon@donargym.nl'     => 'Charon',
         );
     }
-
+	
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -270,8 +258,8 @@ final class Inschrijving
      * @ORM\Column(length=300, nullable=true)
      */
     private $how = '';
-
-    /**
+	
+	/**
      * @var string
      *
      * @ORM\Column(length=300)
@@ -286,22 +274,22 @@ final class Inschrijving
      * @Assert\True()
      */
     private $accept;
-
-    /**
+	
+	/**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
      */
     private $acceptPrivacyPolicy;
-
-    /**
+    
+	/**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
      */
     private $acceptNamePublished;
-
-    /**
+    
+	/**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
@@ -673,7 +661,7 @@ final class Inschrijving
      */
     public function setStarttime($starttime)
     {
-        $this->starttime = $starttime->format('h:i');
+        $this->starttime = $starttime->format('H:i');
     }
 
     /**
@@ -723,15 +711,15 @@ final class Inschrijving
     {
         $this->accept = $accept;
     }
-
-    /**
+	
+	    /**
      * @return bool
      */
     public function isAcceptPrivacyPolicy()
     {
         return $this->acceptPrivacyPolicy;
     }
-
+	
     /**
      * @param bool $acceptPrivacyPolicy
      */
@@ -739,7 +727,7 @@ final class Inschrijving
     {
         $this->acceptPrivacyPolicy = $acceptPrivacyPolicy;
     }
-
+	
     /**
      * @return bool
      */
@@ -747,7 +735,7 @@ final class Inschrijving
     {
         return $this->acceptNamePublished;
     }
-
+	
     /**
      * @param bool $acceptNamePublished
      */
@@ -755,7 +743,7 @@ final class Inschrijving
     {
         $this->acceptNamePublished = $acceptNamePublished;
     }
-
+	
     /**
      * @return bool
      */
@@ -763,7 +751,7 @@ final class Inschrijving
     {
         return $this->acceptPicturesPublished;
     }
-
+	
     /**
      * @param bool $acceptPicturesPublished
      */
@@ -771,15 +759,15 @@ final class Inschrijving
     {
         $this->acceptPicturesPublished = $acceptPicturesPublished;
     }
-
-    /**
+	
+	/**
      * @return string
      */
     public function getVrijwilligerstaken()
     {
         return $this->vrijwilligerstaken;
     }
-
+	
     /**
      * @param string $vrijwilligerstaken
      */

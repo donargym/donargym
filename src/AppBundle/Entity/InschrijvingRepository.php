@@ -89,9 +89,9 @@ EOQ;
                 'starttime'               => $inschrijving->getStarttime(),
                 'trainer'                 => $inschrijving->getTrainer(),
                 'how'                     => $inschrijving->getHow(),
-                'vrijwilligerstaken'      => $inschrijving->getVrijwilligerstaken(),
+				'vrijwilligerstaken'      => $inschrijving->getVrijwilligerstaken(),
                 'accept'                  => $inschrijving->isAccept(),
-                'acceptPrivacyPolicy'     => $inschrijving->isacceptPrivacyPolicy(),
+				'acceptPrivacyPolicy'     => $inschrijving->isacceptPrivacyPolicy(),
                 'acceptNamePublished'     => $inschrijving->isacceptNamePublished(),
                 'acceptPicturesPublished' => $inschrijving->isacceptPicturesPublished(),
             )

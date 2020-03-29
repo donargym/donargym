@@ -2,7 +2,12 @@
 
 {% block body %}
     <h1>Lid worden</h1>
+<p>
+	Let op: kijk eerst even voor welke les je in wilt schrijven in het <a href="https://www.donargym.nl/lessen/lesrooster/">lesrooster</a>.
+	Als er een wachtlijst op een les is, neem dan eerst even via de mail contact op met de juf.
+</p>
     {{ form_start(form) }}
+	<h2>Persoonsgegevens</h2>
     <table>
         <tr>
             <td>{{ form_label(form.firstname) }}</td>
@@ -69,6 +74,11 @@
             <td>{{ form_widget(form.emailaddress) }}</td>
             <td>{{ form_errors(form.emailaddress) }}</td>
         </tr>
+		    </table>
+		<br>
+		<h2>Les</h2>
+		<p>Selecteer hieronder de gegevens van de les waar je lid van wilt worden. Let op: er kan een wachtlijst op een les zijn. Voor een overzicht van de beschikbare lessen en om te zien of er een wachtlijst is kijk je op <a href="{{ path('getLessenPage', { 'page': 'lesrooster' }) }}" target="blank">de pagina met het lesrooster.</a></p>
+		<table>
         <tr>
             <td>{{ form_label(form.category) }}</td>
             <td>{{ form_widget(form.category) }}</td>
@@ -104,6 +114,7 @@
         </tr>
     </table>
     <br>
+	<h2>Overig</h2>
     <table>
         <tr>
             <td>{{ form_label(form.havebeensubscribed) }}</td>

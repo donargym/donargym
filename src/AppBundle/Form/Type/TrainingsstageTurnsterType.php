@@ -28,7 +28,7 @@ final class TrainingsstageTurnsterType extends AbstractType
             ->add('phone2', 'text', array('required' => false, 'label' => 'Evt. 2e telefoonnummer'))
             ->add('huisArts', 'text', array('label' => 'Naam huisarts*'))
             ->add('insuranceCompany', 'text', array('label' => 'Verzekeringsmaatschappij*'))
-            ->add('insuranceCard', 'file', array('label' => 'Kopie verzekeringspasje (jpg, png of gif)*'))
+            ->add('insuranceCard', 'file', array('label' => 'Kopie/screenshot verzekeringspasje (jpg, png of gif)*'))
             ->add('bankaccountholder', 'text', array('label' => 'Naam rekeninghouder vanaf waar de betaling gedaan wordt. Betalen kan via '))
             ->add('diet', 'textarea', array('required' => false, 'label' => 'Allergisch voor of lust/mag ABSOLUUT geen...',))
             ->add('medicines', 'textarea', array('required' => false, 'label' => 'Medicijngebruik; naam medicatie, frequentie van inname en of uw kind het zelf kan innemen of hulp nodig heeft',))

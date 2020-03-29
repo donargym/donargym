@@ -117,7 +117,6 @@ final class SubscribeType extends AbstractType
                         'Jongens 10 t/m 15 jaar' => 'Jongens 10 t/m 15 jaar',
                         'Dames 16 jaar en ouder' => 'Dames 16 jaar en ouder',
                         'Heren 16 jaar en ouder' => 'Heren 16 jaar en ouder',
-                        'Selectie dames'         => 'Selectie dames',
                         'Aerobics/Bodyshape'     => 'Aerobics/Bodyshape',
                         'Badminton/Volleybal'    => 'Badminton/Volleybal',
                     ),
@@ -136,8 +135,6 @@ final class SubscribeType extends AbstractType
                         'Woensdag'  => 'Woensdag',
                         'Donderdag' => 'Donderdag',
                         'Vrijdag'   => 'Vrijdag',
-                        'Zaterdag'  => 'Zaterdag',
-                        'Zondag'    => 'Zondag',
                     ),
                     'choices_as_values' => true,
                 )
@@ -150,25 +147,31 @@ final class SubscribeType extends AbstractType
                     'multiple'          => true,
                     'expanded'          => true,
                     'choices'           => array(
-                        'Oude Bleijk'           => 'Oude Bleijk',
-                        'Mari Andriessenstraat' => 'Mari Andriessenstraat',
-                        'Turnhal Den Haag GVP'  => 'Turnhal Den Haag GVP',
-                        'Turnhal Den Haag ZP'   => 'Turnhal Den Haag ZP',
-                        'Zaanstraat'            => 'Zaanstraat',
-                        'Renswoudelaan'         => 'Renswoudelaan',
-                        '2e Sweelinckstraat'    => '2e Sweelinckstraat',
-                        'Den Helderstraat'      => 'Den Helderstraat',
-                        'Erasmusweg'            => 'Erasmusweg',
-                        'Walenburg'             => 'Walenburg',
+                        'Mari Andriessenstraat'  => 'Mari Andriessenstraat',
+                        'Zaanstraat'             => 'Zaanstraat',
+                        'Renswoudelaan'          => 'Renswoudelaan',
+                        '2e Sweelinckstraat'     => '2e Sweelinckstraat',
+                        'Den Helderstraat'       => 'Den Helderstraat',
+                        'Erasmusweg'             => 'Erasmusweg',
+                        'Walenburg'              => 'Walenburg',
+                        'Sportcampus Zuiderpark' => 'Sportcampus Zuiderpark',
                     ),
                     'choices_as_values' => true,
                 )
             )
             ->add('starttime', 'time', array('empty_value' => '', 'label' => 'Starttijd les*',))
-            ->add('trainer', 'text', array('label' => 'Leiding*',))
+			->add(
+                'trainer',
+                'choice',
+                array(
+                    'label'       => 'Leiding*',
+                    'placeholder' => 'Kies een leiding',
+                    'choices'     => Inschrijving::trainerOptions(),
+                )
+            )
             ->add('how', 'textarea', array('required' => false, 'label' => 'Hoe bent u bij Donar terecht gekomen?',))
-            ->add('vrijwilligerstaken', 'textarea', array(
-                'attr' => array('rows'=> '4', 'cols' => '50'),
+			->add('vrijwilligerstaken', 'textarea', array(
+				'attr' => array('rows'=> '4', 'cols' => '50'),
                 'required' => true,
                 'label' => 'Bij aanmelding gaan wij ervan uit dat u zich als meerderjarige of als ouder van een minderjarige 
                 1 à 2 maal per jaar wil inzetten als vrijwilliger zodat wij als vereniging wedstrijden en evenementen
@@ -187,7 +190,7 @@ van DONAR, te vinden onder het kopje formulieren in het lidmaatschap menu. U ver
 Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje formulieren.',
                 )
             )
-            ->add(
+			->add(
                 'acceptPrivacyPolicy',
                 'checkbox',
                 array(
@@ -205,8 +208,8 @@ Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje for
                         'Ja' => true,
                         'Nee' => false,
                     ),
-                    'choices_as_values' => true,
                     'expanded' => true,
+					'choices_as_values' => true,
                 )
             )
             ->add(
@@ -219,8 +222,8 @@ Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje for
                         'Ja' => true,
                         'Nee' => false,
                     ),
-                    'choices_as_values' => true,
                     'expanded' => true,
+					'choices_as_values' => true,
                 )
             )
             ->add('save', 'submit', array('label' => 'Verstuur formulier'));

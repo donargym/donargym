@@ -35,6 +35,58 @@ class EditContentController extends BaseController
     public function __construct()
     {
     }
+	
+	/**
+     * @Route("/kamp/edit/", name="editKampPage")
+     * @Method({"GET", "POST"})
+     */
+    public function editKampPageAction(Request $request)
+    {
+        $this->setBasicPageData();
+		$this->calendarItems = $this->getCalendarItems();
+		$em = $this->getDoctrine()->getManager();
+		$query = $em->createQuery(
+			'SELECT content
+		FROM AppBundle:Content content
+		WHERE content.pagina = :page
+		ORDER BY content.gewijzigd DESC')
+			->setParameter('page', 'kamp');
+		$content = $query->setMaxResults(1)->getOneOrNullResult();
+		if(count($content) > 0)
+		{
+			$form = $this->createForm(new ContentType(), $content);
+			$form->handleRequest($request);
+
+			if ($form->isValid()) {
+				$editedContent = new Content();
+				$editedContent->setGewijzigd(new \DateTime('NOW'));
+				$editedContent->setPagina('kamp');
+				$editedContent->setContent($content->getContent());
+				$editedContent->setContent($content->getContent());
+				$em->detach($content);
+				$em->persist($editedContent);
+				$em->flush();
+				return $this->redirectToRoute('getKampPage');
+			}
+			else {
+				return $this->render('kamp/editIndex.html.twig', array(
+					'content' => $content->getContent(),
+					'calendarItems' => $this->calendarItems,
+					'header' => $this->header,
+					'form' => $form->createView(),
+					'wedstrijdLinkItems' => $this->groepItems,
+				));
+			}
+		}
+		else
+		{
+			return $this->render('error/pageNotFound.html.twig', array(
+				'calendarItems' => $this->calendarItems,
+				'header' => $this->header,
+				'wedstrijdLinkItems' => $this->groepItems,
+			));
+		}
+	}
 
     /**
      * @Route("/donar/{page}/edit/", defaults={"page" = "geschiedenis"}, name="editDonarPage")

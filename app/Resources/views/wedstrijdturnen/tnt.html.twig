@@ -47,7 +47,7 @@
         {% endif %}
         <td><a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT', 'id': persoon.id }) }}" style="text-decoration: none;">
                 <img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
-            <p>{{ persoon.voornaam }} {{ persoon.achternaam }}<br>
+            <p>{{ persoon.voornaam }}<br>
             {{ persoon.categorie }}</p></a></td>
     {% endfor %}
         </tr>

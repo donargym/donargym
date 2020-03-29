@@ -19,4 +19,3 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
     JurySysteemWachtwoord: WW
     returnLocation: www.hhdhd.dk
-    returnLocation2: www.hhdhd.dk

@@ -20,6 +20,7 @@ class Functie
     /**
      * @ORM\ManyToOne(targetEntity="Persoon", inversedBy="functie")
      * @ORM\JoinColumn(name="persoon_id", referencedColumnName="id", nullable=FALSE)
+     * @ORM\OrderBy({"geboortedatum" = "ASC"})
      */
     protected $persoon;
 

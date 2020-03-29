@@ -310,7 +310,7 @@ class TrainingsPlanController extends SelectieController
                         }
                     }
                     $subdoelPercentage = round($subdoelSom / count($doelOpbouw[0]->subdoelen[$i]->trededoelen));
-                    if ($subdoelPercentage > 80) continue;
+                    if ($subdoelPercentage >= 80) continue;
 
                     $doelKeuze = array();
                     foreach ($doelOpbouw[0]->subdoelen[$i]->trededoelen as $key => $trededoel) {
@@ -365,7 +365,7 @@ class TrainingsPlanController extends SelectieController
                                         }
                                     }
                                     $subdoelPercentage = round($subdoelSom / count($doelOpbouw[0]->subdoelen[$i]->trededoelen));
-                                    if ($subdoelPercentage > 80) continue;
+                                    if ($subdoelPercentage >= 80) continue;
 
                                     $doelKeuze = array();
                                     foreach ($doelOpbouw[0]->subdoelen[$i]->trededoelen as $key => $trededoel) {
@@ -419,7 +419,7 @@ class TrainingsPlanController extends SelectieController
                                                         }
                                                     }
                                                     $subdoelPercentage = round($subdoelSom / count($doelOpbouw[0]->subdoelen[$i]->trededoelen));
-                                                    if ($subdoelPercentage > 80) continue;
+                                                    if ($subdoelPercentage >= 80) continue;
 
                                                     $doelKeuze = array();
                                                     foreach ($doelOpbouw[0]->subdoelen[$i]->trededoelen as $key => $trededoel) {
@@ -473,7 +473,7 @@ class TrainingsPlanController extends SelectieController
                                                                         }
                                                                     }
                                                                     $subdoelPercentage = round($subdoelSom / count($doelOpbouw[0]->subdoelen[$i]->trededoelen));
-                                                                    if ($subdoelPercentage > 80) continue;
+                                                                    if ($subdoelPercentage >= 80) continue;
 
                                                                     $doelKeuze = array();
                                                                     foreach ($doelOpbouw[0]->subdoelen[$i]->trededoelen as $key => $trededoel) {
@@ -527,7 +527,7 @@ class TrainingsPlanController extends SelectieController
                                                                                         }
                                                                                     }
                                                                                     $subdoelPercentage = round($subdoelSom / count($doelOpbouw[0]->subdoelen[$i]->trededoelen));
-                                                                                    if ($subdoelPercentage > 80) continue;
+                                                                                    if ($subdoelPercentage >= 80) continue;
 
                                                                                     $doelKeuze = array();
                                                                                     foreach ($doelOpbouw[0]->subdoelen[$i]->trededoelen as $key => $trededoel) {
@@ -582,7 +582,7 @@ class TrainingsPlanController extends SelectieController
                                                                                                         }
                                                                                                     }
                                                                                                     $subdoelPercentage = round($subdoelSom / count($doelOpbouw[0]->subdoelen[$i]->trededoelen));
-                                                                                                    if ($subdoelPercentage > 80) continue;
+                                                                                                    if ($subdoelPercentage >= 80) continue;
 
                                                                                                     $doelKeuze = array();
                                                                                                     foreach ($doelOpbouw[0]->subdoelen[$i]->trededoelen as $key => $trededoel) {

@@ -28,14 +28,19 @@
                     <td>{{ trainingsdatum.lesdatum }}</td>
                     <td style="text-align: center">
                     {% if trainingsdatum.afmelding is defined %}
-                        {{ trainingsdatum.afmelding }}
-
-                        {% if trainingsdatum.afmelding == 'A' %}
-                    </td><td>
+						{% if trainingsdatum.afmelding == 'A' %}
+							☹️
+						{% elseif trainingsdatum.afmelding == '-' %}
+							☹️❓
+						{% elseif trainingsdatum.afmelding == 'X' %}
+							🤸‍♀️
+						{% endif %}
+						{% if trainingsdatum.afmelding == 'A' %}
+						</td><td>
                         <a href="{{ path('afmelding_annuleren', {'id': id, 'groepId': groepId, 'aanwezigheidId': trainingsdatum.afmeldingId}) }}">
                             <img src="{{ asset('images/refresh.png') }}" width="18px" />
                         </a>
-                        {% endif %}
+						{% endif %}
                     {% else %}
                         <input type="checkbox" name="{{ trainingsdatum.id }}"
                          {% if afmeldingsData is defined %}
