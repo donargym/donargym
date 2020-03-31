@@ -19,7 +19,6 @@ class VoedselController extends SelectieController
      */
     public function EtenDrinkenIndex($persoonId, $groepId)
     {
-        $this->setBasicPageData();
         $userObject     = $this->getUser();
         $user           = $this->getBasisUserGegevens($userObject);
         $persoon        = $this->getBasisPersoonsGegevens($userObject);
@@ -52,7 +51,6 @@ class VoedselController extends SelectieController
      */
     public function EtenDrinkenAdd($persoonId, $groepId, $voedselId = false, Request $request)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);

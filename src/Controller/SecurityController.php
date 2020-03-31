@@ -12,8 +12,6 @@ class SecurityController extends BaseController
      */
     public function loginAction(AuthenticationUtils $authenticationUtils)
     {
-        $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems         = $this->wedstrijdLinkItems[0];
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 

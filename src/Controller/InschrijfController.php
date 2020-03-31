@@ -16,7 +16,6 @@ final class InschrijfController extends BaseController
      */
     public function subscribeAction(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData();
         $inschrijving = new Inschrijving();
         $form         = $this->createForm(SubscribeType::class, $inschrijving);
 

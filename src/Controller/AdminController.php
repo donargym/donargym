@@ -35,7 +35,6 @@ class AdminController extends BaseController
      */
     public function getIndexPageAction()
     {
-        $this->setBasicPageData();
         return $this->render(
             'inloggen/adminIndex.html.twig',
             array(
@@ -48,7 +47,6 @@ class AdminController extends BaseController
      */
     public function getAdminFotoPage()
     {
-        $this->setBasicPageData();
         $em           = $this->getDoctrine()->getManager();
         $query        = $em->createQuery(
             'SELECT fotoupload
@@ -73,7 +71,6 @@ class AdminController extends BaseController
      */
     public function addAdminFotoPageAction(Request $request)
     {
-        $this->setBasicPageData();
         $foto = new FotoUpload();
         $form = $this->createFormBuilder($foto)
             ->add('naam')
@@ -110,7 +107,6 @@ class AdminController extends BaseController
     public function removeAdminFotoPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em    = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT fotoupload
@@ -159,7 +155,6 @@ class AdminController extends BaseController
      */
     public function getAdminBestandenPage()
     {
-        $this->setBasicPageData();
         $em           = $this->getDoctrine()->getManager();
         $query        = $em->createQuery(
             'SELECT fileupload
@@ -184,7 +179,6 @@ class AdminController extends BaseController
      */
     public function addAdminBestandenPageAction(Request $request)
     {
-        $this->setBasicPageData();
         $file = new FileUpload();
         $form = $this->createFormBuilder($file)
             ->add('naam')
@@ -214,7 +208,6 @@ class AdminController extends BaseController
     public function removeAdminBestandenPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em    = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT fileupload
@@ -263,7 +256,6 @@ class AdminController extends BaseController
      */
     public function getAdminSelectiePage()
     {
-        $this->setBasicPageData();
         $em    = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT functie
@@ -301,7 +293,6 @@ class AdminController extends BaseController
      */
     public function addAdminTrainerPageAction(Request $request, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
     {
-        $this->setBasicPageData();
         $em           = $this->getDoctrine()->getManager();
         $query        = $em->createQuery(
             'SELECT groepen
@@ -527,7 +518,6 @@ class AdminController extends BaseController
      */
     public function editAdminTrainerPageAction(Request $request, $id)
     {
-        $this->setBasicPageData();
         $em                         = $this->getDoctrine()->getManager();
         $query                      = $em->createQuery(
             'SELECT persoon
@@ -740,7 +730,6 @@ class AdminController extends BaseController
     public function removeAdminTrainerPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em      = $this->getDoctrine()->getManager();
             $query   = $em->createQuery(
                 'SELECT persoon
@@ -811,7 +800,6 @@ class AdminController extends BaseController
      */
     public function getAdminOwPage(Request $request)
     {
-        $this->setBasicPageData();
         return $this->render(
             'inloggen/adminOwIndexPage.html.twig',
             array(
@@ -966,7 +954,6 @@ class AdminController extends BaseController
                 }
             }
         }
-        $this->setBasicPageData();
         return $this->render(
             'inloggen/uploadWedstrijdindelingen.html.twig',
             array(

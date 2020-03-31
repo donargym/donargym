@@ -17,7 +17,6 @@ class TrainingsPlanController extends SelectieController
      */
     public function TrainingsplanIndex($persoonId, $groepId)
     {
-        $this->setBasicPageData();
         $userObject       = $this->getUser();
         $user             = $this->getBasisUserGegevens($userObject);
         $persoon          = $this->getBasisPersoonsGegevens($userObject);
@@ -49,7 +48,6 @@ class TrainingsPlanController extends SelectieController
      */
     public function TrainingsplanmakeGroepjes($persoonId, $groepId, $trainingsdatumId)
     {
-        $this->setBasicPageData();
         $userObject              = $this->getUser();
         $user                    = $this->getBasisUserGegevens($userObject);
         $persoon                 = $this->getBasisPersoonsGegevens($userObject);
@@ -119,7 +117,6 @@ class TrainingsPlanController extends SelectieController
      */
     public function makeTrainingsplan($persoonId, $groepId, $trainingId, Request $request)
     {
-        $this->setBasicPageData();
         $userObject                = $this->getUser();
         $user                      = $this->getBasisUserGegevens($userObject);
         $persoon                   = $this->getBasisPersoonsGegevens($userObject);

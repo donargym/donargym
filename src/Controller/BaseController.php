@@ -10,8 +10,6 @@ use Symfony\Component\Mailer\MailerInterface;
 
 abstract class BaseController extends AbstractController
 {
-    protected $groepItems;
-
     public function getwedstrijdLinkItems()
     {
         $em    = $this->getDoctrine()->getManager();
@@ -92,12 +90,6 @@ abstract class BaseController extends AbstractController
             }
         }
         return $password;
-    }
-
-    protected function setBasicPageData()
-    {
-        $wedstrijdLinkItems  = $this->getwedstrijdLinkItems();
-        $this->groepItems    = $wedstrijdLinkItems[0];
     }
 
     protected function addToDB($object)

@@ -74,7 +74,6 @@ class SelectieController extends BaseController
      */
     public function getSelectieIndexPage()
     {
-        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
@@ -151,7 +150,6 @@ class SelectieController extends BaseController
      */
     public function editContactgegevens(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
@@ -283,7 +281,6 @@ class SelectieController extends BaseController
      */
     public function editEmail(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
@@ -321,7 +318,6 @@ class SelectieController extends BaseController
      */
     public function editEmail2(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
@@ -358,7 +354,6 @@ class SelectieController extends BaseController
      */
     public function editEmail3(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
@@ -418,7 +413,6 @@ class SelectieController extends BaseController
                 return $this->redirectToRoute('getSelectieIndexPage');
             }
         }
-        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
@@ -1068,7 +1062,6 @@ class SelectieController extends BaseController
      */
     public function addWedstrijdkalenderItems($persoonId, $groepId, Request $request)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -1172,7 +1165,6 @@ class SelectieController extends BaseController
      */
     public function editWedstrijdkalenderItems($persoonId, $groepId, $kalenderItemId, Request $request)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -1617,7 +1609,6 @@ class SelectieController extends BaseController
     public
     function showPersoon($id)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -1665,7 +1656,6 @@ class SelectieController extends BaseController
     public
     function showDoelPrijzen($persoonId, $groepId)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -1812,7 +1802,6 @@ class SelectieController extends BaseController
      */
     public function showPersoonDoelenPerToestel($persoonId, $toestel)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -1848,7 +1837,6 @@ class SelectieController extends BaseController
      */
     public function showPersoonOneDoelPerToestel($persoonId, $toestel, $doelId)
     {
-        $this->setBasicPageData();
         $userObject        = $this->getUser();
         $user              = $this->getBasisUserGegevens($userObject);
         $persoon           = $this->getBasisPersoonsGegevens($userObject);
@@ -2003,7 +1991,6 @@ class SelectieController extends BaseController
     public
     function Afmelding($id, $groepId, Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2412,7 +2399,6 @@ class SelectieController extends BaseController
     public
     function viewAfmeldingen($id, $groepId)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2438,7 +2424,6 @@ class SelectieController extends BaseController
     public
     function viewAanwezigheid($id, $groepId)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2521,7 +2506,6 @@ class SelectieController extends BaseController
     public
     function kruisjeslijst($id, $groepId, Request $request)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject    = $this->getUser();
         $user          = $this->getBasisUserGegevens($userObject);
@@ -2576,7 +2560,6 @@ class SelectieController extends BaseController
     public
     function removeTrainingsdatum($id, $groepId, $trainingsdatumId, Request $request)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2662,7 +2645,6 @@ class SelectieController extends BaseController
     public
     function kruisjeslijstInvullen($id, $groepId, $trainingsdatumId, Request $request)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2757,7 +2739,6 @@ class SelectieController extends BaseController
     public
     function viewAdreslijst($id, $groepId)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2781,7 +2762,6 @@ class SelectieController extends BaseController
      */
     public function addStukje($id, Request $request)
     {
-        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2825,7 +2805,6 @@ class SelectieController extends BaseController
     public
     function addSelectieTurnsterPageAction(Request $request, $id, $groepsId, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3070,7 +3049,6 @@ class SelectieController extends BaseController
     function removeSelectieTurnsterPage($trainerId, $turnsterId, $groepId, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $userObject   = $this->getUser();
             $user         = $this->getBasisUserGegevens($userObject);
             $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3166,7 +3144,6 @@ class SelectieController extends BaseController
     public
     function addSelectieFotoPageAction(Request $request, $persoonId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3252,7 +3229,6 @@ class SelectieController extends BaseController
     public
     function viewSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3294,7 +3270,6 @@ class SelectieController extends BaseController
     public
     function addSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3358,7 +3333,6 @@ class SelectieController extends BaseController
      */
     public function removeSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId, $wedstrijduitslagId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3410,7 +3384,6 @@ class SelectieController extends BaseController
      */
     public function editSelectieTurnsterAction(Request $request, $persoonId, $turnsterId, $groepId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4077,7 +4050,6 @@ class SelectieController extends BaseController
     public
     function viewSelectieTurnster($persoonId, $turnsterId, $groepId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4140,7 +4112,6 @@ class SelectieController extends BaseController
     public
     function viewSelectieTurnsterOneDoel($persoonId, $turnsterId, $groepId, $doelId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4332,7 +4303,6 @@ class SelectieController extends BaseController
     public
     function SelectieTurnsterAddCijfer($persoonId, $turnsterId, $groepId, Request $request)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4493,7 +4463,6 @@ class SelectieController extends BaseController
      */
     public function addDoelToTurnster($persoonId, $groepId, $turnsterId, Request $request)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4584,7 +4553,6 @@ class SelectieController extends BaseController
      */
     public function removeDoelFromTurnster($persoonId, $groepId, $turnsterId, $doelId, Request $request)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4670,7 +4638,6 @@ class SelectieController extends BaseController
      */
     public function viewVloermuziek($persoonId, $groepId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4703,7 +4670,6 @@ class SelectieController extends BaseController
     function addSelectieVloermuziekPageAction(Request $request, $persoonId, $turnsterId, $groepId)
     {
         $error = null;
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4849,7 +4815,6 @@ class SelectieController extends BaseController
      */
     public function viewDoelen($persoonId, $groepId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4879,7 +4844,6 @@ class SelectieController extends BaseController
      */
     public function addDoelen($persoonId, $groepId, Request $request)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -5083,7 +5047,6 @@ class SelectieController extends BaseController
      */
     public function viewOneDoel($persoonId, $groepId, $doelId)
     {
-        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);

@@ -31,7 +31,6 @@ class EditContentController extends BaseController
      */
     public function editKampPageAction(Request $request)
     {
-        $this->setBasicPageData();
         $em      = $this->getDoctrine()->getManager();
         $query   = $em->createQuery(
             'SELECT content
@@ -78,7 +77,6 @@ class EditContentController extends BaseController
      */
     public function editDonarPageAction($page, Request $request)
     {
-        $this->setBasicPageData();
         if (in_array(
             $page,
             array(
@@ -147,7 +145,6 @@ class EditContentController extends BaseController
      */
     public function editLessenPageAction($page, Request $request)
     {
-        $this->setBasicPageData();
         if (in_array(
             $page,
             array(
@@ -214,7 +211,6 @@ class EditContentController extends BaseController
      */
     public function editWedstrijdturnenPageAction($page, Request $request)
     {
-        $this->setBasicPageData();
         if (in_array($page, array('wedstrijdturnen'))) {
             $em      = $this->getDoctrine()->getManager();
             $query   = $em->createQuery(
@@ -281,7 +277,6 @@ class EditContentController extends BaseController
      */
     public function editLidmaatschapPageAction($page, Request $request)
     {
-        $this->setBasicPageData();
         if (in_array($page, array('lidmaatschap', 'contributie', 'formulieren', 'ooievaarspas'))) {
             $em      = $this->getDoctrine()->getManager();
             $query   = $em->createQuery(
@@ -337,7 +332,6 @@ class EditContentController extends BaseController
      */
     public function editFotofilmPageAction($page, Request $request)
     {
-        $this->setBasicPageData();
         if (in_array($page, array('fotoenfilm', 'foto', 'film'))) {
             $em      = $this->getDoctrine()->getManager();
             $query   = $em->createQuery(
@@ -393,7 +387,6 @@ class EditContentController extends BaseController
      */
     public function editVrijwilligersPageAction($page, Request $request)
     {
-        $this->setBasicPageData();
         if (in_array($page, array('vrijwilligers', 'taken', 'vrijwilligersdag'))) {
             $em      = $this->getDoctrine()->getManager();
             $query   = $em->createQuery(
@@ -449,7 +442,6 @@ class EditContentController extends BaseController
      */
     public function editContactPageAction($page, Request $request)
     {
-        $this->setBasicPageData();
         if (in_array($page, array('contact', 'veelgesteldevragen'))) {
             $em      = $this->getDoctrine()->getManager();
             $query   = $em->createQuery(
@@ -505,7 +497,6 @@ class EditContentController extends BaseController
      */
     public function addAgendaPage(Request $request)
     {
-        $this->setBasicPageData();
         $agenda = new Calendar();
         $form   = $this->createForm(CalendarType::class, $agenda);
         $form->handleRequest($request);
@@ -530,7 +521,6 @@ class EditContentController extends BaseController
      */
     public function editAgendaPage($id, Request $request)
     {
-        $this->setBasicPageData();
         $em     = $this->getDoctrine()->getManager();
         $query  = $em->createQuery(
             'SELECT calendar
@@ -571,7 +561,6 @@ class EditContentController extends BaseController
     public function removeAgendaPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em     = $this->getDoctrine()->getManager();
             $query  = $em->createQuery(
                 'SELECT calendar
@@ -620,7 +609,6 @@ class EditContentController extends BaseController
      */
     public function addNieuwsPage(Request $request)
     {
-        $this->setBasicPageData();
         $nieuwsbericht = new Nieuwsbericht();
         $form          = $this->createForm(NieuwsberichtType::class, $nieuwsbericht);
         $form->handleRequest($request);
@@ -648,7 +636,6 @@ class EditContentController extends BaseController
      */
     public function editNieuwsberichtPage($id, Request $request)
     {
-        $this->setBasicPageData();
         $em            = $this->getDoctrine()->getManager();
         $query         = $em->createQuery(
             'SELECT nieuwsbericht
@@ -691,7 +678,6 @@ class EditContentController extends BaseController
     public function removeNieuwsberichtPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em            = $this->getDoctrine()->getManager();
             $query         = $em->createQuery(
                 'SELECT nieuwsbericht
@@ -740,7 +726,6 @@ class EditContentController extends BaseController
      */
     public function addVakantiesPage(Request $request)
     {
-        $this->setBasicPageData();
         $em            = $this->getDoctrine()->getManager();
         $query         = $em->createQuery(
             'SELECT vakanties
@@ -779,7 +764,6 @@ class EditContentController extends BaseController
      */
     public function editVakantiesPage($id, Request $request)
     {
-        $this->setBasicPageData();
         $em            = $this->getDoctrine()->getManager();
         $query         = $em->createQuery(
             'SELECT vakanties
@@ -833,7 +817,6 @@ class EditContentController extends BaseController
     public function removeVakantiesPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em            = $this->getDoctrine()->getManager();
             $query         = $em->createQuery(
                 'SELECT vakanties
@@ -895,7 +878,6 @@ class EditContentController extends BaseController
      */
     public function addClubbladPageAction(Request $request)
     {
-        $this->setBasicPageData();
         $clubblad = new Clubblad();
         $form     = $this->createFormBuilder($clubblad)
             ->add(
@@ -931,7 +913,6 @@ class EditContentController extends BaseController
     public function removeClubbladPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em       = $this->getDoctrine()->getManager();
             $query    = $em->createQuery(
                 'SELECT clubblad
@@ -980,7 +961,6 @@ class EditContentController extends BaseController
      */
     public function addFormulierenPageAction(Request $request)
     {
-        $this->setBasicPageData();
         $formulier = new Formulieren();
         $form      = $this->createFormBuilder($formulier)
             ->add('naam')
@@ -1010,7 +990,6 @@ class EditContentController extends BaseController
     public function removeFormulierenPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em        = $this->getDoctrine()->getManager();
             $query     = $em->createQuery(
                 'SELECT formulieren
@@ -1059,7 +1038,6 @@ class EditContentController extends BaseController
      */
     public function addVeelgesteldeVragenPage(Request $request)
     {
-        $this->setBasicPageData();
         $vraag = new VeelgesteldeVragen();
         $form  = $this->createForm(VeelgesteldeVragenType::class, $vraag);
         $form->handleRequest($request);
@@ -1084,7 +1062,6 @@ class EditContentController extends BaseController
      */
     public function editVeelgesteldeVragenPage($id, Request $request)
     {
-        $this->setBasicPageData();
         $em    = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT veelgesteldevragen
@@ -1125,7 +1102,6 @@ class EditContentController extends BaseController
     public function removeVeelgesteldeVragenPage($id, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData();
             $em    = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT veelgesteldevragen
