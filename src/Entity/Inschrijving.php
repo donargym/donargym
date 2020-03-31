@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\InschrijvingRepository")
@@ -11,25 +11,25 @@ use Doctrine\ORM\Mapping as ORM;
  */
 final class Inschrijving
 {
-public static function trainerOptions()
+    public static function trainerOptions()
     {
         return array(
-            'webmaster@donargym.nl'     => 'Mijn leiding staat er niet bij',
-            'jufanchella@donargym.nl'   => 'Anchella',
-            'jufcindy@donargym.nl'      => 'Cindy',
-            'jufdemi@donargym.nl'       => 'Demi',
-            'Ericcastens@donargym.nl'   => 'Eric',
-            'jufilse@donargym.nl'       => 'Ilse',
-            'loestrompet@hotmail.com'   => 'Loes',
-            'jufmartine@donargym.nl'    => 'Martine',
-            'jufmerel@donargym.nl'      => 'Merel',
-            'jufrachel@donargym.nl'     => 'Rachel',
-            'jufrenske@donargym.nl'     => 'Renske',
-            'Verawessels@donargym.nl'   => 'Vera',
-			'jufcharon@donargym.nl'     => 'Charon',
+            'Mijn leiding staat er niet bij' => 'webmaster@donargym.nl',
+            'Anchella'                       => 'jufanchella@donargym.nl',
+            'Cindy'                          => 'jufcindy@donargym.nl',
+            'Demi'                           => 'jufdemi@donargym.nl',
+            'Eric'                           => 'Ericcastens@donargym.nl',
+            'Ilse'                           => 'jufilse@donargym.nl',
+            'Loes'                           => 'loestrompet@hotmail.com',
+            'Martine'                        => 'jufmartine@donargym.nl',
+            'Merel'                          => 'jufmerel@donargym.nl',
+            'Rachel'                         => 'jufrachel@donargym.nl',
+            'Renske'                         => 'jufrenske@donargym.nl',
+            'Vera'                           => 'Verawessels@donargym.nl',
+            'Charon'                         => 'jufcharon@donargym.nl',
         );
     }
-	
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -40,7 +40,7 @@ public static function trainerOptions()
     /**
      * @var string
      *
-     * @ORM\Column(length=300)  
+     * @ORM\Column(length=300)
      *
      * @Assert\NotBlank(message = "Dit veld is verplicht")
      */
@@ -258,8 +258,8 @@ public static function trainerOptions()
      * @ORM\Column(length=300, nullable=true)
      */
     private $how = '';
-	
-	/**
+
+    /**
      * @var string
      *
      * @ORM\Column(length=300)
@@ -274,22 +274,22 @@ public static function trainerOptions()
      * @Assert\IsTrue()
      */
     private $accept;
-	
-	/**
+
+    /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
      */
     private $acceptPrivacyPolicy;
-    
-	/**
+
+    /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
      */
     private $acceptNamePublished;
-    
-	/**
+
+    /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
@@ -711,15 +711,15 @@ public static function trainerOptions()
     {
         $this->accept = $accept;
     }
-	
-	    /**
+
+    /**
      * @return bool
      */
     public function isAcceptPrivacyPolicy()
     {
         return $this->acceptPrivacyPolicy;
     }
-	
+
     /**
      * @param bool $acceptPrivacyPolicy
      */
@@ -727,7 +727,7 @@ public static function trainerOptions()
     {
         $this->acceptPrivacyPolicy = $acceptPrivacyPolicy;
     }
-	
+
     /**
      * @return bool
      */
@@ -735,7 +735,7 @@ public static function trainerOptions()
     {
         return $this->acceptNamePublished;
     }
-	
+
     /**
      * @param bool $acceptNamePublished
      */
@@ -743,7 +743,7 @@ public static function trainerOptions()
     {
         $this->acceptNamePublished = $acceptNamePublished;
     }
-	
+
     /**
      * @return bool
      */
@@ -751,7 +751,7 @@ public static function trainerOptions()
     {
         return $this->acceptPicturesPublished;
     }
-	
+
     /**
      * @param bool $acceptPicturesPublished
      */
@@ -759,15 +759,15 @@ public static function trainerOptions()
     {
         $this->acceptPicturesPublished = $acceptPicturesPublished;
     }
-	
-	/**
+
+    /**
      * @return string
      */
     public function getVrijwilligerstaken()
     {
         return $this->vrijwilligerstaken;
     }
-	
+
     /**
      * @param string $vrijwilligerstaken
      */

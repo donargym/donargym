@@ -6,6 +6,7 @@ use App\Entity\Inschrijving;
 use App\Repository\InschrijvingRepository;
 use App\Form\Type\SubscribeType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 final class InschrijfController extends BaseController
@@ -13,7 +14,7 @@ final class InschrijfController extends BaseController
     /**
      * @Route("/inschrijven/", name="subscribe", methods={"GET", "POST"})
      */
-    public function subscribeAction(Request $request)
+    public function subscribeAction(Request $request, MailerInterface $mailer)
     {
         $this->setBasicPageData();
         $inschrijving = new Inschrijving();
@@ -21,21 +22,15 @@ final class InschrijfController extends BaseController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var InschrijvingRepository $repo */
             $repo = $this->getDoctrine()->getRepository(Inschrijving::class);
 
-            $repo->saveInschrijving(
-                $inschrijving,
-                $this->container->getParameter('database_name'),
-                $this->container->getParameter('database_user'),
-                $this->container->getParameter('database_password'),
-                $this->container->getParameter('database_host')
-            );
+            $repo->saveInschrijving($inschrijving);
 			
-			
+
             $trainers = Inschrijving::trainerOptions();
-            $trainerName = $trainers[$inschrijving->getTrainer()];
+            $trainerName = array_search($inschrijving->getTrainer(), $trainers);
 
             $subject = 'Inschrijving';
             $inschrijfDateTime = new \DateTime();
@@ -43,6 +38,7 @@ final class InschrijfController extends BaseController
                 $subject,
                 'ledensecretariaat@donargym.nl',
                 'mails/inschrijving_naar_ledensecretariaat.txt.twig',
+                $mailer,
                 array(
 					'inschrijfdatetime'  => $inschrijfDateTime->format('d-m-Y H:i'),
                     'voornaam'           => $inschrijving->getFirstName(),
@@ -82,6 +78,7 @@ final class InschrijfController extends BaseController
                 $subject,
                 $inschrijving->getTrainer(),
                 'mails/inschrijving_naar_ledensecretariaat.txt.twig',
+                $mailer,
                 array(
                     'inschrijfdatetime'  => $inschrijfDateTime->format('d-m-Y H:i'),
                     'voornaam'           => $inschrijving->getFirstName(),
@@ -121,6 +118,7 @@ final class InschrijfController extends BaseController
                 $subject,
                 $inschrijving->getEmailaddress(),
                 'mails/inschrijving_naar_lid.txt.twig',
+                $mailer,
                 array('voornaam' => $inschrijving->getFirstName())
             );
 

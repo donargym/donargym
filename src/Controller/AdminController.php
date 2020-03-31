@@ -18,8 +18,11 @@ use App\Repository\ScoresRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 
 /**
@@ -81,11 +84,11 @@ class AdminController extends BaseController
         $form = $this->createFormBuilder($foto)
             ->add('naam')
             ->add('file')
-            ->add('uploadBestand', 'submit')
+            ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($foto);
             $em->flush();
@@ -207,11 +210,11 @@ class AdminController extends BaseController
         $form = $this->createFormBuilder($file)
             ->add('naam')
             ->add('file')
-            ->add('uploadBestand', 'submit')
+            ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($file);
             $em->flush();
@@ -332,7 +335,7 @@ class AdminController extends BaseController
     /**
      * @Route("/admin/selectie/add/", name="addAdminTrainerPage", methods={"GET", "POST"})
      */
-    public function addAdminTrainerPageAction(Request $request)
+    public function addAdminTrainerPageAction(Request $request, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
     {
         $this->setBasicPageData();
         $em           = $this->getDoctrine()->getManager();
@@ -480,15 +483,14 @@ class AdminController extends BaseController
 
             if ($newuser) {
                 $password = $this->generatePassword();
-                $encoder  = $this->container
-                    ->get('security.encoder_factory')
+                $encoder  = $encoderFactory
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $em->persist($user);
             } else {
                 $password = 'over een wachtwoord beschik je als het goed is al';
             }
-            $this->addSubDoelenAanPersoon($persoon);
+//            $this->addSubDoelenAanPersoon($persoon);
             $user->addPersoon($persoon);
             $em->persist($persoon);
             $em->flush();
@@ -496,7 +498,7 @@ class AdminController extends BaseController
 
             $message = new TemplatedEmail();
             $message->subject('Inloggegevens website Donar')
-                ->from('webmaster@donargym.nl')
+                ->from('noreply@donargym.nl')
                 ->to($user->getUsername())
                 ->textTemplate('mails/new_user.txt.twig')
                 ->context(
@@ -508,13 +510,13 @@ class AdminController extends BaseController
                         'password' => $password
                     )
                 );
-            $this->get('mailer')->send($message);
+            $mailer->send($message);
 
             if ($user->getEmail2()) {
 
                 $message = new TemplatedEmail();
                 $message->subject('Inloggegevens website Donar')
-                    ->from('webmaster@donargym.nl')
+                    ->from('noreply@donargym.nl')
                     ->to($user->getEmail2())
                     ->textTemplate('mails/new_user.txt.twig')
                     ->context(
@@ -526,13 +528,13 @@ class AdminController extends BaseController
                             'password' => $password
                         )
                     );
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
             }
             if ($user->getEmail3()) {
 
                 $message = new TemplatedEmail();
                 $message->subject('Inloggegevens website Donar')
-                    ->from('webmaster@donargym.nl')
+                    ->from('noreply@donargym.nl')
                     ->to($user->getEmail3())
                     ->textTemplate('mails/new_user.txt.twig')
                     ->context(
@@ -544,7 +546,7 @@ class AdminController extends BaseController
                             'password' => $password
                         )
                     );
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
             }
             return $this->redirectToRoute('getAdminSelectiePage');
         }
@@ -874,7 +876,7 @@ class AdminController extends BaseController
     /**
      * @Route("/admin/getAdminOwPage/uploadWedstrijdindelingen/", name="uploadWedstrijdindelingen", methods={"GET", "POST"})
      */
-    public function uploadWedstrijdindelingen(Request $request)
+    public function uploadWedstrijdindelingen(Request $request, EncoderFactoryInterface $encoderFactory)
     {
         if ($request->getMethod() == 'POST') {
             /** @var UserRepository $repo */
@@ -890,8 +892,7 @@ class AdminController extends BaseController
                 $user->setPlaats(' ');
                 $user->setTel1(' ');
                 $password = $this->getParameter('JurySysteemWachtwoord');
-                $encoder  = $this->container
-                    ->get('security.encoder_factory')
+                $encoder  = $encoderFactory
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $this->addToDB($user);
@@ -907,8 +908,7 @@ class AdminController extends BaseController
                 $user->setPlaats(' ');
                 $user->setTel1(' ');
                 $password = $this->getParameter('JurySysteemWachtwoord');
-                $encoder  = $this->container
-                    ->get('security.encoder_factory')
+                $encoder  = $encoderFactory
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $this->addToDB($user);
@@ -943,8 +943,7 @@ class AdminController extends BaseController
                                             $user->setPlaats(' ');
                                             $user->setTel1(' ');
                                             $password = ' ';
-                                            $encoder  = $this->container
-                                                ->get('security.encoder_factory')
+                                            $encoder  = $encoderFactory
                                                 ->getEncoder($user);
                                             $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                                             $vereniging = new Vereniging();

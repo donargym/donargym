@@ -15,6 +15,8 @@ use App\Form\Type\NieuwsberichtType;
 use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -49,7 +51,7 @@ class EditContentController extends BaseController
             $form = $this->createForm(ContentType::class, $content);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $editedContent = new Content();
                 $editedContent->setGewijzigd(new \DateTime('NOW'));
                 $editedContent->setPagina('kamp');
@@ -117,7 +119,7 @@ class EditContentController extends BaseController
                 $form = $this->createForm(ContentType::class, $content);
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $editedContent = new Content();
                     $editedContent->setGewijzigd(new \DateTime('NOW'));
                     $editedContent->setPagina($page);
@@ -192,7 +194,7 @@ class EditContentController extends BaseController
                 $form = $this->createForm(ContentType::class, $content);
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $editedContent = new Content();
                     $editedContent->setGewijzigd(new \DateTime('NOW'));
                     $editedContent->setPagina($page);
@@ -258,7 +260,7 @@ class EditContentController extends BaseController
                 $form = $this->createForm(ContentType::class, $content);
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $editedContent = new Content();
                     $editedContent->setGewijzigd(new \DateTime('NOW'));
                     $editedContent->setPagina($page);
@@ -334,7 +336,7 @@ class EditContentController extends BaseController
                 $form = $this->createForm(ContentType::class, $content);
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $editedContent = new Content();
                     $editedContent->setGewijzigd(new \DateTime('NOW'));
                     $editedContent->setPagina($page);
@@ -399,7 +401,7 @@ class EditContentController extends BaseController
                 $form = $this->createForm(ContentType::class, $content);
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $editedContent = new Content();
                     $editedContent->setGewijzigd(new \DateTime('NOW'));
                     $editedContent->setPagina($page);
@@ -464,7 +466,7 @@ class EditContentController extends BaseController
                 $form = $this->createForm(ContentType::class, $content);
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $editedContent = new Content();
                     $editedContent->setGewijzigd(new \DateTime('NOW'));
                     $editedContent->setPagina($page);
@@ -529,7 +531,7 @@ class EditContentController extends BaseController
                 $form = $this->createForm(ContentType::class, $content);
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $editedContent = new Content();
                     $editedContent->setGewijzigd(new \DateTime('NOW'));
                     $editedContent->setPagina($page);
@@ -584,7 +586,7 @@ class EditContentController extends BaseController
         $form   = $this->createForm(CalendarType::class, $agenda);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($agenda);
             $em->flush();
@@ -620,7 +622,7 @@ class EditContentController extends BaseController
             $form = $this->createForm(CalendarType::class, $agenda);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($agenda);
                 $em->flush();
@@ -717,7 +719,7 @@ class EditContentController extends BaseController
         $form          = $this->createForm(NieuwsberichtType::class, $nieuwsbericht);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $nieuwsbericht->setDatumtijd(date('d-m-Y: H:i', time()));
             $nieuwsbericht->setJaar(date("Y", time()));
             $nieuwsbericht->setBericht(str_replace("\n", "<br />", $nieuwsbericht->getBericht()));
@@ -757,7 +759,7 @@ class EditContentController extends BaseController
             $form = $this->createForm(NieuwsberichtType::class, $nieuwsbericht);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $nieuwsbericht->setBericht(str_replace("\n", "<br />", $nieuwsbericht->getBericht()));
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($nieuwsbericht);
@@ -868,7 +870,7 @@ class EditContentController extends BaseController
         $form      = $this->createForm(VakantiesType::class, $vakanties);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($vakanties);
             $em->flush();
@@ -917,7 +919,7 @@ class EditContentController extends BaseController
             $form = $this->createForm(VakantiesType::class, $vakanties);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($vakanties);
                 $em->flush();
@@ -1028,17 +1030,17 @@ class EditContentController extends BaseController
         $form     = $this->createFormBuilder($clubblad)
             ->add(
                 'datum',
-                'date',
+                DateType::class,
                 array(
                     'widget' => 'single_text',
                 )
             )
             ->add('file')
-            ->add('uploadBestand', 'submit')
+            ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($clubblad);
             $em->flush();
@@ -1125,11 +1127,11 @@ class EditContentController extends BaseController
         $form      = $this->createFormBuilder($formulier)
             ->add('naam')
             ->add('file')
-            ->add('uploadBestand', 'submit')
+            ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($formulier);
             $em->flush();
@@ -1216,7 +1218,7 @@ class EditContentController extends BaseController
         $form  = $this->createForm(VeelgesteldeVragenType::class, $vraag);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($vraag);
             $em->flush();
@@ -1252,7 +1254,7 @@ class EditContentController extends BaseController
             $form = $this->createForm(VeelgesteldeVragenType::class, $vraag);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($vraag);
                 $em->flush();

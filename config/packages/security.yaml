@@ -31,9 +31,8 @@ security:
                 csrf_token_generator: security.csrf.token_manager
                 default_target_path: /inloggen
             switch_user: true
-
             logout:
-                path:   /logout
+                path: logout
                 target: /inloggen
 
             remember_me:

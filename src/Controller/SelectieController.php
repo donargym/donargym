@@ -25,8 +25,12 @@ use App\Form\Type\Email3Type;
 use App\Helper\ImageResizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\User;
 
 
@@ -148,7 +152,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editContactgegevens/", name="editContactgegevens", methods={"GET", "POST"})
      */
-    public function editContactgegevens(Request $request)
+    public function editContactgegevens(Request $request, MailerInterface $mailer)
     {
         $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
@@ -157,7 +161,7 @@ class SelectieController extends BaseController
         $form       = $this->createForm(ContactgegevensType::class, $userObject);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($userObject);
             $em->flush();
@@ -173,7 +177,7 @@ class SelectieController extends BaseController
                 . $userObject->getTel1() . "\n"
                 . $userObject->getTel2() . "\n"
                 . $userObject->getTel3();
-            $this->sendNotificationMailEdit('Contactgegevens', $oud, $nieuw, $userObject);
+            $this->sendNotificationMailEdit('Contactgegevens', $mailer, $oud, $nieuw, $userObject);
             return $this->redirectToRoute('getSelectieIndexPage');
         } else {
             return $this->render(
@@ -190,7 +194,7 @@ class SelectieController extends BaseController
         }
     }
 
-    private function sendNotificationMailEdit($watGewijzigd, $oud = null, $nieuw = null, \App\Entity\User $userObject)
+    private function sendNotificationMailEdit($watGewijzigd, MailerInterface $mailer, $oud = null, $nieuw = null, \App\Entity\User $userObject)
     {
         $personen = $userObject->getPersoon();
         /** @var Persoon $persoon */
@@ -214,7 +218,7 @@ class SelectieController extends BaseController
                             /** @var \App\Entity\User $user */
                             $user    = $trainer->getUser();
                             $subject = 'Wijziging ' . $watGewijzigd . ' ' . $voornaam . ' ' . $achternaam;
-                            $from    = 'webmaster@donargym.nl';
+                            $from    = 'noreply@donargym.nl';
                             $to      = $user->getUsername();
 
                             $message = new TemplatedEmail();
@@ -231,7 +235,7 @@ class SelectieController extends BaseController
                                         'nieuw'        => $nieuw,
                                     )
                                 );
-                            $this->get('mailer')->send($message);
+                            $mailer->send($message);
 
                             if ($user->getEmail2()) {
                                 $to = $user->getEmail2();
@@ -250,7 +254,7 @@ class SelectieController extends BaseController
                                             'nieuw'        => $nieuw,
                                         )
                                     );
-                                $this->get('mailer')->send($message);
+                                $mailer->send($message);
                             }
 
                             if ($user->getEmail3()) {
@@ -270,7 +274,7 @@ class SelectieController extends BaseController
                                             'nieuw'        => $nieuw,
                                         )
                                     );
-                                $this->get('mailer')->send($message);
+                                $mailer->send($message);
                             }
                         }
                     }
@@ -283,7 +287,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editEmail/", name="editEmail", methods={"GET", "POST"})
      */
-    public function editEmail(Request $request)
+    public function editEmail(Request $request, MailerInterface $mailer)
     {
         $this->setBasicPageData('wedstrijdturnen');
         /** @var \App\Entity\User $userObject */
@@ -293,12 +297,13 @@ class SelectieController extends BaseController
         $form       = $this->createForm(Email1Type::class, $userObject);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($userObject);
             $em->flush();
             $this->sendNotificationMailEdit(
                 'Emailadres 1',
+                $mailer,
                 $user->email . "\n",
                 $userObject->getUsername(),
                 $userObject
@@ -323,7 +328,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editEmail2/", name="editEmail2", methods={"GET", "POST"})
      */
-    public function editEmail2(Request $request)
+    public function editEmail2(Request $request, MailerInterface $mailer)
     {
         $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
@@ -332,12 +337,13 @@ class SelectieController extends BaseController
         $form       = $this->createForm(Email2Type::class, $userObject);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($userObject);
             $em->flush();
             $this->sendNotificationMailEdit(
                 'Emailadres 2',
+                $mailer,
                 $user->email2 . "\n",
                 $userObject->getEmail2(),
                 $userObject
@@ -362,7 +368,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editEmail3/", name="editEmail3", methods={"GET", "POST"})
      */
-    public function editEmail3(Request $request)
+    public function editEmail3(Request $request, MailerInterface $mailer)
     {
         $this->setBasicPageData('wedstrijdturnen');
         $userObject = $this->getUser();
@@ -370,12 +376,13 @@ class SelectieController extends BaseController
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
         $form       = $this->createForm(Email3Type::class, $userObject);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($userObject);
             $em->flush();
             $this->sendNotificationMailEdit(
                 'Emailadres 3',
+                $mailer,
                 $user->email3 . "\n",
                 $userObject->getEmail3(),
                 $userObject
@@ -400,7 +407,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editPassword/", name="editPassword", methods={"GET", "POST"})
      */
-    public function editPassword(Request $request)
+    public function editPassword(Request $request, EncoderFactoryInterface $encoderFactory)
     {
         $error = "";
         if ($request->getMethod() == 'POST') {
@@ -416,8 +423,7 @@ class SelectieController extends BaseController
             if (empty($error)) {
                 $userObject = $this->getUser();
                 $password   = $request->request->get('pass1');
-                $encoder    = $this->container
-                    ->get('security.encoder_factory')
+                $encoder    = $encoderFactory
                     ->getEncoder($userObject);
                 $userObject->setPassword($encoder->encodePassword($password, $userObject->getSalt()));
                 $em = $this->getDoctrine()->getManager();
@@ -1935,7 +1941,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/{id}/afmelden_annuleren/{groepId}/{aanwezigheidId}", name="afmelding_annuleren", methods={"GET"})
      */
-    public function Afmelding_annuleren($id, $groepId, $aanwezigheidId)
+    public function Afmelding_annuleren($id, $groepId, $aanwezigheidId, MailerInterface $mailer)
     {
         $userObject = $this->getUser();
         /** @var Aanwezigheid $aanwezigheid */
@@ -1964,7 +1970,7 @@ class SelectieController extends BaseController
 
             $message = new TemplatedEmail();
             $message->subject('Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
-                ->from('afmeldingen@donargym.nl')
+                ->from('noreply@donargym.nl')
                 ->to($user->getUsername())
                 ->textTemplate('mails/afmelding_ingetrokken.txt.twig')
                 ->context(
@@ -1974,11 +1980,11 @@ class SelectieController extends BaseController
                         'datum'      => $datum,
                     )
                 );
-            $this->get('mailer')->send($message);
+            $mailer->send($message);
             $subject          = 'Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
-            $from             = 'afmeldingen@donargym.nl';
+            $from             = 'noreply@donargym.nl';
             $to               = $user->getUsername();
-            $body             = $message->getBody();
+            $body             = $this->renderView($message->getTextTemplate(), $message->getContext());
             $afmeldingsObject = new Afmeldingen();
             $afmeldingsObject->setBericht(
                 'FROM: ' . $from . ', TO: ' . $to . ', SUBJECT: ' . $subject . ', BERICHT: ' . $body
@@ -1994,7 +2000,7 @@ class SelectieController extends BaseController
                 $message->subject(
                     'Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam
                 )
-                    ->from('afmeldingen@donargym.nl')
+                    ->from('noreply@donargym.nl')
                     ->to($user->getEmail2())
                     ->textTemplate('mails/afmelding_ingetrokken.txt.twig')
                     ->context(
@@ -2004,7 +2010,7 @@ class SelectieController extends BaseController
                             'afmeldingsData' => $datum,
                         )
                     );
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
             }
 
             if ($user->getEmail3()) {
@@ -2013,7 +2019,7 @@ class SelectieController extends BaseController
                 $message->subject(
                     'Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam
                 )
-                    ->from('afmeldingen@donargym.nl')
+                    ->from('noreply@donargym.nl')
                     ->to($user->getEmail3())
                     ->textTemplate('mails/afmelding_ingetrokken.txt.twig')
                     ->context(
@@ -2023,7 +2029,7 @@ class SelectieController extends BaseController
                             'afmeldingsData' => $datum,
                         )
                     );
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
             }
 
 
@@ -2037,7 +2043,7 @@ class SelectieController extends BaseController
      * @Route("/inloggen/selectie/{id}/afmelden/{groepId}/", name="Afmelding", methods={"GET", "POST"})
      */
     public
-    function Afmelding($id, $groepId, Request $request)
+    function Afmelding($id, $groepId, Request $request, MailerInterface $mailer)
     {
         $this->setBasicPageData('wedstrijdturnen');
         /** @var \App\Entity\User $userObject */
@@ -2098,7 +2104,7 @@ class SelectieController extends BaseController
 
                             $message = new TemplatedEmail();
                             $message->subject('Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
-                                ->from('afmeldingen@donargym.nl')
+                                ->from('noreply@donargym.nl')
                                 ->to($user->getUsername())
                                 ->textTemplate('mails/afmelding.txt.twig')
                                 ->context(
@@ -2109,11 +2115,11 @@ class SelectieController extends BaseController
                                         'reden'          => $reden,
                                     )
                                 );
-                            $this->get('mailer')->send($message);
+                            $mailer->send($message);
                             $subject          = 'Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
-                            $from             = 'afmeldingen@donargym.nl';
+                            $from             = 'noreply@donargym.nl';
                             $to               = $user->getUsername();
-                            $body             = $message->getBody();
+                            $body             = $this->renderView($message->getTextTemplate(), $message->getContext());
                             $afmeldingsObject = new Afmeldingen();
                             $afmeldingsObject->setBericht(
                                 'FROM: ' . $from . ', TO: ' . $to . ', SUBJECT: ' . $subject . ', BERICHT: ' . $body
@@ -2127,7 +2133,7 @@ class SelectieController extends BaseController
 
                                 $message = new TemplatedEmail();
                                 $message->subject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
-                                    ->from('afmeldingen@donargym.nl')
+                                    ->from('noreply@donargym.nl')
                                     ->to($user->getEmail2())
                                     ->textTemplate('mails/afmelding.txt.twig')
                                     ->context(
@@ -2138,14 +2144,14 @@ class SelectieController extends BaseController
                                             'reden'          => $reden,
                                         )
                                     );
-                                $this->get('mailer')->send($message);
+                                $mailer->send($message);
                             }
 
                             if ($user->getEmail3()) {
 
                                 $message = new TemplatedEmail();
                                 $message->subject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
-                                    ->from('afmeldingen@donargym.nl')
+                                    ->from('noreply@donargym.nl')
                                     ->to($user->getEmail3())
                                     ->textTemplate('mails/afmelding.txt.twig')
                                     ->context(
@@ -2156,7 +2162,7 @@ class SelectieController extends BaseController
                                             'reden'          => $reden,
                                         )
                                     );
-                                $this->get('mailer')->send($message);
+                                $mailer->send($message);
                             }
 
 
@@ -2886,7 +2892,7 @@ class SelectieController extends BaseController
      * @Route("/inloggen/selectie/{id}/add/{groepsId}", name="addSelectieTurnsterPage", methods={"GET", "POST"})
      */
     public
-    function addSelectieTurnsterPageAction(Request $request, $id, $groepsId)
+    function addSelectieTurnsterPageAction(Request $request, $id, $groepsId, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
     {
         $this->setBasicPageData('wedstrijdturnen');
         $userObject   = $this->getUser();
@@ -3041,15 +3047,14 @@ class SelectieController extends BaseController
 
             if ($newuser) {
                 $password = $this->generatePassword();
-                $encoder  = $this->container
-                    ->get('security.encoder_factory')
+                $encoder  = $encoderFactory
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $em->persist($user);
             } else {
                 $password = 'over een wachtwoord beschik je als het goed is al';
             }
-            $this->addSubDoelenAanPersoon($persoon);
+//            $this->addSubDoelenAanPersoon($persoon);
             $user->addPersoon($persoon);
             $em->persist($persoon);
             $em->flush();
@@ -3057,7 +3062,7 @@ class SelectieController extends BaseController
 
             $message = new TemplatedEmail();
             $message->subject('Inloggegevens website Donar')
-                ->from('webmaster@donargym.nl')
+                ->from('noreply@donargym.nl')
                 ->to($user->getUsername())
                 ->textTemplate('mails/new_user.txt.twig')
                 ->context(
@@ -3069,13 +3074,13 @@ class SelectieController extends BaseController
                         'password' => $password
                     )
                 );
-            $this->get('mailer')->send($message);
+            $mailer->send($message);
 
             if ($user->getEmail2()) {
 
                 $message = new TemplatedEmail();
                 $message->subject('Inloggegevens website Donar')
-                    ->from('webmaster@donargym.nl')
+                    ->from('noreply@donargym.nl')
                     ->to($user->getEmail2())
                     ->textTemplate('mails/new_user.txt.twig')
                     ->context(
@@ -3087,14 +3092,14 @@ class SelectieController extends BaseController
                             'password' => $password
                         )
                     );
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
             }
 
             if ($user->getEmail3()) {
 
                 $message = new TemplatedEmail();
                 $message->subject('Inloggegevens website Donar')
-                    ->from('webmaster@donargym.nl')
+                    ->from('noreply@donargym.nl')
                     ->to($user->getEmail3())
                     ->textTemplate('mails/new_user.txt.twig')
                     ->context(
@@ -3106,7 +3111,7 @@ class SelectieController extends BaseController
                             'password' => $password
                         )
                     );
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
             }
             return $this->redirectToRoute(
                 'showPersoon',
@@ -3250,11 +3255,11 @@ class SelectieController extends BaseController
         $foto         = new SelectieFoto();
         $form         = $this->createFormBuilder($foto)
             ->add('file')
-            ->add('uploadBestand', 'submit')
+            ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $personen = $userObject->getPersoon();
             foreach ($personen as $persoonObject) {
                 /** @var Persoon $persoonObject */
@@ -3391,16 +3396,16 @@ class SelectieController extends BaseController
                 ->add('naam')
                 ->add(
                     'datum',
-                    'date',
+                    DateType::class,
                     array(
                         'widget' => 'single_text',
                     )
                 )
                 ->add('file')
-                ->add('uploadBestand', 'submit')
+                ->add('uploadBestand', SubmitType::class)
                 ->getForm();
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $wedstrijduitslag->setGroep($groepObject);
                 $em->persist($wedstrijduitslag);
@@ -4842,11 +4847,11 @@ class SelectieController extends BaseController
                 }
                 $form = $this->createFormBuilder($vloermuziek)
                     ->add('file')
-                    ->add('uploadBestand', 'submit')
+                    ->add('uploadBestand', SubmitType::class)
                     ->getForm();
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $extensions = array('mp3', 'wma');
                     if (in_array(strtolower($vloermuziek->getFile()->getClientOriginalExtension()), $extensions)) {
                         $persoonObject->setVloermuziek($vloermuziek);

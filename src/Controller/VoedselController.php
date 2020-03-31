@@ -74,7 +74,7 @@ class VoedselController extends SelectieController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
             $voedsel->setPersoon($em->getRepository(Persoon::class)->findOneBy(array('id' => $persoonId)));

@@ -14,7 +14,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class GetContentController extends BaseController
 {
@@ -27,7 +29,7 @@ class GetContentController extends BaseController
     /**
      * @Route("/trainingsstage/", name="trainingsstage", methods={"GET", "POST"})
      */
-    public function trainingsstage(Request $request)
+    public function trainingsstage(Request $request, MailerInterface $mailer)
     {
         $this->setBasicPageData();
         if (!$request->query->get('as')) {
@@ -61,6 +63,7 @@ class GetContentController extends BaseController
                     'Inschrijving trainingsstage',
                     $trainingsstageTurnster->getEmailaddress(),
                     'mails/trainingsstage_confirmation.txt.twig',
+                    $mailer,
                     array(
                         'naam'        => $trainingsstageTurnster->getName(),
                         'paymentLink' => $this->paymentLink,
@@ -102,6 +105,7 @@ class GetContentController extends BaseController
                     'Inschrijving trainingsstage',
                     $trainingsstageTrainer->getEmailaddress(),
                     'mails/trainingsstage_trainer_confirmation.txt.twig',
+                    $mailer,
                     array(
                         'naam' => $trainingsstageTrainer->getName(),
                     )
@@ -887,7 +891,7 @@ class GetContentController extends BaseController
     /**
      * @Route("/inloggen/new_pass/", name="getNewPassPage", methods={"GET", "POST"})
      */
-    public function getNewPassPageAction(Request $request)
+    public function getNewPassPageAction(Request $request, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
     {
         $error = "";
         $this->setBasicPageData();
@@ -909,15 +913,14 @@ class GetContentController extends BaseController
                 $error = 'Dit Emailadres komt niet voor in de database';
             } else {
                 $password = $this->generatePassword();
-                $encoder  = $this->container
-                    ->get('security.encoder_factory')
+                $encoder  = $encoderFactory
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $em->flush();
 
                 $message = new TemplatedEmail();
                 $message->subject('Inloggegevens website Donar')
-                    ->from('webmaster@donargym.nl')
+                    ->from('noreply@donargym.nl')
                     ->to($user->getUsername())
                     ->textTemplate('mails/new_password.txt.twig')
                     ->context(
@@ -929,7 +932,7 @@ class GetContentController extends BaseController
                         )
                     );
                 try {
-                    $this->get('mailer')->send($message);
+                    $mailer->send($message);
                 } catch (\Exception $e) {
                     var_dump($e->getMessage());
                     die;
@@ -939,7 +942,7 @@ class GetContentController extends BaseController
 
                     $message = new TemplatedEmail();
                     $message->subject('Inloggegevens website Donar')
-                        ->from('webmaster@donargym.nl')
+                        ->from('noreply@donargym.nl')
                         ->to($user->getEmail2())
                         ->textTemplate('mails/new_password.txt.twig')
                         ->context(
@@ -951,7 +954,7 @@ class GetContentController extends BaseController
                             )
                         );
                     try {
-                        $this->get('mailer')->send($message);
+                        $mailer->send($message);
                     } catch (\Exception $e) {
                         var_dump($e->getMessage());
                         die;
@@ -962,7 +965,7 @@ class GetContentController extends BaseController
 
                     $message = new TemplatedEmail();
                     $message->subject('Inloggegevens website Donar')
-                        ->from('webmaster@donargym.nl')
+                        ->from('noreply@donargym.nl')
                         ->to($user->getEmail3())
                         ->textTemplate('mails/new_password.txt.twig')
                         ->context(
@@ -974,7 +977,7 @@ class GetContentController extends BaseController
                             )
                         );
                     try {
-                        $this->get('mailer')->send($message);
+                        $mailer->send($message);
                     } catch (\Exception $e) {
                         var_dump($e->getMessage());
                         die;

@@ -17,7 +17,7 @@
     <table style="text-align:center;">
         <tr>
             {% for persoon in personen.Trainer %}
-                {% if loop.index0 is divisibleby(4) %}
+                {% if loop.index0 is divisible by(4) %}
                     </tr><tr>
                 {% endif %}
                 <td><a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT', 'id': persoon.id }) }}" style="text-decoration: none;">
@@ -27,7 +27,7 @@
             {% endfor %}
 
             {% for persoon in attribute(personen, 'Assistent-Trainer') %}
-                {% if (loop.index0+personen.Trainer|length) is divisibleby(4) %}
+                {% if (loop.index0+personen.Trainer|length) is divisible by(4) %}
                     </tr><tr>
                 {% endif %}
                 <td><a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT', 'id': persoon.id }) }}" style="text-decoration: none;"><img src="http://www.donargym.nl/uploads/selectiefotos/{{ persoon.foto }}" width="135"/>
@@ -42,7 +42,7 @@
     <table style="text-align:center;">
         <tr>
     {% for persoon in attribute(personen, 'Turnster') %}
-        {% if loop.index0 is divisibleby(4) %}
+        {% if loop.index0 is divisible by(4) %}
             </tr><tr>
         {% endif %}
         <td><a href="{{ path('getWedstrijdturnenPage', { 'page': activeGroep.id, 'view': 'TNT', 'id': persoon.id }) }}" style="text-decoration: none;">

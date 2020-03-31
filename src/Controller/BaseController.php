@@ -7,7 +7,7 @@ use App\Entity\SubDoelen;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
 
 
 class BaseController extends AbstractController
@@ -182,24 +182,24 @@ class BaseController extends AbstractController
      * @param array  $parameters
      * @param string $from
      */
-    protected function sendEmail($subject, $to, $view, array $parameters = array(), $from = 'info@donargym.nl')
+    protected function sendEmail($subject, $to, $view, MailerInterface $mailer, array $parameters = array(), $from = 'noreply@donargym.nl')
     {
 
         $message = new TemplatedEmail();
-            $message->subject($subject)
+        $message->subject($subject)
             ->from($from)
             ->to($to)
             ->textTemplate($view)
             ->context(['parameters' => $parameters]);
 
-        $this->get('mailer')->send($message);
+        $mailer->send($message);
 
         $sendMail = new SendMail();
         $sendMail->setDatum(new \DateTime())
             ->setVan($from)
             ->setAan($to)
             ->setOnderwerp($subject)
-            ->setBericht($message->getBody());
+            ->setBericht($this->renderView($message->getTextTemplate(), $message->getContext()));
         $this->addToDB($sendMail);
     }
 }

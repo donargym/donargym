@@ -65,7 +65,7 @@ class FileUpload
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        return __DIR__.'/../../../httpdocs/'.$this->getUploadDir();
+        return __DIR__.'/../../public/'.$this->getUploadDir();
     }
 
     protected function getUploadDir()

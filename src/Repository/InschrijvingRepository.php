@@ -3,26 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Inschrijving;
-use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityRepository;
 
 final class InschrijvingRepository extends EntityRepository
 {
-    public function saveInschrijving(Inschrijving $inschrijving, $databaseName, $userName, $password, $dbServerIp)
+    public function saveInschrijving(Inschrijving $inschrijving)
     {
-        $config = new Configuration();
-
-        $connectionParams = array(
-            'dbname'   => $databaseName,
-            'user'     => $userName,
-            'password' => $password,
-            'host'     => $dbServerIp,
-            'driver'   => 'pdo_mysql',
-            'charset'  => 'utf8'
-        );
-
-        $connection = DriverManager::getConnection($connectionParams, $config);
+        $connection = $this->getEntityManager()->getConnection();
 
         $sql
             = <<<EOQ
@@ -78,8 +65,10 @@ EOQ;
                 'bankaccountholder'       => $inschrijving->getBankaccountholder(),
                 'emailaddress'            => $inschrijving->getEmailaddress(),
                 'havebeensubscribed'      => $inschrijving->isHavebeensubscribed(),
-                'subscribedfrom'          => $inschrijving->getSubscribedfrom() ? $inschrijving->getSubscribedfrom()->format('Y-m-d h:i') : null,
-                'subscribeduntil'         => $inschrijving->getSubscribeduntil() ? $inschrijving->getSubscribeduntil()->format('Y-m-d h:i') : null,
+                'subscribedfrom'          => $inschrijving->getSubscribedfrom() ?
+                    $inschrijving->getSubscribedfrom()->format('Y-m-d h:i') : null,
+                'subscribeduntil'         => $inschrijving->getSubscribeduntil() ?
+                    $inschrijving->getSubscribeduntil()->format('Y-m-d h:i') : null,
                 'otherclub'               => $inschrijving->isOtherclub(),
                 'whatotherclub'           => $inschrijving->getWhatotherclub(),
                 'bondscontributiebetaald' => $inschrijving->isBondscontributiebetaald(),
@@ -89,11 +78,11 @@ EOQ;
                 'starttime'               => $inschrijving->getStarttime(),
                 'trainer'                 => $inschrijving->getTrainer(),
                 'how'                     => $inschrijving->getHow(),
-				'vrijwilligerstaken'      => $inschrijving->getVrijwilligerstaken(),
+                'vrijwilligerstaken'      => $inschrijving->getVrijwilligerstaken(),
                 'accept'                  => $inschrijving->isAccept(),
-				'acceptPrivacyPolicy'     => $inschrijving->isacceptPrivacyPolicy(),
-                'acceptNamePublished'     => $inschrijving->isacceptNamePublished(),
-                'acceptPicturesPublished' => $inschrijving->isacceptPicturesPublished(),
+                'acceptPrivacyPolicy'     => (int) $inschrijving->isacceptPrivacyPolicy(),
+                'acceptNamePublished'     => (int) $inschrijving->isacceptNamePublished(),
+                'acceptPicturesPublished' => (int) $inschrijving->isacceptPicturesPublished(),
             )
         );
     }

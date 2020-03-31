@@ -26,8 +26,8 @@ final class SubscribeType extends AbstractType
                 'dateofbirth',
                 DateType::class,
                 array(
-                    'empty_value' => '',
-                    'years'       => range(1908, date('Y')),
+                    'empty_data'  => '',
+                    'years'       => range(date('Y'), 1908),
                     'format'      => 'dd MM yyyy',
                     'label'       => 'Geboortedatum*'
                 )
@@ -42,7 +42,6 @@ final class SubscribeType extends AbstractType
                         'Man'   => 'Man',
                         'Vrouw' => 'Vrouw',
                     ),
-                    'choices_as_values' => true,
                 )
             )
             ->add('address', TextType::class, array('label' => 'Straat + huisnummer*'))
@@ -62,7 +61,6 @@ final class SubscribeType extends AbstractType
                         'Nee' => 'Nee',
                         'Ja'  => 'ja',
                     ),
-                    'choices_as_values' => true,
                 )
             )
             ->add(
@@ -94,7 +92,6 @@ final class SubscribeType extends AbstractType
                         'Nee' => 'Nee',
                         'Ja'  => 'Ja',
                     ),
-                    'choices_as_values' => true,
                 )
             )
             ->add('whatotherclub', TextType::class, array('required' => false, 'label' => 'Zo ja, welke vereniging?'))
@@ -107,7 +104,6 @@ final class SubscribeType extends AbstractType
                         'Nee' => 'Nee',
                         'Ja'  => 'Ja',
                     ),
-                    'choices_as_values' => true,
                 )
             )
             ->add(
@@ -144,7 +140,6 @@ final class SubscribeType extends AbstractType
                         'Donderdag' => 'Donderdag',
                         'Vrijdag'   => 'Vrijdag',
                     ),
-                    'choices_as_values' => true,
                 )
             )
             ->add(
@@ -164,10 +159,9 @@ final class SubscribeType extends AbstractType
                         'Walenburg'              => 'Walenburg',
                         'Sportcampus Zuiderpark' => 'Sportcampus Zuiderpark',
                     ),
-                    'choices_as_values' => true,
                 )
             )
-            ->add('starttime', TimeType::class, array('empty_value' => '', 'label' => 'Starttijd les*',))
+            ->add('starttime', TimeType::class, array('empty_data' => '', 'label' => 'Starttijd les*',))
             ->add(
                 'trainer',
                 ChoiceType::class,
@@ -221,7 +215,6 @@ Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje for
                         'Nee' => false,
                     ),
                     'expanded'          => true,
-                    'choices_as_values' => true,
                 )
             )
             ->add(
@@ -235,7 +228,6 @@ Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje for
                         'Nee' => false,
                     ),
                     'expanded'          => true,
-                    'choices_as_values' => true,
                 )
             )
             ->add('save', SubmitType::class, array('label' => 'Verstuur formulier'));
