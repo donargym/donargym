@@ -1,5 +1,5 @@
 controllers:
-    resource: ../../src/Controller/
+    resource: ../../src/Infrastructure/SymfonyController/
     type: annotation
 
 kernel:

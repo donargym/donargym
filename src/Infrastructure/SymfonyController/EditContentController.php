@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Infrastructure\SymfonyController;
 
 use App\Entity\Calendar;
 use App\Entity\Clubblad;

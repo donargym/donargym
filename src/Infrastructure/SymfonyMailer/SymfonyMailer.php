@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\InfraStructure\SymfonyMailer;
+namespace App\Infrastructure\SymfonyMailer;
 
 use App\Domain\EmailAddress;
 use App\Domain\EmailTemplateType;

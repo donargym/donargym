@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Infrastructure\SymfonyController;
 
 use App\Domain\EmailAddress;
 use App\Domain\EmailTemplateType;
@@ -13,12 +13,10 @@ use App\Entity\TrainingsstageTrainer;
 use App\Entity\TrainingsstageTurnster;
 use App\Form\Type\TrainingsstageTrainerType;
 use App\Form\Type\TrainingsstageTurnsterType;
-use App\InfraStructure\SymfonyMailer\SymfonyMailer;
+use App\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -785,9 +783,9 @@ class GetContentController extends BaseController
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $em->flush();
 
-                $subject = 'Inloggegevens website Donar';
-                $templateLocation ='mails/new_password.txt.twig';
-                $parameters = [
+                $subject          = 'Inloggegevens website Donar';
+                $templateLocation = 'mails/new_password.txt.twig';
+                $parameters       = [
                     'email1'   => $user->getUsername(),
                     'email2'   => $user->getEmail2(),
                     'email3'   => $user->getEmail3(),

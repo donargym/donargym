@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Infrastructure\SymfonyController;
 
 use App\Domain\EmailAddress;
 use App\Domain\EmailTemplateType;
@@ -25,13 +25,11 @@ use App\Form\Type\Email1Type;
 use App\Form\Type\Email2Type;
 use App\Form\Type\Email3Type;
 use App\Helper\ImageResizer;
-use App\InfraStructure\SymfonyMailer\SymfonyMailer;
+use App\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\User;

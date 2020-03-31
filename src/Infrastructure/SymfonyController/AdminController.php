@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Infrastructure\SymfonyController;
 
 use App\Domain\EmailAddress;
 use App\Domain\EmailTemplateType;
@@ -17,14 +17,12 @@ use App\Entity\Turnster;
 use App\Entity\User;
 use App\Entity\Vereniging;
 use App\Helper\ImageResizer;
-use App\InfraStructure\SymfonyMailer\SymfonyMailer;
+use App\Infrastructure\SymfonyMailer\SymfonyMailer;
 use App\Repository\ScoresRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
@@ -51,8 +49,7 @@ class AdminController extends BaseController
     {
         return $this->render(
             'inloggen/adminIndex.html.twig',
-            array(
-            )
+            array()
         );
     }
 
@@ -75,7 +72,7 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminFotos.html.twig',
             array(
-                'contentItems'       => $contentItems,
+                'contentItems' => $contentItems,
             )
         );
     }
@@ -109,7 +106,7 @@ class AdminController extends BaseController
             return $this->render(
                 'inloggen/addAdminFotos.html.twig',
                 array(
-                    'form'               => $form->createView(),
+                    'form' => $form->createView(),
                 )
             );
         }
@@ -133,14 +130,13 @@ class AdminController extends BaseController
                 return $this->render(
                     'inloggen/removeAdminFotos.html.twig',
                     array(
-                        'content'            => $foto->getAll(),
+                        'content' => $foto->getAll(),
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -158,8 +154,7 @@ class AdminController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -183,7 +178,7 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminUploads.html.twig',
             array(
-                'contentItems'       => $contentItems,
+                'contentItems' => $contentItems,
             )
         );
     }
@@ -210,7 +205,7 @@ class AdminController extends BaseController
             return $this->render(
                 'inloggen/addAdminUploads.html.twig',
                 array(
-                    'form'               => $form->createView(),
+                    'form' => $form->createView(),
                 )
             );
         }
@@ -234,14 +229,13 @@ class AdminController extends BaseController
                 return $this->render(
                     'inloggen/removeAdminUploads.html.twig',
                     array(
-                        'content'            => $file->getAll(),
+                        'content' => $file->getAll(),
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -259,8 +253,7 @@ class AdminController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -297,7 +290,7 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminSelectie.html.twig',
             array(
-                'personen'           => $persoonItems,
+                'personen' => $persoonItems,
             )
         );
     }
@@ -464,8 +457,8 @@ class AdminController extends BaseController
             $em->persist($persoon);
             $em->flush();
 
-            $subject = 'Inloggegevens website Donar';
-            $template = 'mails/new_user.txt.twig';
+            $subject    = 'Inloggegevens website Donar';
+            $template   = 'mails/new_user.txt.twig';
             $parameters = [
                 'voornaam' => $persoon->getVoornaam(),
                 'email1'   => $user->getUsername(),
@@ -505,7 +498,7 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminAddTrainer.html.twig',
             array(
-                'groepen'            => $groepenItems,
+                'groepen' => $groepenItems,
             )
         );
     }
@@ -715,8 +708,8 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminEditTrainer.html.twig',
             array(
-                'groepen'            => $groepenItems,
-                'persoonEdit'        => $persoonEdit,
+                'groepen'     => $groepenItems,
+                'persoonEdit' => $persoonEdit,
             )
         );
     }
@@ -739,16 +732,15 @@ class AdminController extends BaseController
                 return $this->render(
                     'inloggen/adminRemoveTrainer.html.twig',
                     array(
-                        'voornaam'           => $persoon->getVoornaam(),
-                        'achternaam'         => $persoon->getAchternaam(),
-                        'id'                 => $persoon->getId(),
+                        'voornaam'   => $persoon->getVoornaam(),
+                        'achternaam' => $persoon->getAchternaam(),
+                        'id'         => $persoon->getId(),
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -786,8 +778,7 @@ class AdminController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -799,8 +790,7 @@ class AdminController extends BaseController
     {
         return $this->render(
             'inloggen/adminOwIndexPage.html.twig',
-            array(
-            )
+            array()
         );
     }
 
@@ -953,8 +943,7 @@ class AdminController extends BaseController
         }
         return $this->render(
             'inloggen/uploadWedstrijdindelingen.html.twig',
-            array(
-            )
+            array()
         );
     }
 }
