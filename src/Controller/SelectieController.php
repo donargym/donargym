@@ -5199,7 +5199,7 @@ class SelectieController extends BaseController
                 }
             }
         }
-        //var_dump($doelOpbouw);die;
+
         return array($doelOpbouw, $subDoelIds, $ids);
     }
 

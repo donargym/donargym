@@ -931,12 +931,7 @@ class GetContentController extends BaseController
                             'password' => $password
                         )
                     );
-                try {
-                    $mailer->send($message);
-                } catch (\Exception $e) {
-                    var_dump($e->getMessage());
-                    die;
-                }
+                $mailer->send($message);
 
                 if ($user->getEmail2()) {
 
@@ -953,12 +948,7 @@ class GetContentController extends BaseController
                                 'password' => $password
                             )
                         );
-                    try {
-                        $mailer->send($message);
-                    } catch (\Exception $e) {
-                        var_dump($e->getMessage());
-                        die;
-                    }
+                    $mailer->send($message);
                 }
 
                 if ($user->getEmail3()) {
@@ -976,12 +966,7 @@ class GetContentController extends BaseController
                                 'password' => $password
                             )
                         );
-                    try {
-                        $mailer->send($message);
-                    } catch (\Exception $e) {
-                        var_dump($e->getMessage());
-                        die;
-                    }
+                    $mailer->send($message);
                 }
 
                 $error = 'Een nieuw wachtwoord is gemaild';

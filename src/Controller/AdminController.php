@@ -930,7 +930,6 @@ class AdminController extends BaseController
 
                                     $repo = $this->getDoctrine()->getRepository(User::class);
                                     while (($lineData = fgetcsv($handle, 0, ";")) !== FALSE) {
-                                        var_dump($lineData);
                                         /** @var User $user */
                                         $user = $repo->findOneBy(array('username' => trim($lineData[2])));
                                         if (!$user) {
@@ -975,7 +974,6 @@ class AdminController extends BaseController
                                         $this->addToDB($scores);
                                         $this->addToDB($turnster);
                                     }
-                                    die;
                                     fclose($handle);
                                 }
 
