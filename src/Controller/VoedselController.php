@@ -37,7 +37,6 @@ class VoedselController extends SelectieController
         return $this->render(
             'inloggen/viewVoedsel.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -93,7 +92,6 @@ class VoedselController extends SelectieController
         return $this->render(
             'inloggen/addVoedsel.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,

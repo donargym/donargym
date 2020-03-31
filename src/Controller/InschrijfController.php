@@ -131,7 +131,6 @@ final class InschrijfController extends BaseController
         return $this->render(
             'lidmaatschap/inschrijven.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'form'               => $form->createView(),

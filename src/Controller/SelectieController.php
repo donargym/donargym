@@ -81,7 +81,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieIndexPage.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -183,7 +182,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editContactgegevens.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
@@ -313,7 +311,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
@@ -353,7 +350,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail2.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
@@ -392,7 +388,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail3.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
@@ -440,7 +435,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/editPassword.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -1164,7 +1158,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/addEditKalendarItems.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -1182,7 +1175,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/NotAuthorized.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -1292,7 +1284,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/addEditKalendarItems.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -1315,7 +1306,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/NotAuthorized.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -1680,7 +1670,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieShowPersoon.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -1739,7 +1728,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieShowDoelPrijzen.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -1866,7 +1854,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieShowPersoonDoelenPerToestel.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -1922,7 +1909,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/showPersoonOneDoelPerToestel.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -2184,7 +2170,6 @@ class SelectieController extends BaseController
                         return $this->render(
                             'inloggen/selectieAfmelden.html.twig',
                             array(
-                                'calendarItems'      => $this->calendarItems,
                                 'header'             => $this->header,
                                 'persoon'            => $persoon,
                                 'user'               => $user,
@@ -2211,7 +2196,6 @@ class SelectieController extends BaseController
             'inloggen/selectieAfmelden.html.twig',
             array(
                 'id'                 => $id,
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -2470,7 +2454,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewAfmeldingen.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -2499,7 +2482,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewAanwezigheid.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -2585,7 +2567,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieKruisjeslijst.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -2660,7 +2641,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/removeTrainingsdatum.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -2800,7 +2780,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/kruisjeslijstInvullen.html.twig',
             array(
-                'calendarItems'        => $this->calendarItems,
                 'header'               => $this->header,
                 'persoon'              => $persoon,
                 'user'                 => $user,
@@ -2829,7 +2808,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAdreslijst.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -2877,7 +2855,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddStukje.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -3123,7 +3100,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddTurnster.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'groepen'            => $groepenItems,
                 'persoon'            => $persoon,
@@ -3159,7 +3135,6 @@ class SelectieController extends BaseController
                 return $this->render(
                     'inloggen/selectieRemoveTurnster.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'voornaam'           => $turnster->getVoornaam(),
                         'achternaam'         => $turnster->getAchternaam(),
@@ -3174,7 +3149,6 @@ class SelectieController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -3232,7 +3206,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -3287,7 +3260,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieAddFoto.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
@@ -3361,7 +3333,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewWedstrijduitslagen.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -3423,7 +3394,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieAddWedstrijduitslagen.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                     'persoon'            => $persoon,
@@ -3438,7 +3408,6 @@ class SelectieController extends BaseController
         return $this->render(
             'error/NotAuthorized.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
@@ -3487,7 +3456,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieRemoveWedstrijduitslagen.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -3701,7 +3669,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieEditTurnster.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -4197,7 +4164,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewTurnster.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -4285,7 +4251,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewTurnsterOneDoel.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -4515,7 +4480,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/SelectieTurnsterAddCijfer.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -4673,7 +4637,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddDoelToTurnster.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -4744,7 +4707,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieRemoveDoelFromTurnster.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -4799,7 +4761,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewVloermuziek.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -4880,7 +4841,6 @@ class SelectieController extends BaseController
                 return $this->render(
                     'inloggen/selectieAddVloermuziek.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'form'               => $form->createView(),
                         'wedstrijdLinkItems' => $this->groepItems,
@@ -4983,7 +4943,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewDoelen.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -5077,7 +5036,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddDoelen.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
@@ -5261,7 +5219,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewOneDoel.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,

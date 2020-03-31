@@ -39,7 +39,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminIndex.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
@@ -67,7 +66,6 @@ class AdminController extends BaseController
             'inloggen/adminFotos.html.twig',
             array(
                 'contentItems'       => $contentItems,
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
@@ -104,7 +102,6 @@ class AdminController extends BaseController
             return $this->render(
                 'inloggen/addAdminFotos.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
@@ -132,7 +129,6 @@ class AdminController extends BaseController
                 return $this->render(
                     'inloggen/removeAdminFotos.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'content'            => $foto->getAll(),
                         'wedstrijdLinkItems' => $this->groepItems,
@@ -142,7 +138,6 @@ class AdminController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -164,7 +159,6 @@ class AdminController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -193,7 +187,6 @@ class AdminController extends BaseController
             'inloggen/adminUploads.html.twig',
             array(
                 'contentItems'       => $contentItems,
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
@@ -223,7 +216,6 @@ class AdminController extends BaseController
             return $this->render(
                 'inloggen/addAdminUploads.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
@@ -251,7 +243,6 @@ class AdminController extends BaseController
                 return $this->render(
                     'inloggen/removeAdminUploads.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'content'            => $file->getAll(),
                         'wedstrijdLinkItems' => $this->groepItems,
@@ -261,7 +252,6 @@ class AdminController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -283,7 +273,6 @@ class AdminController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -324,7 +313,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminSelectie.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'personen'           => $persoonItems,
                 'wedstrijdLinkItems' => $this->groepItems,
@@ -553,7 +541,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminAddTrainer.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'groepen'            => $groepenItems,
                 'wedstrijdLinkItems' => $this->groepItems,
@@ -767,7 +754,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminEditTrainer.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'groepen'            => $groepenItems,
                 'persoonEdit'        => $persoonEdit,
@@ -795,7 +781,6 @@ class AdminController extends BaseController
                 return $this->render(
                     'inloggen/adminRemoveTrainer.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'voornaam'           => $persoon->getVoornaam(),
                         'achternaam'         => $persoon->getAchternaam(),
@@ -807,7 +792,6 @@ class AdminController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'calendarItems'      => $this->calendarItems,
                         'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -849,7 +833,6 @@ class AdminController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'calendarItems'      => $this->calendarItems,
                     'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -866,7 +849,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminOwIndexPage.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
@@ -1024,7 +1006,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/uploadWedstrijdindelingen.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )

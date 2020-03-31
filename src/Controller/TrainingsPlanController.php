@@ -34,7 +34,6 @@ class TrainingsPlanController extends SelectieController
         return $this->render(
             'inloggen/TrainingsplanIndex.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -72,7 +71,6 @@ class TrainingsPlanController extends SelectieController
         return $this->render(
             'inloggen/TrainingsplanMakeGroepjes.html.twig',
             array(
-                'calendarItems'        => $this->calendarItems,
                 'header'               => $this->header,
                 'persoon'              => $persoon,
                 'user'                 => $user,
@@ -187,7 +185,6 @@ class TrainingsPlanController extends SelectieController
         return $this->render(
             'inloggen/ViewTrainingsplan.html.twig',
             array(
-                'calendarItems'      => $this->calendarItems,
                 'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,

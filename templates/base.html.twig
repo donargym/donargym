@@ -172,9 +172,9 @@
 
                 <h2><i>(data onder voorbehoud)</i></h2>
                 <hr>
-                {% for item in calendarItems %}
+                {% for item in calendarItems.allFutureItems %}
                     <a href="{{ path('getAgendaPage', { 'id': item.id }) }}">
-                        <div class="a_date">{{ item.datum }}
+                        <div class="a_date">{{ item.date|date('d-m-Y') }}
                             {% if app.user and is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('editAgendaPage', { 'id': item.id }) }}"><img
                                             src="{{ asset('images/edit.png') }}" width="18px"/></a>
@@ -183,7 +183,7 @@
                             {% endif %}
                         </div>
                         <a href="{{ path('getAgendaPage', { 'id': item.id }) }}">
-                            {{ item.activiteit }}</a>
+                            {{ item.name }}</a>
                         <hr>
                     </a>
                 {% endfor %}

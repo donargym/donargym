@@ -2,20 +2,29 @@
 
 namespace App\Controller;
 
+use App\Domain\SystemClock;
 use App\Entity\SendMail;
-use App\Entity\SubDoelen;
+use App\Repository\DbalCompactCalendarItemRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
 
-
-class BaseController extends AbstractController
+abstract class BaseController extends AbstractController
 {
     protected $calendarItems;
     protected $header;
     protected $groepItems;
     protected $groepIds;
+
+    private DbalCompactCalendarItemRepository $compactCalendarItemRepository;
+    private SystemClock $clock;
+
+    public function __construct(DbalCompactCalendarItemRepository $compactCalendarItemRepository, SystemClock $clock)
+    {
+        $this->compactCalendarItemRepository = $compactCalendarItemRepository;
+        $this->clock                         = $clock;
+    }
 
     public function getHeader($page = null)
     {
@@ -52,25 +61,6 @@ class BaseController extends AbstractController
         }
         return array($groepItems, $groepId);
     }
-
-    public function getCalendarItems()
-    {
-        $em            = $this->getDoctrine()->getManager();
-        $query         = $em->createQuery(
-            'SELECT calendar
-                FROM App:Calendar calendar
-                WHERE calendar.datum >= :datum
-                ORDER BY calendar.datum ASC'
-        )
-            ->setParameter('datum', date('Y-m-d', time()));
-        $calendar      = $query->getResult();
-        $calendarItems = array();
-        for ($i = 0; $i < count($calendar); $i++) {
-            $calendarItems[$i] = $calendar[$i]->getAll();
-        }
-        return $calendarItems;
-    }
-
 
     public function maand($maandNummer)
     {
@@ -133,31 +123,12 @@ class BaseController extends AbstractController
         return $password;
     }
 
-    protected function addSubDoelenAanPersoon($persoon)
-    {
-        $em     = $this->getDoctrine()->getManager();
-        $query  = $em->createQuery(
-            'SELECT doelen
-        FROM App:Doelen doelen
-        WHERE doelen.trede IS NULL'
-        );
-        $doelen = $query->getResult();
-        foreach ($doelen as $doel) {
-            $subdoelEntity = new SubDoelen();
-            $subdoelEntity->setDoel($doel);
-            $subdoelEntity->setPersoon($persoon);
-            $em->persist($subdoelEntity);
-            $em->flush();
-        }
-    }
-
     protected function setBasicPageData($page = null)
     {
         $wedstrijdLinkItems  = $this->getwedstrijdLinkItems();
         $this->groepItems    = $wedstrijdLinkItems[0];
         $this->groepIds      = $wedstrijdLinkItems[1];
         $this->header        = $this->getHeader($page);
-        $this->calendarItems = $this->getCalendarItems();
     }
 
     protected function addToDB($object)

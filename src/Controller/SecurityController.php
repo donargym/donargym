@@ -7,16 +7,14 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends BaseController
 {
-
     /**
      * @Route("/login", name="login_route")
      */
     public function loginAction(AuthenticationUtils $authenticationUtils)
     {
         $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
-        $this->groepItems = $this->wedstrijdLinkItems[0];
-        $this->header = $this->getHeader();
-        $this->calendarItems = $this->getCalendarItems();
+        $this->groepItems         = $this->wedstrijdLinkItems[0];
+        $this->header             = $this->getHeader();
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -27,10 +25,9 @@ class SecurityController extends BaseController
             'security/login.html.twig',
             array(
                 // last username entered by the user
-                'last_username' => $lastUsername,
-                'error'         => $error,
-                'calendarItems' => $this->calendarItems,
-                'header'        => $this->header,
+                'last_username'      => $lastUsername,
+                'error'              => $error,
+                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
         );
