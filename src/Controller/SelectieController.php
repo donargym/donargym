@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Domain\EmailAddress;
+use App\Domain\EmailTemplateType;
+use App\Domain\PasswordGenerator;
 use App\Entity\Aanwezigheid;
-use App\Entity\Afmeldingen;
 use App\Entity\Cijfers;
 use App\Entity\Doelen;
 use App\Entity\Functie;
@@ -23,6 +25,7 @@ use App\Form\Type\Email1Type;
 use App\Form\Type\Email2Type;
 use App\Form\Type\Email3Type;
 use App\Helper\ImageResizer;
+use App\InfraStructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -36,6 +39,16 @@ use Symfony\Component\Security\Core\User\User;
 
 class SelectieController extends BaseController
 {
+    /**
+     * @var SymfonyMailer
+     */
+    private SymfonyMailer $mailer;
+
+    public function __construct(SymfonyMailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     /**
      * Creates a token usable in a form
      *
@@ -80,8 +93,8 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieIndexPage.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
+                'persoon' => $persoon,
+                'user'    => $user,
             )
         );
     }
@@ -148,7 +161,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editContactgegevens/", name="editContactgegevens", methods={"GET", "POST"})
      */
-    public function editContactgegevens(Request $request, MailerInterface $mailer)
+    public function editContactgegevens(Request $request)
     {
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
@@ -172,21 +185,21 @@ class SelectieController extends BaseController
                 . $userObject->getTel1() . "\n"
                 . $userObject->getTel2() . "\n"
                 . $userObject->getTel3();
-            $this->sendNotificationMailEdit('Contactgegevens', $mailer, $oud, $nieuw, $userObject);
+            $this->sendNotificationMailEdit('Contactgegevens', $oud, $nieuw, $userObject);
             return $this->redirectToRoute('getSelectieIndexPage');
         } else {
             return $this->render(
                 'inloggen/editContactgegevens.html.twig',
                 array(
-                    'form'               => $form->createView(),
-                    'persoon'            => $persoon,
-                    'user'               => $user,
+                    'form'    => $form->createView(),
+                    'persoon' => $persoon,
+                    'user'    => $user,
                 )
             );
         }
     }
 
-    private function sendNotificationMailEdit($watGewijzigd, MailerInterface $mailer, $oud = null, $nieuw = null, \App\Entity\User $userObject)
+    private function sendNotificationMailEdit($watGewijzigd, $oud, $nieuw, \App\Entity\User $userObject)
     {
         $personen = $userObject->getPersoon();
         /** @var Persoon $persoon */
@@ -208,65 +221,48 @@ class SelectieController extends BaseController
                             /** @var Persoon $trainer */
                             $trainer = $persoonFunctieInGroep->getPersoon();
                             /** @var \App\Entity\User $user */
-                            $user    = $trainer->getUser();
-                            $subject = 'Wijziging ' . $watGewijzigd . ' ' . $voornaam . ' ' . $achternaam;
-                            $from    = 'noreply@donargym.nl';
-                            $to      = $user->getUsername();
+                            $user             = $trainer->getUser();
+                            $subject          = 'Wijziging ' . $watGewijzigd . ' ' . $voornaam . ' ' . $achternaam;
+                            $to               = EmailAddress::fromString($user->getUsername());
+                            $templateLocation = 'mails/wijziging.txt.twig';
+                            $parameters       = [
+                                'voornaam'     => $voornaam,
+                                'achternaam'   => $achternaam,
+                                'watGewijzigd' => $watGewijzigd,
+                                'oud'          => $oud,
+                                'nieuw'        => $nieuw,
+                            ];
 
-                            $message = new TemplatedEmail();
-                            $message->subject($subject)
-                                ->from($from)
-                                ->to($to)
-                                ->textTemplate('mails/wijziging.txt.twig')
-                                ->context(
-                                    array(
-                                        'voornaam'     => $voornaam,
-                                        'achternaam'   => $achternaam,
-                                        'watGewijzigd' => $watGewijzigd,
-                                        'oud'          => $oud,
-                                        'nieuw'        => $nieuw,
-                                    )
-                                );
-                            $mailer->send($message);
+                            $this->mailer->sendEmail(
+                                $subject,
+                                $to,
+                                $templateLocation,
+                                EmailTemplateType::TEXT(),
+                                $parameters
+                            );
 
                             if ($user->getEmail2()) {
-                                $to = $user->getEmail2();
+                                $to = EmailAddress::fromString($user->getEmail2());
 
-                                $message = new TemplatedEmail();
-                                $message->subject($subject)
-                                    ->from($from)
-                                    ->to($to)
-                                    ->textTemplate('mails/wijziging.txt.twig')
-                                    ->context(
-                                        array(
-                                            'voornaam'     => $voornaam,
-                                            'achternaam'   => $achternaam,
-                                            'watGewijzigd' => $watGewijzigd,
-                                            'oud'          => $oud,
-                                            'nieuw'        => $nieuw,
-                                        )
-                                    );
-                                $mailer->send($message);
+                                $this->mailer->sendEmail(
+                                    $subject,
+                                    $to,
+                                    $templateLocation,
+                                    EmailTemplateType::TEXT(),
+                                    $parameters
+                                );
                             }
 
                             if ($user->getEmail3()) {
-                                $to = $user->getEmail3();
+                                $to = EmailAddress::fromString($user->getEmail3());
 
-                                $message = new TemplatedEmail();
-                                $message->subject($subject)
-                                    ->from($from)
-                                    ->to($to)
-                                    ->textTemplate('mails/wijziging.txt.twig')
-                                    ->context(
-                                        array(
-                                            'voornaam'     => $voornaam,
-                                            'achternaam'   => $achternaam,
-                                            'watGewijzigd' => $watGewijzigd,
-                                            'oud'          => $oud,
-                                            'nieuw'        => $nieuw,
-                                        )
-                                    );
-                                $mailer->send($message);
+                                $this->mailer->sendEmail(
+                                    $subject,
+                                    $to,
+                                    $templateLocation,
+                                    EmailTemplateType::TEXT(),
+                                    $parameters
+                                );
                             }
                         }
                     }
@@ -279,7 +275,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editEmail/", name="editEmail", methods={"GET", "POST"})
      */
-    public function editEmail(Request $request, MailerInterface $mailer)
+    public function editEmail(Request $request)
     {
         /** @var \App\Entity\User $userObject */
         $userObject = $this->getUser();
@@ -294,7 +290,6 @@ class SelectieController extends BaseController
             $em->flush();
             $this->sendNotificationMailEdit(
                 'Emailadres 1',
-                $mailer,
                 $user->email . "\n",
                 $userObject->getUsername(),
                 $userObject
@@ -304,9 +299,9 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail.html.twig',
                 array(
-                    'form'               => $form->createView(),
-                    'persoon'            => $persoon,
-                    'user'               => $user,
+                    'form'    => $form->createView(),
+                    'persoon' => $persoon,
+                    'user'    => $user,
                 )
             );
         }
@@ -316,7 +311,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editEmail2/", name="editEmail2", methods={"GET", "POST"})
      */
-    public function editEmail2(Request $request, MailerInterface $mailer)
+    public function editEmail2(Request $request)
     {
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
@@ -330,7 +325,6 @@ class SelectieController extends BaseController
             $em->flush();
             $this->sendNotificationMailEdit(
                 'Emailadres 2',
-                $mailer,
                 $user->email2 . "\n",
                 $userObject->getEmail2(),
                 $userObject
@@ -340,9 +334,9 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail2.html.twig',
                 array(
-                    'form'               => $form->createView(),
-                    'persoon'            => $persoon,
-                    'user'               => $user,
+                    'form'    => $form->createView(),
+                    'persoon' => $persoon,
+                    'user'    => $user,
                 )
             );
         }
@@ -352,7 +346,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/editEmail3/", name="editEmail3", methods={"GET", "POST"})
      */
-    public function editEmail3(Request $request, MailerInterface $mailer)
+    public function editEmail3(Request $request)
     {
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
@@ -365,7 +359,6 @@ class SelectieController extends BaseController
             $em->flush();
             $this->sendNotificationMailEdit(
                 'Emailadres 3',
-                $mailer,
                 $user->email3 . "\n",
                 $userObject->getEmail3(),
                 $userObject
@@ -375,9 +368,9 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail3.html.twig',
                 array(
-                    'form'               => $form->createView(),
-                    'persoon'            => $persoon,
-                    'user'               => $user,
+                    'form'    => $form->createView(),
+                    'persoon' => $persoon,
+                    'user'    => $user,
                 )
             );
         }
@@ -419,9 +412,9 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/editPassword.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'error'              => $error,
+                'persoon' => $persoon,
+                'user'    => $user,
+                'error'   => $error,
             )
         );
     }
@@ -1139,22 +1132,21 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/addEditKalendarItems.html.twig',
                 array(
-                    'persoon'            => $persoon,
-                    'user'               => $user,
-                    'persoonItems'       => $persoonItems,
-                    'groep'              => $groepsnaam,
-                    'groepId'            => $groepId,
-                    'persoonId'          => $persoonId,
-                    'token'              => $token,
-                    'action'             => 'add',
-                    'turnsters'          => $turnsters,
+                    'persoon'      => $persoon,
+                    'user'         => $user,
+                    'persoonItems' => $persoonItems,
+                    'groep'        => $groepsnaam,
+                    'groepId'      => $groepId,
+                    'persoonId'    => $persoonId,
+                    'token'        => $token,
+                    'action'       => 'add',
+                    'turnsters'    => $turnsters,
                 )
             );
         } else {
             return $this->render(
                 'error/NotAuthorized.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -1260,27 +1252,26 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/addEditKalendarItems.html.twig',
                 array(
-                    'persoon'            => $persoon,
-                    'user'               => $user,
-                    'persoonItems'       => $persoonItems,
-                    'groep'              => $groepsnaam,
-                    'groepId'            => $groepId,
-                    'persoonId'          => $persoonId,
-                    'token'              => $token,
-                    'action'             => 'edit',
-                    'turnsters'          => $turnsters,
-                    'wedstrijdnaam'      => $wedstrijdnaam,
-                    'datum'              => $datum,
-                    'tijden'             => $tijden,
-                    'locatie'            => $locatie,
-                    'kalenderItemId'     => $kalenderItemId,
+                    'persoon'        => $persoon,
+                    'user'           => $user,
+                    'persoonItems'   => $persoonItems,
+                    'groep'          => $groepsnaam,
+                    'groepId'        => $groepId,
+                    'persoonId'      => $persoonId,
+                    'token'          => $token,
+                    'action'         => 'edit',
+                    'turnsters'      => $turnsters,
+                    'wedstrijdnaam'  => $wedstrijdnaam,
+                    'datum'          => $datum,
+                    'tijden'         => $tijden,
+                    'locatie'        => $locatie,
+                    'kalenderItemId' => $kalenderItemId,
                 )
             );
         } else {
             return $this->render(
                 'error/NotAuthorized.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -1641,10 +1632,10 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieShowPersoon.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'voortgang'          => $voortgang,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'voortgang'    => $voortgang,
             )
         );
     }
@@ -1696,13 +1687,13 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieShowDoelPrijzen.html.twig',
                 array(
-                    'persoon'            => $persoon,
-                    'user'               => $user,
-                    'persoonItems'       => $persoonItems,
-                    'aantalMedailles'    => $countMedailles,
-                    'aantalBekers'       => $countBekers,
-                    'turnsters'          => $turnsters,
-                    'groepId'            => $groepId,
+                    'persoon'         => $persoon,
+                    'user'            => $user,
+                    'persoonItems'    => $persoonItems,
+                    'aantalMedailles' => $countMedailles,
+                    'aantalBekers'    => $countBekers,
+                    'turnsters'       => $turnsters,
+                    'groepId'         => $groepId,
                 )
             );
         }
@@ -1819,14 +1810,14 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieShowPersoonDoelenPerToestel.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'voortgang'          => $voortgang,
-                'doelen'             => $doelen,
-                'toestel'            => $toestel,
-                'kleuren'            => $kleuren,
-                'cijfers'            => $cijfers,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'voortgang'    => $voortgang,
+                'doelen'       => $doelen,
+                'toestel'      => $toestel,
+                'kleuren'      => $kleuren,
+                'cijfers'      => $cijfers,
             )
         );
     }
@@ -1871,14 +1862,14 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/showPersoonOneDoelPerToestel.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'doelOpbouw'         => $doelOpbouw,
-                'extraDoelen'        => $extraDoelen,
-                'cijfers'            => $cijfers,
-                'kleuren'            => $kleuren,
-                'toestel'            => $toestel,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'doelOpbouw'   => $doelOpbouw,
+                'extraDoelen'  => $extraDoelen,
+                'cijfers'      => $cijfers,
+                'kleuren'      => $kleuren,
+                'toestel'      => $toestel,
             )
         );
     }
@@ -1887,7 +1878,7 @@ class SelectieController extends BaseController
      * @IsGranted("ROLE_TURNSTER")
      * @Route("/inloggen/selectie/{id}/afmelden_annuleren/{groepId}/{aanwezigheidId}", name="afmelding_annuleren", methods={"GET"})
      */
-    public function Afmelding_annuleren($id, $groepId, $aanwezigheidId, MailerInterface $mailer)
+    public function Afmelding_annuleren($id, $groepId, $aanwezigheidId)
     {
         $userObject = $this->getUser();
         /** @var Aanwezigheid $aanwezigheid */
@@ -1912,70 +1903,47 @@ class SelectieController extends BaseController
         foreach ($trainers as $trainer) {
             $persoon = $trainer->getPersoon();
             /** @var User $user */
-            $user = $persoon->getUser();
+            $user             = $persoon->getUser();
+            $subject
+                              = 'Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
+            $to               = EmailAddress::fromString($user->getUsername());
+            $templateLocation = 'mails/afmelding_ingetrokken.txt.twig';
+            $parameters       = [
+                'voornaam'   => $persoonItems->voornaam,
+                'achternaam' => $persoonItems->achternaam,
+                'datum'      => $datum,
+            ];
 
-            $message = new TemplatedEmail();
-            $message->subject('Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
-                ->from('noreply@donargym.nl')
-                ->to($user->getUsername())
-                ->textTemplate('mails/afmelding_ingetrokken.txt.twig')
-                ->context(
-                    array(
-                        'voornaam'   => $persoonItems->voornaam,
-                        'achternaam' => $persoonItems->achternaam,
-                        'datum'      => $datum,
-                    )
-                );
-            $mailer->send($message);
-            $subject          = 'Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
-            $from             = 'noreply@donargym.nl';
-            $to               = $user->getUsername();
-            $body             = $this->renderView($message->getTextTemplate(), $message->getContext());
-            $afmeldingsObject = new Afmeldingen();
-            $afmeldingsObject->setBericht(
-                'FROM: ' . $from . ', TO: ' . $to . ', SUBJECT: ' . $subject . ', BERICHT: ' . $body
+            $this->mailer->sendEmail(
+                $subject,
+                $to,
+                $templateLocation,
+                EmailTemplateType::TEXT(),
+                $parameters
             );
-            $afmeldingsObject->setTurnster($persoonItems->voornaam . ' ' . $persoonItems->achternaam);
-            $afmeldingsObject->setDatum(new \DateTime('now'));
-            $em->persist($afmeldingsObject);
-            $em->flush();
 
             if ($user->getEmail2()) {
+                $to = EmailAddress::fromString($user->getEmail2());
 
-                $message = new TemplatedEmail();
-                $message->subject(
-                    'Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam
-                )
-                    ->from('noreply@donargym.nl')
-                    ->to($user->getEmail2())
-                    ->textTemplate('mails/afmelding_ingetrokken.txt.twig')
-                    ->context(
-                        array(
-                            'voornaam'       => $persoonItems->voornaam,
-                            'achternaam'     => $persoonItems->achternaam,
-                            'afmeldingsData' => $datum,
-                        )
-                    );
-                $mailer->send($message);
+                $this->mailer->sendEmail(
+                    $subject,
+                    $to,
+                    $templateLocation,
+                    EmailTemplateType::TEXT(),
+                    $parameters
+                );
             }
 
             if ($user->getEmail3()) {
+                $to = EmailAddress::fromString($user->getEmail3());
 
-                $message = new TemplatedEmail();
-                $message->subject(
-                    'Afmelding ingetrokken van ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam
-                )
-                    ->from('noreply@donargym.nl')
-                    ->to($user->getEmail3())
-                    ->textTemplate('mails/afmelding_ingetrokken.txt.twig')
-                    ->context(
-                        array(
-                            'voornaam'       => $persoonItems->voornaam,
-                            'achternaam'     => $persoonItems->achternaam,
-                            'afmeldingsData' => $datum,
-                        )
-                    );
-                $mailer->send($message);
+                $this->mailer->sendEmail(
+                    $subject,
+                    $to,
+                    $templateLocation,
+                    EmailTemplateType::TEXT(),
+                    $parameters
+                );
             }
 
 
@@ -1989,7 +1957,7 @@ class SelectieController extends BaseController
      * @Route("/inloggen/selectie/{id}/afmelden/{groepId}/", name="Afmelding", methods={"GET", "POST"})
      */
     public
-    function Afmelding($id, $groepId, Request $request, MailerInterface $mailer)
+    function Afmelding($id, $groepId, Request $request)
     {
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
@@ -2045,73 +2013,51 @@ class SelectieController extends BaseController
                         foreach ($trainers as $trainer) {
                             $persoon = $trainer->getPersoon();
                             /** @var User $user */
-                            $user = $persoon->getUser();
+                            $user             = $persoon->getUser();
+                            $subject
+                                              = 'Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
+                            $to               = EmailAddress::fromString($user->getUsername());
+                            $templateLocation = 'mails/afmelding.txt.twig';
+                            $parameters       = [
+                                'voornaam'       => $persoonItems->voornaam,
+                                'achternaam'     => $persoonItems->achternaam,
+                                'afmeldingsData' => $afmeldingsData,
+                                'reden'          => $reden,
+                            ];
 
-                            $message = new TemplatedEmail();
-                            $message->subject('Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam)
-                                ->from('noreply@donargym.nl')
-                                ->to($user->getUsername())
-                                ->textTemplate('mails/afmelding.txt.twig')
-                                ->context(
-                                    array(
-                                        'voornaam'       => $persoonItems->voornaam,
-                                        'achternaam'     => $persoonItems->achternaam,
-                                        'afmeldingsData' => $afmeldingsData,
-                                        'reden'          => $reden,
-                                    )
-                                );
-                            $mailer->send($message);
-                            $subject          = 'Afmelding ' . $persoonItems->voornaam . ' ' . $persoonItems->achternaam;
-                            $from             = 'noreply@donargym.nl';
-                            $to               = $user->getUsername();
-                            $body             = $this->renderView($message->getTextTemplate(), $message->getContext());
-                            $afmeldingsObject = new Afmeldingen();
-                            $afmeldingsObject->setBericht(
-                                'FROM: ' . $from . ', TO: ' . $to . ', SUBJECT: ' . $subject . ', BERICHT: ' . $body
+                            $this->mailer->sendEmail(
+                                $subject,
+                                $to,
+                                $templateLocation,
+                                EmailTemplateType::TEXT(),
+                                $parameters
                             );
-                            $afmeldingsObject->setTurnster($persoonItems->voornaam . ' ' . $persoonItems->achternaam);
-                            $afmeldingsObject->setDatum(new \DateTime('now'));
-                            $em->persist($afmeldingsObject);
-                            $em->flush();
 
                             if ($user->getEmail2()) {
+                                $to = EmailAddress::fromString($user->getEmail2());
 
-                                $message = new TemplatedEmail();
-                                $message->subject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
-                                    ->from('noreply@donargym.nl')
-                                    ->to($user->getEmail2())
-                                    ->textTemplate('mails/afmelding.txt.twig')
-                                    ->context(
-                                        array(
-                                            'voornaam'       => $persoonItems->voornaam,
-                                            'achternaam'     => $persoonItems->achternaam,
-                                            'afmeldingsData' => $afmeldingsData,
-                                            'reden'          => $reden,
-                                        )
-                                    );
-                                $mailer->send($message);
+                                $this->mailer->sendEmail(
+                                    $subject,
+                                    $to,
+                                    $templateLocation,
+                                    EmailTemplateType::TEXT(),
+                                    $parameters
+                                );
                             }
 
                             if ($user->getEmail3()) {
+                                $to = EmailAddress::fromString($user->getEmail3());
 
-                                $message = new TemplatedEmail();
-                                $message->subject('Afmelding ' . $persoonItems->voornaam . $persoonItems->achternaam)
-                                    ->from('noreply@donargym.nl')
-                                    ->to($user->getEmail3())
-                                    ->textTemplate('mails/afmelding.txt.twig')
-                                    ->context(
-                                        array(
-                                            'voornaam'       => $persoonItems->voornaam,
-                                            'achternaam'     => $persoonItems->achternaam,
-                                            'afmeldingsData' => $afmeldingsData,
-                                            'reden'          => $reden,
-                                        )
-                                    );
-                                $mailer->send($message);
+                                $this->mailer->sendEmail(
+                                    $subject,
+                                    $to,
+                                    $templateLocation,
+                                    EmailTemplateType::TEXT(),
+                                    $parameters
+                                );
                             }
-
-
                         }
+
                         return $this->redirectToRoute(
                             'showPersoon',
                             array(
@@ -2129,13 +2075,13 @@ class SelectieController extends BaseController
                         return $this->render(
                             'inloggen/selectieAfmelden.html.twig',
                             array(
-                                'persoon'            => $persoon,
-                                'user'               => $user,
-                                'persoonItems'       => $persoonItems,
-                                'groepId'            => $groepId,
-                                'token'              => $token,
-                                'error'              => $error,
-                                'afmeldingsData'     => $afmeldingsData,
+                                'persoon'        => $persoon,
+                                'user'           => $user,
+                                'persoonItems'   => $persoonItems,
+                                'groepId'        => $groepId,
+                                'token'          => $token,
+                                'error'          => $error,
+                                'afmeldingsData' => $afmeldingsData,
                             )
                         );
                     }
@@ -2152,12 +2098,12 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAfmelden.html.twig',
             array(
-                'id'                 => $id,
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'groepId'            => $groepId,
-                'token'              => $token,
+                'id'           => $id,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'groepId'      => $groepId,
+                'token'        => $token,
             )
         );
     }
@@ -2408,11 +2354,11 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewAfmeldingen.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'groepId'            => $groepId,
-                'aanwezigheid'       => $aanwezigheid,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'groepId'      => $groepId,
+                'aanwezigheid' => $aanwezigheid,
             )
         );
     }
@@ -2433,11 +2379,11 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewAanwezigheid.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'groepId'            => $groepId,
-                'aanwezigheid'       => $aanwezigheid,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'groepId'      => $groepId,
+                'aanwezigheid' => $aanwezigheid,
             )
         );
     }
@@ -2515,11 +2461,11 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieKruisjeslijst.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'groepId'            => $groepId,
-                'trainingsdata'      => $trainingsdata,
+                'persoon'       => $persoon,
+                'user'          => $user,
+                'persoonItems'  => $persoonItems,
+                'groepId'       => $groepId,
+                'trainingsdata' => $trainingsdata,
             )
         );
     }
@@ -2586,11 +2532,11 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/removeTrainingsdatum.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'groepId'            => $groepId,
-                'trainingsdata'      => $trainingsdata,
+                'persoon'       => $persoon,
+                'user'          => $user,
+                'persoonItems'  => $persoonItems,
+                'groepId'       => $groepId,
+                'trainingsdata' => $trainingsdata,
             )
         );
     }
@@ -2747,10 +2693,10 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAdreslijst.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'groepId'            => $groepId,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'groepId'      => $groepId,
             )
         );
     }
@@ -2791,9 +2737,9 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddStukje.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
             )
         );
     }
@@ -2803,7 +2749,7 @@ class SelectieController extends BaseController
      * @Route("/inloggen/selectie/{id}/add/{groepsId}", name="addSelectieTurnsterPage", methods={"GET", "POST"})
      */
     public
-    function addSelectieTurnsterPageAction(Request $request, $id, $groepsId, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
+    function addSelectieTurnsterPageAction(Request $request, $id, $groepsId, EncoderFactoryInterface $encoderFactory)
     {
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2956,7 +2902,7 @@ class SelectieController extends BaseController
             $persoon->setUser($user);
 
             if ($newuser) {
-                $password = $this->generatePassword();
+                $password = PasswordGenerator::generatePassword();
                 $encoder  = $encoderFactory
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
@@ -2969,60 +2915,48 @@ class SelectieController extends BaseController
             $em->persist($persoon);
             $em->flush();
 
+            $subject          = 'Inloggegevens website Donar';
+            $to               = EmailAddress::fromString($user->getUsername());
+            $templateLocation = 'mails/new_user.txt.twig';
+            $parameters       = [
+                'voornaam' => $persoon->getVoornaam(),
+                'email1'   => $user->getUsername(),
+                'email2'   => $user->getEmail2(),
+                'email3'   => $user->getEmail3(),
+                'password' => $password,
+            ];
 
-            $message = new TemplatedEmail();
-            $message->subject('Inloggegevens website Donar')
-                ->from('noreply@donargym.nl')
-                ->to($user->getUsername())
-                ->textTemplate('mails/new_user.txt.twig')
-                ->context(
-                    array(
-                        'voornaam' => $persoon->getVoornaam(),
-                        'email1'   => $user->getUsername(),
-                        'email2'   => $user->getEmail2(),
-                        'email3'   => $user->getEmail3(),
-                        'password' => $password
-                    )
-                );
-            $mailer->send($message);
-
+            $this->mailer->sendEmail(
+                $subject,
+                $to,
+                $templateLocation,
+                EmailTemplateType::TEXT(),
+                $parameters
+            );
             if ($user->getEmail2()) {
+                $to = EmailAddress::fromString($user->getEmail2());
 
-                $message = new TemplatedEmail();
-                $message->subject('Inloggegevens website Donar')
-                    ->from('noreply@donargym.nl')
-                    ->to($user->getEmail2())
-                    ->textTemplate('mails/new_user.txt.twig')
-                    ->context(
-                        array(
-                            'voornaam' => $persoon->getVoornaam(),
-                            'email1'   => $user->getUsername(),
-                            'email2'   => $user->getEmail2(),
-                            'email3'   => $user->getEmail3(),
-                            'password' => $password
-                        )
-                    );
-                $mailer->send($message);
+                $this->mailer->sendEmail(
+                    $subject,
+                    $to,
+                    $templateLocation,
+                    EmailTemplateType::TEXT(),
+                    $parameters
+                );
             }
 
             if ($user->getEmail3()) {
+                $to = EmailAddress::fromString($user->getEmail3());
 
-                $message = new TemplatedEmail();
-                $message->subject('Inloggegevens website Donar')
-                    ->from('noreply@donargym.nl')
-                    ->to($user->getEmail3())
-                    ->textTemplate('mails/new_user.txt.twig')
-                    ->context(
-                        array(
-                            'voornaam' => $persoon->getVoornaam(),
-                            'email1'   => $user->getUsername(),
-                            'email2'   => $user->getEmail2(),
-                            'email3'   => $user->getEmail3(),
-                            'password' => $password
-                        )
-                    );
-                $mailer->send($message);
+                $this->mailer->sendEmail(
+                    $subject,
+                    $to,
+                    $templateLocation,
+                    EmailTemplateType::TEXT(),
+                    $parameters
+                );
             }
+
             return $this->redirectToRoute(
                 'showPersoon',
                 array(
@@ -3033,10 +2967,10 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddTurnster.html.twig',
             array(
-                'groepen'            => $groepenItems,
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
+                'groepen'      => $groepenItems,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
             )
         );
     }
@@ -3065,19 +2999,18 @@ class SelectieController extends BaseController
                 return $this->render(
                     'inloggen/selectieRemoveTurnster.html.twig',
                     array(
-                        'voornaam'           => $turnster->getVoornaam(),
-                        'achternaam'         => $turnster->getAchternaam(),
-                        'id'                 => $turnster->getId(),
-                        'persoon'            => $persoon,
-                        'user'               => $user,
-                        'persoonItems'       => $persoonItems,
+                        'voornaam'     => $turnster->getVoornaam(),
+                        'achternaam'   => $turnster->getAchternaam(),
+                        'id'           => $turnster->getId(),
+                        'persoon'      => $persoon,
+                        'user'         => $user,
+                        'persoonItems' => $persoonItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -3131,8 +3064,7 @@ class SelectieController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -3183,10 +3115,10 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieAddFoto.html.twig',
                 array(
-                    'form'               => $form->createView(),
-                    'persoon'            => $persoon,
-                    'user'               => $user,
-                    'persoonItems'       => $persoonItems,
+                    'form'         => $form->createView(),
+                    'persoon'      => $persoon,
+                    'user'         => $user,
+                    'persoonItems' => $persoonItems,
                 )
             );
         }
@@ -3311,19 +3243,18 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieAddWedstrijduitslagen.html.twig',
                 array(
-                    'persoon'            => $persoon,
-                    'user'               => $user,
-                    'persoonItems'       => $persoonItems,
-                    'functie'            => $functie,
-                    'groepId'            => $groepId,
-                    'form'               => $form->createView(),
+                    'persoon'      => $persoon,
+                    'user'         => $user,
+                    'persoonItems' => $persoonItems,
+                    'functie'      => $functie,
+                    'groepId'      => $groepId,
+                    'form'         => $form->createView(),
                 )
             );
         }
         return $this->render(
             'error/NotAuthorized.html.twig',
-            array(
-            )
+            array()
         );
     }
 
@@ -3368,12 +3299,12 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieRemoveWedstrijduitslagen.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'uitslag'            => $uitslag,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'functie'      => $functie,
+                'groepId'      => $groepId,
+                'uitslag'      => $uitslag,
             )
         );
     }
@@ -3578,14 +3509,14 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieEditTurnster.html.twig',
                 array(
-                    'persoon'            => $persoon,
-                    'user'               => $user,
-                    'persoonItems'       => $persoonItems,
-                    'groepen'            => $groepenItems,
-                    'persoonEdit'        => $persoonEdit,
-                    'functie'            => $functie,
-                    'groepId'            => $groepId,
-                    'persoonId'          => $persoonId,
+                    'persoon'      => $persoon,
+                    'user'         => $user,
+                    'persoonItems' => $persoonItems,
+                    'groepen'      => $groepenItems,
+                    'persoonEdit'  => $persoonEdit,
+                    'functie'      => $functie,
+                    'groepId'      => $groepId,
+                    'persoonId'    => $persoonId,
 
                 )
             );
@@ -4070,16 +4001,16 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewTurnster.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'turnster'           => $turnster,
-                'doelen'             => $doelen,
-                'voortgang'          => $voortgang,
-                'cijfers'            => $cijfers,
-                'kleuren'            => $kleuren,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'functie'      => $functie,
+                'groepId'      => $groepId,
+                'turnster'     => $turnster,
+                'doelen'       => $doelen,
+                'voortgang'    => $voortgang,
+                'cijfers'      => $cijfers,
+                'kleuren'      => $kleuren,
             )
         );
     }
@@ -4154,16 +4085,16 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewTurnsterOneDoel.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'turnster'           => $turnster,
-                'doelOpbouw'         => $doelOpbouw,
-                'extraDoelen'        => $extraDoelen,
-                'cijfers'            => $cijfers,
-                'kleuren'            => $kleuren,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'functie'      => $functie,
+                'groepId'      => $groepId,
+                'turnster'     => $turnster,
+                'doelOpbouw'   => $doelOpbouw,
+                'extraDoelen'  => $extraDoelen,
+                'cijfers'      => $cijfers,
+                'kleuren'      => $kleuren,
             )
         );
     }
@@ -4380,15 +4311,15 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/SelectieTurnsterAddCijfer.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'turnster'           => $turnster,
-                'doelen'             => $allSubdoelen,
-                'repeat'             => $repeat,
-                'token'              => $token,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'functie'      => $functie,
+                'groepId'      => $groepId,
+                'turnster'     => $turnster,
+                'doelen'       => $allSubdoelen,
+                'repeat'       => $repeat,
+                'token'        => $token,
             )
         );
     }
@@ -4534,15 +4465,15 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddDoelToTurnster.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'turnster'           => $turnster,
-                'doelen'             => $doelenLijst,
-                'token'              => $token,
-                'repeat'             => $repeat,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'functie'      => $functie,
+                'groepId'      => $groepId,
+                'turnster'     => $turnster,
+                'doelen'       => $doelenLijst,
+                'token'        => $token,
+                'repeat'       => $repeat,
             )
         );
     }
@@ -4601,14 +4532,14 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieRemoveDoelFromTurnster.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'turnster'           => $turnster,
-                'doelNaam'           => $doelNaam,
-                'doelToestel'        => $doelToestel,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'functie'      => $functie,
+                'groepId'      => $groepId,
+                'turnster'     => $turnster,
+                'doelNaam'     => $doelNaam,
+                'doelToestel'  => $doelToestel,
             )
         );
     }
@@ -4652,12 +4583,12 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewVloermuziek.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'vloermuziek'        => $vloermuziek,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'functie'      => $functie,
+                'groepId'      => $groepId,
+                'vloermuziek'  => $vloermuziek,
             )
         );
     }
@@ -4669,7 +4600,7 @@ class SelectieController extends BaseController
     public
     function addSelectieVloermuziekPageAction(Request $request, $persoonId, $turnsterId, $groepId)
     {
-        $error = null;
+        $error        = null;
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4729,14 +4660,14 @@ class SelectieController extends BaseController
                 return $this->render(
                     'inloggen/selectieAddVloermuziek.html.twig',
                     array(
-                        'form'               => $form->createView(),
-                        'persoon'            => $persoon,
-                        'user'               => $user,
-                        'persoonItems'       => $persoonItems,
-                        'turnster'           => $turnster,
-                        'error'              => $error,
-                        'functie'            => $functie,
-                        'groepId'            => $groepId,
+                        'form'         => $form->createView(),
+                        'persoon'      => $persoon,
+                        'user'         => $user,
+                        'persoonItems' => $persoonItems,
+                        'turnster'     => $turnster,
+                        'error'        => $error,
+                        'functie'      => $functie,
+                        'groepId'      => $groepId,
                     )
                 );
 
@@ -4828,12 +4759,12 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewDoelen.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'doelenPerToestel'   => $doelenPerToestel,
+                'persoon'          => $persoon,
+                'user'             => $user,
+                'persoonItems'     => $persoonItems,
+                'functie'          => $functie,
+                'groepId'          => $groepId,
+                'doelenPerToestel' => $doelenPerToestel,
             )
         );
     }
@@ -4918,13 +4849,13 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddDoelen.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'doelenPerToestel'   => $doelenPerToestel,
-                'repeat'             => $repeat,
+                'persoon'          => $persoon,
+                'user'             => $user,
+                'persoonItems'     => $persoonItems,
+                'functie'          => $functie,
+                'groepId'          => $groepId,
+                'doelenPerToestel' => $doelenPerToestel,
+                'repeat'           => $repeat,
             )
         );
     }
@@ -5098,13 +5029,13 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewOneDoel.html.twig',
             array(
-                'persoon'            => $persoon,
-                'user'               => $user,
-                'persoonItems'       => $persoonItems,
-                'functie'            => $functie,
-                'groepId'            => $groepId,
-                'doelOpbouw'         => $doelOpbouw,
-                'extraDoelen'        => $extraDoelen,
+                'persoon'      => $persoon,
+                'user'         => $user,
+                'persoonItems' => $persoonItems,
+                'functie'      => $functie,
+                'groepId'      => $groepId,
+                'doelOpbouw'   => $doelOpbouw,
+                'extraDoelen'  => $extraDoelen,
             )
         );
     }

@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Domain\EmailAddress;
+use App\Domain\EmailTemplateType;
+use App\Domain\PasswordGenerator;
 use App\Entity\FileUpload;
 use App\Entity\FotoUpload;
 use App\Entity\Functie;
@@ -14,6 +17,7 @@ use App\Entity\Turnster;
 use App\Entity\User;
 use App\Entity\Vereniging;
 use App\Helper\ImageResizer;
+use App\InfraStructure\SymfonyMailer\SymfonyMailer;
 use App\Repository\ScoresRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -30,6 +34,16 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
  */
 class AdminController extends BaseController
 {
+    /**
+     * @var SymfonyMailer
+     */
+    private SymfonyMailer $mailer;
+
+    public function __construct(SymfonyMailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     /**
      * @Route("/admin/", name="getAdminIndexPage", methods={"GET"})
      */
@@ -291,7 +305,7 @@ class AdminController extends BaseController
     /**
      * @Route("/admin/selectie/add/", name="addAdminTrainerPage", methods={"GET", "POST"})
      */
-    public function addAdminTrainerPageAction(Request $request, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
+    public function addAdminTrainerPageAction(Request $request, EncoderFactoryInterface $encoderFactory)
     {
         $em           = $this->getDoctrine()->getManager();
         $query        = $em->createQuery(
@@ -437,7 +451,7 @@ class AdminController extends BaseController
             $persoon->setUser($user);
 
             if ($newuser) {
-                $password = $this->generatePassword();
+                $password = PasswordGenerator::generatePassword();
                 $encoder  = $encoderFactory
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
@@ -450,58 +464,41 @@ class AdminController extends BaseController
             $em->persist($persoon);
             $em->flush();
 
+            $subject = 'Inloggegevens website Donar';
+            $template = 'mails/new_user.txt.twig';
+            $parameters = [
+                'voornaam' => $persoon->getVoornaam(),
+                'email1'   => $user->getUsername(),
+                'email2'   => $user->getEmail2(),
+                'email3'   => $user->getEmail3(),
+                'password' => $password,
+            ];
 
-            $message = new TemplatedEmail();
-            $message->subject('Inloggegevens website Donar')
-                ->from('noreply@donargym.nl')
-                ->to($user->getUsername())
-                ->textTemplate('mails/new_user.txt.twig')
-                ->context(
-                    array(
-                        'voornaam' => $persoon->getVoornaam(),
-                        'email1'   => $user->getUsername(),
-                        'email2'   => $user->getEmail2(),
-                        'email3'   => $user->getEmail3(),
-                        'password' => $password
-                    )
-                );
-            $mailer->send($message);
+            $this->mailer->sendEmail(
+                $subject,
+                EmailAddress::fromString($user->getUsername()),
+                $template,
+                EmailTemplateType::TEXT(),
+                $parameters
+            );
 
             if ($user->getEmail2()) {
-
-                $message = new TemplatedEmail();
-                $message->subject('Inloggegevens website Donar')
-                    ->from('noreply@donargym.nl')
-                    ->to($user->getEmail2())
-                    ->textTemplate('mails/new_user.txt.twig')
-                    ->context(
-                        array(
-                            'voornaam' => $persoon->getVoornaam(),
-                            'email1'   => $user->getUsername(),
-                            'email2'   => $user->getEmail2(),
-                            'email3'   => $user->getEmail3(),
-                            'password' => $password
-                        )
-                    );
-                $mailer->send($message);
+                $this->mailer->sendEmail(
+                    $subject,
+                    EmailAddress::fromString($user->getEmail2()),
+                    $template,
+                    EmailTemplateType::TEXT(),
+                    $parameters
+                );
             }
             if ($user->getEmail3()) {
-
-                $message = new TemplatedEmail();
-                $message->subject('Inloggegevens website Donar')
-                    ->from('noreply@donargym.nl')
-                    ->to($user->getEmail3())
-                    ->textTemplate('mails/new_user.txt.twig')
-                    ->context(
-                        array(
-                            'voornaam' => $persoon->getVoornaam(),
-                            'email1'   => $user->getUsername(),
-                            'email2'   => $user->getEmail2(),
-                            'email3'   => $user->getEmail3(),
-                            'password' => $password
-                        )
-                    );
-                $mailer->send($message);
+                $this->mailer->sendEmail(
+                    $subject,
+                    EmailAddress::fromString($user->getEmail3()),
+                    $template,
+                    EmailTemplateType::TEXT(),
+                    $parameters
+                );
             }
             return $this->redirectToRoute('getAdminSelectiePage');
         }

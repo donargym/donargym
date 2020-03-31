@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Domain\EmailAddress;
+use App\Domain\EmailTemplateType;
+use App\Domain\PasswordGenerator;
 use App\Entity\Functie;
 use App\Entity\Groepen;
 use App\Entity\Persoon;
@@ -10,6 +13,7 @@ use App\Entity\TrainingsstageTrainer;
 use App\Entity\TrainingsstageTurnster;
 use App\Form\Type\TrainingsstageTrainerType;
 use App\Form\Type\TrainingsstageTurnsterType;
+use App\InfraStructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -17,15 +21,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GetContentController extends BaseController
 {
     private $paymentLink = 'https://bunq.me/open-request/t/a8b04702-6632-47ca-9a96-7722edf8d25c';
+    private TranslatorInterface $translator;
+    private SymfonyMailer $mailer;
+
+    public function __construct(TranslatorInterface $translator, SymfonyMailer $mailer)
+    {
+        $this->translator = $translator;
+        $this->mailer     = $mailer;
+    }
 
     /**
      * @Route("/trainingsstage/", name="trainingsstage", methods={"GET", "POST"})
      */
-    public function trainingsstage(Request $request, MailerInterface $mailer)
+    public function trainingsstage(Request $request)
     {
         if (!$request->query->get('as')) {
             return $this->render(
@@ -50,15 +63,15 @@ class GetContentController extends BaseController
 
                 $this->addToDB($trainingsstageTurnster);
 
-                $this->sendEmail(
+                $this->mailer->sendEmail(
                     'Inschrijving trainingsstage',
-                    $trainingsstageTurnster->getEmailaddress(),
+                    EmailAddress::fromString($trainingsstageTurnster->getEmailaddress()),
                     'mails/trainingsstage_confirmation.txt.twig',
-                    $mailer,
-                    array(
+                    EmailTemplateType::TEXT(),
+                    [
                         'naam'        => $trainingsstageTurnster->getName(),
                         'paymentLink' => $this->paymentLink,
-                    )
+                    ]
                 );
 
                 return $this->redirectToRoute('trainingsstageSuccess', array('as' => $request->query->get('as')));
@@ -89,14 +102,12 @@ class GetContentController extends BaseController
 
                 $this->addToDB($trainingsstageTrainer);
 
-                $this->sendEmail(
+                $this->mailer->sendEmail(
                     'Inschrijving trainingsstage',
-                    $trainingsstageTrainer->getEmailaddress(),
+                    EmailAddress::fromString($trainingsstageTrainer->getEmailaddress()),
                     'mails/trainingsstage_trainer_confirmation.txt.twig',
-                    $mailer,
-                    array(
-                        'naam' => $trainingsstageTrainer->getName(),
-                    )
+                    EmailTemplateType::TEXT(),
+                    ['naam' => $trainingsstageTrainer->getName()]
                 );
 
                 return $this->redirectToRoute('trainingsstageSuccess', array('as' => $request->query->get('as')));
@@ -282,8 +293,8 @@ class GetContentController extends BaseController
                 ));
             $clubbladItems[$k][$j]            = $content[$i]->getAll();
             $clubbladItems[$k][$j]->jaar      = date("Y", strtotime($content[$i]->getDatumFormat()));
-            $clubbladItems[$k][$j]->maandJaar = $this->maand(
-                    date("m", strtotime($content[$i]->getDatumFormat()))
+            $clubbladItems[$k][$j]->maandJaar = $this->translator->trans(
+                    'month.' . date("F", strtotime($content[$i]->getDatumFormat()))
                 ) . ' ' . date("Y", strtotime($content[$i]->getDatumFormat()));
             $j++;
         }
@@ -748,7 +759,7 @@ class GetContentController extends BaseController
      * @Route("/inloggen/new_pass/", name="getNewPassPage", methods={"GET", "POST"})
      */
     public
-    function getNewPassPageAction(Request $request, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
+    function getNewPassPageAction(Request $request, EncoderFactoryInterface $encoderFactory)
     {
         $error = "";
 
@@ -768,61 +779,47 @@ class GetContentController extends BaseController
             if (!$user) {
                 $error = 'Dit Emailadres komt niet voor in de database';
             } else {
-                $password = $this->generatePassword();
+                $password = PasswordGenerator::generatePassword();
                 $encoder  = $encoderFactory
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $em->flush();
 
-                $message = new TemplatedEmail();
-                $message->subject('Inloggegevens website Donar')
-                    ->from('noreply@donargym.nl')
-                    ->to($user->getUsername())
-                    ->textTemplate('mails/new_password.txt.twig')
-                    ->context(
-                        array(
-                            'email1'   => $user->getUsername(),
-                            'email2'   => $user->getEmail2(),
-                            'email3'   => $user->getEmail3(),
-                            'password' => $password
-                        )
-                    );
-                $mailer->send($message);
+                $subject = 'Inloggegevens website Donar';
+                $templateLocation ='mails/new_password.txt.twig';
+                $parameters = [
+                    'email1'   => $user->getUsername(),
+                    'email2'   => $user->getEmail2(),
+                    'email3'   => $user->getEmail3(),
+                    'password' => $password,
+                ];
+
+                $this->mailer->sendEmail(
+                    $subject,
+                    EmailAddress::fromString($user->getUsername()),
+                    $templateLocation,
+                    EmailTemplateType::TEXT(),
+                    $parameters
+                );
 
                 if ($user->getEmail2()) {
-
-                    $message = new TemplatedEmail();
-                    $message->subject('Inloggegevens website Donar')
-                        ->from('noreply@donargym.nl')
-                        ->to($user->getEmail2())
-                        ->textTemplate('mails/new_password.txt.twig')
-                        ->context(
-                            array(
-                                'email1'   => $user->getUsername(),
-                                'email2'   => $user->getEmail2(),
-                                'email3'   => $user->getEmail3(),
-                                'password' => $password
-                            )
-                        );
-                    $mailer->send($message);
+                    $this->mailer->sendEmail(
+                        $subject,
+                        EmailAddress::fromString($user->getEmail2()),
+                        $templateLocation,
+                        EmailTemplateType::TEXT(),
+                        $parameters
+                    );
                 }
 
                 if ($user->getEmail3()) {
-
-                    $message = new TemplatedEmail();
-                    $message->subject('Inloggegevens website Donar')
-                        ->from('noreply@donargym.nl')
-                        ->to($user->getEmail3())
-                        ->textTemplate('mails/new_password.txt.twig')
-                        ->context(
-                            array(
-                                'email1'   => $user->getUsername(),
-                                'email2'   => $user->getEmail2(),
-                                'email3'   => $user->getEmail3(),
-                                'password' => $password
-                            )
-                        );
-                    $mailer->send($message);
+                    $this->mailer->sendEmail(
+                        $subject,
+                        EmailAddress::fromString($user->getEmail3()),
+                        $templateLocation,
+                        EmailTemplateType::TEXT(),
+                        $parameters
+                    );
                 }
 
                 $error = 'Een nieuw wachtwoord is gemaild';

@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Domain\EmailAddress;
+use App\Domain\EmailTemplateType;
 use App\Entity\Inschrijving;
+use App\InfraStructure\SymfonyMailer\SymfonyMailer;
 use App\Repository\InschrijvingRepository;
 use App\Form\Type\SubscribeType;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,10 +14,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class InschrijfController extends BaseController
 {
+    private SymfonyMailer $mailer;
+
+    public function __construct(SymfonyMailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     /**
      * @Route("/inschrijven/", name="subscribe", methods={"GET", "POST"})
      */
-    public function subscribeAction(Request $request, MailerInterface $mailer)
+    public function subscribeAction(Request $request)
     {
         $inschrijving = new Inschrijving();
         $form         = $this->createForm(SubscribeType::class, $inschrijving);
@@ -33,12 +43,12 @@ final class InschrijfController extends BaseController
 
             $subject = 'Inschrijving';
             $inschrijfDateTime = new \DateTime();
-            $this->sendEmail(
+            $this->mailer->sendEmail(
                 $subject,
-                'ledensecretariaat@donargym.nl',
+                EmailAddress::fromString('ledensecretariaat@donargym.nl'),
                 'mails/inschrijving_naar_ledensecretariaat.txt.twig',
-                $mailer,
-                array(
+                EmailTemplateType::TEXT(),
+                [
 					'inschrijfdatetime'  => $inschrijfDateTime->format('d-m-Y H:i'),
                     'voornaam'           => $inschrijving->getFirstName(),
                     'achternaam'         => $inschrijving->getLastname(),
@@ -70,15 +80,15 @@ final class InschrijfController extends BaseController
 					'acceptPrivacy'           => $inschrijving->isAcceptPrivacyPolicy(),
                     'acceptNamePublished'     => $inschrijving->isAcceptNamePublished(),
                     'acceptPicturesPublished' => $inschrijving->isAcceptPicturesPublished(),
-                )
+                ]
             );
 			
-			$this->sendEmail(
+			$this->mailer->sendEmail(
                 $subject,
-                $inschrijving->getTrainer(),
+                EmailAddress::fromString($inschrijving->getTrainer()),
                 'mails/inschrijving_naar_ledensecretariaat.txt.twig',
-                $mailer,
-                array(
+                EmailTemplateType::TEXT(),
+                [
                     'inschrijfdatetime'  => $inschrijfDateTime->format('d-m-Y H:i'),
                     'voornaam'           => $inschrijving->getFirstName(),
                     'achternaam'         => $inschrijving->getLastname(),
@@ -110,14 +120,14 @@ final class InschrijfController extends BaseController
 					'acceptPrivacy'           => $inschrijving->isAcceptPrivacyPolicy(),
                     'acceptNamePublished'     => $inschrijving->isAcceptNamePublished(),
                     'acceptPicturesPublished' => $inschrijving->isAcceptPicturesPublished(),
-                )
+                ]
             );
 
-            $this->sendEmail(
+            $this->mailer->sendEmail(
                 $subject,
-                $inschrijving->getEmailaddress(),
+                EmailAddress::fromString($inschrijving->getEmailaddress()),
                 'mails/inschrijving_naar_lid.txt.twig',
-                $mailer,
+                EmailTemplateType::TEXT(),
                 array('voornaam' => $inschrijving->getFirstName())
             );
 
