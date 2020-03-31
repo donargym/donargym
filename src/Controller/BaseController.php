@@ -12,7 +12,6 @@ use Symfony\Component\Mailer\MailerInterface;
 
 abstract class BaseController extends AbstractController
 {
-    protected $calendarItems;
     protected $header;
     protected $groepItems;
     protected $groepIds;
