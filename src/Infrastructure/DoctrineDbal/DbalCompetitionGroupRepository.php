@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Infrastructure\DoctrineDbal;
 
 use App\Domain\CompetitionGroup;
 use App\Domain\CompetitionGroups;

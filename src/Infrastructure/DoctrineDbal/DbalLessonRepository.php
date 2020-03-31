@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Infrastructure\DoctrineDbal;
 
 use App\Domain\Lesson;
 use App\Domain\Lessons;

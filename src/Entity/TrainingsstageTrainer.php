@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\TrainingsstageTrainerRepository")
  * @ORM\Table(name="trainingsstage_trainer")
  */
 final class TrainingsstageTrainer

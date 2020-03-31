@@ -2,6 +2,6 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         # the value is the service's id
-        calendarItems: '@App\Repository\DbalCompactCalendarItemRepository'
+        calendarItems: '@App\Infrastructure\DoctrineDbal\DbalCompactCalendarItemRepository'
         header: '@App\Domain\HeaderLocation'
-        competitionGroups: '@App\Repository\DbalCompetitionGroupRepository'
+        competitionGroups: '@App\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository'
