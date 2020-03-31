@@ -32,7 +32,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'wedstrijdturnen/trainingsstageIndexPage.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -71,7 +70,6 @@ class GetContentController extends BaseController
                 'wedstrijdturnen/trainingsstageTurnsterForm.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                     'paymentLink'        => $this->paymentLink,
                 )
             );
@@ -110,7 +108,6 @@ class GetContentController extends BaseController
                 'wedstrijdturnen/trainingsstageTrainerForm.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                     'paymentLink'        => $this->paymentLink,
                 )
             );
@@ -128,7 +125,6 @@ class GetContentController extends BaseController
         return $this->render(
             'wedstrijdturnen/trainingsstageSuccessPage.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'as'                 => $request->query->get('as'),
                 'paymentLink'        => $this->paymentLink,
             )
@@ -177,14 +173,12 @@ class GetContentController extends BaseController
                     'donar/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -193,7 +187,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -224,7 +217,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -247,7 +239,6 @@ class GetContentController extends BaseController
             'default/nieuws.html.twig',
             array(
                 'nieuwsItems'        => $nieuwsItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -271,7 +262,6 @@ class GetContentController extends BaseController
             'default/vakanties.html.twig',
             array(
                 'vakantieItems'      => $vakantieItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -309,7 +299,6 @@ class GetContentController extends BaseController
             'default/clubblad.html.twig',
             array(
                 'clubbladItems'      => $clubbladItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -334,7 +323,6 @@ class GetContentController extends BaseController
                 'default/nieuws.html.twig',
                 array(
                     'nieuwsItems'        => $nieuwsItems,
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         } else {
@@ -353,7 +341,6 @@ class GetContentController extends BaseController
                 'default/archief_index.html.twig',
                 array(
                     'jaren'              => $jaren,
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -390,14 +377,12 @@ class GetContentController extends BaseController
                     'lessen/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -406,7 +391,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -423,7 +407,6 @@ class GetContentController extends BaseController
     public function getWedstrijdturnenPageAction($page, $view, $id)
     {
         $this->setBasicPageData();
-        $groepId = $this->groepIds;
         if (in_array($page, array('wedstrijdturnen'))) {
             $em      = $this->getDoctrine()->getManager();
             $query   = $em->createQuery(
@@ -440,407 +423,410 @@ class GetContentController extends BaseController
                     array(
                         'content'            => $content->getContent(),
                         'groepen'            => $this->groepItems,
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
-        } elseif (in_array($page, $groepId)) {
-            $em          = $this->getDoctrine()->getManager();
-            $query       = $em->createQuery(
-                'SELECT groepen
+        }
+
+        $em    = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT groepen
                 FROM App:Groepen groepen
                 WHERE groepen.id = :id'
-            )
-                ->setParameter('id', $page);
-            $groep       = $query->setMaxResults(1)->getOneOrNullResult();
+        )
+            ->setParameter('id', $page);
+        $groep = $query->setMaxResults(1)->getOneOrNullResult();
+        if ($groep) {
             $groepIdName = $groep->getIdName();
             if ($view == null && $id == null) {
                 return $this->render(
                     'wedstrijdturnen/groepIndex.html.twig',
                     array(
                         'activeGroep'        => $groepIdName,
-                        'wedstrijdLinkItems' => $this->groepItems,
                         'groepen'            => $this->groepItems,
                     )
                 );
-            } elseif ($view == 'wedstrijduitslagen') {
-                $wedstrijduitslagen = array();
-                $uitslagen          = $groep->getWedstrijduitslagen();
-                for ($counter = (count($uitslagen) - 1); $counter >= 0; $counter--) {
-                    if ($uitslagen[$counter]->getDatum()->format("m") > 7) {
-                        $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format("Y")][]
-                            = $uitslagen[$counter]->getAll();
-                    } else {
-                        $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format("Y") - 1)][]
-                            = $uitslagen[$counter]->getAll();
+            }
+        }
+
+        if ($view == 'wedstrijduitslagen') {
+            $wedstrijduitslagen = array();
+            $uitslagen          = $groep->getWedstrijduitslagen();
+            for ($counter = (count($uitslagen) - 1); $counter >= 0; $counter--) {
+                if ($uitslagen[$counter]->getDatum()->format("m") > 7) {
+                    $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format("Y")][]
+                        = $uitslagen[$counter]->getAll();
+                } else {
+                    $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format("Y") - 1)][]
+                        = $uitslagen[$counter]->getAll();
+                }
+            }
+            return $this->render(
+                'wedstrijdturnen/wedstrijduitslagen.html.twig',
+                array(
+                    'activeGroep'        => $groepIdName,
+                    'groepen'            => $this->groepItems,
+                    'wedstrijduitslagen' => $wedstrijduitslagen,
+                )
+            );
+        } elseif ($view == 'TNT' && $id == null) {
+            $personen                      = array();
+            $personen['Trainer']           = array();
+            $personen['Assistent-Trainer'] = array();
+            $personen['Turnster']          = array();
+            foreach ($groep->getPeople() as $persoon) {
+                $functies = $persoon->getFunctie();
+                /** @var Functie $functie */
+                foreach ($functies as $functie) {
+                    /** @var Groepen $groep */
+                    $groep = $functie->getGroep();
+                    if ($groep->getId() == $page) {
+                        $personen[$functie->getFunctie()][] = $persoon->getAll();
                     }
                 }
-                return $this->render(
-                    'wedstrijdturnen/wedstrijduitslagen.html.twig',
-                    array(
-                        'activeGroep'        => $groepIdName,
-                        'groepen'            => $this->groepItems,
-                        'wedstrijduitslagen' => $wedstrijduitslagen,
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            } elseif ($view == 'TNT' && $id == null) {
-                $personen                      = array();
-                $personen['Trainer']           = array();
-                $personen['Assistent-Trainer'] = array();
-                $personen['Turnster']          = array();
-                foreach ($groep->getPeople() as $persoon) {
-                    $functies = $persoon->getFunctie();
-                    /** @var Functie $functie */
-                    foreach ($functies as $functie) {
-                        /** @var Groepen $groep */
-                        $groep = $functie->getGroep();
-                        if ($groep->getId() == $page) {
-                            $personen[$functie->getFunctie()][] = $persoon->getAll();
-                        }
-                    }
+            }
+            usort(
+                $personen['Turnster'],
+                function ($a, $b) {
+                    $t1 = strtotime($a->geboortedatum);
+                    $t2 = strtotime($b->geboortedatum);
+                    return $t1 - $t2;
                 }
-                usort(
-                    $personen['Turnster'],
-                    function ($a, $b) {
-                        $t1 = strtotime($a->geboortedatum);
-                        $t2 = strtotime($b->geboortedatum);
-                        return $t1 - $t2;
-                    }
-                );
-                return $this->render(
-                    'wedstrijdturnen/tnt.html.twig',
-                    array(
-                        'activeGroep'        => $groepIdName,
-                        'groepen'            => $this->groepItems,
-                        'personen'           => $personen,
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            } elseif ($view == 'TNT' && $id != null) {
-                $em    = $this->getDoctrine()->getManager();
-                $query = $em->createQuery(
-                    'SELECT persoon
-                FROM App:Persoon persoon
-                WHERE persoon.id = :id'
-                )
-                    ->setParameter('id', $id);
-                /** @var Persoon $persoon */
-                $persoon = $query->setMaxResults(1)->getOneOrNullResult();
-                /** @var Stukje $stukje */
-                $turnster = $persoon->getAll();
-                $stukje   = $persoon->getStukje();
-                if (!$stukje) {
-                    $stukje = new Stukje();
-                    $persoon->setStukje($stukje);
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($stukje);
-                    $em->flush();
-                }
-                $stukjeItems = $stukje->getAll();
-                return $this->render(
-                    'wedstrijdturnen/stukje.html.twig',
-                    array(
-                        'activeGroep'        => $groepIdName,
-                        'groepen'            => $this->groepItems,
-                        'stukje'             => $stukjeItems,
-                        'wedstrijdLinkItems' => $this->groepItems,
-                        'turnster'           => $turnster,
-                    )
-                );
-            }
-
-        } else {
+            );
             return $this->render(
-                'error/pageNotFound.html.twig',
+                'wedstrijdturnen/tnt.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
+                    'activeGroep'        => $groepIdName,
+                    'groepen'            => $this->groepItems,
+                    'personen'           => $personen,
                 )
             );
-        }
-    }
-
-    /**
-     * @Route("/lidmaatschap/{page}/", defaults={"page" = "lidmaatschap"}, name="getLidmaatschapPage", methods={"GET"})
-     */
-    public function getLidmaatschapPageAction($page)
-    {
-        $this->setBasicPageData();
-        if (in_array($page, array('lidmaatschap', 'contributie', 'ooievaarspas'))) {
-            $em      = $this->getDoctrine()->getManager();
-            $query   = $em->createQuery(
-                'SELECT content
-                FROM App:Content content
-                WHERE content.pagina = :page
-                ORDER BY content.gewijzigd DESC'
-            )
-                ->setParameter('page', $page);
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($content) {
-                return $this->render(
-                    'lidmaatschap/index.html.twig',
-                    array(
-                        'content'            => $content->getContent(),
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            } else {
-                return $this->render(
-                    'error/pageNotFound.html.twig',
-                    array(
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            }
-
-        } elseif ($page === 'formulieren') {
-            $em           = $this->getDoctrine()->getManager();
-            $query        = $em->createQuery(
-                'SELECT formulieren
-                FROM App:Formulieren formulieren
-                ORDER BY formulieren.id'
-            );
-            $content      = $query->getResult();
-            $contentItems = array();
-            for ($i = 0; $i < count($content); $i++) {
-                $contentItems[$i] = $content[$i]->getAll();
-            }
-            return $this->render(
-                'lidmaatschap/formulieren.html.twig',
-                array(
-                    'contentItems'       => $contentItems,
-                    'wedstrijdLinkItems' => $this->groepItems,
-                )
-            );
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array(
-                    'wedstrijdLinkItems' => $this->groepItems,
-                )
-            );
-        }
-    }
-
-    /**
-     * @Route("/fotofilm/{page}/", defaults={"page" = "fotoenfilm"}, name="getFotofilmPage", methods={"GET"})
-     */
-    public function getFotofilmPageAction($page)
-    {
-        $this->setBasicPageData();
-        if (in_array($page, array('fotoenfilm', 'foto', 'film'))) {
-            $em      = $this->getDoctrine()->getManager();
-            $query   = $em->createQuery(
-                'SELECT content
-                FROM App:Content content
-                WHERE content.pagina = :page
-                ORDER BY content.gewijzigd DESC'
-            )
-                ->setParameter('page', $page);
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($content) {
-                return $this->render(
-                    'fotofilm/index.html.twig',
-                    array(
-                        'content'            => $content->getContent(),
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            } else {
-                return $this->render(
-                    'error/pageNotFound.html.twig',
-                    array(
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            }
-
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array(
-                    'wedstrijdLinkItems' => $this->groepItems,
-                )
-            );
-        }
-    }
-
-    /**
-     * @Route("/vrijwilligers/{page}/", defaults={"page" = "vrijwilligers"}, name="getVrijwilligersPage", methods={"GET"})
-     */
-    public function getVrijwilligersPageAction($page)
-    {
-        $this->setBasicPageData();
-        if (in_array($page, array('vrijwilligers', 'taken', 'vrijwilligersdag'))) {
-            $em      = $this->getDoctrine()->getManager();
-            $query   = $em->createQuery(
-                'SELECT content
-                FROM App:Content content
-                WHERE content.pagina = :page
-                ORDER BY content.gewijzigd DESC'
-            )
-                ->setParameter('page', $page);
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($content) {
-                return $this->render(
-                    'vrijwilligers/index.html.twig',
-                    array(
-                        'content'            => $content->getContent(),
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            } else {
-                return $this->render(
-                    'error/pageNotFound.html.twig',
-                    array(
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            }
-
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array(
-                    'wedstrijdLinkItems' => $this->groepItems,
-                )
-            );
-        }
-    }
-
-    /**
-     * @Route("/contact/{page}/", defaults={"page" = "contact"}, name="getContactPage", methods={"GET"})
-     */
-    public function getContactPageAction($page)
-    {
-        $this->setBasicPageData();
-        if (in_array($page, array('contact'))) {
-            $em      = $this->getDoctrine()->getManager();
-            $query   = $em->createQuery(
-                'SELECT content
-                FROM App:Content content
-                WHERE content.pagina = :page
-                ORDER BY content.gewijzigd DESC'
-            )
-                ->setParameter('page', $page);
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($content) {
-                return $this->render(
-                    'contact/index.html.twig',
-                    array(
-                        'content'            => $content->getContent(),
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            } else {
-                return $this->render(
-                    'error/pageNotFound.html.twig',
-                    array(
-                        'wedstrijdLinkItems' => $this->groepItems,
-                    )
-                );
-            }
-
-        } elseif ($pagina = 'veelgesteldevragen') {
-            $em           = $this->getDoctrine()->getManager();
-            $query        = $em->createQuery(
-                'SELECT veelgesteldevragen
-                FROM App:VeelgesteldeVragen veelgesteldevragen
-                ORDER BY veelgesteldevragen.id'
-            );
-            $content      = $query->getResult();
-            $contentItems = array();
-            for ($i = 0; $i < count($content); $i++) {
-                $contentItems[$i] = $content[$i]->getAll();
-            }
-            return $this->render(
-                'contact/veelgesteldeVragen.html.twig',
-                array(
-                    'contentItems'       => $contentItems,
-                    'wedstrijdLinkItems' => $this->groepItems,
-                )
-            );
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array(
-                    'wedstrijdLinkItems' => $this->groepItems,
-                )
-            );
-        }
-    }
-
-    /**
-     * @Route("/inloggen/", name="getInloggenPage", methods={"GET"})
-     *
-     * @IsGranted("ROLE_INGELOGD")
-     */
-    public function getInloggenPageAction()
-    {
-        $this->setBasicPageData();
-        $user  = $this->getUser();
-        $roles = $user->getRoles();
-        switch ($roles[0]) {
-            case 'ROLE_ADMIN':
-                return $this->redirectToRoute('getAdminIndexPage');
-                break;
-            case 'ROLE_TRAINER':
-            case 'ROLE_ASSISTENT':
-            case 'ROLE_TURNSTER':
-                return $this->redirectToRoute('getSelectieIndexPage');
-                break;
-            case 'ROLE_SELECTIE':
-                return $this->redirectToRoute('getSelectieBeheerIndexPage');
-                break;
-            default:
-                return $this->render(
-                    'error/pageNotFound.html.twig',
-                    array(
-                    )
-                );
-        }
-    }
-
-    /**
-     * @Route("/inloggen/new_pass/", name="getNewPassPage", methods={"GET", "POST"})
-     */
-    public function getNewPassPageAction(Request $request, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
-    {
-        $error = "";
-        $this->setBasicPageData();
-
-        if ($request->getMethod() == 'POST') {
-            $email = $request->request->get('email');
+        } elseif ($view == 'TNT' && $id != null) {
             $em    = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
-                'SELECT user
+                'SELECT persoon
+                FROM App:Persoon persoon
+                WHERE persoon.id = :id'
+            )
+                ->setParameter('id', $id);
+            /** @var Persoon $persoon */
+            $persoon = $query->setMaxResults(1)->getOneOrNullResult();
+            /** @var Stukje $stukje */
+            $turnster = $persoon->getAll();
+            $stukje   = $persoon->getStukje();
+            if (!$stukje) {
+                $stukje = new Stukje();
+                $persoon->setStukje($stukje);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($stukje);
+                $em->flush();
+            }
+            $stukjeItems = $stukje->getAll();
+            return $this->render(
+                'wedstrijdturnen/stukje.html.twig',
+                array(
+                    'activeGroep'        => $groepIdName,
+                    'groepen'            => $this->groepItems,
+                    'stukje'             => $stukjeItems,
+                    'turnster'           => $turnster,
+                )
+            );
+        }
+        return $this->render(
+            'error/pageNotFound.html.twig',
+            array(
+            )
+        );
+    }
+
+/**
+ * @Route("/lidmaatschap/{page}/", defaults={"page" = "lidmaatschap"}, name="getLidmaatschapPage", methods={"GET"})
+ */
+public
+function getLidmaatschapPageAction($page)
+{
+    $this->setBasicPageData();
+    if (in_array($page, array('lidmaatschap', 'contributie', 'ooievaarspas'))) {
+        $em      = $this->getDoctrine()->getManager();
+        $query   = $em->createQuery(
+            'SELECT content
+                FROM App:Content content
+                WHERE content.pagina = :page
+                ORDER BY content.gewijzigd DESC'
+        )
+            ->setParameter('page', $page);
+        $content = $query->setMaxResults(1)->getOneOrNullResult();
+        if ($content) {
+            return $this->render(
+                'lidmaatschap/index.html.twig',
+                array(
+                    'content'            => $content->getContent(),
+                )
+            );
+        } else {
+            return $this->render(
+                'error/pageNotFound.html.twig',
+                array(
+                )
+            );
+        }
+
+    } elseif ($page === 'formulieren') {
+        $em           = $this->getDoctrine()->getManager();
+        $query        = $em->createQuery(
+            'SELECT formulieren
+                FROM App:Formulieren formulieren
+                ORDER BY formulieren.id'
+        );
+        $content      = $query->getResult();
+        $contentItems = array();
+        for ($i = 0; $i < count($content); $i++) {
+            $contentItems[$i] = $content[$i]->getAll();
+        }
+        return $this->render(
+            'lidmaatschap/formulieren.html.twig',
+            array(
+                'contentItems'       => $contentItems,
+            )
+        );
+    } else {
+        return $this->render(
+            'error/pageNotFound.html.twig',
+            array(
+            )
+        );
+    }
+}
+
+/**
+ * @Route("/fotofilm/{page}/", defaults={"page" = "fotoenfilm"}, name="getFotofilmPage", methods={"GET"})
+ */
+public
+function getFotofilmPageAction($page)
+{
+    $this->setBasicPageData();
+    if (in_array($page, array('fotoenfilm', 'foto', 'film'))) {
+        $em      = $this->getDoctrine()->getManager();
+        $query   = $em->createQuery(
+            'SELECT content
+                FROM App:Content content
+                WHERE content.pagina = :page
+                ORDER BY content.gewijzigd DESC'
+        )
+            ->setParameter('page', $page);
+        $content = $query->setMaxResults(1)->getOneOrNullResult();
+        if ($content) {
+            return $this->render(
+                'fotofilm/index.html.twig',
+                array(
+                    'content'            => $content->getContent(),
+                )
+            );
+        } else {
+            return $this->render(
+                'error/pageNotFound.html.twig',
+                array(
+                )
+            );
+        }
+
+    } else {
+        return $this->render(
+            'error/pageNotFound.html.twig',
+            array(
+            )
+        );
+    }
+}
+
+/**
+ * @Route("/vrijwilligers/{page}/", defaults={"page" = "vrijwilligers"}, name="getVrijwilligersPage", methods={"GET"})
+ */
+public
+function getVrijwilligersPageAction($page)
+{
+    $this->setBasicPageData();
+    if (in_array($page, array('vrijwilligers', 'taken', 'vrijwilligersdag'))) {
+        $em      = $this->getDoctrine()->getManager();
+        $query   = $em->createQuery(
+            'SELECT content
+                FROM App:Content content
+                WHERE content.pagina = :page
+                ORDER BY content.gewijzigd DESC'
+        )
+            ->setParameter('page', $page);
+        $content = $query->setMaxResults(1)->getOneOrNullResult();
+        if ($content) {
+            return $this->render(
+                'vrijwilligers/index.html.twig',
+                array(
+                    'content'            => $content->getContent(),
+                )
+            );
+        } else {
+            return $this->render(
+                'error/pageNotFound.html.twig',
+                array(
+                )
+            );
+        }
+
+    } else {
+        return $this->render(
+            'error/pageNotFound.html.twig',
+            array(
+            )
+        );
+    }
+}
+
+/**
+ * @Route("/contact/{page}/", defaults={"page" = "contact"}, name="getContactPage", methods={"GET"})
+ */
+public
+function getContactPageAction($page)
+{
+    $this->setBasicPageData();
+    if (in_array($page, array('contact'))) {
+        $em      = $this->getDoctrine()->getManager();
+        $query   = $em->createQuery(
+            'SELECT content
+                FROM App:Content content
+                WHERE content.pagina = :page
+                ORDER BY content.gewijzigd DESC'
+        )
+            ->setParameter('page', $page);
+        $content = $query->setMaxResults(1)->getOneOrNullResult();
+        if ($content) {
+            return $this->render(
+                'contact/index.html.twig',
+                array(
+                    'content'            => $content->getContent(),
+                )
+            );
+        } else {
+            return $this->render(
+                'error/pageNotFound.html.twig',
+                array(
+                )
+            );
+        }
+
+    } elseif ($pagina = 'veelgesteldevragen') {
+        $em           = $this->getDoctrine()->getManager();
+        $query        = $em->createQuery(
+            'SELECT veelgesteldevragen
+                FROM App:VeelgesteldeVragen veelgesteldevragen
+                ORDER BY veelgesteldevragen.id'
+        );
+        $content      = $query->getResult();
+        $contentItems = array();
+        for ($i = 0; $i < count($content); $i++) {
+            $contentItems[$i] = $content[$i]->getAll();
+        }
+        return $this->render(
+            'contact/veelgesteldeVragen.html.twig',
+            array(
+                'contentItems'       => $contentItems,
+            )
+        );
+    } else {
+        return $this->render(
+            'error/pageNotFound.html.twig',
+            array(
+            )
+        );
+    }
+}
+
+/**
+ * @Route("/inloggen/", name="getInloggenPage", methods={"GET"})
+ *
+ * @IsGranted("ROLE_INGELOGD")
+ */
+public
+function getInloggenPageAction()
+{
+    $this->setBasicPageData();
+    $user  = $this->getUser();
+    $roles = $user->getRoles();
+    switch ($roles[0]) {
+        case 'ROLE_ADMIN':
+            return $this->redirectToRoute('getAdminIndexPage');
+            break;
+        case 'ROLE_TRAINER':
+        case 'ROLE_ASSISTENT':
+        case 'ROLE_TURNSTER':
+            return $this->redirectToRoute('getSelectieIndexPage');
+            break;
+        case 'ROLE_SELECTIE':
+            return $this->redirectToRoute('getSelectieBeheerIndexPage');
+            break;
+        default:
+            return $this->render(
+                'error/pageNotFound.html.twig',
+                array()
+            );
+    }
+}
+
+/**
+ * @Route("/inloggen/new_pass/", name="getNewPassPage", methods={"GET", "POST"})
+ */
+public
+function getNewPassPageAction(Request $request, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
+{
+    $error = "";
+    $this->setBasicPageData();
+
+    if ($request->getMethod() == 'POST') {
+        $email = $request->request->get('email');
+        $em    = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT user
                     FROM App:User user
                     WHERE user.username = :email
                     OR user.email2 = :email
                     OR user.email3 = :email
                     '
-            )
-                ->setParameter('email', $email);
-            $user  = $query->setMaxResults(1)->getOneOrNullResult();
-            if (!$user) {
-                $error = 'Dit Emailadres komt niet voor in de database';
-            } else {
-                $password = $this->generatePassword();
-                $encoder  = $encoderFactory
-                    ->getEncoder($user);
-                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-                $em->flush();
+        )
+            ->setParameter('email', $email);
+        $user  = $query->setMaxResults(1)->getOneOrNullResult();
+        if (!$user) {
+            $error = 'Dit Emailadres komt niet voor in de database';
+        } else {
+            $password = $this->generatePassword();
+            $encoder  = $encoderFactory
+                ->getEncoder($user);
+            $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+            $em->flush();
+
+            $message = new TemplatedEmail();
+            $message->subject('Inloggegevens website Donar')
+                ->from('noreply@donargym.nl')
+                ->to($user->getUsername())
+                ->textTemplate('mails/new_password.txt.twig')
+                ->context(
+                    array(
+                        'email1'   => $user->getUsername(),
+                        'email2'   => $user->getEmail2(),
+                        'email3'   => $user->getEmail3(),
+                        'password' => $password
+                    )
+                );
+            $mailer->send($message);
+
+            if ($user->getEmail2()) {
 
                 $message = new TemplatedEmail();
                 $message->subject('Inloggegevens website Donar')
                     ->from('noreply@donargym.nl')
-                    ->to($user->getUsername())
+                    ->to($user->getEmail2())
                     ->textTemplate('mails/new_password.txt.twig')
                     ->context(
                         array(
@@ -851,86 +837,67 @@ class GetContentController extends BaseController
                         )
                     );
                 $mailer->send($message);
-
-                if ($user->getEmail2()) {
-
-                    $message = new TemplatedEmail();
-                    $message->subject('Inloggegevens website Donar')
-                        ->from('noreply@donargym.nl')
-                        ->to($user->getEmail2())
-                        ->textTemplate('mails/new_password.txt.twig')
-                        ->context(
-                            array(
-                                'email1'   => $user->getUsername(),
-                                'email2'   => $user->getEmail2(),
-                                'email3'   => $user->getEmail3(),
-                                'password' => $password
-                            )
-                        );
-                    $mailer->send($message);
-                }
-
-                if ($user->getEmail3()) {
-
-                    $message = new TemplatedEmail();
-                    $message->subject('Inloggegevens website Donar')
-                        ->from('noreply@donargym.nl')
-                        ->to($user->getEmail3())
-                        ->textTemplate('mails/new_password.txt.twig')
-                        ->context(
-                            array(
-                                'email1'   => $user->getUsername(),
-                                'email2'   => $user->getEmail2(),
-                                'email3'   => $user->getEmail3(),
-                                'password' => $password
-                            )
-                        );
-                    $mailer->send($message);
-                }
-
-                $error = 'Een nieuw wachtwoord is gemaild';
             }
-        }
 
+            if ($user->getEmail3()) {
+
+                $message = new TemplatedEmail();
+                $message->subject('Inloggegevens website Donar')
+                    ->from('noreply@donargym.nl')
+                    ->to($user->getEmail3())
+                    ->textTemplate('mails/new_password.txt.twig')
+                    ->context(
+                        array(
+                            'email1'   => $user->getUsername(),
+                            'email2'   => $user->getEmail2(),
+                            'email3'   => $user->getEmail3(),
+                            'password' => $password
+                        )
+                    );
+                $mailer->send($message);
+            }
+
+            $error = 'Een nieuw wachtwoord is gemaild';
+        }
+    }
+
+    return $this->render(
+        'security/newPass.html.twig',
+        array(
+            'error'              => $error,
+        )
+    );
+}
+
+/**
+ * @Route("/agenda/view/{id}/", name="getAgendaPage", methods={"GET"})
+ */
+public
+function getAgendaPageAction($id)
+{
+    $this->setBasicPageData();
+    $em      = $this->getDoctrine()->getManager();
+    $query   = $em->createQuery(
+        'SELECT calendar
+                FROM App:Calendar calendar
+                WHERE calendar.id = :id'
+    )
+        ->setParameter('id', $id);
+    $content = $query->setMaxResults(1)->getOneOrNullResult();
+    if ($content) {
         return $this->render(
-            'security/newPass.html.twig',
+            'default/viewCalendar.html.twig',
             array(
-                'error'              => $error,
-                'wedstrijdLinkItems' => $this->groepItems,
+                'content'            => $content->getAll(),
+            )
+        );
+    } else {
+        return $this->render(
+            'error/pageNotFound.html.twig',
+            array(
             )
         );
     }
-
-    /**
-     * @Route("/agenda/view/{id}/", name="getAgendaPage", methods={"GET"})
-     */
-    public function getAgendaPageAction($id)
-    {
-        $this->setBasicPageData();
-        $em      = $this->getDoctrine()->getManager();
-        $query   = $em->createQuery(
-            'SELECT calendar
-                FROM App:Calendar calendar
-                WHERE calendar.id = :id'
-        )
-            ->setParameter('id', $id);
-        $content = $query->setMaxResults(1)->getOneOrNullResult();
-        if ($content) {
-            return $this->render(
-                'default/viewCalendar.html.twig',
-                array(
-                    'content'            => $content->getAll(),
-                    'wedstrijdLinkItems' => $this->groepItems,
-                )
-            );
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array(
-                    'wedstrijdLinkItems' => $this->groepItems,
-                )
-            );
-        }
-    }
+}
 
 }

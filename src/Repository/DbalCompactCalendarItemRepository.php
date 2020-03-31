@@ -40,7 +40,7 @@ final class DbalCompactCalendarItemRepository
             $compactCalendarItems[] = $this->hydrate($row);
         }
 
-        return CompactCalendarItems::createFromArray($compactCalendarItems);
+        return CompactCalendarItems::fromArray($compactCalendarItems);
     }
 
     private function hydrate(array $row): CompactCalendarItem

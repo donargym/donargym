@@ -7,4 +7,8 @@ namespace App\Domain;
 final class DetailedCalendarItem
 {
 
+
+    private function __construct()
+    {
+    }
 }

@@ -60,9 +60,9 @@
                 <li>{% block wedstrijdturnen %}<a href="#">Wedstrijdturnen</a>{% endblock %}
                     <ul>
                         <li><a href="{{ path('getWedstrijdturnenPage') }}">Algemeen</a></li>
-                        {% for wedstrijdLinkItem in wedstrijdLinkItems %}
+                        {% for competitionGroup in competitionGroups.allGroups %}
                             <li>
-                                <a href="{{ path('getWedstrijdturnenPage', { 'page': wedstrijdLinkItem.id, 'view': 'TNT' }) }}">{{ wedstrijdLinkItem.name }}</a>
+                                <a href="{{ path('getWedstrijdturnenPage', { 'page': competitionGroup.id, 'view': 'TNT' }) }}">{{ competitionGroup.name }}</a>
                             </li>
                         {% endfor %}
                         <li><a href="http://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a></li>

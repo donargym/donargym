@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Domain\SystemClock;
 use App\Entity\SendMail;
-use App\Repository\DbalCompactCalendarItemRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,16 +11,6 @@ use Symfony\Component\Mailer\MailerInterface;
 abstract class BaseController extends AbstractController
 {
     protected $groepItems;
-    protected $groepIds;
-
-    private DbalCompactCalendarItemRepository $compactCalendarItemRepository;
-    private SystemClock $clock;
-
-    public function __construct(DbalCompactCalendarItemRepository $compactCalendarItemRepository, SystemClock $clock)
-    {
-        $this->compactCalendarItemRepository = $compactCalendarItemRepository;
-        $this->clock                         = $clock;
-    }
 
     public function getwedstrijdLinkItems()
     {
@@ -110,7 +98,6 @@ abstract class BaseController extends AbstractController
     {
         $wedstrijdLinkItems  = $this->getwedstrijdLinkItems();
         $this->groepItems    = $wedstrijdLinkItems[0];
-        $this->groepIds      = $wedstrijdLinkItems[1];
     }
 
     protected function addToDB($object)

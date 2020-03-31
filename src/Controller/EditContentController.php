@@ -61,7 +61,6 @@ class EditContentController extends BaseController
                     array(
                         'content'            => $content->getContent(),
                         'form'               => $form->createView(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -69,7 +68,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -124,7 +122,6 @@ class EditContentController extends BaseController
                         array(
                             'content'            => $content->getContent(),
                             'form'               => $form->createView(),
-                            'wedstrijdLinkItems' => $this->groepItems,
                         )
                     );
                 }
@@ -132,7 +129,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -141,7 +137,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -193,7 +188,6 @@ class EditContentController extends BaseController
                         array(
                             'content'            => $content->getContent(),
                             'form'               => $form->createView(),
-                            'wedstrijdLinkItems' => $this->groepItems,
                         )
                     );
                 }
@@ -201,7 +195,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -210,7 +203,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -253,7 +245,6 @@ class EditContentController extends BaseController
                         array(
                             'content'            => $content->getContent(),
                             'form'               => $form->createView(),
-                            'wedstrijdLinkItems' => $this->groepItems,
                         )
                     );
                 }
@@ -261,7 +252,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -281,7 +271,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -323,7 +312,6 @@ class EditContentController extends BaseController
                         array(
                             'content'            => $content->getContent(),
                             'form'               => $form->createView(),
-                            'wedstrijdLinkItems' => $this->groepItems,
                         )
                     );
                 }
@@ -331,7 +319,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -340,7 +327,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -382,7 +368,6 @@ class EditContentController extends BaseController
                         array(
                             'content'            => $content->getContent(),
                             'form'               => $form->createView(),
-                            'wedstrijdLinkItems' => $this->groepItems,
                         )
                     );
                 }
@@ -390,7 +375,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -399,7 +383,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -441,7 +424,6 @@ class EditContentController extends BaseController
                         array(
                             'content'            => $content->getContent(),
                             'form'               => $form->createView(),
-                            'wedstrijdLinkItems' => $this->groepItems,
                         )
                     );
                 }
@@ -449,7 +431,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -458,7 +439,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -500,7 +480,6 @@ class EditContentController extends BaseController
                         array(
                             'content'            => $content->getContent(),
                             'form'               => $form->createView(),
-                            'wedstrijdLinkItems' => $this->groepItems,
                         )
                     );
                 }
@@ -508,7 +487,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -517,7 +495,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -543,7 +520,6 @@ class EditContentController extends BaseController
                 'default/addCalendar.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -577,7 +553,6 @@ class EditContentController extends BaseController
                     'default/addCalendar.html.twig',
                     array(
                         'form'               => $form->createView(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -585,7 +560,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -611,14 +585,12 @@ class EditContentController extends BaseController
                     'default/removeCalendar.html.twig',
                     array(
                         'content'            => $agenda->getAll(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -638,7 +610,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -667,7 +638,6 @@ class EditContentController extends BaseController
                 'default/addNieuwsbericht.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -703,7 +673,6 @@ class EditContentController extends BaseController
                     'default/addNieuwsbericht.html.twig',
                     array(
                         'form'               => $form->createView(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -711,7 +680,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -737,14 +705,12 @@ class EditContentController extends BaseController
                     'default/removeNieuwsbericht.html.twig',
                     array(
                         'content'            => $nieuwsbericht->getAll(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -764,7 +730,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -804,7 +769,6 @@ class EditContentController extends BaseController
                 array(
                     'form'               => $form->createView(),
                     'vakantieItems'      => $vakantieItems,
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -851,7 +815,6 @@ class EditContentController extends BaseController
                     array(
                         'form'               => $form->createView(),
                         'vakantieItems'      => $vakantieItems,
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -859,7 +822,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -898,14 +860,12 @@ class EditContentController extends BaseController
                     array(
                         'content'            => $vakanties->getAll(),
                         'vakantieItems'      => $vakantieItems,
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -925,7 +885,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -961,7 +920,6 @@ class EditContentController extends BaseController
                 'default/addClubblad.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -987,14 +945,12 @@ class EditContentController extends BaseController
                     'default/removeClubblad.html.twig',
                     array(
                         'content'            => $clubblad->getAll(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -1014,7 +970,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -1044,7 +999,6 @@ class EditContentController extends BaseController
                 'lidmaatschap/addFormulieren.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -1070,14 +1024,12 @@ class EditContentController extends BaseController
                     'lidmaatschap/removeFormulieren.html.twig',
                     array(
                         'content'            => $formulier->getAll(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -1097,7 +1049,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -1123,7 +1074,6 @@ class EditContentController extends BaseController
                 'contact/addVeelgesteldeVragen.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -1157,7 +1107,6 @@ class EditContentController extends BaseController
                     'contact/addVeelgesteldeVragen.html.twig',
                     array(
                         'form'               => $form->createView(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -1165,7 +1114,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -1191,14 +1139,12 @@ class EditContentController extends BaseController
                     'contact/removeVeelgesteldeVragen.html.twig',
                     array(
                         'content'            => $vraag->getAll(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -1218,7 +1164,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }

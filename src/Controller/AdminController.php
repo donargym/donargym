@@ -39,7 +39,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminIndex.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -65,7 +64,6 @@ class AdminController extends BaseController
             'inloggen/adminFotos.html.twig',
             array(
                 'contentItems'       => $contentItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -101,7 +99,6 @@ class AdminController extends BaseController
                 'inloggen/addAdminFotos.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -127,14 +124,12 @@ class AdminController extends BaseController
                     'inloggen/removeAdminFotos.html.twig',
                     array(
                         'content'            => $foto->getAll(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -154,7 +149,6 @@ class AdminController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -181,7 +175,6 @@ class AdminController extends BaseController
             'inloggen/adminUploads.html.twig',
             array(
                 'contentItems'       => $contentItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -210,7 +203,6 @@ class AdminController extends BaseController
                 'inloggen/addAdminUploads.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -236,14 +228,12 @@ class AdminController extends BaseController
                     'inloggen/removeAdminUploads.html.twig',
                     array(
                         'content'            => $file->getAll(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -263,7 +253,6 @@ class AdminController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -303,7 +292,6 @@ class AdminController extends BaseController
             'inloggen/adminSelectie.html.twig',
             array(
                 'personen'           => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -530,7 +518,6 @@ class AdminController extends BaseController
             'inloggen/adminAddTrainer.html.twig',
             array(
                 'groepen'            => $groepenItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -743,7 +730,6 @@ class AdminController extends BaseController
             array(
                 'groepen'            => $groepenItems,
                 'persoonEdit'        => $persoonEdit,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -770,14 +756,12 @@ class AdminController extends BaseController
                         'voornaam'           => $persoon->getVoornaam(),
                         'achternaam'         => $persoon->getAchternaam(),
                         'id'                 => $persoon->getId(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -817,7 +801,6 @@ class AdminController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -832,7 +815,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/adminOwIndexPage.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -988,7 +970,6 @@ class AdminController extends BaseController
         return $this->render(
             'inloggen/uploadWedstrijdindelingen.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }

@@ -20,7 +20,7 @@ final class CompactCalendarItems implements IteratorAggregate
      *
      * @return static
      */
-    public static function createFromArray(array $compactCalendarItems): self
+    public static function fromArray(array $compactCalendarItems): self
     {
         Assertion::allIsInstanceOf($compactCalendarItems, CompactCalendarItem::class);
 
@@ -33,5 +33,9 @@ final class CompactCalendarItems implements IteratorAggregate
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->compactCalendarItems);
+    }
+
+    private function __construct()
+    {
     }
 }

@@ -83,7 +83,6 @@ class SelectieController extends BaseController
             array(
                 'persoon'            => $persoon,
                 'user'               => $user,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -184,7 +183,6 @@ class SelectieController extends BaseController
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
                     'user'               => $user,
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -312,7 +310,6 @@ class SelectieController extends BaseController
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
                     'user'               => $user,
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -350,7 +347,6 @@ class SelectieController extends BaseController
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
                     'user'               => $user,
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -387,7 +383,6 @@ class SelectieController extends BaseController
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
                     'user'               => $user,
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -433,7 +428,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'error'              => $error,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -1155,7 +1149,6 @@ class SelectieController extends BaseController
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
-                    'wedstrijdLinkItems' => $this->groepItems,
                     'groep'              => $groepsnaam,
                     'groepId'            => $groepId,
                     'persoonId'          => $persoonId,
@@ -1168,7 +1161,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/NotAuthorized.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -1279,7 +1271,6 @@ class SelectieController extends BaseController
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
-                    'wedstrijdLinkItems' => $this->groepItems,
                     'groep'              => $groepsnaam,
                     'groepId'            => $groepId,
                     'persoonId'          => $persoonId,
@@ -1297,7 +1288,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/NotAuthorized.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -1663,7 +1653,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'voortgang'          => $voortgang,
             )
         );
@@ -1720,7 +1709,6 @@ class SelectieController extends BaseController
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
-                    'wedstrijdLinkItems' => $this->groepItems,
                     'aantalMedailles'    => $countMedailles,
                     'aantalBekers'       => $countBekers,
                     'turnsters'          => $turnsters,
@@ -1845,7 +1833,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'voortgang'          => $voortgang,
                 'doelen'             => $doelen,
                 'toestel'            => $toestel,
@@ -1896,7 +1883,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/showPersoonOneDoelPerToestel.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -2159,7 +2145,6 @@ class SelectieController extends BaseController
                                 'persoon'            => $persoon,
                                 'user'               => $user,
                                 'persoonItems'       => $persoonItems,
-                                'wedstrijdLinkItems' => $this->groepItems,
                                 'groepId'            => $groepId,
                                 'token'              => $token,
                                 'error'              => $error,
@@ -2184,7 +2169,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'groepId'            => $groepId,
                 'token'              => $token,
             )
@@ -2441,7 +2425,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'groepId'            => $groepId,
                 'aanwezigheid'       => $aanwezigheid,
             )
@@ -2468,7 +2451,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'groepId'            => $groepId,
                 'aanwezigheid'       => $aanwezigheid,
             )
@@ -2552,7 +2534,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'groepId'            => $groepId,
                 'trainingsdata'      => $trainingsdata,
             )
@@ -2625,7 +2606,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'groepId'            => $groepId,
                 'trainingsdata'      => $trainingsdata,
             )
@@ -2763,7 +2743,6 @@ class SelectieController extends BaseController
                 'persoon'              => $persoon,
                 'user'                 => $user,
                 'persoonItems'         => $persoonItems,
-                'wedstrijdLinkItems'   => $this->groepItems,
                 'groepId'              => $groepId,
                 'trainingsdata'        => $trainingsdata,
                 'personenAanwezigheid' => $personenAanwezigheid,
@@ -2790,7 +2769,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'groepId'            => $groepId,
             )
         );
@@ -2836,7 +2814,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -3081,7 +3058,6 @@ class SelectieController extends BaseController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -3114,7 +3090,6 @@ class SelectieController extends BaseController
                         'voornaam'           => $turnster->getVoornaam(),
                         'achternaam'         => $turnster->getAchternaam(),
                         'id'                 => $turnster->getId(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                         'persoon'            => $persoon,
                         'user'               => $user,
                         'persoonItems'       => $persoonItems,
@@ -3124,7 +3099,6 @@ class SelectieController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
             }
@@ -3180,7 +3154,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
         }
@@ -3234,7 +3207,6 @@ class SelectieController extends BaseController
                 'inloggen/selectieAddFoto.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'wedstrijdLinkItems' => $this->groepItems,
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
@@ -3305,7 +3277,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewWedstrijduitslagen.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -3365,7 +3336,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieAddWedstrijduitslagen.html.twig',
                 array(
-                    'wedstrijdLinkItems' => $this->groepItems,
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
@@ -3378,7 +3348,6 @@ class SelectieController extends BaseController
         return $this->render(
             'error/NotAuthorized.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }
@@ -3425,7 +3394,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieRemoveWedstrijduitslagen.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -3642,7 +3610,6 @@ class SelectieController extends BaseController
                     'persoonItems'       => $persoonItems,
                     'groepen'            => $groepenItems,
                     'persoonEdit'        => $persoonEdit,
-                    'wedstrijdLinkItems' => $this->groepItems,
                     'functie'            => $functie,
                     'groepId'            => $groepId,
                     'persoonId'          => $persoonId,
@@ -4131,7 +4098,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewTurnster.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -4217,7 +4183,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewTurnsterOneDoel.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -4445,7 +4410,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/SelectieTurnsterAddCijfer.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -4601,7 +4565,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddDoelToTurnster.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -4670,7 +4633,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieRemoveDoelFromTurnster.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -4723,7 +4685,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewVloermuziek.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -4803,7 +4764,6 @@ class SelectieController extends BaseController
                     'inloggen/selectieAddVloermuziek.html.twig',
                     array(
                         'form'               => $form->createView(),
-                        'wedstrijdLinkItems' => $this->groepItems,
                         'persoon'            => $persoon,
                         'user'               => $user,
                         'persoonItems'       => $persoonItems,
@@ -4903,7 +4863,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewDoelen.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -4995,7 +4954,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddDoelen.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -5177,7 +5135,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewOneDoel.html.twig',
             array(
-                'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,

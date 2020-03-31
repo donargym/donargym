@@ -26,7 +26,6 @@ class SecurityController extends BaseController
                 // last username entered by the user
                 'last_username'      => $lastUsername,
                 'error'              => $error,
-                'wedstrijdLinkItems' => $this->groepItems,
             )
         );
     }

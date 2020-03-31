@@ -40,7 +40,6 @@ class VoedselController extends SelectieController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'groepId'            => $groepId,
                 'voedselItems'       => $voedsel,
             )
@@ -94,7 +93,6 @@ class VoedselController extends SelectieController
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
-                'wedstrijdLinkItems' => $this->groepItems,
                 'groepId'            => $groepId,
                 'form'               => $form->createView(),
             )
