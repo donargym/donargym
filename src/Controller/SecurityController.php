@@ -14,7 +14,6 @@ class SecurityController extends BaseController
     {
         $this->wedstrijdLinkItems = $this->getwedstrijdLinkItems();
         $this->groepItems         = $this->wedstrijdLinkItems[0];
-        $this->header             = $this->getHeader();
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -27,7 +26,6 @@ class SecurityController extends BaseController
                 // last username entered by the user
                 'last_username'      => $lastUsername,
                 'error'              => $error,
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
         );

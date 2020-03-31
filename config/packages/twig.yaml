@@ -3,3 +3,4 @@ twig:
     globals:
         # the value is the service's id
         calendarItems: '@App\Repository\DbalCompactCalendarItemRepository'
+        header: '@App\Domain\HeaderLocation'

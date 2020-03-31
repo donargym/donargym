@@ -32,7 +32,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'wedstrijdturnen/trainingsstageIndexPage.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -72,7 +71,6 @@ class GetContentController extends BaseController
                 'wedstrijdturnen/trainingsstageTurnsterForm.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                     'paymentLink'        => $this->paymentLink,
                 )
@@ -112,7 +110,6 @@ class GetContentController extends BaseController
                 'wedstrijdturnen/trainingsstageTrainerForm.html.twig',
                 array(
                     'form'               => $form->createView(),
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                     'paymentLink'        => $this->paymentLink,
                 )
@@ -131,7 +128,6 @@ class GetContentController extends BaseController
         return $this->render(
             'wedstrijdturnen/trainingsstageSuccessPage.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'as'                 => $request->query->get('as'),
                 'paymentLink'        => $this->paymentLink,
@@ -181,7 +177,6 @@ class GetContentController extends BaseController
                     'donar/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -189,7 +184,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -199,7 +193,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -231,7 +224,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -255,7 +247,6 @@ class GetContentController extends BaseController
             'default/nieuws.html.twig',
             array(
                 'nieuwsItems'        => $nieuwsItems,
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
         );
@@ -280,7 +271,6 @@ class GetContentController extends BaseController
             'default/vakanties.html.twig',
             array(
                 'vakantieItems'      => $vakantieItems,
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
         );
@@ -319,7 +309,6 @@ class GetContentController extends BaseController
             'default/clubblad.html.twig',
             array(
                 'clubbladItems'      => $clubbladItems,
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
         );
@@ -345,7 +334,6 @@ class GetContentController extends BaseController
                 'default/nieuws.html.twig',
                 array(
                     'nieuwsItems'        => $nieuwsItems,
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -365,7 +353,6 @@ class GetContentController extends BaseController
                 'default/archief_index.html.twig',
                 array(
                     'jaren'              => $jaren,
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -377,7 +364,7 @@ class GetContentController extends BaseController
      */
     public function getLessenPageAction($page)
     {
-        $this->setBasicPageData('recreatie');
+        $this->setBasicPageData();
         if (in_array(
             $page,
             array(
@@ -403,7 +390,6 @@ class GetContentController extends BaseController
                     'lessen/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -411,7 +397,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -421,7 +406,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -438,7 +422,7 @@ class GetContentController extends BaseController
      */
     public function getWedstrijdturnenPageAction($page, $view, $id)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $groepId = $this->groepIds;
         if (in_array($page, array('wedstrijdturnen'))) {
             $em      = $this->getDoctrine()->getManager();
@@ -455,7 +439,6 @@ class GetContentController extends BaseController
                     'wedstrijdturnen/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'header'             => $this->header,
                         'groepen'            => $this->groepItems,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -464,7 +447,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'        => $this->header
                     )
                 );
             }
@@ -482,7 +464,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'wedstrijdturnen/groepIndex.html.twig',
                     array(
-                        'header'             => $this->header,
                         'activeGroep'        => $groepIdName,
                         'wedstrijdLinkItems' => $this->groepItems,
                         'groepen'            => $this->groepItems,
@@ -503,7 +484,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'wedstrijdturnen/wedstrijduitslagen.html.twig',
                     array(
-                        'header'             => $this->header,
                         'activeGroep'        => $groepIdName,
                         'groepen'            => $this->groepItems,
                         'wedstrijduitslagen' => $wedstrijduitslagen,
@@ -537,7 +517,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'wedstrijdturnen/tnt.html.twig',
                     array(
-                        'header'             => $this->header,
                         'activeGroep'        => $groepIdName,
                         'groepen'            => $this->groepItems,
                         'personen'           => $personen,
@@ -568,7 +547,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'wedstrijdturnen/stukje.html.twig',
                     array(
-                        'header'             => $this->header,
                         'activeGroep'        => $groepIdName,
                         'groepen'            => $this->groepItems,
                         'stukje'             => $stukjeItems,
@@ -582,7 +560,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -610,7 +587,6 @@ class GetContentController extends BaseController
                     'lidmaatschap/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -618,7 +594,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -640,7 +615,6 @@ class GetContentController extends BaseController
                 'lidmaatschap/formulieren.html.twig',
                 array(
                     'contentItems'       => $contentItems,
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -648,7 +622,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -676,7 +649,6 @@ class GetContentController extends BaseController
                     'fotofilm/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -684,7 +656,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -694,7 +665,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -722,7 +692,6 @@ class GetContentController extends BaseController
                     'vrijwilligers/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -730,7 +699,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -740,7 +708,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -768,7 +735,6 @@ class GetContentController extends BaseController
                     'contact/index.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -776,7 +742,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -798,7 +763,6 @@ class GetContentController extends BaseController
                 'contact/veelgesteldeVragen.html.twig',
                 array(
                     'contentItems'       => $contentItems,
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -806,7 +770,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -839,7 +802,6 @@ class GetContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'        => $this->header
                     )
                 );
         }
@@ -933,7 +895,6 @@ class GetContentController extends BaseController
         return $this->render(
             'security/newPass.html.twig',
             array(
-                'header'             => $this->header,
                 'error'              => $error,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
@@ -959,7 +920,6 @@ class GetContentController extends BaseController
                 'default/viewCalendar.html.twig',
                 array(
                     'content'            => $content->getAll(),
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -967,7 +927,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );

@@ -60,7 +60,6 @@ class EditContentController extends BaseController
                     'kamp/editIndex.html.twig',
                     array(
                         'content'            => $content->getContent(),
-                        'header'             => $this->header,
                         'form'               => $form->createView(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -70,7 +69,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -125,7 +123,6 @@ class EditContentController extends BaseController
                         'donar/editIndex.html.twig',
                         array(
                             'content'            => $content->getContent(),
-                            'header'             => $this->header,
                             'form'               => $form->createView(),
                             'wedstrijdLinkItems' => $this->groepItems,
                         )
@@ -135,7 +132,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -145,7 +141,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -157,7 +152,7 @@ class EditContentController extends BaseController
      */
     public function editLessenPageAction($page, Request $request)
     {
-        $this->setBasicPageData('recreatie');
+        $this->setBasicPageData();
         if (in_array(
             $page,
             array(
@@ -197,7 +192,6 @@ class EditContentController extends BaseController
                         'lessen/editIndex.html.twig',
                         array(
                             'content'            => $content->getContent(),
-                            'header'             => $this->header,
                             'form'               => $form->createView(),
                             'wedstrijdLinkItems' => $this->groepItems,
                         )
@@ -207,7 +201,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -217,7 +210,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -230,7 +222,7 @@ class EditContentController extends BaseController
      */
     public function editWedstrijdturnenPageAction($page, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         if (in_array($page, array('wedstrijdturnen'))) {
             $em      = $this->getDoctrine()->getManager();
             $query   = $em->createQuery(
@@ -260,7 +252,6 @@ class EditContentController extends BaseController
                         'wedstrijdturnen/editIndex.html.twig',
                         array(
                             'content'            => $content->getContent(),
-                            'header'             => $this->header,
                             'form'               => $form->createView(),
                             'wedstrijdLinkItems' => $this->groepItems,
                         )
@@ -270,7 +261,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -291,7 +281,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -333,7 +322,6 @@ class EditContentController extends BaseController
                         'lidmaatschap/editIndex.html.twig',
                         array(
                             'content'            => $content->getContent(),
-                            'header'             => $this->header,
                             'form'               => $form->createView(),
                             'wedstrijdLinkItems' => $this->groepItems,
                         )
@@ -343,7 +331,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -353,7 +340,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -395,7 +381,6 @@ class EditContentController extends BaseController
                         'fotofilm/editIndex.html.twig',
                         array(
                             'content'            => $content->getContent(),
-                            'header'             => $this->header,
                             'form'               => $form->createView(),
                             'wedstrijdLinkItems' => $this->groepItems,
                         )
@@ -405,7 +390,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -415,7 +399,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -457,7 +440,6 @@ class EditContentController extends BaseController
                         'vrijwilligers/editIndex.html.twig',
                         array(
                             'content'            => $content->getContent(),
-                            'header'             => $this->header,
                             'form'               => $form->createView(),
                             'wedstrijdLinkItems' => $this->groepItems,
                         )
@@ -467,7 +449,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -477,7 +458,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -519,7 +499,6 @@ class EditContentController extends BaseController
                         'contact/editIndex.html.twig',
                         array(
                             'content'            => $content->getContent(),
-                            'header'             => $this->header,
                             'form'               => $form->createView(),
                             'wedstrijdLinkItems' => $this->groepItems,
                         )
@@ -529,7 +508,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -539,7 +517,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -565,7 +542,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'default/addCalendar.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -600,7 +576,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/addCalendar.html.twig',
                     array(
-                        'header'             => $this->header,
                         'form'               => $form->createView(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -610,7 +585,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -636,7 +610,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/removeCalendar.html.twig',
                     array(
-                        'header'             => $this->header,
                         'content'            => $agenda->getAll(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -645,7 +618,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -666,7 +638,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -695,7 +666,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'default/addNieuwsbericht.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -732,7 +702,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/addNieuwsbericht.html.twig',
                     array(
-                        'header'             => $this->header,
                         'form'               => $form->createView(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -742,7 +711,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -768,7 +736,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/removeNieuwsbericht.html.twig',
                     array(
-                        'header'             => $this->header,
                         'content'            => $nieuwsbericht->getAll(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -777,7 +744,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -798,7 +764,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -837,7 +802,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'default/addVakanties.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'vakantieItems'      => $vakantieItems,
                     'wedstrijdLinkItems' => $this->groepItems,
@@ -885,7 +849,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/addVakanties.html.twig',
                     array(
-                        'header'             => $this->header,
                         'form'               => $form->createView(),
                         'vakantieItems'      => $vakantieItems,
                         'wedstrijdLinkItems' => $this->groepItems,
@@ -896,7 +859,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -934,7 +896,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/removeVakanties.html.twig',
                     array(
-                        'header'             => $this->header,
                         'content'            => $vakanties->getAll(),
                         'vakantieItems'      => $vakantieItems,
                         'wedstrijdLinkItems' => $this->groepItems,
@@ -944,7 +905,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -965,7 +925,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -1001,7 +960,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'default/addClubblad.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -1028,7 +986,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/removeClubblad.html.twig',
                     array(
-                        'header'             => $this->header,
                         'content'            => $clubblad->getAll(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -1037,7 +994,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -1058,7 +1014,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -1088,7 +1043,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'lidmaatschap/addFormulieren.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -1115,7 +1069,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'lidmaatschap/removeFormulieren.html.twig',
                     array(
-                        'header'             => $this->header,
                         'content'            => $formulier->getAll(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -1124,7 +1077,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -1145,7 +1097,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -1171,7 +1122,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'contact/addVeelgesteldeVragen.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
@@ -1206,7 +1156,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'contact/addVeelgesteldeVragen.html.twig',
                     array(
-                        'header'             => $this->header,
                         'form'               => $form->createView(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -1216,7 +1165,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -1242,7 +1190,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'contact/removeVeelgesteldeVragen.html.twig',
                     array(
-                        'header'             => $this->header,
                         'content'            => $vraag->getAll(),
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
@@ -1251,7 +1198,6 @@ class EditContentController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -1272,7 +1218,6 @@ class EditContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );

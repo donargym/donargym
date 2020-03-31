@@ -12,7 +12,6 @@ use Symfony\Component\Mailer\MailerInterface;
 
 abstract class BaseController extends AbstractController
 {
-    protected $header;
     protected $groepItems;
     protected $groepIds;
 
@@ -23,21 +22,6 @@ abstract class BaseController extends AbstractController
     {
         $this->compactCalendarItemRepository = $compactCalendarItemRepository;
         $this->clock                         = $clock;
-    }
-
-    public function getHeader($page = null)
-    {
-        switch ($page) {
-            case 'wedstrijdturnen':
-                return 'wedstrijdturnen' . rand(1, 12);
-                break;
-            case 'recreatie':
-                return 'bannerrecreatie' . rand(1, 4);
-                break;
-            default:
-                return 'bannerhome' . rand(1, 4);
-                break;
-        }
     }
 
     public function getwedstrijdLinkItems()
@@ -122,12 +106,11 @@ abstract class BaseController extends AbstractController
         return $password;
     }
 
-    protected function setBasicPageData($page = null)
+    protected function setBasicPageData()
     {
         $wedstrijdLinkItems  = $this->getwedstrijdLinkItems();
         $this->groepItems    = $wedstrijdLinkItems[0];
         $this->groepIds      = $wedstrijdLinkItems[1];
-        $this->header        = $this->getHeader($page);
     }
 
     protected function addToDB($object)

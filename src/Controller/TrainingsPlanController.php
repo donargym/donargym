@@ -17,7 +17,7 @@ class TrainingsPlanController extends SelectieController
      */
     public function TrainingsplanIndex($persoonId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject       = $this->getUser();
         $user             = $this->getBasisUserGegevens($userObject);
         $persoon          = $this->getBasisPersoonsGegevens($userObject);
@@ -34,7 +34,6 @@ class TrainingsPlanController extends SelectieController
         return $this->render(
             'inloggen/TrainingsplanIndex.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -51,7 +50,7 @@ class TrainingsPlanController extends SelectieController
      */
     public function TrainingsplanmakeGroepjes($persoonId, $groepId, $trainingsdatumId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject              = $this->getUser();
         $user                    = $this->getBasisUserGegevens($userObject);
         $persoon                 = $this->getBasisPersoonsGegevens($userObject);
@@ -71,7 +70,6 @@ class TrainingsPlanController extends SelectieController
         return $this->render(
             'inloggen/TrainingsplanMakeGroepjes.html.twig',
             array(
-                'header'               => $this->header,
                 'persoon'              => $persoon,
                 'user'                 => $user,
                 'persoonItems'         => $persoonItems,
@@ -123,7 +121,7 @@ class TrainingsPlanController extends SelectieController
      */
     public function makeTrainingsplan($persoonId, $groepId, $trainingId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject                = $this->getUser();
         $user                      = $this->getBasisUserGegevens($userObject);
         $persoon                   = $this->getBasisPersoonsGegevens($userObject);
@@ -185,7 +183,6 @@ class TrainingsPlanController extends SelectieController
         return $this->render(
             'inloggen/ViewTrainingsplan.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,

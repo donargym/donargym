@@ -74,14 +74,13 @@ class SelectieController extends BaseController
      */
     public function getSelectieIndexPage()
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
         return $this->render(
             'inloggen/selectieIndexPage.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'wedstrijdLinkItems' => $this->groepItems,
@@ -153,7 +152,7 @@ class SelectieController extends BaseController
      */
     public function editContactgegevens(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
@@ -182,7 +181,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editContactgegevens.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -287,7 +285,7 @@ class SelectieController extends BaseController
      */
     public function editEmail(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
@@ -311,7 +309,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -327,7 +324,7 @@ class SelectieController extends BaseController
      */
     public function editEmail2(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
@@ -350,7 +347,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail2.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -366,7 +362,7 @@ class SelectieController extends BaseController
      */
     public function editEmail3(Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
@@ -388,7 +384,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/editEmail3.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -428,14 +423,13 @@ class SelectieController extends BaseController
                 return $this->redirectToRoute('getSelectieIndexPage');
             }
         }
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject = $this->getUser();
         $user       = $this->getBasisUserGegevens($userObject);
         $persoon    = $this->getBasisPersoonsGegevens($userObject);
         return $this->render(
             'inloggen/editPassword.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'error'              => $error,
@@ -1080,7 +1074,7 @@ class SelectieController extends BaseController
      */
     public function addWedstrijdkalenderItems($persoonId, $groepId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -1158,7 +1152,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/addEditKalendarItems.html.twig',
                 array(
-                    'header'             => $this->header,
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
@@ -1175,7 +1168,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/NotAuthorized.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -1188,7 +1180,7 @@ class SelectieController extends BaseController
      */
     public function editWedstrijdkalenderItems($persoonId, $groepId, $kalenderItemId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -1284,7 +1276,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/addEditKalendarItems.html.twig',
                 array(
-                    'header'             => $this->header,
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
@@ -1306,7 +1297,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/NotAuthorized.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -1637,7 +1627,7 @@ class SelectieController extends BaseController
     public
     function showPersoon($id)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -1670,7 +1660,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieShowPersoon.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -1687,7 +1676,7 @@ class SelectieController extends BaseController
     public
     function showDoelPrijzen($persoonId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -1728,7 +1717,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieShowDoelPrijzen.html.twig',
                 array(
-                    'header'             => $this->header,
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
@@ -1836,7 +1824,7 @@ class SelectieController extends BaseController
      */
     public function showPersoonDoelenPerToestel($persoonId, $toestel)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -1854,7 +1842,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieShowPersoonDoelenPerToestel.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -1874,7 +1861,7 @@ class SelectieController extends BaseController
      */
     public function showPersoonOneDoelPerToestel($persoonId, $toestel, $doelId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject        = $this->getUser();
         $user              = $this->getBasisUserGegevens($userObject);
         $persoon           = $this->getBasisPersoonsGegevens($userObject);
@@ -1909,7 +1896,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/showPersoonOneDoelPerToestel.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -2031,7 +2017,7 @@ class SelectieController extends BaseController
     public
     function Afmelding($id, $groepId, Request $request, MailerInterface $mailer)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2170,7 +2156,6 @@ class SelectieController extends BaseController
                         return $this->render(
                             'inloggen/selectieAfmelden.html.twig',
                             array(
-                                'header'             => $this->header,
                                 'persoon'            => $persoon,
                                 'user'               => $user,
                                 'persoonItems'       => $persoonItems,
@@ -2196,7 +2181,6 @@ class SelectieController extends BaseController
             'inloggen/selectieAfmelden.html.twig',
             array(
                 'id'                 => $id,
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -2444,7 +2428,7 @@ class SelectieController extends BaseController
     public
     function viewAfmeldingen($id, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2454,7 +2438,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewAfmeldingen.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -2472,7 +2455,7 @@ class SelectieController extends BaseController
     public
     function viewAanwezigheid($id, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2482,7 +2465,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewAanwezigheid.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -2557,7 +2539,7 @@ class SelectieController extends BaseController
     public
     function kruisjeslijst($id, $groepId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject    = $this->getUser();
         $user          = $this->getBasisUserGegevens($userObject);
@@ -2567,7 +2549,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieKruisjeslijst.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -2614,7 +2595,7 @@ class SelectieController extends BaseController
     public
     function removeTrainingsdatum($id, $groepId, $trainingsdatumId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2641,7 +2622,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/removeTrainingsdatum.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -2702,7 +2682,7 @@ class SelectieController extends BaseController
     public
     function kruisjeslijstInvullen($id, $groepId, $trainingsdatumId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2780,7 +2760,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/kruisjeslijstInvullen.html.twig',
             array(
-                'header'               => $this->header,
                 'persoon'              => $persoon,
                 'user'                 => $user,
                 'persoonItems'         => $persoonItems,
@@ -2799,7 +2778,7 @@ class SelectieController extends BaseController
     public
     function viewAdreslijst($id, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2808,7 +2787,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAdreslijst.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -2825,7 +2803,7 @@ class SelectieController extends BaseController
      */
     public function addStukje($id, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         /** @var \App\Entity\User $userObject */
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
@@ -2855,7 +2833,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddStukje.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -2871,7 +2848,7 @@ class SelectieController extends BaseController
     public
     function addSelectieTurnsterPageAction(Request $request, $id, $groepsId, EncoderFactoryInterface $encoderFactory, MailerInterface $mailer)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3100,7 +3077,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddTurnster.html.twig',
             array(
-                'header'             => $this->header,
                 'groepen'            => $groepenItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -3118,7 +3094,7 @@ class SelectieController extends BaseController
     function removeSelectieTurnsterPage($trainerId, $turnsterId, $groepId, Request $request)
     {
         if ($request->getMethod() == 'GET') {
-            $this->setBasicPageData('wedstrijdturnen');
+            $this->setBasicPageData();
             $userObject   = $this->getUser();
             $user         = $this->getBasisUserGegevens($userObject);
             $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3135,7 +3111,6 @@ class SelectieController extends BaseController
                 return $this->render(
                     'inloggen/selectieRemoveTurnster.html.twig',
                     array(
-                        'header'             => $this->header,
                         'voornaam'           => $turnster->getVoornaam(),
                         'achternaam'         => $turnster->getAchternaam(),
                         'id'                 => $turnster->getId(),
@@ -3149,7 +3124,6 @@ class SelectieController extends BaseController
                 return $this->render(
                     'error/pageNotFound.html.twig',
                     array(
-                        'header'             => $this->header,
                         'wedstrijdLinkItems' => $this->groepItems,
                     )
                 );
@@ -3206,7 +3180,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                 )
             );
@@ -3220,7 +3193,7 @@ class SelectieController extends BaseController
     public
     function addSelectieFotoPageAction(Request $request, $persoonId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3260,7 +3233,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieAddFoto.html.twig',
                 array(
-                    'header'             => $this->header,
                     'form'               => $form->createView(),
                     'wedstrijdLinkItems' => $this->groepItems,
                     'persoon'            => $persoon,
@@ -3308,7 +3280,7 @@ class SelectieController extends BaseController
     public
     function viewSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3333,7 +3305,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewWedstrijduitslagen.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -3352,7 +3323,7 @@ class SelectieController extends BaseController
     public
     function addSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3394,7 +3365,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieAddWedstrijduitslagen.html.twig',
                 array(
-                    'header'             => $this->header,
                     'wedstrijdLinkItems' => $this->groepItems,
                     'persoon'            => $persoon,
                     'user'               => $user,
@@ -3408,7 +3378,6 @@ class SelectieController extends BaseController
         return $this->render(
             'error/NotAuthorized.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
             )
         );
@@ -3420,7 +3389,7 @@ class SelectieController extends BaseController
      */
     public function removeSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId, $wedstrijduitslagId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3456,7 +3425,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieRemoveWedstrijduitslagen.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -3474,7 +3442,7 @@ class SelectieController extends BaseController
      */
     public function editSelectieTurnsterAction(Request $request, $persoonId, $turnsterId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -3669,7 +3637,6 @@ class SelectieController extends BaseController
             return $this->render(
                 'inloggen/selectieEditTurnster.html.twig',
                 array(
-                    'header'             => $this->header,
                     'persoon'            => $persoon,
                     'user'               => $user,
                     'persoonItems'       => $persoonItems,
@@ -4143,7 +4110,7 @@ class SelectieController extends BaseController
     public
     function viewSelectieTurnster($persoonId, $turnsterId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4164,7 +4131,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewTurnster.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -4208,7 +4174,7 @@ class SelectieController extends BaseController
     public
     function viewSelectieTurnsterOneDoel($persoonId, $turnsterId, $groepId, $doelId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4251,7 +4217,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewTurnsterOneDoel.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -4402,7 +4367,7 @@ class SelectieController extends BaseController
     public
     function SelectieTurnsterAddCijfer($persoonId, $turnsterId, $groepId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4480,7 +4445,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/SelectieTurnsterAddCijfer.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -4565,7 +4529,7 @@ class SelectieController extends BaseController
      */
     public function addDoelToTurnster($persoonId, $groepId, $turnsterId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4637,7 +4601,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddDoelToTurnster.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -4658,7 +4621,7 @@ class SelectieController extends BaseController
      */
     public function removeDoelFromTurnster($persoonId, $groepId, $turnsterId, $doelId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4707,7 +4670,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieRemoveDoelFromTurnster.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -4746,7 +4708,7 @@ class SelectieController extends BaseController
      */
     public function viewVloermuziek($persoonId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4761,7 +4723,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewVloermuziek.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -4781,7 +4742,7 @@ class SelectieController extends BaseController
     function addSelectieVloermuziekPageAction(Request $request, $persoonId, $turnsterId, $groepId)
     {
         $error = null;
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4841,7 +4802,6 @@ class SelectieController extends BaseController
                 return $this->render(
                     'inloggen/selectieAddVloermuziek.html.twig',
                     array(
-                        'header'             => $this->header,
                         'form'               => $form->createView(),
                         'wedstrijdLinkItems' => $this->groepItems,
                         'persoon'            => $persoon,
@@ -4929,7 +4889,7 @@ class SelectieController extends BaseController
      */
     public function viewDoelen($persoonId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -4943,7 +4903,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewDoelen.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -4961,7 +4920,7 @@ class SelectieController extends BaseController
      */
     public function addDoelen($persoonId, $groepId, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -5036,7 +4995,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieAddDoelen.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,
@@ -5167,7 +5125,7 @@ class SelectieController extends BaseController
      */
     public function viewOneDoel($persoonId, $groepId, $doelId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -5219,7 +5177,6 @@ class SelectieController extends BaseController
         return $this->render(
             'inloggen/selectieViewOneDoel.html.twig',
             array(
-                'header'             => $this->header,
                 'wedstrijdLinkItems' => $this->groepItems,
                 'persoon'            => $persoon,
                 'user'               => $user,

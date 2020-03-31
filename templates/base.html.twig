@@ -14,7 +14,7 @@
         <div id="header">
             <a href="/">
                 {% block header %}
-                    <img width="980" src="{{ asset('images/headers/'~ header ~'.jpg') }}"/>
+                    <img width="980" src="{{ asset('images/headers/'~ header.getHeader(app.request.get('page')) ~'.jpg') }}"/>
                 {% endblock %}
             </a>
         </div>

@@ -19,7 +19,7 @@ class VoedselController extends SelectieController
      */
     public function EtenDrinkenIndex($persoonId, $groepId)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject     = $this->getUser();
         $user           = $this->getBasisUserGegevens($userObject);
         $persoon        = $this->getBasisPersoonsGegevens($userObject);
@@ -37,7 +37,6 @@ class VoedselController extends SelectieController
         return $this->render(
             'inloggen/viewVoedsel.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
@@ -54,7 +53,7 @@ class VoedselController extends SelectieController
      */
     public function EtenDrinkenAdd($persoonId, $groepId, $voedselId = false, Request $request)
     {
-        $this->setBasicPageData('wedstrijdturnen');
+        $this->setBasicPageData();
         $userObject   = $this->getUser();
         $user         = $this->getBasisUserGegevens($userObject);
         $persoon      = $this->getBasisPersoonsGegevens($userObject);
@@ -92,7 +91,6 @@ class VoedselController extends SelectieController
         return $this->render(
             'inloggen/addVoedsel.html.twig',
             array(
-                'header'             => $this->header,
                 'persoon'            => $persoon,
                 'user'               => $user,
                 'persoonItems'       => $persoonItems,
