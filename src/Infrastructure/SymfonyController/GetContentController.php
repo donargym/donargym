@@ -14,25 +14,30 @@ use App\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class GetContentController extends BaseController
 {
     private DbalSimpleContentPageRepository $simpleContentPageRepository;
     private TranslatorInterface $translator;
     private SymfonyMailer $mailer;
+    private Environment $twig;
 
     public function __construct(
         DbalSimpleContentPageRepository $simpleContentPageRepository,
         TranslatorInterface $translator,
-        SymfonyMailer $mailer
+        SymfonyMailer $mailer,
+        Environment $twig
     )
     {
         $this->simpleContentPageRepository = $simpleContentPageRepository;
         $this->translator                  = $translator;
         $this->mailer                      = $mailer;
+        $this->twig                        = $twig;
     }
 
     /**
@@ -62,7 +67,7 @@ class GetContentController extends BaseController
                 return $this->getNieuwsArchiefPage($request);
                 break;
             default:
-                return $this->render('error/pageNotFound.html.twig');
+                throw new NotFoundHttpException();
         }
     }
 
@@ -71,18 +76,17 @@ class GetContentController extends BaseController
      */
     public function getSimpleContentPage(string $pageName): Response
     {
-        switch ($pageName) {
-            default:
-                $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
-                if (!$simpleContentPage) {
-                    return $this->render('error/pageNotFound.html.twig');
-                }
-
-                return $this->render(
-                    'default/simple_content_page.html.twig',
-                    array('content' => $simpleContentPage->pageContent())
-                );
+        $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
+        if (!$simpleContentPage) {
+            throw new NotFoundHttpException();
         }
+
+        return new Response(
+            $this->twig->render(
+                'default/simple_content_page.html.twig',
+                ['content' => $simpleContentPage->pageContent()]
+            )
+        );
     }
 
     /**
