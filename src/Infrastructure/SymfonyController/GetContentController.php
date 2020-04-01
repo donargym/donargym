@@ -9,388 +9,79 @@ use App\Entity\Functie;
 use App\Entity\Groepen;
 use App\Entity\Persoon;
 use App\Entity\Stukje;
-use App\Entity\TrainingsstageTrainer;
-use App\Entity\TrainingsstageTurnster;
-use App\Form\Type\TrainingsstageTrainerType;
-use App\Form\Type\TrainingsstageTurnsterType;
+use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
 use App\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GetContentController extends BaseController
 {
-    private $paymentLink = 'https://bunq.me/open-request/t/a8b04702-6632-47ca-9a96-7722edf8d25c';
+    private DbalSimpleContentPageRepository $simpleContentPageRepository;
     private TranslatorInterface $translator;
     private SymfonyMailer $mailer;
 
-    public function __construct(TranslatorInterface $translator, SymfonyMailer $mailer)
+    public function __construct(
+        DbalSimpleContentPageRepository $simpleContentPageRepository,
+        TranslatorInterface $translator,
+        SymfonyMailer $mailer
+    )
     {
-        $this->translator = $translator;
-        $this->mailer     = $mailer;
-    }
-
-    /**
-     * @Route("/trainingsstage/", name="trainingsstage", methods={"GET", "POST"})
-     */
-    public function trainingsstage(Request $request)
-    {
-        if (!$request->query->get('as')) {
-            return $this->render(
-                'wedstrijdturnen/trainingsstageIndexPage.html.twig',
-                array()
-            );
-        }
-
-        if ($request->query->get('as') === 'turnster') {
-            $trainingsstageTurnster = new TrainingsstageTurnster();
-            $form                   = $this->createForm(TrainingsstageTurnsterType::class, $trainingsstageTurnster);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                /** @var UploadedFile $file */
-                $file     = $trainingsstageTurnster->getInsuranceCard();
-                $fileName = $trainingsstageTurnster->getName() . '.' . $file->guessExtension();
-                $file->move(
-                    $this->getParameter('upload_dir'),
-                    $fileName
-                );
-                $trainingsstageTurnster->setInsuranceCard($fileName);
-
-                $this->addToDB($trainingsstageTurnster);
-
-                $this->mailer->sendEmail(
-                    'Inschrijving trainingsstage',
-                    EmailAddress::fromString($trainingsstageTurnster->getEmailaddress()),
-                    'mails/trainingsstage_confirmation.txt.twig',
-                    EmailTemplateType::TEXT(),
-                    [
-                        'naam'        => $trainingsstageTurnster->getName(),
-                        'paymentLink' => $this->paymentLink,
-                    ]
-                );
-
-                return $this->redirectToRoute('trainingsstageSuccess', array('as' => $request->query->get('as')));
-            }
-
-            return $this->render(
-                'wedstrijdturnen/trainingsstageTurnsterForm.html.twig',
-                array(
-                    'form'        => $form->createView(),
-                    'paymentLink' => $this->paymentLink,
-                )
-            );
-        }
-
-        if ($request->query->get('as') === 'trainer') {
-            $trainingsstageTrainer = new TrainingsstageTrainer();
-            $form                  = $this->createForm(TrainingsstageTrainerType::class, $trainingsstageTrainer);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                /** @var UploadedFile $file */
-                $file     = $trainingsstageTrainer->getInsuranceCard();
-                $fileName = $trainingsstageTrainer->getName() . '.' . $file->guessExtension();
-                $file->move(
-                    $this->getParameter('upload_dir'),
-                    $fileName
-                );
-                $trainingsstageTrainer->setInsuranceCard($fileName);
-
-                $this->addToDB($trainingsstageTrainer);
-
-                $this->mailer->sendEmail(
-                    'Inschrijving trainingsstage',
-                    EmailAddress::fromString($trainingsstageTrainer->getEmailaddress()),
-                    'mails/trainingsstage_trainer_confirmation.txt.twig',
-                    EmailTemplateType::TEXT(),
-                    ['naam' => $trainingsstageTrainer->getName()]
-                );
-
-                return $this->redirectToRoute('trainingsstageSuccess', array('as' => $request->query->get('as')));
-            }
-
-            return $this->render(
-                'wedstrijdturnen/trainingsstageTrainerForm.html.twig',
-                array(
-                    'form'        => $form->createView(),
-                    'paymentLink' => $this->paymentLink,
-                )
-            );
-        }
-
-        return $this->redirectToRoute('getIndexPage');
-    }
-
-    /**
-     * @Route("/trainingsstageSuccess/", name="trainingsstageSuccess", methods={"GET"})
-     */
-    public function trainingsstageSuccess(Request $request)
-    {
-        return $this->render(
-            'wedstrijdturnen/trainingsstageSuccessPage.html.twig',
-            array(
-                'as'          => $request->query->get('as'),
-                'paymentLink' => $this->paymentLink,
-            )
-        );
+        $this->simpleContentPageRepository = $simpleContentPageRepository;
+        $this->translator                  = $translator;
+        $this->mailer                      = $mailer;
     }
 
     /**
      * @Route("/", name="getIndexPage", methods={"GET"})
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         return ($this->getNieuwsPageAction('index', $request));
     }
 
     /**
-     * @Route("/donar/{page}/", defaults={"page" = "geschiedenis"}, name="getDonarPage", methods={"GET"})
-     */
-    public function getDonarPageAction($page)
-    {
-        if (in_array(
-            $page,
-            array(
-                'geschiedenis',
-                'visie',
-                'bestuur',
-                'leiding',
-                'evenementen',
-                'locaties',
-                'kleding',
-                'vacatures',
-                'sponsors'
-            )
-        )) {
-            $em      = $this->getDoctrine()->getManager();
-            $query   = $em->createQuery(
-                'SELECT content
-            FROM App:Content content
-            WHERE content.pagina = :page
-            ORDER BY content.gewijzigd DESC'
-            )
-                ->setParameter('page', $page);
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($content) {
-                return $this->render(
-                    'donar/index.html.twig',
-                    array(
-                        'content' => $content->getContent(),
-                    )
-                );
-            } else {
-                return $this->render(
-                    'error/pageNotFound.html.twig',
-                    array()
-                );
-            }
-
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array()
-            );
-        }
-    }
-
-    /**
      * @Route("/nieuws/{page}/", defaults={"page" = "index"}, name="getNieuwsPage", methods={"GET"})
      */
-    public function getNieuwsPageAction($page, Request $request)
+    public function getNieuwsPageAction(string $page, Request $request): Response
     {
-        if (in_array($page, array('index', 'vakanties', 'clubblad', 'archief'))) {
-            switch ($page) {
-                case 'index':
-                    return $this->getNieuwsIndexPage();
-                    break;
-                case 'vakanties':
-                    return $this->getNieuwsVakantiesPage();
-                    break;
-                case 'clubblad':
-                    return $this->getNieuwsClubbladPage();
-                    break;
-                case 'archief':
-                    return $this->getNieuwsArchiefPage($request);
-                    break;
-            }
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array()
-            );
-        }
-    }
-
-    protected function getNieuwsIndexPage($jaar = null)
-    {
-        $em          = $this->getDoctrine()->getManager();
-        $query       = $em->createQuery(
-            'SELECT nieuwsbericht
-            FROM App:Nieuwsbericht nieuwsbericht
-            ORDER BY nieuwsbericht.id       DESC'
-        );
-        $content     = $query->setMaxResults(10)->getResult();
-        $nieuwsItems = array();
-        for ($i = 0; $i < count($content); $i++) {
-            $nieuwsItems[$i] = $content[$i]->getAll();
-        }
-        return $this->render(
-            'default/nieuws.html.twig',
-            array(
-                'nieuwsItems' => $nieuwsItems,
-            )
-        );
-    }
-
-    protected function getNieuwsVakantiesPage()
-    {
-        $em            = $this->getDoctrine()->getManager();
-        $query         = $em->createQuery(
-            'SELECT vakanties
-            FROM App:Vakanties vakanties
-            WHERE vakanties.tot >= :datum
-            ORDER BY vakanties.van'
-        )
-            ->setParameter('datum', date('Y-m-d', time()));
-        $content       = $query->getResult();
-        $vakantieItems = array();
-        for ($i = 0; $i < count($content); $i++) {
-            $vakantieItems[$i] = $content[$i]->getAll();
-        }
-        return $this->render(
-            'default/vakanties.html.twig',
-            array(
-                'vakantieItems' => $vakantieItems,
-            )
-        );
-    }
-
-    protected function getNieuwsClubbladPage()
-    {
-        $em            = $this->getDoctrine()->getManager();
-        $query         = $em->createQuery(
-            'SELECT clubblad
-            FROM App:Clubblad clubblad
-            WHERE clubblad.datum >= :datum
-            ORDER BY clubblad.datum DESC'
-        )
-            ->setParameter('datum', (date("Y", time()) - 2) . '-01-01');
-        $content       = $query->getResult();
-        $clubbladItems = array();
-        $j             = 0;
-        $k             = 0;
-        for ($i = 0; $i < count($content); $i++) {
-            if (date("Y", time()) - date("Y", strtotime($content[$i]->getDatumFormat())) != $k) {
-                $j = 0;
-            }
-            $k                                = (date("Y", time()) - date(
-                    "Y",
-                    strtotime($content[$i]->getDatumFormat())
-                ));
-            $clubbladItems[$k][$j]            = $content[$i]->getAll();
-            $clubbladItems[$k][$j]->jaar      = date("Y", strtotime($content[$i]->getDatumFormat()));
-            $clubbladItems[$k][$j]->maandJaar = $this->translator->trans(
-                    'month.' . date("F", strtotime($content[$i]->getDatumFormat()))
-                ) . ' ' . date("Y", strtotime($content[$i]->getDatumFormat()));
-            $j++;
-        }
-        return $this->render(
-            'default/clubblad.html.twig',
-            array(
-                'clubbladItems' => $clubbladItems,
-            )
-        );
-    }
-
-    protected function getNieuwsArchiefPage(Request $request)
-    {
-        if ($request->query->get('jaar')) {
-            $em          = $this->getDoctrine()->getManager();
-            $query       = $em->createQuery(
-                'SELECT nieuwsbericht
-            FROM App:Nieuwsbericht nieuwsbericht
-            WHERE nieuwsbericht.jaar = :jaar
-            ORDER BY nieuwsbericht.id ASC'
-            )
-                ->setParameter('jaar', $request->query->get('jaar'));
-            $content     = $query->getResult();
-            $nieuwsItems = array();
-            for ($i = 0; $i < count($content); $i++) {
-                $nieuwsItems[$i] = $content[$i]->getAll();
-            }
-            return $this->render(
-                'default/nieuws.html.twig',
-                array(
-                    'nieuwsItems' => $nieuwsItems,
-                )
-            );
-        } else {
-            $em      = $this->getDoctrine()->getManager();
-            $query   = $em->createQuery(
-                'SELECT nieuwsbericht
-                FROM App:Nieuwsbericht nieuwsbericht
-                ORDER BY nieuwsbericht.jaar ASC'
-            );
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            $jaren   = array();
-            for ($i = date("Y", time()); $i >= $content->getJaar(); $i--) {
-                array_push($jaren, $i);
-            }
-            return $this->render(
-                'default/archief_index.html.twig',
-                array(
-                    'jaren' => $jaren,
-                )
-            );
+        switch ($page) {
+            case 'index':
+                return $this->getNieuwsIndexPage();
+                break;
+            case 'vakanties':
+                return $this->getNieuwsVakantiesPage();
+                break;
+            case 'clubblad':
+                return $this->getNieuwsClubbladPage();
+                break;
+            case 'archief':
+                return $this->getNieuwsArchiefPage($request);
+                break;
+            default:
+                return $this->render('error/pageNotFound.html.twig');
         }
     }
 
     /**
-     * @Route("/lessen/{page}/", defaults={"page" = "lesrooster"}, name="getLessenPage", methods={"GET"})
+     * @Route("/page/{pageName}/", name="getSimpleContentPage", methods={"GET"})
      */
-    public function getLessenPageAction($page)
+    public function getSimpleContentPage(string $pageName): Response
     {
-        if (in_array(
-            $page,
-            array(
-                'lesrooster',
-                'peuterenkleutergym',
-                'gymnastiekenrecreatiefturnen',
-                '50plusgymenconditie',
-                'aerobicsenbodyshape',
-                'badmintonenvolleybal'
-            )
-        )) {
-            $em      = $this->getDoctrine()->getManager();
-            $query   = $em->createQuery(
-                'SELECT content
-                FROM App:Content content
-                WHERE content.pagina = :page
-                ORDER BY content.gewijzigd DESC'
-            )
-                ->setParameter('page', $page);
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($content) {
-                return $this->render(
-                    'lessen/index.html.twig',
-                    array(
-                        'content' => $content->getContent(),
-                    )
-                );
-            } else {
-                return $this->render(
-                    'error/pageNotFound.html.twig',
-                    array()
-                );
-            }
+        switch ($pageName) {
+            default:
+                $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
+                if (!$simpleContentPage) {
+                    return $this->render('error/pageNotFound.html.twig');
+                }
 
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array()
-            );
+                return $this->render(
+                    'default/simple_content_page.html.twig',
+                    array('content' => $simpleContentPage->pageContent())
+                );
         }
     }
 
@@ -857,6 +548,130 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array()
+            );
+        }
+    }
+
+    private function getNieuwsIndexPage()
+    {
+        $em          = $this->getDoctrine()->getManager();
+        $query       = $em->createQuery(
+            'SELECT nieuwsbericht
+            FROM App:Nieuwsbericht nieuwsbericht
+            ORDER BY nieuwsbericht.id       DESC'
+        );
+        $content     = $query->setMaxResults(10)->getResult();
+        $nieuwsItems = array();
+        for ($i = 0; $i < count($content); $i++) {
+            $nieuwsItems[$i] = $content[$i]->getAll();
+        }
+        return $this->render(
+            'default/nieuws.html.twig',
+            array(
+                'nieuwsItems' => $nieuwsItems,
+            )
+        );
+    }
+
+    private function getNieuwsVakantiesPage()
+    {
+        $em            = $this->getDoctrine()->getManager();
+        $query         = $em->createQuery(
+            'SELECT vakanties
+            FROM App:Vakanties vakanties
+            WHERE vakanties.tot >= :datum
+            ORDER BY vakanties.van'
+        )
+            ->setParameter('datum', date('Y-m-d', time()));
+        $content       = $query->getResult();
+        $vakantieItems = array();
+        for ($i = 0; $i < count($content); $i++) {
+            $vakantieItems[$i] = $content[$i]->getAll();
+        }
+        return $this->render(
+            'default/vakanties.html.twig',
+            array(
+                'vakantieItems' => $vakantieItems,
+            )
+        );
+    }
+
+    private function getNieuwsClubbladPage()
+    {
+        $em            = $this->getDoctrine()->getManager();
+        $query         = $em->createQuery(
+            'SELECT clubblad
+            FROM App:Clubblad clubblad
+            WHERE clubblad.datum >= :datum
+            ORDER BY clubblad.datum DESC'
+        )
+            ->setParameter('datum', (date("Y", time()) - 2) . '-01-01');
+        $content       = $query->getResult();
+        $clubbladItems = array();
+        $j             = 0;
+        $k             = 0;
+        for ($i = 0; $i < count($content); $i++) {
+            if (date("Y", time()) - date("Y", strtotime($content[$i]->getDatumFormat())) != $k) {
+                $j = 0;
+            }
+            $k                                = (date("Y", time()) - date(
+                    "Y",
+                    strtotime($content[$i]->getDatumFormat())
+                ));
+            $clubbladItems[$k][$j]            = $content[$i]->getAll();
+            $clubbladItems[$k][$j]->jaar      = date("Y", strtotime($content[$i]->getDatumFormat()));
+            $clubbladItems[$k][$j]->maandJaar = $this->translator->trans(
+                    'month.' . date("F", strtotime($content[$i]->getDatumFormat()))
+                ) . ' ' . date("Y", strtotime($content[$i]->getDatumFormat()));
+            $j++;
+        }
+        return $this->render(
+            'default/clubblad.html.twig',
+            array(
+                'clubbladItems' => $clubbladItems,
+            )
+        );
+    }
+
+    private function getNieuwsArchiefPage(Request $request)
+    {
+        if ($request->query->get('jaar')) {
+            $em          = $this->getDoctrine()->getManager();
+            $query       = $em->createQuery(
+                'SELECT nieuwsbericht
+            FROM App:Nieuwsbericht nieuwsbericht
+            WHERE nieuwsbericht.jaar = :jaar
+            ORDER BY nieuwsbericht.id ASC'
+            )
+                ->setParameter('jaar', $request->query->get('jaar'));
+            $content     = $query->getResult();
+            $nieuwsItems = array();
+            for ($i = 0; $i < count($content); $i++) {
+                $nieuwsItems[$i] = $content[$i]->getAll();
+            }
+            return $this->render(
+                'default/nieuws.html.twig',
+                array(
+                    'nieuwsItems' => $nieuwsItems,
+                )
+            );
+        } else {
+            $em      = $this->getDoctrine()->getManager();
+            $query   = $em->createQuery(
+                'SELECT nieuwsbericht
+                FROM App:Nieuwsbericht nieuwsbericht
+                ORDER BY nieuwsbericht.jaar ASC'
+            );
+            $content = $query->setMaxResults(1)->getOneOrNullResult();
+            $jaren   = array();
+            for ($i = date("Y", time()); $i >= $content->getJaar(); $i--) {
+                array_push($jaren, $i);
+            }
+            return $this->render(
+                'default/archief_index.html.twig',
+                array(
+                    'jaren' => $jaren,
+                )
             );
         }
     }

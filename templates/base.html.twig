@@ -33,27 +33,27 @@
 
                 <li>{% block donar %}<a href="#">Donar</a>{% endblock %}
                     <ul>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'geschiedenis' }) }}">Geschiedenis</a></li>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'visie' }) }}">Visie</a></li>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'bestuur' }) }}">Bestuur</a></li>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'leiding' }) }}">Leiding</a></li>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'evenementen' }) }}">Evenementen</a></li>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'locaties' }) }}">Locaties</a></li>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'kleding' }) }}">Kleding</a></li>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'vacatures' }) }}">Vacatures</a></li>
-                        <li><a href="{{ path('getDonarPage', { 'page': 'sponsors' }) }}">Sponsors</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'geschiedenis' }) }}">Geschiedenis</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'visie' }) }}">Visie</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'bestuur' }) }}">Bestuur</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'leiding' }) }}">Leiding</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'evenementen' }) }}">Evenementen</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'locaties' }) }}">Locaties</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'kleding' }) }}">Kleding</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'vacatures' }) }}">Vacatures</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'sponsors' }) }}">Sponsors</a></li>
                     </ul>
                 </li>
                 <li>{% block lessen %}<a href="#">Lessen</a>{% endblock %}
                     <ul>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'lesrooster' }) }}">Lesrooster</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'peuterenkleutergym' }) }}">Peuter &
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'lesrooster' }) }}">Lesrooster</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'peuterenkleutergym' }) }}">Peuter &
                                 Kleutergym</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'gymnastiekenrecreatiefturnen' }) }}">Recreatief
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'gymnastiekenrecreatiefturnen' }) }}">Recreatief
                                 Turnen</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': '50plusgymenconditie' }) }}">50+ Gym &
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': '50plusgymenconditie' }) }}">50+ Gym &
                                 Conditie</a></li>
-                        <li><a href="{{ path('getLessenPage', { 'page': 'aerobicsenbodyshape' }) }}">Aerobics &
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'aerobicsenbodyshape' }) }}">Aerobics &
                                 Bodyshape</a></li>
                     </ul>
                 </li>
@@ -92,36 +92,6 @@
             </ul>
         </nav>
 
-        {#<div id="navigator">
-            {% block nieuws %}
-                <a href="{{ path('getNieuwsPage') }}">Nieuws</a>
-            {% endblock %}
-            {% block donar %}
-                <a href="{{ path('getDonarPage') }}">Donar</a>
-            {% endblock %}
-            {% block lessen %}
-                <a href="{{ path('getLessenPage') }}">Lessen</a>
-            {% endblock %}
-            {% block wedstrijdturnen %}
-                <a href="{{ path('getWedstrijdturnenPage') }}">Wedstrijdturnen</a>
-            {% endblock %}
-            {% block lidmaatschap %}
-                <a href="{{ path('getLidmaatschapPage') }}">Lidmaatschap</a>
-            {% endblock %}
-            {% block fotofilm %}
-                <a href="{{ path('getFotofilmPage') }}">Foto/Film</a>
-            {% endblock %}
-            {% block vrijwilligers %}
-                &#123;&#35; <a href="{{ path('getVrijwilligersPage') }}">Vrijwilligers</a> &#35;&#125;
-            {% endblock %}
-            {% block contact %}
-                <a href="{{ path('getContactPage') }}">Contact</a>
-            {% endblock %}
-            {% block inloggen %}
-                <a href="{{ path('getInloggenPage') }}">Inloggen</a>
-            {% endblock %}
-        </div>#}
-        {#<div class="line2" style="width:980px;margin-left:auto;margin-right:auto;margin-top:20px;margin-bottom:20px;"></div>#}
         <div id="error_container">
             {% if app.session.flashbag.get('error') is defined %}
                 {% for flash_message in app.session.flashbag.get('error') %}

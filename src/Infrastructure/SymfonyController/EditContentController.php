@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -27,49 +28,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class EditContentController extends BaseController
 {
     /**
-     * @Route("/kamp/edit/", name="editKampPage", methods={"GET", "POST"})
+     * @Route("/editPage/{page}/", name="editSimpleContentPage", methods={"GET"})
      */
-    public function editKampPageAction(Request $request)
+    public function editSimpleContentPage(string $page): Response
     {
-        $em      = $this->getDoctrine()->getManager();
-        $query   = $em->createQuery(
-            'SELECT content
-		FROM App:Content content
-		WHERE content.pagina = :page
-		ORDER BY content.gewijzigd DESC'
-        )
-            ->setParameter('page', 'kamp');
-        $content = $query->setMaxResults(1)->getOneOrNullResult();
-        if ($content) {
-            $form = $this->createForm(ContentType::class, $content);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $editedContent = new Content();
-                $editedContent->setGewijzigd(new \DateTime('NOW'));
-                $editedContent->setPagina('kamp');
-                $editedContent->setContent($content->getContent());
-                $editedContent->setContent($content->getContent());
-                $em->detach($content);
-                $em->persist($editedContent);
-                $em->flush();
-                return $this->redirectToRoute('getKampPage');
-            } else {
-                return $this->render(
-                    'kamp/editIndex.html.twig',
-                    array(
-                        'content'            => $content->getContent(),
-                        'form'               => $form->createView(),
-                    )
-                );
-            }
-        } else {
-            return $this->render(
-                'error/pageNotFound.html.twig',
-                array(
-                )
-            );
-        }
+        return $this->render('default/simple_content_page.html.twig', ['content' => '']);
     }
 
     /**
