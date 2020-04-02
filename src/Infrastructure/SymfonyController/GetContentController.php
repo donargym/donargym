@@ -42,21 +42,41 @@ class GetContentController extends BaseController
 
     /**
      * @Route("/", name="getIndexPage", methods={"GET"})
+     * @param Request $request
+     *
+     * @return Response
      */
     public function indexAction(Request $request): Response
     {
-        return ($this->getNieuwsPageAction('index', $request));
+        $em          = $this->getDoctrine()->getManager();
+        $query       = $em->createQuery(
+            'SELECT nieuwsbericht
+            FROM App:Nieuwsbericht nieuwsbericht
+            ORDER BY nieuwsbericht.id       DESC'
+        );
+        $content     = $query->setMaxResults(10)->getResult();
+        $nieuwsItems = array();
+        for ($i = 0; $i < count($content); $i++) {
+            $nieuwsItems[$i] = $content[$i]->getAll();
+        }
+        return $this->render(
+            'default/nieuws.html.twig',
+            array(
+                'nieuwsItems' => $nieuwsItems,
+            )
+        );
     }
 
     /**
      * @Route("/nieuws/{page}/", defaults={"page" = "index"}, name="getNieuwsPage", methods={"GET"})
+     * @param string  $page
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function getNieuwsPageAction(string $page, Request $request): Response
+    public function getNewsPage(string $page, Request $request): Response
     {
         switch ($page) {
-            case 'index':
-                return $this->getNieuwsIndexPage();
-                break;
             case 'vakanties':
                 return $this->getNieuwsVakantiesPage();
                 break;
@@ -554,27 +574,6 @@ class GetContentController extends BaseController
                 array()
             );
         }
-    }
-
-    private function getNieuwsIndexPage()
-    {
-        $em          = $this->getDoctrine()->getManager();
-        $query       = $em->createQuery(
-            'SELECT nieuwsbericht
-            FROM App:Nieuwsbericht nieuwsbericht
-            ORDER BY nieuwsbericht.id       DESC'
-        );
-        $content     = $query->setMaxResults(10)->getResult();
-        $nieuwsItems = array();
-        for ($i = 0; $i < count($content); $i++) {
-            $nieuwsItems[$i] = $content[$i]->getAll();
-        }
-        return $this->render(
-            'default/nieuws.html.twig',
-            array(
-                'nieuwsItems' => $nieuwsItems,
-            )
-        );
     }
 
     private function getNieuwsVakantiesPage()

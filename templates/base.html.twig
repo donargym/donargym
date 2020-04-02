@@ -23,7 +23,7 @@
             <ul>
                 <li>{% block nieuws %}<a href="#">Nieuws</a>{% endblock %}
                     <ul>
-                        <li><a href="{{ path('getNieuwsPage') }}">Laatste nieuws</a></li>
+                        <li><a href="{{ path('getIndexPage') }}">Laatste nieuws</a></li>
                         <li><a href="{{ path('getNieuwsPage', { 'page': 'vakanties' }) }}">Vakanties</a></li>
                         <li><a href="{{ path('getNieuwsPage', { 'page': 'clubblad' }) }}">Clubblad</a></li>
                         <li><a href="{{ path('getNieuwsPage', { 'page': 'archief' }) }}">Archief</a></li>

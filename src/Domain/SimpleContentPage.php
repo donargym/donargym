@@ -14,6 +14,20 @@ final class SimpleContentPage
 
     private string $pageContent;
 
+    public static function createNew(
+        string $pageName,
+        string $pageContent,
+        SystemClock $clock
+    ): self
+    {
+        $self              = new self();
+        $self->changedAt   = $clock->now();
+        $self->pageName    = $pageName;
+        $self->pageContent = $pageContent;
+
+        return $self;
+    }
+
     public static function createFromDataSource(
         DateTimeImmutable $changedAt,
         string $pageName,

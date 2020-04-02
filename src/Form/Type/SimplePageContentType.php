@@ -8,27 +8,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentType extends AbstractType
+class SimplePageContentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('content', TextareaType::class, array(
-                    'attr' => array('cols' => '80', 'rows' => '40'),
-            ))
-            ->add('Verstuur', SubmitType::class)
-        ;
+            ->add(
+                'pageContent',
+                TextareaType::class,
+                ['data' => $options['content'], 'attr' => ['cols' => '80', 'rows' => '40']]
+            )
+            ->add('Verstuur', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Content',
-        ));
-    }
-
-    public function getName()
-    {
-        return 'content';
+        $resolver->setDefaults(['content' => null]);
     }
 }

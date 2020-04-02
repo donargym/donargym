@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\SymfonyController;
 
+use App\Domain\SimpleContentPage;
+use App\Domain\SystemClock;
 use App\Entity\Calendar;
 use App\Entity\Clubblad;
 use App\Entity\Content;
@@ -10,16 +12,22 @@ use App\Entity\Nieuwsbericht;
 use App\Entity\Vakanties;
 use App\Entity\VeelgesteldeVragen;
 use App\Form\Type\CalendarType;
-use App\Form\Type\ContentType;
 use App\Form\Type\NieuwsberichtType;
+use App\Form\Type\SimplePageContentType;
 use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
+use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
+use Twig\Environment;
 
 
 /**
@@ -27,12 +35,59 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EditContentController extends BaseController
 {
-    /**
-     * @Route("/editPage/{page}/", name="editSimpleContentPage", methods={"GET"})
-     */
-    public function editSimpleContentPage(string $page): Response
+    private DbalSimpleContentPageRepository $simpleContentPageRepository;
+    private FormFactoryInterface $formFactory;
+    private Environment $twig;
+    private SystemClock $clock;
+    private RouterInterface $router;
+
+    public function __construct(
+        DbalSimpleContentPageRepository $simpleContentPageRepository,
+        FormFactoryInterface $formFactory,
+        Environment $twig,
+        SystemClock $clock,
+        RouterInterface $router
+    )
     {
-        return $this->render('default/simple_content_page.html.twig', ['content' => '']);
+        $this->simpleContentPageRepository = $simpleContentPageRepository;
+        $this->formFactory                 = $formFactory;
+        $this->twig                        = $twig;
+        $this->clock                       = $clock;
+        $this->router                      = $router;
+    }
+
+    /**
+     * @Route("/editPage/{pageName}/", name="editSimpleContentPage", methods={"GET", "POST"})
+     * @param Request $request
+     * @param string  $pageName
+     *
+     * @return Response
+     */
+    public function editSimpleContentPage(Request $request, string $pageName): Response
+    {
+        $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
+        if (!$simpleContentPage) {
+            throw new NotFoundHttpException();
+        }
+
+        $form = $this->formFactory->create(
+            SimplePageContentType::class,
+            null,
+            ['content' => $simpleContentPage->pageContent()]
+        );
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $simpleContentPage = SimpleContentPage::createNew($pageName, $form->getData()['pageContent'], $this->clock);
+            $this->simpleContentPageRepository->insert($simpleContentPage);
+
+            return new RedirectResponse($this->router->generate('getSimpleContentPage', ['pageName' => $pageName]));
+        }
+
+        return $this->render(
+            'default/edit_simple_content_page.html.twig',
+            ['content' => $simpleContentPage->pageContent(), 'form' => $form->createView()]
+        );
     }
 
     /**
@@ -64,7 +119,7 @@ class EditContentController extends BaseController
                 ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if ($content) {
-                $form = $this->createForm(ContentType::class, $content);
+                $form = $this->createForm(SimplePageContentType::class, $content);
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -81,24 +136,22 @@ class EditContentController extends BaseController
                     return $this->render(
                         'donar/editIndex.html.twig',
                         array(
-                            'content'            => $content->getContent(),
-                            'form'               => $form->createView(),
+                            'content' => $content->getContent(),
+                            'form'    => $form->createView(),
                         )
                     );
                 }
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
 
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -129,7 +182,7 @@ class EditContentController extends BaseController
                 ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if ($content) {
-                $form = $this->createForm(ContentType::class, $content);
+                $form = $this->createForm(SimplePageContentType::class, $content);
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -146,24 +199,22 @@ class EditContentController extends BaseController
                     return $this->render(
                         'lessen/editIndex.html.twig',
                         array(
-                            'content'            => $content->getContent(),
-                            'form'               => $form->createView(),
+                            'content' => $content->getContent(),
+                            'form'    => $form->createView(),
                         )
                     );
                 }
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
 
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -185,7 +236,7 @@ class EditContentController extends BaseController
                 ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if ($content) {
-                $form = $this->createForm(ContentType::class, $content);
+                $form = $this->createForm(SimplePageContentType::class, $content);
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -202,16 +253,15 @@ class EditContentController extends BaseController
                     return $this->render(
                         'wedstrijdturnen/editIndex.html.twig',
                         array(
-                            'content'            => $content->getContent(),
-                            'form'               => $form->createView(),
+                            'content' => $content->getContent(),
+                            'form'    => $form->createView(),
                         )
                     );
                 }
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
 
@@ -229,8 +279,7 @@ class EditContentController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -251,7 +300,7 @@ class EditContentController extends BaseController
                 ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if ($content) {
-                $form = $this->createForm(ContentType::class, $content);
+                $form = $this->createForm(SimplePageContentType::class, $content);
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -268,24 +317,22 @@ class EditContentController extends BaseController
                     return $this->render(
                         'lidmaatschap/editIndex.html.twig',
                         array(
-                            'content'            => $content->getContent(),
-                            'form'               => $form->createView(),
+                            'content' => $content->getContent(),
+                            'form'    => $form->createView(),
                         )
                     );
                 }
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
 
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -306,7 +353,7 @@ class EditContentController extends BaseController
                 ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if ($content) {
-                $form = $this->createForm(ContentType::class, $content);
+                $form = $this->createForm(SimplePageContentType::class, $content);
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -323,24 +370,22 @@ class EditContentController extends BaseController
                     return $this->render(
                         'fotofilm/editIndex.html.twig',
                         array(
-                            'content'            => $content->getContent(),
-                            'form'               => $form->createView(),
+                            'content' => $content->getContent(),
+                            'form'    => $form->createView(),
                         )
                     );
                 }
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
 
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -361,7 +406,7 @@ class EditContentController extends BaseController
                 ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if ($content) {
-                $form = $this->createForm(ContentType::class, $content);
+                $form = $this->createForm(SimplePageContentType::class, $content);
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -378,24 +423,22 @@ class EditContentController extends BaseController
                     return $this->render(
                         'vrijwilligers/editIndex.html.twig',
                         array(
-                            'content'            => $content->getContent(),
-                            'form'               => $form->createView(),
+                            'content' => $content->getContent(),
+                            'form'    => $form->createView(),
                         )
                     );
                 }
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
 
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -416,7 +459,7 @@ class EditContentController extends BaseController
                 ->setParameter('page', $page);
             $content = $query->setMaxResults(1)->getOneOrNullResult();
             if ($content) {
-                $form = $this->createForm(ContentType::class, $content);
+                $form = $this->createForm(SimplePageContentType::class, $content);
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -433,24 +476,22 @@ class EditContentController extends BaseController
                     return $this->render(
                         'contact/editIndex.html.twig',
                         array(
-                            'content'            => $content->getContent(),
-                            'form'               => $form->createView(),
+                            'content' => $content->getContent(),
+                            'form'    => $form->createView(),
                         )
                     );
                 }
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
 
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -473,7 +514,7 @@ class EditContentController extends BaseController
             return $this->render(
                 'default/addCalendar.html.twig',
                 array(
-                    'form'               => $form->createView(),
+                    'form' => $form->createView(),
                 )
             );
         }
@@ -505,15 +546,14 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/addCalendar.html.twig',
                     array(
-                        'form'               => $form->createView(),
+                        'form' => $form->createView(),
                     )
                 );
             }
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -536,14 +576,13 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/removeCalendar.html.twig',
                     array(
-                        'content'            => $agenda->getAll(),
+                        'content' => $agenda->getAll(),
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -561,8 +600,7 @@ class EditContentController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -588,7 +626,7 @@ class EditContentController extends BaseController
             return $this->render(
                 'default/addNieuwsbericht.html.twig',
                 array(
-                    'form'               => $form->createView(),
+                    'form' => $form->createView(),
                 )
             );
         }
@@ -622,15 +660,14 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/addNieuwsbericht.html.twig',
                     array(
-                        'form'               => $form->createView(),
+                        'form' => $form->createView(),
                     )
                 );
             }
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -653,14 +690,13 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/removeNieuwsbericht.html.twig',
                     array(
-                        'content'            => $nieuwsbericht->getAll(),
+                        'content' => $nieuwsbericht->getAll(),
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -678,8 +714,7 @@ class EditContentController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -715,8 +750,8 @@ class EditContentController extends BaseController
             return $this->render(
                 'default/addVakanties.html.twig',
                 array(
-                    'form'               => $form->createView(),
-                    'vakantieItems'      => $vakantieItems,
+                    'form'          => $form->createView(),
+                    'vakantieItems' => $vakantieItems,
                 )
             );
         }
@@ -760,16 +795,15 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/addVakanties.html.twig',
                     array(
-                        'form'               => $form->createView(),
-                        'vakantieItems'      => $vakantieItems,
+                        'form'          => $form->createView(),
+                        'vakantieItems' => $vakantieItems,
                     )
                 );
             }
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -804,15 +838,14 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/removeVakanties.html.twig',
                     array(
-                        'content'            => $vakanties->getAll(),
-                        'vakantieItems'      => $vakantieItems,
+                        'content'       => $vakanties->getAll(),
+                        'vakantieItems' => $vakantieItems,
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -830,8 +863,7 @@ class EditContentController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -864,7 +896,7 @@ class EditContentController extends BaseController
             return $this->render(
                 'default/addClubblad.html.twig',
                 array(
-                    'form'               => $form->createView(),
+                    'form' => $form->createView(),
                 )
             );
         }
@@ -888,14 +920,13 @@ class EditContentController extends BaseController
                 return $this->render(
                     'default/removeClubblad.html.twig',
                     array(
-                        'content'            => $clubblad->getAll(),
+                        'content' => $clubblad->getAll(),
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -913,8 +944,7 @@ class EditContentController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -941,7 +971,7 @@ class EditContentController extends BaseController
             return $this->render(
                 'lidmaatschap/addFormulieren.html.twig',
                 array(
-                    'form'               => $form->createView(),
+                    'form' => $form->createView(),
                 )
             );
         }
@@ -965,14 +995,13 @@ class EditContentController extends BaseController
                 return $this->render(
                     'lidmaatschap/removeFormulieren.html.twig',
                     array(
-                        'content'            => $formulier->getAll(),
+                        'content' => $formulier->getAll(),
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -990,8 +1019,7 @@ class EditContentController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -1014,7 +1042,7 @@ class EditContentController extends BaseController
             return $this->render(
                 'contact/addVeelgesteldeVragen.html.twig',
                 array(
-                    'form'               => $form->createView(),
+                    'form' => $form->createView(),
                 )
             );
         }
@@ -1046,15 +1074,14 @@ class EditContentController extends BaseController
                 return $this->render(
                     'contact/addVeelgesteldeVragen.html.twig',
                     array(
-                        'form'               => $form->createView(),
+                        'form' => $form->createView(),
                     )
                 );
             }
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }
@@ -1077,14 +1104,13 @@ class EditContentController extends BaseController
                 return $this->render(
                     'contact/removeVeelgesteldeVragen.html.twig',
                     array(
-                        'content'            => $vraag->getAll(),
+                        'content' => $vraag->getAll(),
                     )
                 );
             } else {
                 return $this->render(
                     'error/pageNotFound.html.twig',
-                    array(
-                    )
+                    array()
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -1102,8 +1128,7 @@ class EditContentController extends BaseController
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
-                array(
-                )
+                array()
             );
         }
     }

@@ -2,7 +2,9 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('editPage', { 'page': app.request.get('page') }) }}"><img src="{{ asset('images/edit.png') }}" /></a>
+        <a href="{{ path('editSimpleContentPage', { 'pageName': app.request.get('pageName') }) }}">
+            <img src="{{ asset('images/edit.png') }}" alt="edit content of this page"/>
+        </a>
     {% endif %}
     {{ content|raw }}
 {% endblock %}

@@ -7,6 +7,7 @@ namespace App\Infrastructure\DoctrineDbal;
 use App\Domain\SimpleContentPage;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use PDO;
 
 final class DbalSimpleContentPageRepository
@@ -35,6 +36,28 @@ final class DbalSimpleContentPageRepository
         }
 
         return $this->hydrate($row);
+    }
+
+    public function insert(SimpleContentPage $simpleContentPage): void
+    {
+        $this->connection->createQueryBuilder()
+            ->insert('content')
+            ->values(
+                [
+                    'gewijzigd' => ':changedAt',
+                    'pagina'    => ':pageName',
+                    'content'   => ':pageContent',
+                ]
+            )
+            ->setParameters(
+                [
+                    'changedAt'   => $simpleContentPage->changedAt(),
+                    'pageName'    => $simpleContentPage->pageName(),
+                    'pageContent' => $simpleContentPage->pageContent(),
+                ],
+                ['changedAt' => Types::DATETIME_IMMUTABLE]
+            )
+            ->execute();
     }
 
     private function hydrate(array $row): SimpleContentPage
