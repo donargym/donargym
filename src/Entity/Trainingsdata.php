@@ -34,12 +34,6 @@ class Trainingsdata
      */
     protected $lesdatum;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="Voorbereiding")
-//     * @ORM\JoinColumn(name="voorbereiding_id", referencedColumnName="id")
-//     **/
-//    protected $voorbereiding;
-
     /**
      * Constructor
      */

@@ -109,78 +109,11 @@ class User implements UserInterface, \Serializable
      */
     private $persoon;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Vereniging", inversedBy="user")
-     *
-     */
-    private $vereniging;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Turnster", mappedBy="user", cascade={"persist", "remove"})
-     */
-    private $turnster;
-
     public function __construct()
     {
         $this->persoon = new ArrayCollection();
         $this->turnster = new ArrayCollection();
         $this->isActive = true;
-    }
-
-    /**
-     * Add turnster
-     *
-     * @param \App\Entity\Turnster $turnster
-     * @return User
-     */
-    public function addTurnster(\App\Entity\Turnster $turnster)
-    {
-        $this->turnster[] = $turnster;
-
-        return $this;
-    }
-
-    /**
-     * Remove turnster
-     *
-     * @param \App\Entity\Turnster $turnster
-     */
-    public function removeTurnster(\App\Entity\Turnster $turnster)
-    {
-        $this->turnster->removeElement($turnster);
-    }
-
-    /**
-     * Get turnster
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTurnster()
-    {
-        return $this->turnster;
-    }
-
-    /**
-     * Set vereniging
-     *
-     * @param \App\Entity\Vereniging $vereniging
-     * @return User
-     */
-    public function setVereniging(\App\Entity\Vereniging $vereniging = null)
-    {
-        $this->vereniging = $vereniging;
-
-        return $this;
-    }
-
-    /**
-     * Get vereniging
-     *
-     * @return \App\Entity\Vereniging
-     */
-    public function getVereniging()
-    {
-        return $this->vereniging;
     }
 
     public function getUsername()
@@ -291,9 +224,6 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return \Symfony\Component\Security\Core\Role\Role[]
-     */
     public function getRoles()
     {
         return array($this->role);

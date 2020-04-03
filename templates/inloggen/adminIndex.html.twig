@@ -7,7 +7,6 @@
             <li><a href="{{ path('getAdminFotoPage') }}">Foto's</a></li>
             <li><a href="{{ path('getAdminBestandenPage') }}">Overige bestanden</a></li>
             <li><a href="{{ path('getAdminSelectiePage') }}">Selectie</a></li>
-            <li><a href="{{ path('getAdminOwPage') }}">OW</a></li>
             {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
                 <li><a href="{{ path('getInloggenPage', {'_switch_user': '_exit'}) }}">
                     Uitloggen

@@ -10,16 +10,9 @@ use App\Entity\FotoUpload;
 use App\Entity\Functie;
 use App\Entity\Groepen;
 use App\Entity\Persoon;
-use App\Entity\Scores;
-use App\Entity\ToegestaneNiveaus;
 use App\Entity\Trainingen;
-use App\Entity\Turnster;
-use App\Entity\User;
-use App\Entity\Vereniging;
 use App\Helper\ImageResizer;
 use App\Infrastructure\SymfonyMailer\SymfonyMailer;
-use App\Repository\ScoresRepository;
-use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -452,7 +445,6 @@ class AdminController extends BaseController
             } else {
                 $password = 'over een wachtwoord beschik je als het goed is al';
             }
-//            $this->addSubDoelenAanPersoon($persoon);
             $user->addPersoon($persoon);
             $em->persist($persoon);
             $em->flush();
@@ -781,169 +773,5 @@ class AdminController extends BaseController
                 array()
             );
         }
-    }
-
-    /**
-     * @Route("/admin/getAdminOwPage/index/", name="getAdminOwPage", methods={"GET", "POST"})
-     */
-    public function getAdminOwPage(Request $request)
-    {
-        return $this->render(
-            'inloggen/adminOwIndexPage.html.twig',
-            array()
-        );
-    }
-
-    /**
-     * @Route("/admin/getAdminOwPage/uploadWedstrijdindelingen/", name="uploadWedstrijdindelingen", methods={"GET", "POST"})
-     */
-    public function uploadWedstrijdindelingen(Request $request, EncoderFactoryInterface $encoderFactory)
-    {
-        if ($request->getMethod() == 'POST') {
-            /** @var UserRepository $repo */
-            $repo   = $this->getDoctrine()->getRepository(User::class);
-            $result = $repo->findOneBy(array('username' => 'OWJurySysteem'));
-            if (!$result) {
-                $user = new User();
-                $user->setUsername('OWJurySysteem');
-                $user->setRole('ROLE_ORGANISATIE');
-                $user->setIsActive(true);
-                $user->setStraatnr(' ');
-                $user->setPostcode(' ');
-                $user->setPlaats(' ');
-                $user->setTel1(' ');
-                $password = $this->getParameter('JurySysteemWachtwoord');
-                $encoder  = $encoderFactory
-                    ->getEncoder($user);
-                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-                $this->addToDB($user);
-            }
-            $result = $repo->findOneBy(array('username' => 'OWJuryLid'));
-            if (!$result) {
-                $user = new User();
-                $user->setUsername('OWJuryLid');
-                $user->setRole('ROLE_JURY');
-                $user->setIsActive(true);
-                $user->setStraatnr(' ');
-                $user->setPostcode(' ');
-                $user->setPlaats(' ');
-                $user->setTel1(' ');
-                $password = $this->getParameter('JurySysteemWachtwoord');
-                $encoder  = $encoderFactory
-                    ->getEncoder($user);
-                $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-                $this->addToDB($user);
-            }
-            if ($_FILES["userfile"]) {
-                if (!empty($_FILES['userfile']['name'])) {
-                    $allow[0] = "csv";
-                    $extentie = strtolower(substr($_FILES['userfile']['name'], -3));
-                    if ($extentie == $allow[0]) {
-                        if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
-                            if ($_FILES['userfile']['size'] < 5000000) {
-                                $localfile = $_FILES['userfile']['tmp_name'];
-                                ini_set("auto_detect_line_endings", "1");
-                                if (($handle = fopen($localfile, "r")) !== FALSE) {
-                                    $turnsters = $this->getDoctrine()->getRepository(Turnster::class)->findAll();
-                                    foreach ($turnsters as $turnster) {
-                                        $this->removeFromDB($turnster);
-                                    }
-
-                                    $repo = $this->getDoctrine()->getRepository(User::class);
-                                    while (($lineData = fgetcsv($handle, 0, ";")) !== FALSE) {
-                                        /** @var User $user */
-                                        $user = $repo->findOneBy(array('username' => trim($lineData[2])));
-                                        if (!$user) {
-                                            $user = new User();
-                                            $user->setUsername(trim($lineData[2]));
-                                            $user->setRole('ROLE_CONTACT');
-                                            $user->setIsActive(true);
-                                            $user->setStraatnr(' ');
-                                            $user->setPostcode(' ');
-                                            $user->setPlaats(' ');
-                                            $user->setTel1(' ');
-                                            $password = ' ';
-                                            $encoder  = $encoderFactory
-                                                ->getEncoder($user);
-                                            $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-                                            $vereniging = new Vereniging();
-                                            $vereniging->setNaam(trim($lineData[2]));
-                                            $vereniging->setPlaats(' ');
-                                            $this->addToDB($vereniging);
-                                            $user->setVereniging($vereniging);
-                                            $this->addToDB($user);
-                                        }
-                                        $turnster = new Turnster();
-                                        $scores   = new Scores();
-                                        $turnster->setWachtlijst(false);
-                                        $turnster->setCreationDate(new \DateTime('now'));
-                                        $turnster->setScores($scores);
-                                        $turnster->setVoornaam(trim($lineData[1]));
-                                        $turnster->setAchternaam(' ');
-                                        $turnster->setNiveau(trim($lineData[4]));
-                                        $turnster->setCategorie(trim($lineData[3]));
-                                        $turnster->setIngevuld(true);
-                                        $turnster->setUser($user);
-                                        $user->addTurnster($turnster);
-                                        /** @var Turnster $turnster */
-                                        $scores->setWedstrijdnummer(trim($lineData[5]));
-                                        $scores->setWedstrijddag(trim($lineData[6]));
-                                        $scores->setWedstrijdronde(trim($lineData[7]));
-                                        $scores->setBaan(trim($lineData[8]));
-                                        $scores->setGroep(trim($lineData[9]));
-                                        $scores->setBegintoestel(trim($lineData[9]));
-                                        $this->addToDB($scores);
-                                        $this->addToDB($turnster);
-                                    }
-                                    fclose($handle);
-                                }
-
-                                /** @var ScoresRepository $repo */
-                                $repo    = $this->getDoctrine()->getRepository(Scores::class);
-                                $results = $this->getDoctrine()->getRepository(ToegestaneNiveaus::class)
-                                    ->findAll();
-                                foreach ($results as $result) {
-                                    $this->removeFromDB($result);
-                                }
-                                $results = $repo->getDistinctNiveaus();
-                                foreach ($results as $result) {
-                                    $new = new ToegestaneNiveaus();
-                                    $new->setCategorie($result['categorie']);
-                                    $new->setNiveau($result['niveau']);
-                                    $new->setUitslagGepubliceerd(0);
-                                    $this->addToDB($new);
-                                }
-
-                                return $this->redirectToRoute('getAdminOwPage');
-                            } else {
-                                $this->addFlash(
-                                    'error',
-                                    'Helaas, de upload is mislukt: het bestand is te groot.'
-                                );
-                            }
-                        } else {
-                            $this->addFlash(
-                                'error',
-                                'Helaas, de upload is mislukt.'
-                            );
-                        }
-                    } else {
-                        $this->addFlash(
-                            'error',
-                            'Helaas, de upload is mislukt: het bestand moet .csv zijn.'
-                        );
-                    }
-                } else {
-                    $this->addFlash(
-                        'error',
-                        'Selecteer een bestand.'
-                    );
-                }
-            }
-        }
-        return $this->render(
-            'inloggen/uploadWedstrijdindelingen.html.twig',
-            array()
-        );
     }
 }

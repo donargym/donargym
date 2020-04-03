@@ -64,21 +64,6 @@ class Persoon
     private $functie;
 
     /**
-     * @ORM\OneToMany(targetEntity="Voedsel", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
-     */
-    private $voedsel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="SeizoensDoelen", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
-     */
-    private $seizoensdoelen;
-
-    /**
-     * @ORM\OneToMany(targetEntity="SubDoelen", mappedBy="persoon", cascade={"persist", "remove"}, orphanRemoval=TRUE)
-     */
-    private $subdoelen;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Trainingen", mappedBy="persoon")
      * @ORM\JoinTable(name="personen_trainingen",
      *      joinColumns={@ORM\JoinColumn(name="trainingen_id", referencedColumnName="id", onDelete="cascade")},
@@ -107,57 +92,13 @@ class Persoon
      **/
     private $stukje;
 
-    /**
-     * @ORM\Column(type="integer", nullable=TRUE)
-     */
-    private $voortgangSprong;
-
-    /**
-     * @ORM\Column(type="integer", nullable=TRUE)
-     */
-    private $voortgangBrug;
-
-    /**
-     * @ORM\Column(type="integer", nullable=TRUE)
-     */
-    private $voortgangBalk;
-
-    /**
-     * @ORM\Column(type="integer", nullable=TRUE)
-     */
-    private $voortgangVloer;
-
-    /**
-     * @ORM\Column(type="integer", nullable=TRUE)
-     */
-    private $voortgangTotaal;
-
-    /**
-     * @ORM\Column(length=255, nullable=TRUE)
-     */
-    private $lastUpdatedAtSeizoen;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=TRUE)
-     */
-    protected $updatedCijfersAt;
-
     public function __construct()
     {
         $this->functie = new ArrayCollection();
-        $this->subdoelen = new ArrayCollection();
-        $this->seizoensdoelen = new ArrayCollection();
         $this->aanwezigheid = new ArrayCollection();
         $this->trainingen = new ArrayCollection();
-        $this->voedsel = new ArrayCollection();
         $this->wedstrijdkalender = new ArrayCollection();
     }
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
 
     public function getAll()
     {
@@ -477,39 +418,6 @@ class Persoon
     }
 
     /**
-     * Add seizoensdoelen
-     *
-     * @param \App\Entity\SeizoensDoelen $seizoensdoelen
-     * @return Persoon
-     */
-    public function addSeizoensdoelen(\App\Entity\SeizoensDoelen $seizoensdoelen)
-    {
-        $this->seizoensdoelen[] = $seizoensdoelen;
-
-        return $this;
-    }
-
-    /**
-     * Remove seizoensdoelen
-     *
-     * @param \App\Entity\SeizoensDoelen $seizoensdoelen
-     */
-    public function removeSeizoensdoelen(\App\Entity\SeizoensDoelen $seizoensdoelen)
-    {
-        $this->seizoensdoelen->removeElement($seizoensdoelen);
-    }
-
-    /**
-     * Get seizoensdoelen
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSeizoensdoelen()
-    {
-        return $this->seizoensdoelen;
-    }
-
-    /**
      * Add trainingen
      *
      * @param \App\Entity\Trainingen $trainingen
@@ -568,210 +476,6 @@ class Persoon
     }
 
     /**
-     * Add subdoelen
-     *
-     * @param \App\Entity\SubDoelen $subdoelen
-     * @return Persoon
-     */
-    public function addSubdoelen(\App\Entity\SubDoelen $subdoelen)
-    {
-        $this->subdoelen[] = $subdoelen;
-
-        return $this;
-    }
-
-    /**
-     * Remove subdoelen
-     *
-     * @param \App\Entity\SubDoelen $subdoelen
-     */
-    public function removeSubdoelen(\App\Entity\SubDoelen $subdoelen)
-    {
-        $this->subdoelen->removeElement($subdoelen);
-    }
-
-    /**
-     * Get subdoelen
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSubdoelen()
-    {
-        return $this->subdoelen;
-    }
-
-    /**
-     * Set voortgangSprong
-     *
-     * @param integer $voortgangSprong
-     * @return Persoon
-     */
-    public function setVoortgangSprong($voortgangSprong)
-    {
-        $this->voortgangSprong = $voortgangSprong;
-
-        return $this;
-    }
-
-    /**
-     * Get voortgangSprong
-     *
-     * @return integer 
-     */
-    public function getVoortgangSprong()
-    {
-        return $this->voortgangSprong;
-    }
-
-    /**
-     * Set voortgangBrug
-     *
-     * @param integer $voortgangBrug
-     * @return Persoon
-     */
-    public function setVoortgangBrug($voortgangBrug)
-    {
-        $this->voortgangBrug = $voortgangBrug;
-
-        return $this;
-    }
-
-    /**
-     * Get voortgangBrug
-     *
-     * @return integer 
-     */
-    public function getVoortgangBrug()
-    {
-        return $this->voortgangBrug;
-    }
-
-    /**
-     * Set voortgangBalk
-     *
-     * @param integer $voortgangBalk
-     * @return Persoon
-     */
-    public function setVoortgangBalk($voortgangBalk)
-    {
-        $this->voortgangBalk = $voortgangBalk;
-
-        return $this;
-    }
-
-    /**
-     * Get voortgangBalk
-     *
-     * @return integer 
-     */
-    public function getVoortgangBalk()
-    {
-        return $this->voortgangBalk;
-    }
-
-    /**
-     * Set voortgangVloer
-     *
-     * @param integer $voortgangVloer
-     * @return Persoon
-     */
-    public function setVoortgangVloer($voortgangVloer)
-    {
-        $this->voortgangVloer = $voortgangVloer;
-
-        return $this;
-    }
-
-    /**
-     * Get voortgangVloer
-     *
-     * @return integer 
-     */
-    public function getVoortgangVloer()
-    {
-        return $this->voortgangVloer;
-    }
-
-    /**
-     * Set voortgangTotaal
-     *
-     * @param integer $voortgangTotaal
-     * @return Persoon
-     */
-    public function setVoortgangTotaal($voortgangTotaal)
-    {
-        $this->voortgangTotaal = $voortgangTotaal;
-
-        return $this;
-    }
-
-    /**
-     * Get lastUpdatedAtSeizoen
-     *
-     * @return string
-     */
-    public function getLastUpdatedAtSeizoen()
-    {
-        return $this->lastUpdatedAtSeizoen;
-    }
-
-    /**
-     * Set lastUpdatedAtSeizoen
-     *
-     * @param string $lastUpdatedAtSeizoen
-     * @return Persoon
-     */
-    public function setLastUpdatedAtSeizoen($lastUpdatedAtSeizoen)
-    {
-        $this->lastUpdatedAtSeizoen = $lastUpdatedAtSeizoen;
-
-        return $this;
-    }
-
-    /**
-     * Get voortgangTotaal
-     *
-     * @return integer
-     */
-    public function getVoortgangTotaal()
-    {
-        return $this->voortgangTotaal;
-    }
-
-    /**
-     * Add voedsel
-     *
-     * @param \App\Entity\Voedsel $voedsel
-     * @return Persoon
-     */
-    public function addVoedsel(\App\Entity\Voedsel $voedsel)
-    {
-        $this->voedsel[] = $voedsel;
-
-        return $this;
-    }
-
-    /**
-     * Remove voedsel
-     *
-     * @param \App\Entity\Voedsel $voedsel
-     */
-    public function removeVoedsel(\App\Entity\Voedsel $voedsel)
-    {
-        $this->voedsel->removeElement($voedsel);
-    }
-
-    /**
-     * Get voedsel
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getVoedsel()
-    {
-        return $this->voedsel;
-    }
-
-    /**
      * Add wedstrijdkalender
      *
      * @param \App\Entity\Wedstrijdkalender $wedstrijdkalender
@@ -802,28 +506,5 @@ class Persoon
     public function getWedstrijdkalender()
     {
         return $this->wedstrijdkalender;
-    }
-
-    /**
-     * Set updatedCijfersAt
-     *
-     * @param \DateTime $updatedCijfersAt
-     * @return Persoon
-     */
-    public function setUpdatedCijfersAt($updatedCijfersAt)
-    {
-        $this->updatedCijfersAt = $updatedCijfersAt;
-
-        return $this;
-    }
-
-    /**
-     * Get updatedCijfersAt
-     *
-     * @return \DateTime 
-     */
-    public function getUpdatedCijfersAt()
-    {
-        return $this->updatedCijfersAt;
     }
 }

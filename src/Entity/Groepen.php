@@ -39,11 +39,6 @@ class Groepen
     protected $trainingen;
 
     /**
-     * @ORM\OneToMany(targetEntity="SeizoensDoelen", mappedBy="groep", cascade={"persist", "remove"}, orphanRemoval=TRUE)
-     */
-    private $seizoensdoelen;
-
-    /**
      * @ORM\OneToMany(targetEntity="Wedstrijdkalender", mappedBy="groep", cascade={"persist", "remove"}, orphanRemoval=TRUE)
      */
     private $wedstrijdkalender;
@@ -202,39 +197,6 @@ class Groepen
         $this->functies[] = $functies;
 
         return $this;
-    }
-
-    /**
-     * Add seizoensdoelen
-     *
-     * @param \App\Entity\SeizoensDoelen $seizoensdoelen
-     * @return Groepen
-     */
-    public function addSeizoensdoelen(\App\Entity\SeizoensDoelen $seizoensdoelen)
-    {
-        $this->seizoensdoelen[] = $seizoensdoelen;
-
-        return $this;
-    }
-
-    /**
-     * Remove seizoensdoelen
-     *
-     * @param \App\Entity\SeizoensDoelen $seizoensdoelen
-     */
-    public function removeSeizoensdoelen(\App\Entity\SeizoensDoelen $seizoensdoelen)
-    {
-        $this->seizoensdoelen->removeElement($seizoensdoelen);
-    }
-
-    /**
-     * Get seizoensdoelen
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSeizoensdoelen()
-    {
-        return $this->seizoensdoelen;
     }
 
     /**
