@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class GetContentController extends BaseController
@@ -29,7 +28,6 @@ class GetContentController extends BaseController
     private DbalNewsPostRepository $newsPostRepository;
     private DbalHolidayRepository $holidayRepository;
     private DbalClubMagazineRepository $clubMagazineRepository;
-    private TranslatorInterface $translator;
     private SymfonyMailer $mailer;
     private Environment $twig;
 
@@ -119,7 +117,7 @@ class GetContentController extends BaseController
     }
 
     /**
-     * @Route("/page/{pageName}/", name="getSimpleContentPage", methods={"GET"})
+     * @Route("/page/{pageName}/", name="simpleContentPage", methods={"GET"})
      */
     public function simpleContentPage(string $pageName): Response
     {

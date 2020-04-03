@@ -3,7 +3,7 @@
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         <p>
-            <a href="{{ path('getSimpleContentPage', { 'pageName': app.request.get('pageName') }) }}">
+            <a href="{{ path('simpleContentPage', { 'pageName': app.request.get('pageName') }) }}">
                 Annuleer wijzigingen
             </a>
             {{ form_start(form) }}
