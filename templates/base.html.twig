@@ -12,7 +12,7 @@
 <center>
     <div id="container">
         <div id="header">
-            <a href="/">
+            <a href="{{ path('newsPosts') }}">
                 {% block header %}
                     <img width="980" src="{{ asset('images/headers/'~ header.getHeader(app.request.get('page')) ~'.jpg') }}"/>
                 {% endblock %}
@@ -23,9 +23,9 @@
             <ul>
                 <li>{% block nieuws %}<a href="#">Nieuws</a>{% endblock %}
                     <ul>
-                        <li><a href="{{ path('getIndexPage') }}">Laatste nieuws</a></li>
-                        <li><a href="{{ path('getNieuwsPage', { 'page': 'vakanties' }) }}">Vakanties</a></li>
-                        <li><a href="{{ path('getNieuwsPage', { 'page': 'clubblad' }) }}">Clubblad</a></li>
+                        <li><a href="{{ path('newsPosts') }}">Laatste nieuws</a></li>
+                        <li><a href="{{ path('holidays') }}">Vakanties</a></li>
+                        <li><a href="{{ path('clubMagazine') }}">Clubblad</a></li>
                         <li><a href="{{ path('getNieuwsPage', { 'page': 'archief' }) }}">Archief</a></li>
                         {# <li><a href="http://www.gymfeestje.nl" target="blank">Donar Gymfeestje</a></li> #}
                     </ul>

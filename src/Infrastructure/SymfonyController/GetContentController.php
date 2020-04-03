@@ -9,6 +9,8 @@ use App\Entity\Functie;
 use App\Entity\Groepen;
 use App\Entity\Persoon;
 use App\Entity\Stukje;
+use App\Infrastructure\DoctrineDbal\DbalClubMagazineRepository;
+use App\Infrastructure\DoctrineDbal\DbalHolidayRepository;
 use App\Infrastructure\DoctrineDbal\DbalNewsPostRepository;
 use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
 use App\Infrastructure\SymfonyMailer\SymfonyMailer;
@@ -25,6 +27,8 @@ class GetContentController extends BaseController
 {
     private DbalSimpleContentPageRepository $simpleContentPageRepository;
     private DbalNewsPostRepository $newsPostRepository;
+    private DbalHolidayRepository $holidayRepository;
+    private DbalClubMagazineRepository $clubMagazineRepository;
     private TranslatorInterface $translator;
     private SymfonyMailer $mailer;
     private Environment $twig;
@@ -32,6 +36,8 @@ class GetContentController extends BaseController
     public function __construct(
         DbalSimpleContentPageRepository $simpleContentPageRepository,
         DbalNewsPostRepository $newsPostRepository,
+        DbalHolidayRepository $holidayRepository,
+        DbalClubMagazineRepository $clubMagazineRepository,
         TranslatorInterface $translator,
         SymfonyMailer $mailer,
         Environment $twig
@@ -39,21 +45,50 @@ class GetContentController extends BaseController
     {
         $this->simpleContentPageRepository = $simpleContentPageRepository;
         $this->newsPostRepository          = $newsPostRepository;
+        $this->holidayRepository           = $holidayRepository;
+        $this->clubMagazineRepository      = $clubMagazineRepository;
         $this->translator                  = $translator;
         $this->mailer                      = $mailer;
         $this->twig                        = $twig;
     }
 
     /**
-     * @Route("/", name="getIndexPage", methods={"GET"})
+     * @Route("/", name="newsPosts", methods={"GET"})
      *
      * @return Response
      */
-    public function indexAction(): Response
+    public function newsPosts(): Response
     {
-        $newsPosts = $this->newsPostRepository->findTenMostRecentNewsPosts();
+        return $this->render(
+            'default/news.html.twig',
+            ['newPosts' => $this->newsPostRepository->findTenMostRecentNewsPosts()]
+        );
+    }
 
-        return $this->render('default/news.html.twig', ['newPosts' => $newsPosts]);
+    /**
+     * @Route("/vakanties", name="holidays", methods={"GET"})
+     *
+     * @return Response
+     */
+    public function holidays()
+    {
+        return $this->render(
+            'default/holidays.html.twig',
+            ['holidays' => $this->holidayRepository->findCurrentAndFutureHolidays()]
+        );
+    }
+
+    /**
+     * @Route("/clubblad", name="clubMagazine", methods={"GET"})
+     *
+     * @return Response
+     */
+    public function clubMagazine()
+    {
+        $clubMagazines = $this->clubMagazineRepository->findAll();
+        $years         = $this->clubMagazineRepository->findAllYears();
+
+        return $this->render('default/club_magazine.html.twig', ['clubMagazines' => $clubMagazines, 'years' => $years]);
     }
 
     /**
@@ -66,12 +101,6 @@ class GetContentController extends BaseController
     public function getNewsPage(string $page, Request $request): Response
     {
         switch ($page) {
-            case 'vakanties':
-                return $this->getNieuwsVakantiesPage();
-                break;
-            case 'clubblad':
-                return $this->getNieuwsClubbladPage();
-                break;
             case 'archief':
                 return $this->getNieuwsArchiefPage($request);
                 break;
@@ -83,7 +112,7 @@ class GetContentController extends BaseController
     /**
      * @Route("/page/{pageName}/", name="getSimpleContentPage", methods={"GET"})
      */
-    public function getSimpleContentPage(string $pageName): Response
+    public function simpleContentPage(string $pageName): Response
     {
         $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
         if (!$simpleContentPage) {
@@ -563,66 +592,6 @@ class GetContentController extends BaseController
                 array()
             );
         }
-    }
-
-    private function getNieuwsVakantiesPage()
-    {
-        $em            = $this->getDoctrine()->getManager();
-        $query         = $em->createQuery(
-            'SELECT vakanties
-            FROM App:Vakanties vakanties
-            WHERE vakanties.tot >= :datum
-            ORDER BY vakanties.van'
-        )
-            ->setParameter('datum', date('Y-m-d', time()));
-        $content       = $query->getResult();
-        $vakantieItems = array();
-        for ($i = 0; $i < count($content); $i++) {
-            $vakantieItems[$i] = $content[$i]->getAll();
-        }
-        return $this->render(
-            'default/vakanties.html.twig',
-            array(
-                'vakantieItems' => $vakantieItems,
-            )
-        );
-    }
-
-    private function getNieuwsClubbladPage()
-    {
-        $em            = $this->getDoctrine()->getManager();
-        $query         = $em->createQuery(
-            'SELECT clubblad
-            FROM App:Clubblad clubblad
-            WHERE clubblad.datum >= :datum
-            ORDER BY clubblad.datum DESC'
-        )
-            ->setParameter('datum', (date("Y", time()) - 2) . '-01-01');
-        $content       = $query->getResult();
-        $clubbladItems = array();
-        $j             = 0;
-        $k             = 0;
-        for ($i = 0; $i < count($content); $i++) {
-            if (date("Y", time()) - date("Y", strtotime($content[$i]->getDatumFormat())) != $k) {
-                $j = 0;
-            }
-            $k                                = (date("Y", time()) - date(
-                    "Y",
-                    strtotime($content[$i]->getDatumFormat())
-                ));
-            $clubbladItems[$k][$j]            = $content[$i]->getAll();
-            $clubbladItems[$k][$j]->jaar      = date("Y", strtotime($content[$i]->getDatumFormat()));
-            $clubbladItems[$k][$j]->maandJaar = $this->translator->trans(
-                    'month.' . date("F", strtotime($content[$i]->getDatumFormat()))
-                ) . ' ' . date("Y", strtotime($content[$i]->getDatumFormat()));
-            $j++;
-        }
-        return $this->render(
-            'default/clubblad.html.twig',
-            array(
-                'clubbladItems' => $clubbladItems,
-            )
-        );
     }
 
     private function getNieuwsArchiefPage(Request $request)

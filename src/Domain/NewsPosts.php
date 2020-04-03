@@ -34,4 +34,8 @@ final class NewsPosts implements IteratorAggregate
     {
         return new ArrayIterator($this->newsPosts);
     }
+
+    private function __construct()
+    {
+    }
 }

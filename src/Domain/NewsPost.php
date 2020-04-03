@@ -51,4 +51,8 @@ final class NewsPost
     {
         return $this->createdAt;
     }
+
+    private function __construct()
+    {
+    }
 }
