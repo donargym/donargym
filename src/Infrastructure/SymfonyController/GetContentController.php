@@ -10,6 +10,8 @@ use App\Entity\Groepen;
 use App\Entity\Persoon;
 use App\Entity\Stukje;
 use App\Infrastructure\DoctrineDbal\DbalClubMagazineRepository;
+use App\Infrastructure\DoctrineDbal\DbalCompetitionGroupMemberRepository;
+use App\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository;
 use App\Infrastructure\DoctrineDbal\DbalHolidayRepository;
 use App\Infrastructure\DoctrineDbal\DbalNewsPostRepository;
 use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
@@ -28,6 +30,8 @@ class GetContentController extends BaseController
     private DbalNewsPostRepository $newsPostRepository;
     private DbalHolidayRepository $holidayRepository;
     private DbalClubMagazineRepository $clubMagazineRepository;
+    private DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository;
+    private DbalCompetitionGroupRepository $competitionGroupRepository;
     private SymfonyMailer $mailer;
     private Environment $twig;
 
@@ -36,16 +40,20 @@ class GetContentController extends BaseController
         DbalNewsPostRepository $newsPostRepository,
         DbalHolidayRepository $holidayRepository,
         DbalClubMagazineRepository $clubMagazineRepository,
+        DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository,
+        DbalCompetitionGroupRepository $competitionGroupRepository,
         SymfonyMailer $mailer,
         Environment $twig
     )
     {
-        $this->simpleContentPageRepository = $simpleContentPageRepository;
-        $this->newsPostRepository          = $newsPostRepository;
-        $this->holidayRepository           = $holidayRepository;
-        $this->clubMagazineRepository      = $clubMagazineRepository;
-        $this->mailer                      = $mailer;
-        $this->twig                        = $twig;
+        $this->simpleContentPageRepository      = $simpleContentPageRepository;
+        $this->newsPostRepository               = $newsPostRepository;
+        $this->holidayRepository                = $holidayRepository;
+        $this->clubMagazineRepository           = $clubMagazineRepository;
+        $this->competitionGroupMemberRepository = $competitionGroupMemberRepository;
+        $this->competitionGroupRepository       = $competitionGroupRepository;
+        $this->mailer                           = $mailer;
+        $this->twig                             = $twig;
     }
 
     /**
@@ -117,20 +125,22 @@ class GetContentController extends BaseController
     }
 
     /**
-     * @Route("/page/{pageName}/", name="simpleContentPage", methods={"GET"})
+     * @Route("/wedstrijdturnen/{groupId}", name="showCompetitionGroup", methods={"GET"})
      */
-    public function simpleContentPage(string $pageName): Response
+    public function showCompetitionGroup(int $groupId): Response
     {
-        $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
-        if (!$simpleContentPage) {
+        $competitionGroup = $this->competitionGroupRepository->find($groupId);
+        if (!$competitionGroup) {
             throw new NotFoundHttpException();
         }
+        $competitionGroupMembers = $this->competitionGroupMemberRepository->findAllForGroup($groupId);
 
-        return new Response(
-            $this->twig->render(
-                'default/simple_content_page.html.twig',
-                ['content' => $simpleContentPage->pageContent()]
-            )
+        return $this->render(
+            'wedstrijdturnen/show_competition_group.html.twig',
+            [
+                'group'                 => $competitionGroup,
+                'competionGroupMembers' => $competitionGroupMembers,
+            ]
         );
     }
 
@@ -176,37 +186,6 @@ class GetContentController extends BaseController
                 array(
                     'activeGroep'        => $groepIdName,
                     'wedstrijduitslagen' => $wedstrijduitslagen,
-                )
-            );
-        } elseif ($view == 'TNT' && $id == null) {
-            $personen                      = array();
-            $personen['Trainer']           = array();
-            $personen['Assistent-Trainer'] = array();
-            $personen['Turnster']          = array();
-            foreach ($groep->getPeople() as $persoon) {
-                $functies = $persoon->getFunctie();
-                /** @var Functie $functie */
-                foreach ($functies as $functie) {
-                    /** @var Groepen $groep */
-                    $groep = $functie->getGroep();
-                    if ($groep->getId() == $page) {
-                        $personen[$functie->getFunctie()][] = $persoon->getAll();
-                    }
-                }
-            }
-            usort(
-                $personen['Turnster'],
-                function ($a, $b) {
-                    $t1 = strtotime($a->geboortedatum);
-                    $t2 = strtotime($b->geboortedatum);
-                    return $t1 - $t2;
-                }
-            );
-            return $this->render(
-                'wedstrijdturnen/tnt.html.twig',
-                array(
-                    'activeGroep' => $groepIdName,
-                    'personen'    => $personen,
                 )
             );
         } elseif ($view == 'TNT' && $id != null) {
@@ -423,5 +402,23 @@ class GetContentController extends BaseController
                 array()
             );
         }
+    }
+
+    /**
+     * @Route("/page/{pageName}/", name="simpleContentPage", methods={"GET"})
+     */
+    public function simpleContentPage(string $pageName): Response
+    {
+        $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
+        if (!$simpleContentPage) {
+            throw new NotFoundHttpException();
+        }
+
+        return new Response(
+            $this->twig->render(
+                'default/simple_content_page.html.twig',
+                ['content' => $simpleContentPage->pageContent()]
+            )
+        );
     }
 }

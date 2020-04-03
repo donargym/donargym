@@ -18,6 +18,23 @@ final class DbalCompetitionGroupRepository
         $this->connection = $connection;
     }
 
+    public function find(int $groupId): ?CompetitionGroup
+    {
+        $statement = $this->connection->createQueryBuilder()
+            ->select('id', 'name')
+            ->from('groepen')
+            ->andWhere('id = :id')
+            ->setParameter('id', $groupId)
+            ->execute();
+
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+
+        return $this->hydrate($row);
+    }
+
     public function allGroups(): CompetitionGroups
     {
         $statement = $this->connection->createQueryBuilder()

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="uitslagen"><a
+                href="{{ path('getWedstrijdturnenPage', { 'page': group.id, 'view': 'wedstrijduitslagen' }) }}">
+            &#187; Wedstrijduitslagen &#171;</a></div>
+    <h1>{{ group.name }}</h1>
+
+    <h2>Trainers</h2>
+    <table style="text-align:center;">
+        <tr>
+            {% for member in competionGroupMembers.coaches %}
+            {% if loop.index0 is divisible by(4) %}
+        </tr>
+        <tr>
+            {% endif %}
+            <td>
+                <a href="{{ path('getWedstrijdturnenPage', { 'page': group.id, 'view': 'TNT', 'id': member.id }) }}" style="text-decoration: none;">
+                    <img src="/uploads/selectiefotos/{{ member.pictureFileName }}" width="135" alt="Meer info"/>
+                    <p>{{ member.firstName }}<br>Trainer</p>
+                </a>
+            </td>
+            {% endfor %}
+
+            {% for member in competionGroupMembers.assistantCoaches %}
+            {% if (loop.index0 + competionGroupMembers.coaches.count) is divisible by(4) %}
+        </tr>
+        <tr>
+            {% endif %}
+            <td>
+                <a href="{{ path('getWedstrijdturnenPage', { 'page': group.id, 'view': 'TNT', 'id': member.id }) }}" style="text-decoration: none;">
+                    <img src="/uploads/selectiefotos/{{ member.pictureFileName }}" width="135" alt="Meer info"/>
+                    <p>{{ member.firstName }}<br>Assistent-Trainer</p>
+                </a>
+            </td>
+            {% endfor %}
+
+        </tr>
+    </table>
+
+    <h2>Turnsters</h2>
+    <table style="text-align:center;">
+        <tr>
+            {% for member in competionGroupMembers.gymnasts %}
+            {% if loop.index0 is divisible by(4) %}
+        </tr>
+        <tr>
+            {% endif %}
+            <td>
+                <a href="{{ path('getWedstrijdturnenPage', { 'page': group.id, 'view': 'TNT', 'id': member.id }) }}" style="text-decoration: none;">
+                    <img src="/uploads/selectiefotos/{{ member.pictureFileName }}" width="135" alt="Meer info"/>
+                    <p>{{ member.firstName }}<br>Turnster</p>
+                </a>
+            </td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endblock %}
