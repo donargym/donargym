@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('addNieuwsPage') }}">
+            Nieuw nieuwsbericht plaatsen:
+            <img src="{{ asset('images/add.png') }}" width="18px" alt="niewsbericht plaatsen"/>
+        </a>
+    {% endif %}
+
+    {% for newsPost in newPosts %}
+        <div id="article">
+            <div class="date">{{ newsPost.createdAt|date('d-m-Y: H:i') }}</div>
+            <hr>
+            <h3>
+                {{ newsPost.title }}
+                {% if app.user and is_granted('ROLE_ADMIN') %}
+                    {% apply spaceless %}
+                        <a href="{{ path('editNieuwsberichtPage', { 'id': newsPost.id }) }}">
+                            <img src="{{ asset('images/edit.png') }}" width="18px" alt="Nieuwsbericht bewerken"/>
+                        </a>
+                        <a href="{{ path('removeNieuwsberichtPage', { 'id': newsPost.id }) }}">
+                            <img src="{{ asset('images/remove.png') }}" width="18px" alt="Nieuwsbericht verwijderen"/>
+                        </a>
+                    {% endapply %}
+                {% endif %}
+            </h3>
+
+            <p>{{ newsPost.content|raw }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

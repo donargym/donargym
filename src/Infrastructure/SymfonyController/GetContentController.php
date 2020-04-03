@@ -9,6 +9,7 @@ use App\Entity\Functie;
 use App\Entity\Groepen;
 use App\Entity\Persoon;
 use App\Entity\Stukje;
+use App\Infrastructure\DoctrineDbal\DbalNewsPostRepository;
 use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
 use App\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -23,18 +24,21 @@ use Twig\Environment;
 class GetContentController extends BaseController
 {
     private DbalSimpleContentPageRepository $simpleContentPageRepository;
+    private DbalNewsPostRepository $newsPostRepository;
     private TranslatorInterface $translator;
     private SymfonyMailer $mailer;
     private Environment $twig;
 
     public function __construct(
         DbalSimpleContentPageRepository $simpleContentPageRepository,
+        DbalNewsPostRepository $newsPostRepository,
         TranslatorInterface $translator,
         SymfonyMailer $mailer,
         Environment $twig
     )
     {
         $this->simpleContentPageRepository = $simpleContentPageRepository;
+        $this->newsPostRepository          = $newsPostRepository;
         $this->translator                  = $translator;
         $this->mailer                      = $mailer;
         $this->twig                        = $twig;
@@ -42,29 +46,14 @@ class GetContentController extends BaseController
 
     /**
      * @Route("/", name="getIndexPage", methods={"GET"})
-     * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(Request $request): Response
+    public function indexAction(): Response
     {
-        $em          = $this->getDoctrine()->getManager();
-        $query       = $em->createQuery(
-            'SELECT nieuwsbericht
-            FROM App:Nieuwsbericht nieuwsbericht
-            ORDER BY nieuwsbericht.id       DESC'
-        );
-        $content     = $query->setMaxResults(10)->getResult();
-        $nieuwsItems = array();
-        for ($i = 0; $i < count($content); $i++) {
-            $nieuwsItems[$i] = $content[$i]->getAll();
-        }
-        return $this->render(
-            'default/nieuws.html.twig',
-            array(
-                'nieuwsItems' => $nieuwsItems,
-            )
-        );
+        $newsPosts = $this->newsPostRepository->findTenMostRecentNewsPosts();
+
+        return $this->render('default/news.html.twig', ['newPosts' => $newsPosts]);
     }
 
     /**
