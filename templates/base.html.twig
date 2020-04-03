@@ -55,7 +55,7 @@
                 </li>
                 <li>{% block wedstrijdturnen %}<a href="#">Wedstrijdturnen</a>{% endblock %}
                     <ul>
-                        <li><a href="{{ path('getWedstrijdturnenPage') }}">Algemeen</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'wedstrijdturnen' }) }}">Algemeen</a></li>
                         {% for competitionGroup in competitionGroups.allGroups %}
                             <li>
                                 <a href="{{ path('getWedstrijdturnenPage', { 'page': competitionGroup.id, 'view': 'TNT' }) }}">{{ competitionGroup.name }}</a>
@@ -67,17 +67,17 @@
                 <li>{% block lidmaatschap %}<a href="#">Lidmaatschap</a>{% endblock %}
                     <ul>
                         <li><a href="{{ path('subscribe') }}">Lid worden</a></li>
-                        <li><a href="{{ path('getLidmaatschapPage') }}">Inlichtingen</a></li>
-                        <li><a href="{{ path('getLidmaatschapPage', { 'page': 'contributie' }) }}">Contributie</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'lidmaatschap'}) }}">Inlichtingen</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'contributie' }) }}">Contributie</a></li>
                         <li><a href="{{ path('getLidmaatschapPage', { 'page': 'formulieren' }) }}">Formulieren</a></li>
-                        <li><a href="{{ path('getLidmaatschapPage', { 'page': 'ooievaarspas' }) }}">Ooievaarspas</a>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'ooievaarspas' }) }}">Ooievaarspas</a>
                         </li>
                     </ul>
                 </li>
-                <li>{% block fotofilm %}<a href="{{ path('getFotofilmPage') }}">Foto/Film</a>{% endblock %}</li>
+                <li>{% block fotofilm %}<a href="{{ path('simpleContentPage', { 'pageName': 'fotoenfilm' }) }}">Foto/Film</a>{% endblock %}</li>
                 <li>{% block contact %}<a href="#">Contact</a>{% endblock %}
                     <ul>
-                        <li><a href="{{ path('getContactPage', { 'page': 'contact' }) }}">Contactgegevens</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'contact' }) }}">Contactgegevens</a></li>
                         <li><a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Veelgestelde vragen</a></li>
                     </ul>
                 </li>
