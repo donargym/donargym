@@ -38,7 +38,6 @@ class GetContentController extends BaseController
         DbalNewsPostRepository $newsPostRepository,
         DbalHolidayRepository $holidayRepository,
         DbalClubMagazineRepository $clubMagazineRepository,
-        TranslatorInterface $translator,
         SymfonyMailer $mailer,
         Environment $twig
     )
@@ -47,66 +46,76 @@ class GetContentController extends BaseController
         $this->newsPostRepository          = $newsPostRepository;
         $this->holidayRepository           = $holidayRepository;
         $this->clubMagazineRepository      = $clubMagazineRepository;
-        $this->translator                  = $translator;
         $this->mailer                      = $mailer;
         $this->twig                        = $twig;
     }
 
     /**
      * @Route("/", name="newsPosts", methods={"GET"})
-     *
-     * @return Response
      */
     public function newsPosts(): Response
     {
-        return $this->render(
-            'default/news.html.twig',
-            ['newPosts' => $this->newsPostRepository->findTenMostRecentNewsPosts()]
+        return new Response(
+            $this->twig->render(
+                'default/news.html.twig',
+                ['newPosts' => $this->newsPostRepository->findTenMostRecentNewsPosts()]
+            )
         );
     }
 
     /**
      * @Route("/vakanties", name="holidays", methods={"GET"})
-     *
-     * @return Response
      */
-    public function holidays()
+    public function holidays(): Response
     {
-        return $this->render(
-            'default/holidays.html.twig',
-            ['holidays' => $this->holidayRepository->findCurrentAndFutureHolidays()]
+        return new Response(
+            $this->twig->render(
+                'default/holidays.html.twig',
+                ['holidays' => $this->holidayRepository->findCurrentAndFutureHolidays()]
+            )
         );
     }
 
     /**
      * @Route("/clubblad", name="clubMagazine", methods={"GET"})
-     *
-     * @return Response
      */
-    public function clubMagazine()
+    public function clubMagazine(): Response
     {
-        $clubMagazines = $this->clubMagazineRepository->findAll();
-        $years         = $this->clubMagazineRepository->findAllYears();
-
-        return $this->render('default/club_magazine.html.twig', ['clubMagazines' => $clubMagazines, 'years' => $years]);
+        return new Response(
+            $this->twig->render(
+                'default/club_magazine.html.twig',
+                [
+                    'clubMagazines' => $this->clubMagazineRepository->findAll(),
+                    'years'         => $this->clubMagazineRepository->findAllYears(),
+                ]
+            )
+        );
     }
 
     /**
-     * @Route("/nieuws/{page}/", defaults={"page" = "index"}, name="getNieuwsPage", methods={"GET"})
-     * @param string  $page
-     * @param Request $request
-     *
-     * @return Response
+     * @Route("/archief", name="newsArchiveIndex", methods={"GET"})
      */
-    public function getNewsPage(string $page, Request $request): Response
+    public function newsArchiveIndex(): Response
     {
-        switch ($page) {
-            case 'archief':
-                return $this->getNieuwsArchiefPage($request);
-                break;
-            default:
-                throw new NotFoundHttpException();
-        }
+        return new Response(
+            $this->twig->render(
+                'default/archive_index.html.twig',
+                ['years' => $this->newsPostRepository->findYearsForArchive()]
+            )
+        );
+    }
+
+    /**
+     * @Route("/archief/{year}", name="newsArchiveForYear", methods={"GET"})
+     */
+    public function newsArchiveForYear(int $year): Response
+    {
+        return new Response(
+            $this->twig->render(
+                'default/news.html.twig',
+                ['newPosts' => $this->newsPostRepository->findNewsPostsForYear($year)]
+            )
+        );
     }
 
     /**
@@ -590,49 +599,6 @@ class GetContentController extends BaseController
             return $this->render(
                 'error/pageNotFound.html.twig',
                 array()
-            );
-        }
-    }
-
-    private function getNieuwsArchiefPage(Request $request)
-    {
-        if ($request->query->get('jaar')) {
-            $em          = $this->getDoctrine()->getManager();
-            $query       = $em->createQuery(
-                'SELECT nieuwsbericht
-            FROM App:Nieuwsbericht nieuwsbericht
-            WHERE nieuwsbericht.jaar = :jaar
-            ORDER BY nieuwsbericht.id ASC'
-            )
-                ->setParameter('jaar', $request->query->get('jaar'));
-            $content     = $query->getResult();
-            $nieuwsItems = array();
-            for ($i = 0; $i < count($content); $i++) {
-                $nieuwsItems[$i] = $content[$i]->getAll();
-            }
-            return $this->render(
-                'default/nieuws.html.twig',
-                array(
-                    'nieuwsItems' => $nieuwsItems,
-                )
-            );
-        } else {
-            $em      = $this->getDoctrine()->getManager();
-            $query   = $em->createQuery(
-                'SELECT nieuwsbericht
-                FROM App:Nieuwsbericht nieuwsbericht
-                ORDER BY nieuwsbericht.jaar ASC'
-            );
-            $content = $query->setMaxResults(1)->getOneOrNullResult();
-            $jaren   = array();
-            for ($i = date("Y", time()); $i >= $content->getJaar(); $i--) {
-                array_push($jaren, $i);
-            }
-            return $this->render(
-                'default/archief_index.html.twig',
-                array(
-                    'jaren' => $jaren,
-                )
             );
         }
     }

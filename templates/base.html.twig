@@ -26,7 +26,7 @@
                         <li><a href="{{ path('newsPosts') }}">Laatste nieuws</a></li>
                         <li><a href="{{ path('holidays') }}">Vakanties</a></li>
                         <li><a href="{{ path('clubMagazine') }}">Clubblad</a></li>
-                        <li><a href="{{ path('getNieuwsPage', { 'page': 'archief' }) }}">Archief</a></li>
+                        <li><a href="{{ path('newsArchiveIndex', { 'page': 'archief' }) }}">Archief</a></li>
                         {# <li><a href="http://www.gymfeestje.nl" target="blank">Donar Gymfeestje</a></li> #}
                     </ul>
                 </li>
@@ -47,14 +47,10 @@
                 <li>{% block lessen %}<a href="#">Lessen</a>{% endblock %}
                     <ul>
                         <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'lesrooster' }) }}">Lesrooster</a></li>
-                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'peuterenkleutergym' }) }}">Peuter &
-                                Kleutergym</a></li>
-                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'gymnastiekenrecreatiefturnen' }) }}">Recreatief
-                                Turnen</a></li>
-                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': '50plusgymenconditie' }) }}">50+ Gym &
-                                Conditie</a></li>
-                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'aerobicsenbodyshape' }) }}">Aerobics &
-                                Bodyshape</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'peuterenkleutergym' }) }}">Peuter & Kleutergym</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'gymnastiekenrecreatiefturnen' }) }}">Recreatief Turnen</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': '50plusgymenconditie' }) }}">50+ Gym & Conditie</a></li>
+                        <li><a href="{{ path('getSimpleContentPage', { 'pageName': 'aerobicsenbodyshape' }) }}">Aerobics & Bodyshape</a></li>
                     </ul>
                 </li>
                 <li>{% block wedstrijdturnen %}<a href="#">Wedstrijdturnen</a>{% endblock %}
@@ -82,8 +78,7 @@
                 <li>{% block contact %}<a href="#">Contact</a>{% endblock %}
                     <ul>
                         <li><a href="{{ path('getContactPage', { 'page': 'contact' }) }}">Contactgegevens</a></li>
-                        <li><a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Veelgestelde
-                                vragen</a></li>
+                        <li><a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Veelgestelde vragen</a></li>
                     </ul>
                 </li>
                 <li>
