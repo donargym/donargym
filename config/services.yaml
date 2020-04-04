@@ -23,6 +23,10 @@ services:
         resource: '../src/Infrastructure/SymfonyController'
         tags: ['controller.service_arguments']
 
+    App\PublicInformation\Infrastructure\SymfonyController\:
+        resource: '../src/PublicInformation/Infrastructure/SymfonyController'
+        tags: ['controller.service_arguments']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
