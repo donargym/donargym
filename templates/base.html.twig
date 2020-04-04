@@ -58,7 +58,7 @@
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'wedstrijdturnen' }) }}">Algemeen</a></li>
                         {% for competitionGroup in competitionGroups.allGroups %}
                             <li>
-                                <a href="{{ path('getWedstrijdturnenPage', { 'page': competitionGroup.id, 'view': 'TNT' }) }}">{{ competitionGroup.name }}</a>
+                                <a href="{{ path('showCompetitionGroup', { 'groupId': competitionGroup.id }) }}">{{ competitionGroup.name }}</a>
                             </li>
                         {% endfor %}
                         <li><a href="http://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a></li>
