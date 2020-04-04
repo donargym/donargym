@@ -1,8 +1,16 @@
 {% extends 'base.html.twig' %}
 
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <i>{{ group.name }}</i>
+        </div>
+    </div>
+{% endblock %}
+
 {% block body %}
     <div class="uitslagen"><a
-                href="{{ path('getWedstrijdturnenPage', { 'page': group.id, 'view': 'wedstrijduitslagen' }) }}">
+                href="{{ path('competitionResults', { 'groupId': group.id }) }}">
             &#187; Wedstrijduitslagen &#171;</a></div>
     <h1>{{ group.name }}</h1>
 

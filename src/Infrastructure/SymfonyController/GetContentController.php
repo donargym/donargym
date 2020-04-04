@@ -5,13 +5,12 @@ namespace App\Infrastructure\SymfonyController;
 use App\Domain\EmailAddress;
 use App\Domain\EmailTemplateType;
 use App\Domain\PasswordGenerator;
-use App\Entity\Functie;
-use App\Entity\Groepen;
 use App\Entity\Persoon;
 use App\Entity\Stukje;
 use App\Infrastructure\DoctrineDbal\DbalClubMagazineRepository;
 use App\Infrastructure\DoctrineDbal\DbalCompetitionGroupMemberRepository;
 use App\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository;
+use App\Infrastructure\DoctrineDbal\DbalCompetitionResultRepository;
 use App\Infrastructure\DoctrineDbal\DbalHolidayRepository;
 use App\Infrastructure\DoctrineDbal\DbalNewsPostRepository;
 use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
@@ -32,6 +31,7 @@ class GetContentController extends BaseController
     private DbalClubMagazineRepository $clubMagazineRepository;
     private DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository;
     private DbalCompetitionGroupRepository $competitionGroupRepository;
+    private DbalCompetitionResultRepository $competitionResultRepository;
     private SymfonyMailer $mailer;
     private Environment $twig;
 
@@ -42,6 +42,7 @@ class GetContentController extends BaseController
         DbalClubMagazineRepository $clubMagazineRepository,
         DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository,
         DbalCompetitionGroupRepository $competitionGroupRepository,
+        DbalCompetitionResultRepository $competitionResultRepository,
         SymfonyMailer $mailer,
         Environment $twig
     )
@@ -52,6 +53,7 @@ class GetContentController extends BaseController
         $this->clubMagazineRepository           = $clubMagazineRepository;
         $this->competitionGroupMemberRepository = $competitionGroupMemberRepository;
         $this->competitionGroupRepository       = $competitionGroupRepository;
+        $this->competitionResultRepository      = $competitionResultRepository;
         $this->mailer                           = $mailer;
         $this->twig                             = $twig;
     }
@@ -136,10 +138,31 @@ class GetContentController extends BaseController
         $competitionGroupMembers = $this->competitionGroupMemberRepository->findAllForGroup($groupId);
 
         return $this->render(
-            'wedstrijdturnen/show_competition_group.html.twig',
+            'wedstrijdturnen/competition_group.html.twig',
             [
                 'group'                 => $competitionGroup,
                 'competionGroupMembers' => $competitionGroupMembers,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/wedstrijdturnen/{groupId}/wedstrijduitslagen", name="competitionResults", methods={"GET"})
+     */
+    public function competitionResults(int $groupId): Response
+    {
+        $competitionGroup = $this->competitionGroupRepository->find($groupId);
+        if (!$competitionGroup) {
+            throw new NotFoundHttpException();
+        }
+
+        $competitionResults = $this->competitionResultRepository->findAllForGroup($groupId);
+
+        return $this->render(
+            'wedstrijdturnen/competition_results.html.twig',
+            [
+                'group'              => $competitionGroup,
+                'competitionResults' => $competitionResults,
             ]
         );
     }
@@ -159,36 +182,9 @@ class GetContentController extends BaseController
         $groep = $query->setMaxResults(1)->getOneOrNullResult();
         if ($groep) {
             $groepIdName = $groep->getIdName();
-            if ($view == null && $id == null) {
-                return $this->render(
-                    'wedstrijdturnen/groepIndex.html.twig',
-                    array(
-                        'activeGroep' => $groepIdName,
-                    )
-                );
-            }
         }
 
-        if ($view == 'wedstrijduitslagen') {
-            $wedstrijduitslagen = array();
-            $uitslagen          = $groep->getWedstrijduitslagen();
-            for ($counter = (count($uitslagen) - 1); $counter >= 0; $counter--) {
-                if ($uitslagen[$counter]->getDatum()->format("m") > 7) {
-                    $wedstrijduitslagen[$uitslagen[$counter]->getDatum()->format("Y")][]
-                        = $uitslagen[$counter]->getAll();
-                } else {
-                    $wedstrijduitslagen[($uitslagen[$counter]->getDatum()->format("Y") - 1)][]
-                        = $uitslagen[$counter]->getAll();
-                }
-            }
-            return $this->render(
-                'wedstrijdturnen/wedstrijduitslagen.html.twig',
-                array(
-                    'activeGroep'        => $groepIdName,
-                    'wedstrijduitslagen' => $wedstrijduitslagen,
-                )
-            );
-        } elseif ($view == 'TNT' && $id != null) {
+        if ($view == 'TNT' && $id != null) {
             $em    = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
                 'SELECT persoon

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block inlogNavigation %}
+    <div id="inlog_nav">
+        <div id="text">
+            <a href="{{ path('showCompetitionGroup', { 'groupId': group.id }) }}">{{ group.name }}</a>
+            > <i>Wedstrijduitslagen</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div id="wedstrijduitslagen">
+        <h1>{{ group.name }}</h1>
+        <h2>Wedstrijduitslagen</h2>
+        {% for competitionSeason in competitionResults.competitionSeasons %}
+            <br>
+            <b>{{ competitionSeason.seasonLabel }}</b><br>
+            {% for competitionResult in competitionResults.competitionResultsForSeason(competitionSeason) %}
+                <a href="/uploads/wedstrijduitslagen/{{ competitionResult.fileName }}" target="blank">
+                    {{ competitionResult.label }}
+                </a><br>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}

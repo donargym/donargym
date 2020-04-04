@@ -30,7 +30,7 @@ final class ClubMagazines implements IteratorAggregate
         return $self;
     }
 
-    public function clubMagazinesForYear(int $year): ClubMagazines
+    public function clubMagazinesForYear(int $year): self
     {
         $clubMagazines = [];
         foreach ($this->clubMagazines as $clubMagazine) {
@@ -39,7 +39,7 @@ final class ClubMagazines implements IteratorAggregate
             }
         }
 
-        return ClubMagazines::fromArray($clubMagazines);
+        return self::fromArray($clubMagazines);
     }
 
     public function getIterator(): ArrayIterator
