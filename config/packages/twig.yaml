@@ -3,6 +3,6 @@ twig:
     form_themes: ['bootstrap_4_layout.html.twig']
     globals:
         # the value is the service's id
-        calendarItems: '@App\Infrastructure\DoctrineDbal\DbalCompactCalendarItemRepository'
+        calendarItems: '@App\Infrastructure\DoctrineDbal\DbalPublicCalendarItemRepository'
         header: '@App\Domain\HeaderLocation'
         competitionGroups: '@App\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository'

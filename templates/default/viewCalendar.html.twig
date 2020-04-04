@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>{{ content.activiteit }}</h1>
+    <h1>{{ calendarItem.name }}</h1>
     <h2>Datum</h2>
-    {{ content.datum }}
+    {{ calendarItem.date|date('d-m-Y') }}
     <h2>Locatie</h2>
-    {{ content.locatie }}
+    {{ calendarItem.locationDescription }}
     <h2>Tijden</h2>
-    {{ content.tijd }}
+    {{ calendarItem.timeDescription }}
 {% endblock %}

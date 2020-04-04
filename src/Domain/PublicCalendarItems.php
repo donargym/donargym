@@ -8,21 +8,21 @@ use ArrayIterator;
 use Assert\Assertion;
 use IteratorAggregate;
 
-final class CompactCalendarItems implements IteratorAggregate
+final class PublicCalendarItems implements IteratorAggregate
 {
     /**
-     * @var CompactCalendarItem[]
+     * @var PublicCalendarItem[]
      */
     private array $compactCalendarItems;
 
     /**
-     * @param CompactCalendarItem[] $compactCalendarItems
+     * @param PublicCalendarItem[] $compactCalendarItems
      *
      * @return static
      */
     public static function fromArray(array $compactCalendarItems): self
     {
-        Assertion::allIsInstanceOf($compactCalendarItems, CompactCalendarItem::class);
+        Assertion::allIsInstanceOf($compactCalendarItems, PublicCalendarItem::class);
 
         $self                       = new self();
         $self->compactCalendarItems = $compactCalendarItems;
