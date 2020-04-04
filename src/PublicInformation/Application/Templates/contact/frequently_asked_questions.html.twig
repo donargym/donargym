@@ -1,0 +1,29 @@
+{% extends '@Shared/base.html.twig' %}
+
+{% block body %}
+    <h1>Veelgestelde vragen</h1>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('addVeelgesteldeVragenPage') }}">
+            Nieuwe vraag toevoegen:
+            <img src="{{ asset('images/add.png') }}" width="18px" alt="Nieuwe vraag toevoegen"/>
+        </a>
+    {% endif %}
+    {% for question in questions %}
+            <h3>{{ question.question }}
+            {% if app.user and is_granted('ROLE_ADMIN') %}
+                {% apply spaceless %}
+                <a href="{{ path('editVeelgesteldeVragenPage', { 'id': question.id }) }}">
+                    <img src="{{ asset('images/edit.png') }}" width="18px" alt="Bewerk vraag/antwoord" />
+                </a>
+                <a href="{{ path('removeVeelgesteldeVragenPage', { 'id': question.id }) }}">
+                    <img src="{{ asset('images/remove.png') }}" width="18px" alt="Verwijder deze vraag" />
+                </a>
+                {% endapply %}
+            {% endif %}
+            </h3>
+        <div>
+            {{ question.answer|raw }}
+        </div>
+    {% endfor %}
+{% endblock %}
+

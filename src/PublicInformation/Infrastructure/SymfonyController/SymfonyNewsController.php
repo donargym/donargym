@@ -30,7 +30,7 @@ final class SymfonyNewsController
     {
         return new Response(
             $this->twig->render(
-                'default/news.html.twig',
+                '@PublicInformation/default/news.html.twig',
                 ['newPosts' => $this->newsPostRepository->findTenMostRecentNewsPosts()]
             )
         );
@@ -43,7 +43,7 @@ final class SymfonyNewsController
     {
         return new Response(
             $this->twig->render(
-                'default/archive_index.html.twig',
+                '@PublicInformation/default/archive_index.html.twig',
                 ['years' => $this->newsPostRepository->findYearsForArchive()]
             )
         );
@@ -56,7 +56,7 @@ final class SymfonyNewsController
     {
         return new Response(
             $this->twig->render(
-                'default/news.html.twig',
+                '@PublicInformation/default/news.html.twig',
                 ['newPosts' => $this->newsPostRepository->findNewsPostsForYear($year)]
             )
         );

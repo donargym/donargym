@@ -48,7 +48,7 @@ final class SymfonyPublicCompetitionGroupController
 
         return new Response(
             $this->twig->render(
-                'wedstrijdturnen/competition_group.html.twig',
+                '@PublicInformation/wedstrijdturnen/competition_group.html.twig',
                 [
                     'group'                   => $competitionGroup,
                     'competitionGroupMembers' => $this->competitionGroupMemberRepository->findAllForGroup($groupId),
@@ -69,7 +69,7 @@ final class SymfonyPublicCompetitionGroupController
 
         return new Response(
             $this->twig->render(
-                'wedstrijdturnen/competition_results.html.twig',
+                '@PublicInformation/wedstrijdturnen/competition_results.html.twig',
                 [
                     'group'              => $competitionGroup,
                     'competitionResults' => $this->competitionResultRepository->findAllForGroup($groupId),
@@ -100,7 +100,7 @@ final class SymfonyPublicCompetitionGroupController
 
         return new Response(
             $this->twig->render(
-                'wedstrijdturnen/about_gymnast.html.twig',
+                '@PublicInformation/wedstrijdturnen/about_gymnast.html.twig',
                 [
                     'group'        => $competitionGroup,
                     'aboutGymnast' => $aboutGymnast,

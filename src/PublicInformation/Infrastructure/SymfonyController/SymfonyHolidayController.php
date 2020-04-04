@@ -30,7 +30,7 @@ final class SymfonyHolidayController
     {
         return new Response(
             $this->twig->render(
-                'default/holidays.html.twig',
+                '@PublicInformation/default/holidays.html.twig',
                 ['holidays' => $this->holidayRepository->findCurrentAndFutureHolidays()]
             )
         );

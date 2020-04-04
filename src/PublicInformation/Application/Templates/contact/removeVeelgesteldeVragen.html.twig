@@ -1,0 +1,21 @@
+{% extends '@Shared/base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <h1>Vraag verwijderen</h1>
+        <p><span style="color:red;">Weet u zeker dat u onderstaande vraag wilt verwijderen?</span></p>
+        <p>{{ content.vraag }}</p>
+        <table>
+            <tr>
+                <td>
+                    <form method="post" action="{{ path('removeVeelgesteldeVragenPage', { id: app.request.get('id') }) }}">
+                        <input name="bevestig" type="submit" value="Bevestig">
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}"><input type="button" value="Annuleren"></a>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+{% endblock %}

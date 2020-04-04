@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl">
+<head>
+    <meta charset="UTF-8" content="HTML,CSS,JavaScript"/>
+    <title>Welkom bij Gymnastiek Vereniging Donar Den Haag</title>
+    {% block stylesheets %}
+        <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
+    {% endblock %}
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/donarlogo.png') }}"/>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <a href="{{ path('newsPosts') }}">
+                {% block header %}
+                    <img width="980" src="{{ asset('images/headers/'~random(1, 20)~'.jpg') }}" alt=""/>
+                {% endblock %}
+            </a>
+        </div>
+
+        <nav id="primary_nav_wrap">
+            <ul>
+                <li><a href="#">Nieuws</a>
+                    <ul>
+                        <li><a href="{{ path('newsPosts') }}">Laatste nieuws</a></li>
+                        <li><a href="{{ path('holidays') }}">Vakanties</a></li>
+                        <li><a href="{{ path('clubMagazine') }}">Clubblad</a></li>
+                        <li><a href="{{ path('newsArchiveIndex', { 'page': 'archief' }) }}">Archief</a></li>
+                        {# <li><a href="http://www.gymfeestje.nl" target="blank">Donar Gymfeestje</a></li> #}
+                    </ul>
+                </li>
+
+                <li><a href="#">Donar</a>
+                    <ul>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'geschiedenis' }) }}">Geschiedenis</a>
+                        </li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'visie' }) }}">Visie</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'bestuur' }) }}">Bestuur</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'leiding' }) }}">Leiding</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'evenementen' }) }}">Evenementen</a>
+                        </li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'locaties' }) }}">Locaties</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'kleding' }) }}">Kleding</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'vacatures' }) }}">Vacatures</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'sponsors' }) }}">Sponsors</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Lessen</a>
+                    <ul>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'lesrooster' }) }}">Lesrooster</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'peuterenkleutergym' }) }}">Peuter &
+                                Kleutergym</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'gymnastiekenrecreatiefturnen' }) }}">Recreatief
+                                Turnen</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': '50plusgymenconditie' }) }}">50+ Gym &
+                                Conditie</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'aerobicsenbodyshape' }) }}">Aerobics &
+                                Bodyshape</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Wedstrijdturnen</a>
+                    <ul>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'wedstrijdturnen' }) }}">Algemeen</a>
+                        </li>
+                        {% for competitionGroup in competitionGroups.allGroups %}
+                            <li>
+                                <a href="{{ path('showCompetitionGroup', { 'groupId': competitionGroup.id }) }}">{{ competitionGroup.name }}</a>
+                            </li>
+                        {% endfor %}
+                        <li><a href="https://www.topturnenhw.nl" target="_blank">Topturnen Heren</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Lidmaatschap</a>
+                    <ul>
+                        <li><a href="{{ path('subscribe') }}">Lid worden</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'subscription'}) }}">Inlichtingen</a>
+                        </li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'contributie' }) }}">Contributie</a>
+                        </li>
+                        <li><a href="{{ path('subscriptionPaperForms') }}">Formulieren</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'ooievaarspas' }) }}">Ooievaarspas</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="{{ path('simpleContentPage', { 'pageName': 'fotoenfilm' }) }}">Foto/Film</a></li>
+                <li><a href="#">Contact</a>
+                    <ul>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'contact' }) }}">Contactgegevens</a>
+                        </li>
+                        <li><a href="{{ path('frequentlyAskedQuestions') }}">Veelgestelde vragen</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{ path('getInloggenPage') }}">Inloggen</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="error_container">
+            {% if app.session.flashbag.get('error') is defined %}
+                {% for flash_message in app.session.flashbag.get('error') %}
+                    <div id="error">
+                        {{ flash_message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div id="error_success_container">
+            {% if app.session.flashbag.get('success') is defined %}
+                {% for flash_message in app.session.flashbag.get('success') %}
+                    <div id="error_success">
+                        {{ flash_message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div id="c">
+
+            <div id="content">
+
+                {% block inlogmenu %}{% endblock %}
+
+                {% block inlogNavigation %}
+
+                {% endblock %}
+                {% block pageHeader %}
+
+                {% endblock %}
+                {% block body %}
+
+                {% endblock %}
+            </div>
+        </div>
+        <div id="agenda">
+            <div class="agenda">
+                <h1>Agenda
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('addAgendaPage') }}">
+                            <img src="{{ asset('images/add.png') }}" width="18px" alt="Agenda item toevoegen"/>
+                        </a>
+                    {% endif %}
+                </h1>
+
+                <h2><i>(data onder voorbehoud)</i></h2>
+                <hr>
+                {% for item in calendarItems.allFutureItems %}
+                    <a href="{{ path('publicCalendarItem', { 'id': item.id }) }}">
+                        <span class="a_date">
+                            {{ item.date|date('d-m-Y') }}
+                        </span>
+                    </a>
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('editAgendaPage', { 'id': item.id }) }}">
+                            <img src="{{ asset('images/edit.png') }}" width="18px" alt="Bewerk agenda item"/>
+                        </a>
+                        <a href="{{ path('removeAgendaPage', { 'id': item.id }) }}">
+                            <img src="{{ asset('images/remove.png') }}" width="18px" alt="Verwijder agenda item"/>
+                        </a>
+                    {% endif %}
+                    <br/>
+                    {{ item.name }}
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+        {% block javascripts %}{% endblock %}
+    </div>
+    <div id="footer">
+        <a href="{{ asset('uploads/privacy.pdf') }}" target="blank">Privacybeleid</a>
+    </div>
+</body>
+</html>

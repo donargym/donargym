@@ -34,6 +34,6 @@ final class SymfonyPublicCalendarController
             throw new NotFoundHttpException();
         }
 
-        return new Response($this->twig->render('default/viewCalendar.html.twig', ['calendarItem' => $calendarItem]));
+        return new Response($this->twig->render('@PublicInformation/default/viewCalendar.html.twig', ['calendarItem' => $calendarItem]));
     }
 }

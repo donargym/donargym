@@ -1,0 +1,21 @@
+{% extends '@Shared/base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <h1>Vraag toevoegen of wijzigen</h1>
+        <a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Annuleer</a>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {{ form_errors(form.vraag) }}<br>
+        <b>{{ form_label(form.vraag) }}</b><br>
+        {{ form_widget(form.vraag) }}<br>
+
+        {{ form_errors(form.antwoord) }}<br>
+        <b>{{ form_label(form.antwoord) }}</b><br>
+        {{ form_widget(form.antwoord) }}<br>
+
+        {{ form_widget(form.Verstuur) }}
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}

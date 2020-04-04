@@ -1,0 +1,22 @@
+{% extends '@PublicInformation/default/holidays.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <h1>Vakantie verwijderen</h1>
+        <span style="color:red;">Weet u zeker dat u onderstaande vakantie of feestdag wilt verwijderen?</span>
+        <p>{{ content.naam }}</p>
+        <table>
+            <tr>
+                <td>
+                    <form method="post" action="{{ path('removeVakantiesPage', { id: app.request.get('id') }) }}">
+                        <input name="bevestig" type="submit" value="Bevestig">
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ path('getNieuwsPage', { 'page': 'vakanties' }) }}"><input type="button" value="Annuleren"></a>
+                </td>
+            </tr>
+        </table><br>
+    {% endif %}
+    {{ parent() }}
+{% endblock %}

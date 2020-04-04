@@ -141,7 +141,7 @@ final class InschrijfController extends BaseController
         }
 
         return $this->render(
-            'subscription/inschrijven.html.twig',
+            '@PublicInformation/subscription/inschrijven.html.twig',
             array(
                 'form' => $form->createView(),
             )

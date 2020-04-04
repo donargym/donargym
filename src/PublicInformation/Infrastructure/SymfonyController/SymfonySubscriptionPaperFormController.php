@@ -30,7 +30,7 @@ final class SymfonySubscriptionPaperFormController
     {
         return new Response(
             $this->twig->render(
-                'subscription/paper_forms.html.twig',
+                '@PublicInformation/subscription/paper_forms.html.twig',
                 ['subscriptionPaperForms' => $this->subscriptionPaperFormRepository->findAll()]
             )
         );

@@ -30,7 +30,7 @@ final class SymfonyFrequentlyAskedQuestionsController
     {
         return new Response(
             $this->twig->render(
-                'contact/frequently_asked_questions.html.twig',
+                '@PublicInformation/contact/frequently_asked_questions.html.twig',
                 ['questions' => $this->frequentlyAskedQuestionRepository->findAll()]
             )
         );

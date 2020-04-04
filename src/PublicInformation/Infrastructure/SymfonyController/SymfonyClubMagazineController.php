@@ -30,7 +30,7 @@ final class SymfonyClubMagazineController
     {
         return new Response(
             $this->twig->render(
-                'default/club_magazine.html.twig',
+                '@PublicInformation/default/club_magazine.html.twig',
                 [
                     'clubMagazines' => $this->clubMagazineRepository->findAll(),
                     'years'         => $this->clubMagazineRepository->findAllYears(),

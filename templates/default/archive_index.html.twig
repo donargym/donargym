@@ -1,9 +1,0 @@
-{% extends 'base.html.twig' %}
-{% block body %}
-    <h1>Archief</h1>
-        {% for year in years %}
-           <li style="list-style: none;">
-               <a href="{{ path('newsArchiveForYear', { 'year': year }) }}">Archief {{ year }}</a>
-           </li>
-        {% endfor %}
-{% endblock %}

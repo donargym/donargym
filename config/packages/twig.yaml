@@ -1,7 +1,11 @@
 twig:
-    default_path: '%kernel.project_dir%/templates'
-    form_themes: ['bootstrap_4_layout.html.twig']
-    globals:
-        # the value is the service's id
-        calendarItems: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCalendarItemRepository'
-        competitionGroups: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository'
+  paths:
+    'templates': ~
+    'src/PublicInformation/Application/Templates': 'PublicInformation'
+    'src/Shared/Application/Templates': 'Shared'
+    'src/Security/Application/Templates': 'Security'
+  form_themes: ['bootstrap_4_layout.html.twig']
+  globals:
+    # the value is the service's id
+    calendarItems: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCalendarItemRepository'
+    competitionGroups: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository'

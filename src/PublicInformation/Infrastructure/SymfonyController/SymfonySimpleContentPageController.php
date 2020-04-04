@@ -53,7 +53,7 @@ final class SymfonySimpleContentPageController
 
         return new Response(
             $this->twig->render(
-                'default/simple_content_page.html.twig',
+                '@PublicInformation/default/simple_content_page.html.twig',
                 ['content' => $simpleContentPage->pageContent()]
             )
         );
@@ -86,7 +86,7 @@ final class SymfonySimpleContentPageController
 
         return new Response(
             $this->twig->render(
-                'default/edit_simple_content_page.html.twig',
+                '@PublicInformation/default/edit_simple_content_page.html.twig',
                 ['content' => $simpleContentPage->pageContent(), 'form' => $form->createView()]
             )
         );

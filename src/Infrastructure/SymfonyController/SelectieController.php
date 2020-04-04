@@ -1015,7 +1015,7 @@ class SelectieController extends BaseController
             );
         } else {
             return $this->render(
-                'error/NotAuthorized.html.twig',
+                '@Shared/error/NotAuthorized.html.twig',
                 array()
             );
         }
@@ -1140,7 +1140,7 @@ class SelectieController extends BaseController
             );
         } else {
             return $this->render(
-                'error/NotAuthorized.html.twig',
+                '@Shared/error/NotAuthorized.html.twig',
                 array()
             );
         }
@@ -2584,7 +2584,7 @@ class SelectieController extends BaseController
                 );
             } else {
                 return $this->render(
-                    'error/pageNotFound.html.twig',
+                    '@Shared/error/pageNotFound.html.twig',
                     array()
                 );
             }
@@ -2638,7 +2638,7 @@ class SelectieController extends BaseController
             );
         } else {
             return $this->render(
-                'error/pageNotFound.html.twig',
+                '@Shared/error/pageNotFound.html.twig',
                 array()
             );
         }
@@ -2827,7 +2827,7 @@ class SelectieController extends BaseController
             );
         }
         return $this->render(
-            'error/NotAuthorized.html.twig',
+            '@Shared/error/NotAuthorized.html.twig',
             array()
         );
     }

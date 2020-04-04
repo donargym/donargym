@@ -128,7 +128,7 @@ class AdminController extends BaseController
                 );
             } else {
                 return $this->render(
-                    'error/pageNotFound.html.twig',
+                    '@Shared/error/pageNotFound.html.twig',
                     array()
                 );
             }
@@ -146,7 +146,7 @@ class AdminController extends BaseController
             return $this->redirectToRoute('getAdminFotoPage');
         } else {
             return $this->render(
-                'error/pageNotFound.html.twig',
+                '@Shared/error/pageNotFound.html.twig',
                 array()
             );
         }
@@ -227,7 +227,7 @@ class AdminController extends BaseController
                 );
             } else {
                 return $this->render(
-                    'error/pageNotFound.html.twig',
+                    '@Shared/error/pageNotFound.html.twig',
                     array()
                 );
             }
@@ -245,7 +245,7 @@ class AdminController extends BaseController
             return $this->redirectToRoute('getAdminBestandenPage');
         } else {
             return $this->render(
-                'error/pageNotFound.html.twig',
+                '@Shared/error/pageNotFound.html.twig',
                 array()
             );
         }
@@ -731,7 +731,7 @@ class AdminController extends BaseController
                 );
             } else {
                 return $this->render(
-                    'error/pageNotFound.html.twig',
+                    '@Shared/error/pageNotFound.html.twig',
                     array()
                 );
             }
@@ -769,7 +769,7 @@ class AdminController extends BaseController
             return $this->redirectToRoute('getAdminSelectiePage');
         } else {
             return $this->render(
-                'error/pageNotFound.html.twig',
+                '@Shared/error/pageNotFound.html.twig',
                 array()
             );
         }

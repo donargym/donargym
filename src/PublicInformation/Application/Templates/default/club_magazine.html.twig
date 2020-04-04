@@ -1,0 +1,33 @@
+{% extends '@Shared/base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('addClubbladPage') }}">
+            Clubblad uploaden:
+            <img src="{{ asset('images/add.png') }}" width="18px" alt="Clubblad uploaden"/>
+        </a>
+    {% endif %}
+
+    <h1>Clubblad</h1>
+    <p>Hieronder kun je de clubbladen bekijken.</p>
+    {% for year in years %}
+        <h2>{{ year }}</h2>
+        <table><tr>
+        {% for clubMagazine in clubMagazines.clubMagazinesForYear(year) %}
+            <td style="text-align:center;">
+                <a href="/uploads/clubblad/{{ clubMagazine.fileName }}" target="blank">
+                    <img src="{{ asset('images/donarlogo.jpg') }}" width="85" alt="Bekijk clubblad" /><br>
+                    {% set label = 'month.' ~ clubMagazine.issueDate|date('F') %}
+                    {{ label|trans }} {{ year }}
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('removeClubbladPage', { 'id': clubMagazine.id }) }}">
+                            <img src="{{ asset('images/remove.png') }}" width="18px" alt="Verwijder clubblad" />
+                        </a>
+                    {% endif %}
+                </a>
+            </td>
+        {% endfor %}
+            </tr>
+        </table>
+    {% endfor %}
+{% endblock %}
