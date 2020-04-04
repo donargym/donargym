@@ -9,8 +9,6 @@ use App\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository;
 use App\Infrastructure\DoctrineDbal\DbalCompetitionResultRepository;
 use App\Infrastructure\DoctrineDbal\DbalHolidayRepository;
 use App\Infrastructure\DoctrineDbal\DbalNewsPostRepository;
-use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
-use App\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +16,6 @@ use Twig\Environment;
 
 final class GetContentController extends BaseController
 {
-    private DbalSimpleContentPageRepository $simpleContentPageRepository;
     private DbalNewsPostRepository $newsPostRepository;
     private DbalHolidayRepository $holidayRepository;
     private DbalClubMagazineRepository $clubMagazineRepository;
@@ -26,11 +23,9 @@ final class GetContentController extends BaseController
     private DbalCompetitionGroupRepository $competitionGroupRepository;
     private DbalCompetitionResultRepository $competitionResultRepository;
     private DbalAboutGymnastRepository $aboutGymnastRepository;
-    private SymfonyMailer $mailer;
     private Environment $twig;
 
     public function __construct(
-        DbalSimpleContentPageRepository $simpleContentPageRepository,
         DbalNewsPostRepository $newsPostRepository,
         DbalHolidayRepository $holidayRepository,
         DbalClubMagazineRepository $clubMagazineRepository,
@@ -38,11 +33,9 @@ final class GetContentController extends BaseController
         DbalCompetitionGroupRepository $competitionGroupRepository,
         DbalCompetitionResultRepository $competitionResultRepository,
         DbalAboutGymnastRepository $aboutGymnastRepository,
-        SymfonyMailer $mailer,
         Environment $twig
     )
     {
-        $this->simpleContentPageRepository      = $simpleContentPageRepository;
         $this->newsPostRepository               = $newsPostRepository;
         $this->holidayRepository                = $holidayRepository;
         $this->clubMagazineRepository           = $clubMagazineRepository;
@@ -50,7 +43,6 @@ final class GetContentController extends BaseController
         $this->competitionGroupRepository       = $competitionGroupRepository;
         $this->competitionResultRepository      = $competitionResultRepository;
         $this->aboutGymnastRepository           = $aboutGymnastRepository;
-        $this->mailer                           = $mailer;
         $this->twig                             = $twig;
     }
 

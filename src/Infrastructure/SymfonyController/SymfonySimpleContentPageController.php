@@ -8,6 +8,8 @@ use App\Domain\SimpleContentPage;
 use App\Domain\SystemClock;
 use App\Form\Type\SimplePageContentType;
 use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,6 +62,7 @@ final class SymfonySimpleContentPageController
 
     /**
      * @Route("/editPage/{pageName}/", name="editSimpleContentPage", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function editSimpleContentPage(Request $request, string $pageName): Response
     {

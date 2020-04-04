@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\SymfonyController;
 
-use App\Domain\SimpleContentPage;
 use App\Domain\SystemClock;
 use App\Entity\Calendar;
 use App\Entity\Clubblad;
@@ -12,7 +11,6 @@ use App\Entity\Vakanties;
 use App\Entity\VeelgesteldeVragen;
 use App\Form\Type\CalendarType;
 use App\Form\Type\NieuwsberichtType;
-use App\Form\Type\SimplePageContentType;
 use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
 use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
@@ -20,10 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
