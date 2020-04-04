@@ -3,7 +3,7 @@
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         <h1>Formulier uploaden</h1>
-        <a href="{{ path('getLidmaatschapPage', { 'page': 'formulieren' }) }}">Annuleer</a>
+        <a href="{{ path('getSubscriptionPage', { 'page': 'formulieren' }) }}">Annuleer</a>
         <p>Let op: het bestand mag maximaal 6 Mb zijn!</p>
         {{ form_start(form) }}
         {{ form_errors(form) }}

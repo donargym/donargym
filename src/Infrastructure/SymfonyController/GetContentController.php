@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\SymfonyController;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
@@ -13,31 +14,7 @@ final class GetContentController extends BaseController
         Environment $twig
     )
     {
-        $this->twig = $twig;
-    }
-
-    /**
-     * @Route("/lidmaatschap/{page}/", defaults={"page" = "lidmaatschap"}, name="getLidmaatschapPage", methods={"GET"})
-     */
-    public function getLidmaatschapPageAction($page)
-    {
-        $em           = $this->getDoctrine()->getManager();
-        $query        = $em->createQuery(
-            'SELECT formulieren
-                FROM App:Formulieren formulieren
-                ORDER BY formulieren.id'
-        );
-        $content      = $query->getResult();
-        $contentItems = array();
-        for ($i = 0; $i < count($content); $i++) {
-            $contentItems[$i] = $content[$i]->getAll();
-        }
-        return $this->render(
-            'lidmaatschap/formulieren.html.twig',
-            array(
-                'contentItems' => $contentItems,
-            )
-        );
+        $this->twig                            = $twig;
     }
 
     /**

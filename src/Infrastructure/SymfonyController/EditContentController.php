@@ -504,7 +504,7 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/lidmaatschap/formulieren/add/", name="addFormulierenPage", methods={"GET", "POST"})
+     * @Route("/subscription/formulieren/add/", name="addFormulierenPage", methods={"GET", "POST"})
      */
     public function addFormulierenPageAction(Request $request)
     {
@@ -520,10 +520,10 @@ class EditContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($formulier);
             $em->flush();
-            return $this->redirectToRoute('getLidmaatschapPage', array('page' => 'formulieren'));
+            return $this->redirectToRoute('getSubscriptionPage', array('page' => 'formulieren'));
         } else {
             return $this->render(
-                'lidmaatschap/addFormulieren.html.twig',
+                'subscription/addFormulieren.html.twig',
                 array(
                     'form' => $form->createView(),
                 )
@@ -532,7 +532,7 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/lidmaatschap/formulieren/remove/{id}/", name="removeFormulierenPage", methods={"GET", "POST"})
+     * @Route("/subscription/formulieren/remove/{id}/", name="removeFormulierenPage", methods={"GET", "POST"})
      */
     public function removeFormulierenPage($id, Request $request)
     {
@@ -547,7 +547,7 @@ class EditContentController extends BaseController
             $formulier = $query->setMaxResults(1)->getOneOrNullResult();
             if ($formulier) {
                 return $this->render(
-                    'lidmaatschap/removeFormulieren.html.twig',
+                    'subscription/removeFormulieren.html.twig',
                     array(
                         'content' => $formulier->getAll(),
                     )
@@ -569,7 +569,7 @@ class EditContentController extends BaseController
             $formulier = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($formulier);
             $em->flush();
-            return $this->redirectToRoute('getLidmaatschapPage', array('page' => 'formulieren'));
+            return $this->redirectToRoute('getSubscriptionPage', array('page' => 'formulieren'));
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',

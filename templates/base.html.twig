@@ -21,7 +21,7 @@
 
         <nav id="primary_nav_wrap">
             <ul>
-                <li>{% block nieuws %}<a href="#">Nieuws</a>{% endblock %}
+                <li><a href="#">Nieuws</a>
                     <ul>
                         <li><a href="{{ path('newsPosts') }}">Laatste nieuws</a></li>
                         <li><a href="{{ path('holidays') }}">Vakanties</a></li>
@@ -31,7 +31,7 @@
                     </ul>
                 </li>
 
-                <li>{% block donar %}<a href="#">Donar</a>{% endblock %}
+                <li><a href="#">Donar</a>
                     <ul>
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'geschiedenis' }) }}">Geschiedenis</a></li>
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'visie' }) }}">Visie</a></li>
@@ -44,7 +44,7 @@
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'sponsors' }) }}">Sponsors</a></li>
                     </ul>
                 </li>
-                <li>{% block lessen %}<a href="#">Lessen</a>{% endblock %}
+                <li><a href="#">Lessen</a>
                     <ul>
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'lesrooster' }) }}">Lesrooster</a></li>
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'peuterenkleutergym' }) }}">Peuter & Kleutergym</a></li>
@@ -53,7 +53,7 @@
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'aerobicsenbodyshape' }) }}">Aerobics & Bodyshape</a></li>
                     </ul>
                 </li>
-                <li>{% block wedstrijdturnen %}<a href="#">Wedstrijdturnen</a>{% endblock %}
+                <li><a href="#">Wedstrijdturnen</a>
                     <ul>
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'wedstrijdturnen' }) }}">Algemeen</a></li>
                         {% for competitionGroup in competitionGroups.allGroups %}
@@ -61,28 +61,28 @@
                                 <a href="{{ path('showCompetitionGroup', { 'groupId': competitionGroup.id }) }}">{{ competitionGroup.name }}</a>
                             </li>
                         {% endfor %}
-                        <li><a href="http://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a></li>
+                        <li><a href="https://www.topturnenhw.nl/" target="_blank">Topturnen Heren</a></li>
                     </ul>
                 </li>
-                <li>{% block lidmaatschap %}<a href="#">Lidmaatschap</a>{% endblock %}
+                <li><a href="#">Lidmaatschap</a>
                     <ul>
                         <li><a href="{{ path('subscribe') }}">Lid worden</a></li>
-                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'lidmaatschap'}) }}">Inlichtingen</a></li>
+                        <li><a href="{{ path('simpleContentPage', { 'pageName': 'subscription'}) }}">Inlichtingen</a></li>
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'contributie' }) }}">Contributie</a></li>
-                        <li><a href="{{ path('getLidmaatschapPage', { 'page': 'formulieren' }) }}">Formulieren</a></li>
+                        <li><a href="{{ path('subscriptionPaperForms') }}">Formulieren</a></li>
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'ooievaarspas' }) }}">Ooievaarspas</a>
                         </li>
                     </ul>
                 </li>
-                <li>{% block fotofilm %}<a href="{{ path('simpleContentPage', { 'pageName': 'fotoenfilm' }) }}">Foto/Film</a>{% endblock %}</li>
-                <li>{% block contact %}<a href="#">Contact</a>{% endblock %}
+                <li><a href="{{ path('simpleContentPage', { 'pageName': 'fotoenfilm' }) }}">Foto/Film</a></li>
+                <li><a href="#">Contact</a>
                     <ul>
                         <li><a href="{{ path('simpleContentPage', { 'pageName': 'contact' }) }}">Contactgegevens</a></li>
                         <li><a href="{{ path('getContactPage', { 'page': 'veelgesteldevragen' }) }}">Veelgestelde vragen</a></li>
                     </ul>
                 </li>
                 <li>
-                    {% block inloggen %}<a href="{{ path('getInloggenPage') }}">Inloggen</a>{% endblock %}
+                    <a href="{{ path('getInloggenPage') }}">Inloggen</a>
                 </li>
             </ul>
         </nav>
