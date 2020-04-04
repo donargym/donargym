@@ -18,7 +18,7 @@ class SimplePageContentType extends AbstractType
                 TextareaType::class,
                 ['data' => $options['content'], 'attr' => ['cols' => '80', 'rows' => '40']]
             )
-            ->add('Verstuur', SubmitType::class);
+            ->add('submit', SubmitType::class, ['label' => 'form.submit']);
     }
 
     public function configureOptions(OptionsResolver $resolver)

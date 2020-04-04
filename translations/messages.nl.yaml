@@ -11,3 +11,7 @@ month:
   October:    "Oktober"
   November:   "November"
   December:   "December"
+
+form:
+  submit:  "Verstuur"
+  confirm: "Bevestig"

@@ -6,7 +6,7 @@
         <div><span style="color: #FFFF00;">{{ error.messageKey|trans(error.messageData, 'security') }}</span></div>
     {% endif %}
 
-    <form action="{{ path('login_check') }}" method="post">
+    <form action="{{ path('loginCheck') }}" method="post">
         <table>
             <tr>
                 <td>Inlognaam:</td>

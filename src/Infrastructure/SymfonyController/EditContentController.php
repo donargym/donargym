@@ -56,40 +56,6 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/editPage/{pageName}/", name="editSimpleContentPage", methods={"GET", "POST"})
-     * @param Request $request
-     * @param string  $pageName
-     *
-     * @return Response
-     */
-    public function editSimpleContentPage(Request $request, string $pageName): Response
-    {
-        $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
-        if (!$simpleContentPage) {
-            throw new NotFoundHttpException();
-        }
-
-        $form = $this->formFactory->create(
-            SimplePageContentType::class,
-            null,
-            ['content' => $simpleContentPage->pageContent()]
-        );
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $simpleContentPage = SimpleContentPage::createNew($pageName, $form->getData()['pageContent'], $this->clock);
-            $this->simpleContentPageRepository->insert($simpleContentPage);
-
-            return new RedirectResponse($this->router->generate('simpleContentPage', ['pageName' => $pageName]));
-        }
-
-        return $this->render(
-            'default/edit_simple_content_page.html.twig',
-            ['content' => $simpleContentPage->pageContent(), 'form' => $form->createView()]
-        );
-    }
-
-    /**
      * @Route("/agenda/add/", name="addAgendaPage", methods={"GET", "POST"})
      */
     public function addAgendaPage(Request $request)
