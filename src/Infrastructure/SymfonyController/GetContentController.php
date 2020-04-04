@@ -5,8 +5,7 @@ namespace App\Infrastructure\SymfonyController;
 use App\Domain\EmailAddress;
 use App\Domain\EmailTemplateType;
 use App\Domain\PasswordGenerator;
-use App\Entity\Persoon;
-use App\Entity\Stukje;
+use App\Infrastructure\DoctrineDbal\DbalAboutGymnastRepository;
 use App\Infrastructure\DoctrineDbal\DbalClubMagazineRepository;
 use App\Infrastructure\DoctrineDbal\DbalCompetitionGroupMemberRepository;
 use App\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository;
@@ -32,6 +31,7 @@ class GetContentController extends BaseController
     private DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository;
     private DbalCompetitionGroupRepository $competitionGroupRepository;
     private DbalCompetitionResultRepository $competitionResultRepository;
+    private DbalAboutGymnastRepository $aboutGymnastRepository;
     private SymfonyMailer $mailer;
     private Environment $twig;
 
@@ -43,6 +43,7 @@ class GetContentController extends BaseController
         DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository,
         DbalCompetitionGroupRepository $competitionGroupRepository,
         DbalCompetitionResultRepository $competitionResultRepository,
+        DbalAboutGymnastRepository $aboutGymnastRepository,
         SymfonyMailer $mailer,
         Environment $twig
     )
@@ -54,6 +55,7 @@ class GetContentController extends BaseController
         $this->competitionGroupMemberRepository = $competitionGroupMemberRepository;
         $this->competitionGroupRepository       = $competitionGroupRepository;
         $this->competitionResultRepository      = $competitionResultRepository;
+        $this->aboutGymnastRepository           = $aboutGymnastRepository;
         $this->mailer                           = $mailer;
         $this->twig                             = $twig;
     }
@@ -135,13 +137,12 @@ class GetContentController extends BaseController
         if (!$competitionGroup) {
             throw new NotFoundHttpException();
         }
-        $competitionGroupMembers = $this->competitionGroupMemberRepository->findAllForGroup($groupId);
 
         return $this->render(
             'wedstrijdturnen/competition_group.html.twig',
             [
                 'group'                 => $competitionGroup,
-                'competionGroupMembers' => $competitionGroupMembers,
+                'competionGroupMembers' => $this->competitionGroupMemberRepository->findAllForGroup($groupId),
             ]
         );
     }
@@ -156,67 +157,42 @@ class GetContentController extends BaseController
             throw new NotFoundHttpException();
         }
 
-        $competitionResults = $this->competitionResultRepository->findAllForGroup($groupId);
-
         return $this->render(
             'wedstrijdturnen/competition_results.html.twig',
             [
                 'group'              => $competitionGroup,
-                'competitionResults' => $competitionResults,
+                'competitionResults' => $this->competitionResultRepository->findAllForGroup($groupId),
             ]
         );
     }
 
     /**
-     * @Route("/wedstrijdturnen/{page}/{view}/{id}", defaults={"page" = "wedstrijdturnen", "view" = null, "id" = null}, name="getWedstrijdturnenPage", methods={"GET"})
+     * @Route("/wedstrijdturnen/{groupId}/turnster/{gymnastId}", name="aboutGymnastPage", methods={"GET"})
      */
-    public function getWedstrijdturnenPageAction($page, $view, $id)
+    public function aboutGymnastPage(int $groupId, int $gymnastId): Response
     {
-        $em    = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT groepen
-                FROM App:Groepen groepen
-                WHERE groepen.id = :id'
-        )
-            ->setParameter('id', $page);
-        $groep = $query->setMaxResults(1)->getOneOrNullResult();
-        if ($groep) {
-            $groepIdName = $groep->getIdName();
+        $competitionGroup = $this->competitionGroupRepository->find($groupId);
+        if (!$competitionGroup) {
+            throw new NotFoundHttpException();
         }
 
-        if ($view == 'TNT' && $id != null) {
-            $em    = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT persoon
-                FROM App:Persoon persoon
-                WHERE persoon.id = :id'
-            )
-                ->setParameter('id', $id);
-            /** @var Persoon $persoon */
-            $persoon = $query->setMaxResults(1)->getOneOrNullResult();
-            /** @var Stukje $stukje */
-            $turnster = $persoon->getAll();
-            $stukje   = $persoon->getStukje();
-            if (!$stukje) {
-                $stukje = new Stukje();
-                $persoon->setStukje($stukje);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($stukje);
-                $em->flush();
-            }
-            $stukjeItems = $stukje->getAll();
-            return $this->render(
-                'wedstrijdturnen/stukje.html.twig',
-                array(
-                    'activeGroep' => $groepIdName,
-                    'stukje'      => $stukjeItems,
-                    'turnster'    => $turnster,
-                )
-            );
+        $gymnast = $this->competitionGroupMemberRepository->find($gymnastId);
+        if (!$gymnast) {
+            throw new NotFoundHttpException();
         }
+
+        $aboutGymnast = $this->aboutGymnastRepository->findForGymnast($gymnastId);
+        if (!$aboutGymnast) {
+            throw new NotFoundHttpException();
+        }
+
         return $this->render(
-            'error/pageNotFound.html.twig',
-            array()
+            'wedstrijdturnen/about_gymnast.html.twig',
+            [
+                'group'        => $competitionGroup,
+                'aboutGymnast' => $aboutGymnast,
+                'gymnast'      => $gymnast,
+            ]
         );
     }
 

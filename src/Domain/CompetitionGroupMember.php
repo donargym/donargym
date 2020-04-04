@@ -16,6 +16,8 @@ final class CompetitionGroupMember
 
     private DateTimeImmutable $dateOfBirth;
 
+    private Category $category;
+
     private string $pictureFileName;
 
     private CompetitionGroupFunction $competitionGroupFunction;
@@ -26,15 +28,21 @@ final class CompetitionGroupMember
         string $lastName,
         DateTimeImmutable $dateOfBirth,
         string $pictureFileName,
-        CompetitionGroupFunction $competitionGroupFunction
+        CompetitionGroupFunction $competitionGroupFunction,
+        SystemClock $clock
     )
     {
-        $self = new self();
+        $category = Category::createFromDateOfBirthForSeason(
+            $dateOfBirth,
+            CompetitionSeason::getCompetitionSeasonForDate($clock->now())
+        );
 
+        $self                           = new self();
         $self->id                       = $id;
         $self->firstName                = $firstName;
         $self->lastName                 = $lastName;
         $self->dateOfBirth              = $dateOfBirth;
+        $self->category                 = $category;
         $self->pictureFileName          = $pictureFileName;
         $self->competitionGroupFunction = $competitionGroupFunction;
 
@@ -59,6 +67,11 @@ final class CompetitionGroupMember
     public function dateOfBirth(): DateTimeImmutable
     {
         return $this->dateOfBirth;
+    }
+
+    public function category(): Category
+    {
+        return $this->category;
     }
 
     public function pictureFileName(): string

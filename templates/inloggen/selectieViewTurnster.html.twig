@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block pageHeader %}
-    <img src="https://www.donargym.nl/uploads/selectiefotos/{{ turnster.foto }}"
+    <img src="{{ asset('/uploads/selectiefotos/'~turnster.foto) }}"
             {% if turnster.width > turnster.height %}
                 width="250"
             {% else %}

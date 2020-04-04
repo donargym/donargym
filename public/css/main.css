@@ -1,5 +1,5 @@
 body {
-    background: #C1C1C1 url(https://www.donargym.nl/images/background2.jpg) no-repeat; /* Blur-> unfocus 4 || opacity: 50 zwart */
+    background: #C1C1C1 url(../images/background2.jpg) no-repeat; /* Blur-> unfocus 4 || opacity: 50 zwart */
     background-size: cover;
     background-attachment: fixed;
     font-family: Verdana, Calibri;

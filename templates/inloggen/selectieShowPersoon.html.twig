@@ -12,7 +12,7 @@
 
     <div style="height: 200px;">
         <a href="{{ path('addSelectieFotoPage', { 'persoonId': persoonItems.id }) }}">
-            <img src="https://www.donargym.nl/uploads/selectiefotos/{{ persoonItems.foto }}"
+            <img src="{{ asset('/uploads/selectiefotos/'~persoonItems.foto) }}"
                  width="150"
                  style="float:right;margin-right:2px;margin-top:5px;"/>
         </a>
@@ -44,14 +44,14 @@
                 <center>
                     <div id="button4">
                         {#<a href="{{ path('TrainingsplanIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">#}
-                            {#Trainingsplan</a>#}
+                        {#Trainingsplan</a>#}
                         {#<a href="{{ path('viewDoelen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Doelen</a>#}
                         <a href="{{ path('viewWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">
                             Uitslagen
                         </a>
                         <a href="{{ path('viewVloermuziek', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Vloermuziek</a>
                         <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
-                        <br />
+                        <br/>
                         <a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden</a>
                         {% if functie.functie == "Trainer" %}
                             <a href="{{ path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Emojilijst</a>
@@ -59,11 +59,11 @@
                         <a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen</a>
                         <a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid</a>
                         {#<a href="{{ path('showDoelPrijzen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">#}
-                            {#{% if functie.doelenPrijzenAantal > 0 %}#}
-                                {#<b>Toestelprijzen ({{ functie.doelenPrijzenAantal }})</b>#}
-                            {#{% else %}#}
-                                {#Toestelprijzen#}
-                            {#{% endif %}#}
+                        {#{% if functie.doelenPrijzenAantal > 0 %}#}
+                        {#<b>Toestelprijzen ({{ functie.doelenPrijzenAantal }})</b>#}
+                        {#{% else %}#}
+                        {#Toestelprijzen#}
+                        {#{% endif %}#}
                         {#</a>#}
                         {% if functie.groepId == 5 %}
                             {#<a href="{{ path('EtenDrinkenIndex', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Eten/Drinken Sinterklaas</a>#}
@@ -81,7 +81,7 @@
                         <a href="{{ path('addSelectieVloermuziekPage', { 'persoonId': persoonItems.id, 'groepId': functie.groepId, 'turnsterId': persoonItems.id }) }}">
                             Vloermuziek uploaden</a>
                     {% endif %}
-					{% if functie.functie == "Trainer" %}
+                    {% if functie.functie == "Trainer" %}
                         <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>
                     {% endif %}
                 </div>
@@ -89,103 +89,103 @@
             {% if functie.groepId == 3 or functie.groepId == 5 %}
                 {#{% if functie.functie == 'Turnster' %}#}
                 {#<p>#}
-                    {#<h2>Voortgang</h2>#}
+                {#<h2>Voortgang</h2>#}
 
-                    {#<div style="width: 600px; height: 200px; margin: 0 auto">#}
-                        {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Sprong' }) }}">#}
-                            {#<div id="sprong" style="width: 300px; height: 200px; float: left"></div>#}
-                        {#</a>#}
-                        {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Brug' }) }}">#}
-                            {#<div id="brug" style="width: 300px; height: 200px; float: left"></div>#}
-                        {#</a>#}
-                    {#</div>#}
-                    {#<div style="width: 600px; height: 200px; margin: 0 auto">#}
-                        {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Balk' }) }}">#}
-                            {#<div id="balk" style="width: 300px; height: 200px; float: left"></div>#}
-                        {#</a>#}
-                        {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Vloer' }) }}">#}
-                            {#<div id="vloer" style="width: 300px; height: 200px; float: left"></div>#}
-                        {#</a>#}
-                    {#</div>#}
+                {#<div style="width: 600px; height: 200px; margin: 0 auto">#}
+                {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Sprong' }) }}">#}
+                {#<div id="sprong" style="width: 300px; height: 200px; float: left"></div>#}
+                {#</a>#}
+                {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Brug' }) }}">#}
+                {#<div id="brug" style="width: 300px; height: 200px; float: left"></div>#}
+                {#</a>#}
+                {#</div>#}
+                {#<div style="width: 600px; height: 200px; margin: 0 auto">#}
+                {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Balk' }) }}">#}
+                {#<div id="balk" style="width: 300px; height: 200px; float: left"></div>#}
+                {#</a>#}
+                {#<a href="{{ path('showPersoonDoelenPerToestel', { 'persoonId': persoonItems.id, 'toestel': 'Vloer' }) }}">#}
+                {#<div id="vloer" style="width: 300px; height: 200px; float: left"></div>#}
+                {#</a>#}
+                {#</div>#}
                 {#</p>#}
-            {#{% endif %}#}
+                {#{% endif %}#}
             {% endif %}
             {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}
-            <p><h3>(Assistent-)Trainers</h3>
-            <table border="0" id="nolink">
-                <tr style="color:#FFFF00;">
-                    <th>Naam</th>
-                    <th>Geboortedatum</th>
-                    <th>% aanwezig</th>
-					{% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
-						<th></th>
-					{% endif %}
+                <p><h3>(Assistent-)Trainers</h3>
+                <table border="0" id="nolink">
+                    <tr style="color:#FFFF00;">
+                        <th>Naam</th>
+                        <th>Geboortedatum</th>
+                        <th>% aanwezig</th>
+                        {% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                            <th></th>
+                        {% endif %}
 
-                </tr>
+                    </tr>
 
-                {% if functie.trainer is defined %}
-                    {% for turnster in functie.trainer %}
-                        <tr>
-                            <td>
-                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
-                                    {{ turnster.voornaam }} {{ turnster.achternaam }}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
-                                    {{ turnster.geboortedatum }}
-                                </a>
-                            </td>
-                            <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
-                            <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
-                            style="text-decoration: none">
+                    {% if functie.trainer is defined %}
+                        {% for turnster in functie.trainer %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
+                                        {{ turnster.voornaam }} {{ turnster.achternaam }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
+                                        {{ turnster.geboortedatum }}
+                                    </a>
+                                </td>
+                                <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
+                                       style="text-decoration: none">
                                     <span style="color: rgba(0,0,0,0.6);">
                                         {{ turnster.percentageAanwezig | round }}%
                                     </span>
-                                </a>
-                            </td>
-							{% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
-                                <td>
-                                    <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
-                                        <img src="{{ asset('images/login_as.png') }}" width="18px"/>
-                                     </a>
-                                 </td>
-							{% endif %}
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+                                    </a>
+                                </td>
+                                {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                                    <td>
+                                        <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
+                                            <img src="{{ asset('images/login_as.png') }}" width="18px"/>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
 
-                {% if functie.assistent is defined %}
-                    {% for turnster in functie.assistent %}
-                        <tr>
-                            <td>
-                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
-                                    {{ turnster.voornaam }} {{ turnster.achternaam }}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
-                                    {{ turnster.geboortedatum }}
-                                </a>
-                            </td>
-                            <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
-                                <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
-                            style="text-decoration: none">
+                    {% if functie.assistent is defined %}
+                        {% for turnster in functie.assistent %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
+                                        {{ turnster.voornaam }} {{ turnster.achternaam }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">
+                                        {{ turnster.geboortedatum }}
+                                    </a>
+                                </td>
+                                <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
+                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
+                                       style="text-decoration: none">
                                         <span style="color: rgba(0,0,0,0.6);">
                                             {{ turnster.percentageAanwezig | round }}%
                                         </span>
-                                </a>
-                            </td>
-							{% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
-                                <td>
-                                    <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
-                                        <img src="{{ asset('images/login_as.png') }}" width="18px"/>
-                                     </a>
-                                 </td>
-							{% endif %}
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+                                    </a>
+                                </td>
+                                {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                                    <td>
+                                        <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
+                                            <img src="{{ asset('images/login_as.png') }}" width="18px"/>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                 </table>
                 </p>
 
@@ -208,9 +208,9 @@
                             <th></th>
                             <th></th>
                         {% endif %}
-						{% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
-							<th></th>
-						{% endif %}
+                        {% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                            <th></th>
+                        {% endif %}
                     </tr>
 
                     {% if functie.turnster is defined %}
@@ -227,18 +227,18 @@
                                     </a>
                                 </td>
                                 {#{% if functie.groepId == 3 or functie.groepId == 5 %}#}
-                                    {#<td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageVoortgangKleur }};">#}
-                                        {#<a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"#}
-                                           {#style="text-decoration: none">#}
-                                            {#<span style="color: rgba(0,0,0,0.6);">#}
-                                            {#{{ turnster.percentageVoortgang | round }}%#}
-                                        {#</span>#}
-                                        {#</a>#}
-                                    {#</td>#}
+                                {#<td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageVoortgangKleur }};">#}
+                                {#<a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"#}
+                                {#style="text-decoration: none">#}
+                                {#<span style="color: rgba(0,0,0,0.6);">#}
+                                {#{{ turnster.percentageVoortgang | round }}%#}
+                                {#</span>#}
+                                {#</a>#}
+                                {#</td>#}
                                 {#{% endif %}#}
                                 <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">
                                     <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"
-                                    style="text-decoration: none">
+                                       style="text-decoration: none">
                                         <span style="color: rgba(0,0,0,0.6);">
                                             {{ turnster.percentageAanwezig | round }}%
                                         </span>
@@ -256,13 +256,13 @@
                                         </a>
                                     </td>
                                 {% endif %}
-								{% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
+                                {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}
                                     <td>
                                         <a href="{{ path('getInloggenPage', {'_switch_user': turnster.username}) }}">
                                             <img src="{{ asset('images/login_as.png') }}" width="18px"/>
-                                         </a>
-                                     </td>
-								{% endif %}
+                                        </a>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     {% endif %}
@@ -284,14 +284,14 @@
                         <tr>
                             {% for trainingsdatum in training.trainingsdata %}
                                 <td style="text-align: center; font-size:1.5em">
-                    {% if trainingsdatum.aanwezigheid == 'A' %}
-							   ☹️
-					{% elseif trainingsdatum.aanwezigheid == '-' %}
-						       ☹️❓
-					{% elseif trainingsdatum.aanwezigheid == 'X' %}
-						🤸‍♀️
-					{% endif %}
-				</td>
+                                    {% if trainingsdatum.aanwezigheid == 'A' %}
+                                        ☹️
+                                    {% elseif trainingsdatum.aanwezigheid == '-' %}
+                                        ☹️❓
+                                    {% elseif trainingsdatum.aanwezigheid == 'X' %}
+                                        🤸‍♀️
+                                    {% endif %}
+                                </td>
                             {% endfor %}
                             <td style="text-align:center; font-weight: bold; background-color: #{{ training.percentageKleur }}; color: rgba(0,0,0,0.6);">
                                 {{ training.percentageAanwezig |round }}%
@@ -302,7 +302,8 @@
             {% endfor %}
             </p>
 
-            <p class="button1" style="background: {{ functie.percentageKleur }};">Totaal {{ functie.aantalAanwezig }} van {{ functie.aantalTrainingen }} trainingen aanwezig:
+            <p class="button1" style="background: {{ functie.percentageKleur }};">Totaal {{ functie.aantalAanwezig }}
+                van {{ functie.aantalTrainingen }} trainingen aanwezig:
                 <span style="font-weight: bold; color: #FFF;">
                         {{ functie.percentageAanwezig | round }}%</span></p>
 
@@ -334,15 +335,15 @@
                         <td>{{ items.tijden|raw }}</td>
                         <td>{{ items.locatie|raw }}</td>
                         <td>
-                        {% for turnsters in items.turnsters %}
-                            {% if persoonItems.id == turnsters.id %}
-                                <span style="color: #FFFF00; font-weight: bold;">
-                            {% endif %}
-                            {{ turnsters.voornaam }} {{ turnsters.achternaam }}
-                            {% if persoonItems.id == turnsters.id %}
-                                </span>
-                            {% endif %}
-                        {% endfor %}
+                            {% for turnsters in items.turnsters %}
+                                {% if persoonItems.id == turnsters.id %}
+                                    <span style="color: #FFFF00; font-weight: bold;">
+                                {% endif %}
+                                {{ turnsters.voornaam }} {{ turnsters.achternaam }}
+                                {% if persoonItems.id == turnsters.id %}
+                                    </span>
+                                {% endif %}
+                            {% endfor %}
                         </td>
                         {% if functie.functie == 'Trainer' %}
                             <td>
@@ -363,186 +364,186 @@
     {{ parent() }}
     <script>
         {#$(function () {#}
-            {#var gaugeOptions = {#}
-                {#chart: {#}
-                    {#type: 'solidgauge',#}
-                    {#backgroundColor: 'rgba(255, 255, 255, 0)'#}
-                {#},#}
-        
-                {#title: null,#}
-                {#pane: {#}
-                    {#center: ['50%', '85%'],#}
-                    {#size: '140%',#}
-                    {#startAngle: -90,#}
-                    {#endAngle: 90,#}
-                    {#background: {#}
-                        {#backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',#}
-                        {#innerRadius: '60%',#}
-                        {#outerRadius: '100%',#}
-                        {#shape: 'arc'#}
-                    {#}#}
-                {#},#}
-                {#tooltip: {#}
-                    {#enabled: false#}
-                {#},#}
-                {#// the value axis#}
-                {#yAxis: {#}
-                    {#stops: [#}
-                        {#[0.1, '#DF5353'], // red#}
-                        {#[0.5, '#DDDF0D'], // yellow#}
-                        {#[0.9, '#55BF3B'] // green#}
-                    {#],#}
-                    {#lineWidth: 0,#}
-                    {#minorTickInterval: null,#}
-                    {#tickPixelInterval: 400,#}
-                    {#tickWidth: 0,#}
-                    {#title: {#}
-                        {#y: -70#}
-                    {#},#}
-                    {#labels: {#}
-                        {#y: 16#}
-                    {#}#}
-                {#},#}
-                {#plotOptions: {#}
-                    {#solidgauge: {#}
-                        {#dataLabels: {#}
-                            {#y: 5,#}
-                            {#borderWidth: 0,#}
-                            {#useHTML: true#}
-                        {#}#}
-                    {#}#}
-                {#}#}
-            {#};#}
-            {#// Sprong#}
-            {#$('#sprong').highcharts(Highcharts.merge(gaugeOptions, {#}
-                {#yAxis: {#}
-                    {#min: 0,#}
-                    {#max: 100,#}
-                    {#title: {#}
-                        {#text: 'Sprong',#}
-                        {#style: {#}
-                            {#fontSize: '14pt',#}
-                            {#color: '#FFFF00',#}
-                            {#fontWeight: 'normal',#}
-                            {#fontFamily: 'Verdana, Calibri'#}
-                        {#}#}
-                    {#}#}
-                {#},#}
-                {#credits: {#}
-                    {#enabled: false#}
-                {#},#}
-                {#series: [{#}
-                    {#name: 'Sprong',#}
-                    {#{% if voortgang is defined %}#}
-                        {#data: [{{ voortgang.Sprong|round }}],#}
-                    {#{% else %}#}
-                        {#data: [{{ 0 }}],#}
-                    {#{% endif %}#}
-                    {#dataLabels: {#}
-                        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
-                        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
-                    {#}#}
-                {#}]#}
-            {#}));#}
-            {#// Brug#}
-            {#$('#brug').highcharts(Highcharts.merge(gaugeOptions, {#}
-                {#yAxis: {#}
-                    {#min: 0,#}
-                    {#max: 100,#}
-                    {#title: {#}
-                        {#text: 'Brug',#}
-                        {#style: {#}
-                            {#fontSize: '14pt',#}
-                            {#color: '#FFFF00',#}
-                            {#fontWeight: 'normal',#}
-                            {#fontFamily: 'Verdana, Calibri'#}
-                        {#}#}
-                    {#}#}
-                {#},#}
-                {#credits: {#}
-                    {#enabled: false#}
-                {#},#}
-                {#series: [{#}
-                    {#name: 'Brug',#}
-                    {#{% if voortgang is defined %}#}
-                        {#data: [{{ voortgang.Brug|round }}],#}
-                    {#{% else %}#}
-                        {#data: [{{ 0 }}],#}
-                    {#{% endif %}#}
-                    {#dataLabels: {#}
-                        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
-                        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
-                    {#}#}
-                {#}]#}
-            {#}));#}
-            {#// Balk#}
-            {#$('#balk').highcharts(Highcharts.merge(gaugeOptions, {#}
-                {#yAxis: {#}
-                    {#min: 0,#}
-                    {#max: 100,#}
-                    {#title: {#}
-                        {#text: 'Balk',#}
-                        {#style: {#}
-                            {#fontSize: '14pt',#}
-                            {#color: '#FFFF00',#}
-                            {#fontWeight: 'normal',#}
-                            {#fontFamily: 'Verdana, Calibri'#}
-                        {#}#}
-                    {#}#}
-                {#},#}
-                {#credits: {#}
-                    {#enabled: false#}
-                {#},#}
-                {#series: [{#}
-                    {#name: 'Balk',#}
-                    {#{% if voortgang is defined %}#}
-                        {#data: [{{ voortgang.Balk|round }}],#}
-                    {#{% else %}#}
-                        {#data: [{{ 0 }}],#}
-                    {#{% endif %}#}
-                    {#dataLabels: {#}
-                        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
-                        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
-                    {#}#}
-                {#}]#}
-            {#}));#}
-            {#// Vloer#}
-            {#$('#vloer').highcharts(Highcharts.merge(gaugeOptions, {#}
-                {#yAxis: {#}
-                    {#min: 0,#}
-                    {#max: 100,#}
-                    {#title: {#}
-                        {#text: 'Vloer',#}
-                        {#style: {#}
-                            {#fontSize: '14pt',#}
-                            {#color: '#FFFF00',#}
-                            {#fontWeight: 'normal',#}
-                            {#fontFamily: 'Verdana, Calibri'#}
-                        {#}#}
-                    {#}#}
-                {#},#}
-                {#credits: {#}
-                    {#enabled: false#}
-                {#},#}
-                {#series: [{#}
-                    {#name: 'Vloer',#}
-                    {#{% if voortgang is defined %}#}
-                        {#data: [{{ voortgang.Vloer|round }}],#}
-                    {#{% else %}#}
-                        {#data: [{{ 0 }}],#}
-                    {#{% endif %}#}
-                    {#dataLabels: {#}
-                        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
-                        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
-                    {#}#}
-                {#}]#}
-            {#}));#}
+        {#var gaugeOptions = {#}
+        {#chart: {#}
+        {#type: 'solidgauge',#}
+        {#backgroundColor: 'rgba(255, 255, 255, 0)'#}
+        {#},#}
+
+        {#title: null,#}
+        {#pane: {#}
+        {#center: ['50%', '85%'],#}
+        {#size: '140%',#}
+        {#startAngle: -90,#}
+        {#endAngle: 90,#}
+        {#background: {#}
+        {#backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',#}
+        {#innerRadius: '60%',#}
+        {#outerRadius: '100%',#}
+        {#shape: 'arc'#}
+        {#}#}
+        {#},#}
+        {#tooltip: {#}
+        {#enabled: false#}
+        {#},#}
+        {#// the value axis#}
+        {#yAxis: {#}
+        {#stops: [#}
+        {#[0.1, '#DF5353'], // red#}
+        {#[0.5, '#DDDF0D'], // yellow#}
+        {#[0.9, '#55BF3B'] // green#}
+        {#],#}
+        {#lineWidth: 0,#}
+        {#minorTickInterval: null,#}
+        {#tickPixelInterval: 400,#}
+        {#tickWidth: 0,#}
+        {#title: {#}
+        {#y: -70#}
+        {#},#}
+        {#labels: {#}
+        {#y: 16#}
+        {#}#}
+        {#},#}
+        {#plotOptions: {#}
+        {#solidgauge: {#}
+        {#dataLabels: {#}
+        {#y: 5,#}
+        {#borderWidth: 0,#}
+        {#useHTML: true#}
+        {#}#}
+        {#}#}
+        {#}#}
+        {#};#}
+        {#// Sprong#}
+        {#$('#sprong').highcharts(Highcharts.merge(gaugeOptions, {#}
+        {#yAxis: {#}
+        {#min: 0,#}
+        {#max: 100,#}
+        {#title: {#}
+        {#text: 'Sprong',#}
+        {#style: {#}
+        {#fontSize: '14pt',#}
+        {#color: '#FFFF00',#}
+        {#fontWeight: 'normal',#}
+        {#fontFamily: 'Verdana, Calibri'#}
+        {#}#}
+        {#}#}
+        {#},#}
+        {#credits: {#}
+        {#enabled: false#}
+        {#},#}
+        {#series: [{#}
+        {#name: 'Sprong',#}
+        {#{% if voortgang is defined %}#}
+        {#data: [{{ voortgang.Sprong|round }}],#}
+        {#{% else %}#}
+        {#data: [{{ 0 }}],#}
+        {#{% endif %}#}
+        {#dataLabels: {#}
+        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
+        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
+        {#}#}
+        {#}]#}
+        {#}));#}
+        {#// Brug#}
+        {#$('#brug').highcharts(Highcharts.merge(gaugeOptions, {#}
+        {#yAxis: {#}
+        {#min: 0,#}
+        {#max: 100,#}
+        {#title: {#}
+        {#text: 'Brug',#}
+        {#style: {#}
+        {#fontSize: '14pt',#}
+        {#color: '#FFFF00',#}
+        {#fontWeight: 'normal',#}
+        {#fontFamily: 'Verdana, Calibri'#}
+        {#}#}
+        {#}#}
+        {#},#}
+        {#credits: {#}
+        {#enabled: false#}
+        {#},#}
+        {#series: [{#}
+        {#name: 'Brug',#}
+        {#{% if voortgang is defined %}#}
+        {#data: [{{ voortgang.Brug|round }}],#}
+        {#{% else %}#}
+        {#data: [{{ 0 }}],#}
+        {#{% endif %}#}
+        {#dataLabels: {#}
+        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
+        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
+        {#}#}
+        {#}]#}
+        {#}));#}
+        {#// Balk#}
+        {#$('#balk').highcharts(Highcharts.merge(gaugeOptions, {#}
+        {#yAxis: {#}
+        {#min: 0,#}
+        {#max: 100,#}
+        {#title: {#}
+        {#text: 'Balk',#}
+        {#style: {#}
+        {#fontSize: '14pt',#}
+        {#color: '#FFFF00',#}
+        {#fontWeight: 'normal',#}
+        {#fontFamily: 'Verdana, Calibri'#}
+        {#}#}
+        {#}#}
+        {#},#}
+        {#credits: {#}
+        {#enabled: false#}
+        {#},#}
+        {#series: [{#}
+        {#name: 'Balk',#}
+        {#{% if voortgang is defined %}#}
+        {#data: [{{ voortgang.Balk|round }}],#}
+        {#{% else %}#}
+        {#data: [{{ 0 }}],#}
+        {#{% endif %}#}
+        {#dataLabels: {#}
+        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
+        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
+        {#}#}
+        {#}]#}
+        {#}));#}
+        {#// Vloer#}
+        {#$('#vloer').highcharts(Highcharts.merge(gaugeOptions, {#}
+        {#yAxis: {#}
+        {#min: 0,#}
+        {#max: 100,#}
+        {#title: {#}
+        {#text: 'Vloer',#}
+        {#style: {#}
+        {#fontSize: '14pt',#}
+        {#color: '#FFFF00',#}
+        {#fontWeight: 'normal',#}
+        {#fontFamily: 'Verdana, Calibri'#}
+        {#}#}
+        {#}#}
+        {#},#}
+        {#credits: {#}
+        {#enabled: false#}
+        {#},#}
+        {#series: [{#}
+        {#name: 'Vloer',#}
+        {#{% if voortgang is defined %}#}
+        {#data: [{{ voortgang.Vloer|round }}],#}
+        {#{% else %}#}
+        {#data: [{{ 0 }}],#}
+        {#{% endif %}#}
+        {#dataLabels: {#}
+        {#format: '<div style="text-align:center"><span style="font-size:25px;color:' +#}
+        {#((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span></div>'#}
+        {#}#}
+        {#}]#}
+        {#}));#}
         {#});#}
-		
-		
+
+
         $('#wedstrijdkalender').click(function () {
             $('.wedstrijdkalender-item').toggle();
         });
-		
+
     </script>
 {% endblock %}

@@ -9,9 +9,11 @@
 {% endblock %}
 
 {% block body %}
-    <div class="uitslagen"><a
-                href="{{ path('competitionResults', { 'groupId': group.id }) }}">
-            &#187; Wedstrijduitslagen &#171;</a></div>
+    <div class="uitslagen">
+        <a href="{{ path('competitionResults', { 'groupId': group.id }) }}">
+            &#187; Wedstrijduitslagen &#171;
+        </a>
+    </div>
     <h1>{{ group.name }}</h1>
 
     <h2>Trainers</h2>
@@ -23,10 +25,8 @@
         <tr>
             {% endif %}
             <td>
-                <a href="{{ path('getWedstrijdturnenPage', { 'page': group.id, 'view': 'TNT', 'id': member.id }) }}" style="text-decoration: none;">
-                    <img src="/uploads/selectiefotos/{{ member.pictureFileName }}" width="135" alt="Meer info"/>
-                    <p>{{ member.firstName }}<br>Trainer</p>
-                </a>
+                <img src="{{ asset('/uploads/selectiefotos/'~member.pictureFileName) }}" width="135" alt="Meer info"/>
+                <p>{{ member.firstName }}<br>Trainer</p>
             </td>
             {% endfor %}
 
@@ -36,10 +36,8 @@
         <tr>
             {% endif %}
             <td>
-                <a href="{{ path('getWedstrijdturnenPage', { 'page': group.id, 'view': 'TNT', 'id': member.id }) }}" style="text-decoration: none;">
-                    <img src="/uploads/selectiefotos/{{ member.pictureFileName }}" width="135" alt="Meer info"/>
-                    <p>{{ member.firstName }}<br>Assistent-Trainer</p>
-                </a>
+                <img src="{{ asset('/uploads/selectiefotos/'~member.pictureFileName) }}" width="135" alt="Meer info"/>
+                <p>{{ member.firstName }}<br>Assistent-Trainer</p>
             </td>
             {% endfor %}
 
@@ -55,8 +53,9 @@
         <tr>
             {% endif %}
             <td>
-                <a href="{{ path('getWedstrijdturnenPage', { 'page': group.id, 'view': 'TNT', 'id': member.id }) }}" style="text-decoration: none;">
-                    <img src="/uploads/selectiefotos/{{ member.pictureFileName }}" width="135" alt="Meer info"/>
+                <a href="{{ path('aboutGymnastPage', { 'groupId': group.id, 'gymnastId': member.id }) }}" style="text-decoration: none;">
+                    <img src="{{ asset('/uploads/selectiefotos/'~member.pictureFileName) }}" width="135"
+                         alt="Meer info"/>
                     <p>{{ member.firstName }}<br>Turnster</p>
                 </a>
             </td>
