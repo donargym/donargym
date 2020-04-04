@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
 
-class SymfonyLoginController extends BaseController
+class SecurityController extends BaseController
 {
     private AuthenticationUtils $authenticationUtils;
     private Environment $twig;
