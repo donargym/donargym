@@ -2,10 +2,10 @@
 
 namespace App\Infrastructure\SymfonyController;
 
-use App\Domain\EmailAddress;
-use App\Domain\EmailTemplateType;
-use App\Domain\PasswordGenerator;
-use App\Infrastructure\SymfonyMailer\SymfonyMailer;
+use App\Security\Domain\PasswordGenerator;
+use App\Shared\Domain\EmailAddress;
+use App\Shared\Domain\EmailTemplateType;
+use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

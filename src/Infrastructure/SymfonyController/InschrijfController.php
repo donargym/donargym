@@ -2,12 +2,12 @@
 
 namespace App\Infrastructure\SymfonyController;
 
-use App\Domain\EmailAddress;
-use App\Domain\EmailTemplateType;
 use App\Entity\Inschrijving;
 use App\Form\Type\SubscribeType;
-use App\Infrastructure\SymfonyMailer\SymfonyMailer;
 use App\Repository\InschrijvingRepository;
+use App\Shared\Domain\EmailAddress;
+use App\Shared\Domain\EmailTemplateType;
+use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -137,7 +137,7 @@ final class InschrijfController extends BaseController
             $successMessage = 'Inschrijving succesvol verstuurd';
             $this->addFlash('success', $successMessage);
 
-            return $this->redirectToRoute('getIndexPage');
+            return $this->redirectToRoute('newsPosts');
         }
 
         return $this->render(

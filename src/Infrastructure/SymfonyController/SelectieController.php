@@ -2,9 +2,6 @@
 
 namespace App\Infrastructure\SymfonyController;
 
-use App\Domain\EmailAddress;
-use App\Domain\EmailTemplateType;
-use App\Domain\PasswordGenerator;
 use App\Entity\Aanwezigheid;
 use App\Entity\Functie;
 use App\Entity\Groepen;
@@ -20,8 +17,11 @@ use App\Form\Type\ContactgegevensType;
 use App\Form\Type\Email1Type;
 use App\Form\Type\Email2Type;
 use App\Form\Type\Email3Type;
-use App\Helper\ImageResizer;
-use App\Infrastructure\SymfonyMailer\SymfonyMailer;
+use App\Security\Domain\PasswordGenerator;
+use App\Shared\Domain\EmailAddress;
+use App\Shared\Domain\EmailTemplateType;
+use App\Shared\Domain\ImageResizer;
+use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

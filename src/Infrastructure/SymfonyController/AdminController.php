@@ -2,17 +2,17 @@
 
 namespace App\Infrastructure\SymfonyController;
 
-use App\Domain\EmailAddress;
-use App\Domain\EmailTemplateType;
-use App\Domain\PasswordGenerator;
 use App\Entity\FileUpload;
 use App\Entity\FotoUpload;
 use App\Entity\Functie;
 use App\Entity\Groepen;
 use App\Entity\Persoon;
 use App\Entity\Trainingen;
-use App\Helper\ImageResizer;
-use App\Infrastructure\SymfonyMailer\SymfonyMailer;
+use App\Security\Domain\PasswordGenerator;
+use App\Shared\Domain\EmailAddress;
+use App\Shared\Domain\EmailTemplateType;
+use App\Shared\Domain\ImageResizer;
+use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;

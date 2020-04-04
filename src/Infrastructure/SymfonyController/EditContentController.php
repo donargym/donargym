@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\SymfonyController;
 
-use App\Domain\SystemClock;
 use App\Entity\Calendar;
 use App\Entity\Clubblad;
 use App\Entity\Formulieren;
@@ -13,7 +12,8 @@ use App\Form\Type\CalendarType;
 use App\Form\Type\NieuwsberichtType;
 use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
-use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
+use App\PublicInformation\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
+use App\Shared\Domain\SystemClock;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -63,7 +63,7 @@ class EditContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($agenda);
             $em->flush();
-            return $this->redirectToRoute('getNieuwsPage');
+            return $this->redirectToRoute('newsPosts');
         } else {
             return $this->render(
                 'default/addCalendar.html.twig',
@@ -95,7 +95,7 @@ class EditContentController extends BaseController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($agenda);
                 $em->flush();
-                return $this->redirectToRoute('getNieuwsPage');
+                return $this->redirectToRoute('newsPosts');
             } else {
                 return $this->render(
                     'default/addCalendar.html.twig',
@@ -150,7 +150,7 @@ class EditContentController extends BaseController
             $agenda = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($agenda);
             $em->flush();
-            return $this->redirectToRoute('getNieuwsPage');
+            return $this->redirectToRoute('newsPosts');
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
@@ -175,7 +175,7 @@ class EditContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($nieuwsbericht);
             $em->flush();
-            return $this->redirectToRoute('getNieuwsPage');
+            return $this->redirectToRoute('newsPosts');
         } else {
             return $this->render(
                 'default/addNieuwsbericht.html.twig',
@@ -209,7 +209,7 @@ class EditContentController extends BaseController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($nieuwsbericht);
                 $em->flush();
-                return $this->redirectToRoute('getNieuwsPage');
+                return $this->redirectToRoute('newsPosts');
             } else {
                 return $this->render(
                     'default/addNieuwsbericht.html.twig',
@@ -264,7 +264,7 @@ class EditContentController extends BaseController
             $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($nieuwsbericht);
             $em->flush();
-            return $this->redirectToRoute('getNieuwsPage');
+            return $this->redirectToRoute('newsPosts');
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
@@ -299,7 +299,7 @@ class EditContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($vakanties);
             $em->flush();
-            return $this->redirectToRoute('getNieuwsPage', array('page' => 'vakanties'));
+            return $this->redirectToRoute('holidays');
         } else {
             return $this->render(
                 'default/addVakanties.html.twig',
@@ -344,7 +344,7 @@ class EditContentController extends BaseController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($vakanties);
                 $em->flush();
-                return $this->redirectToRoute('getNieuwsPage', array('page' => 'vakanties'));
+                return $this->redirectToRoute('holidays');
             } else {
                 return $this->render(
                     'default/addVakanties.html.twig',
@@ -413,7 +413,7 @@ class EditContentController extends BaseController
             $vakanties = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($vakanties);
             $em->flush();
-            return $this->redirectToRoute('getNieuwsPage', array('page' => 'vakanties'));
+            return $this->redirectToRoute('holidays');
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
@@ -445,7 +445,7 @@ class EditContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($clubblad);
             $em->flush();
-            return $this->redirectToRoute('getNieuwsPage', array('page' => 'clubblad'));
+            return $this->redirectToRoute('holidays');
         } else {
             return $this->render(
                 'default/addClubblad.html.twig',
@@ -494,7 +494,7 @@ class EditContentController extends BaseController
             $clubblad = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($clubblad);
             $em->flush();
-            return $this->redirectToRoute('getNieuwsPage', array('page' => 'clubblad'));
+            return $this->redirectToRoute('clubMagazine');
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
@@ -520,7 +520,7 @@ class EditContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($formulier);
             $em->flush();
-            return $this->redirectToRoute('getSubscriptionPage', array('page' => 'formulieren'));
+            return $this->redirectToRoute('subscriptionPaperForms');
         } else {
             return $this->render(
                 'subscription/addFormulieren.html.twig',
@@ -569,7 +569,7 @@ class EditContentController extends BaseController
             $formulier = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($formulier);
             $em->flush();
-            return $this->redirectToRoute('getSubscriptionPage', array('page' => 'formulieren'));
+            return $this->redirectToRoute('subscriptionPaperForms');
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',
@@ -591,7 +591,7 @@ class EditContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($vraag);
             $em->flush();
-            return $this->redirectToRoute('getContactPage', array('page' => 'veelgesteldevragen'));
+            return $this->redirectToRoute('frequentlyAskedQuestions');
         } else {
             return $this->render(
                 'contact/addVeelgesteldeVragen.html.twig',
@@ -623,7 +623,7 @@ class EditContentController extends BaseController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($vraag);
                 $em->flush();
-                return $this->redirectToRoute('getContactPage', array('page' => 'veelgesteldevragen'));
+                return $this->redirectToRoute('frequentlyAskedQuestions');
             } else {
                 return $this->render(
                     'contact/addVeelgesteldeVragen.html.twig',
@@ -678,7 +678,7 @@ class EditContentController extends BaseController
             $vraag = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($vraag);
             $em->flush();
-            return $this->redirectToRoute('getContactPage', array('page' => 'veelgesteldevragen'));
+            return $this->redirectToRoute('frequentlyAskedQuestions');
         } else {
             return $this->render(
                 'error/pageNotFound.html.twig',

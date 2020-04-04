@@ -1,5 +1,9 @@
-controllers:
+legacy_controllers:
     resource: ../../src/Infrastructure/SymfonyController/
+    type: annotation
+
+public_information_controllers:
+    resource: ../../src/PublicInformation/Infrastructure/SymfonyController/
     type: annotation
 
 kernel:

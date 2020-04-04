@@ -21,7 +21,7 @@ config/packages/parameters.yaml
 
 .vagrant
 
-/data/*
+/data/uploads
 !/data/.gitkeep
 !/data/uploads/.gitkeep
 !/data/uploads/insuranceCards/.gitkeep
