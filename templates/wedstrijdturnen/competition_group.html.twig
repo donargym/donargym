@@ -19,7 +19,7 @@
     <h2>Trainers</h2>
     <table style="text-align:center;">
         <tr>
-            {% for member in competionGroupMembers.coaches %}
+            {% for member in competitionGroupMembers.coaches %}
             {% if loop.index0 is divisible by(4) %}
         </tr>
         <tr>
@@ -30,8 +30,8 @@
             </td>
             {% endfor %}
 
-            {% for member in competionGroupMembers.assistantCoaches %}
-            {% if (loop.index0 + competionGroupMembers.coaches.count) is divisible by(4) %}
+            {% for member in competitionGroupMembers.assistantCoaches %}
+            {% if (loop.index0 + competitionGroupMembers.coaches.count) is divisible by(4) %}
         </tr>
         <tr>
             {% endif %}
@@ -47,7 +47,7 @@
     <h2>Turnsters</h2>
     <table style="text-align:center;">
         <tr>
-            {% for member in competionGroupMembers.gymnasts %}
+            {% for member in competitionGroupMembers.gymnasts %}
             {% if loop.index0 is divisible by(4) %}
         </tr>
         <tr>

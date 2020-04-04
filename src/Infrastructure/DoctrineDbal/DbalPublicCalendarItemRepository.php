@@ -47,7 +47,7 @@ final class DbalPublicCalendarItemRepository
         $statement = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('calendar')
-            ->where('datum >= :today')
+            ->andWhere('datum >= :today')
             ->orderBy('datum', 'ASC')
             ->setParameter('today', $today, Types::DATETIME_IMMUTABLE)
             ->execute();

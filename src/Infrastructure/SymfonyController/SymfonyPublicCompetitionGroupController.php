@@ -50,8 +50,8 @@ final class SymfonyPublicCompetitionGroupController
             $this->twig->render(
                 'wedstrijdturnen/competition_group.html.twig',
                 [
-                    'group'                 => $competitionGroup,
-                    'competionGroupMembers' => $this->competitionGroupMemberRepository->findAllForGroup($groupId),
+                    'group'                   => $competitionGroup,
+                    'competitionGroupMembers' => $this->competitionGroupMemberRepository->findAllForGroup($groupId),
                 ]
             )
         );

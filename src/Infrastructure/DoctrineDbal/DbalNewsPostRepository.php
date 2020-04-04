@@ -6,6 +6,7 @@ namespace App\Infrastructure\DoctrineDbal;
 
 use App\Domain\NewsPost;
 use App\Domain\NewsPosts;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use PDO;
@@ -38,7 +39,7 @@ final class DbalNewsPostRepository
 
     public function findNewsPostsForYear(int $year): NewsPosts
     {
-        $startDate = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $year . '-01-01 00:00:00');
+        $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $year . '-01-01 00:00:00');
         $endDate   = $startDate->modify('+1 year');
 
         $statement = $this->connection->createQueryBuilder()
@@ -86,7 +87,7 @@ final class DbalNewsPostRepository
             (int) $row['id'],
             $row['titel'],
             $row['bericht'],
-            new \DateTimeImmutable($row['created_at'])
+            new DateTimeImmutable($row['created_at'])
         );
     }
 }

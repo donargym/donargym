@@ -24,7 +24,7 @@ final class DbalSimpleContentPageRepository
         $statement = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('content')
-            ->where('pagina = :page')
+            ->andWhere('pagina = :page')
             ->orderBy('gewijzigd', 'DESC')
             ->setMaxResults(1)
             ->setParameter('page', $pageName)

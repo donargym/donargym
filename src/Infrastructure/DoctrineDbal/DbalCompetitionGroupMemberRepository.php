@@ -8,6 +8,7 @@ use App\Domain\CompetitionGroupFunction;
 use App\Domain\CompetitionGroupMember;
 use App\Domain\CompetitionGroupMembers;
 use App\Domain\SystemClock;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use PDO;
 
@@ -81,7 +82,7 @@ final class DbalCompetitionGroupMemberRepository
             (int) $row['id'],
             $row['voornaam'],
             $row['achternaam'],
-            new \DateTimeImmutable($row['geboortedatum']),
+            new DateTimeImmutable($row['geboortedatum']),
             $row['picture_file_name'] ?: $this->defaultPictureFileName,
             CompetitionGroupFunction::fromString($row['functie']),
             $this->clock

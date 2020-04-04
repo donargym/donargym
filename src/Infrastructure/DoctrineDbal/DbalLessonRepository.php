@@ -24,6 +24,8 @@ final class DbalLessonRepository
             ->select('id', 'dag', 'tijdvan', 'tijdtot')
             ->from('trainingen')
             ->orderBy('id', 'ASC')
+            ->andWhere('groepen_id = :groupId')
+            ->setParameter('groupId', $groupId)
             ->execute();
 
         $lessons = [];

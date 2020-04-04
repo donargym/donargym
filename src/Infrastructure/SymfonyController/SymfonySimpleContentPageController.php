@@ -9,7 +9,6 @@ use App\Domain\SystemClock;
 use App\Form\Type\SimplePageContentType;
 use App\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain;
 
 use Assert\Assertion;
+use DateTimeImmutable;
 
 final class Category
 {
@@ -83,7 +84,7 @@ final class Category
         ];
     }
 
-    public static function createFromDateOfBirthForSeason(\DateTimeImmutable $dateOfBirth, CompetitionSeason $competitionSeason): self
+    public static function createFromDateOfBirthForSeason(DateTimeImmutable $dateOfBirth, CompetitionSeason $competitionSeason): self
     {
         switch ((int) $competitionSeason->startDate()->format('Y') - (int) $dateOfBirth->format('Y')) {
             case 0:

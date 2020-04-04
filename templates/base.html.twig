@@ -13,7 +13,7 @@
         <div id="header">
             <a href="{{ path('newsPosts') }}">
                 {% block header %}
-                    <img width="980" src="{{ asset('images/headers/'~ header.getHeader(app.request.get('page')) ~'.jpg') }}" alt=""/>
+                    <img width="980" src="{{ asset('images/headers/'~random(1, 20)~'.jpg') }}" alt=""/>
                 {% endblock %}
             </a>
         </div>

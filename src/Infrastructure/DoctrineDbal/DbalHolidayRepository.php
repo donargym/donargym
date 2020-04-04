@@ -29,7 +29,7 @@ final class DbalHolidayRepository
         $statement = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('vakanties')
-            ->where('tot >= :today')
+            ->andWhere('tot >= :today')
             ->orderBy('van', 'ASC')
             ->setParameter('today', $today->format('Y-m-d'))
             ->execute();
