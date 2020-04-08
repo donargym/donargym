@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\SymfonyController;
+namespace App\Infrastructure\Controller;
 
 use App\Security\Domain\PasswordGenerator;
 use App\Shared\Domain\EmailAddress;

@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
             nfsPath = "/System/Volumes/Data" + Dir.pwd
         end
         donar.vm.synced_folder ".", "/vagrant", disabled: true
-        donar.vm.synced_folder nfsPath, "/vagrant/donargym"
+        donar.vm.synced_folder nfsPath, "/vagrant/donargym", nfs: true
 
         donar.ssh.insert_key = false
         donar.ssh.forward_agent = true

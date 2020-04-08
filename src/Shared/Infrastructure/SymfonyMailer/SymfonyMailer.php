@@ -12,9 +12,9 @@ use Symfony\Component\Mailer\MailerInterface;
 final class SymfonyMailer
 {
     private MailerInterface $mailer;
-
     private string $sender;
 
+    // todo: Remove later: BC's should have their own notifiers
     public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;

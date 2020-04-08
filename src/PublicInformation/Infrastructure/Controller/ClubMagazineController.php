@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\PublicInformation\Infrastructure\SymfonyController;
+namespace App\PublicInformation\Infrastructure\Controller;
 
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalClubMagazineRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
-final class SymfonyClubMagazineController
+final class ClubMagazineController
 {
     private DbalClubMagazineRepository $clubMagazineRepository;
     private Environment $twig;

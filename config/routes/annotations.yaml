@@ -1,9 +1,13 @@
 legacy_controllers:
-    resource: ../../src/Infrastructure/SymfonyController/
+    resource: ../../src/Infrastructure/Controller/
     type: annotation
 
 public_information_controllers:
-    resource: ../../src/PublicInformation/Infrastructure/SymfonyController/
+    resource: ../../src/PublicInformation/Infrastructure/Controller/
+    type: annotation
+
+subscription_controllers:
+    resource: ../../src/Subscription/Infrastructure/Controller/
     type: annotation
 
 kernel:

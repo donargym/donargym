@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\PublicInformation\Infrastructure\SymfonyController;
+namespace App\PublicInformation\Infrastructure\Controller;
 
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalCalendarItemRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
-final class SymfonyPublicCalendarController
+final class CalendarController
 {
     private Environment $twig;
     private DbalCalendarItemRepository $publicCalendarItemRepository;

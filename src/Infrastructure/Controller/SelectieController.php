@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\SymfonyController;
+namespace App\Infrastructure\Controller;
 
 use App\Entity\Aanwezigheid;
 use App\Entity\Functie;

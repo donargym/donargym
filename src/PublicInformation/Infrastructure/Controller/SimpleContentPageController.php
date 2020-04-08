@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\PublicInformation\Infrastructure\SymfonyController;
+namespace App\PublicInformation\Infrastructure\Controller;
 
 use App\PublicInformation\Domain\SimpleContentPage;
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 
-final class SymfonySimpleContentPageController
+final class SimpleContentPageController
 {
     private DbalSimpleContentPageRepository $simpleContentPageRepository;
     private Environment $twig;

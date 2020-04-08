@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\SymfonyController;
+namespace App\Infrastructure\Controller;
 
 use App\Entity\FileUpload;
 use App\Entity\FotoUpload;

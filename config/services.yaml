@@ -19,12 +19,16 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Infrastructure\SymfonyController\:
-        resource: '../src/Infrastructure/SymfonyController'
+    App\Infrastructure\Controller\:
+        resource: '../src/Infrastructure/Controller'
         tags: ['controller.service_arguments']
 
-    App\PublicInformation\Infrastructure\SymfonyController\:
-        resource: '../src/PublicInformation/Infrastructure/SymfonyController'
+    App\PublicInformation\Infrastructure\Controller\:
+        resource: '../src/PublicInformation/Infrastructure/Controller'
+        tags: ['controller.service_arguments']
+
+    App\Subscription\Infrastructure\Controller\:
+        resource: '../src/Subscription/Infrastructure/Controller'
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
@@ -35,3 +39,4 @@ imports:
     - { resource: ../src/Shared/services.yaml }
     - { resource: ../src/Security/services.yaml }
     - { resource: ../src/Temporary/services.yaml }
+    - { resource: ../src/Subscription/services.yaml }

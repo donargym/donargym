@@ -3,31 +3,31 @@
 {% block body %}
     <h1>Lid worden</h1>
 <p>
-	Let op: kijk eerst even voor welke les je in wilt schrijven in het <a href="https://www.donargym.nl/lessen/lesrooster/">lesrooster</a>.
+	Let op: kijk eerst even voor welke les je in wilt schrijven in het <a href="{{ path('simpleContentPage', {'pageName': 'lesrooster'}) }}">lesrooster</a>.
 	Als er een wachtlijst op een les is, neem dan eerst even via de mail contact op met de juf.
 </p>
     {{ form_start(form) }}
 	<h2>Persoonsgegevens</h2>
     <table>
         <tr>
-            <td>{{ form_label(form.firstname) }}</td>
-            <td>{{ form_widget(form.firstname) }}</td>
-            <td>{{ form_errors(form.firstname) }}</td>
+            <td>{{ form_label(form.firstName) }}</td>
+            <td>{{ form_widget(form.firstName) }}</td>
+            <td>{{ form_errors(form.firstName) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.lastname) }}</td>
-            <td>{{ form_widget(form.lastname) }}</td>
-            <td>{{ form_errors(form.lastname) }}</td>
+            <td>{{ form_label(form.lastName) }}</td>
+            <td>{{ form_widget(form.lastName) }}</td>
+            <td>{{ form_errors(form.lastName) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.nameletters) }}</td>
-            <td>{{ form_widget(form.nameletters) }}</td>
-            <td>{{ form_errors(form.nameletters) }}</td>
+            <td>{{ form_label(form.nameLetters) }}</td>
+            <td>{{ form_widget(form.nameLetters) }}</td>
+            <td>{{ form_errors(form.nameLetters) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.dateofbirth) }}</td>
-            <td>{{ form_widget(form.dateofbirth) }}</td>
-            <td>{{ form_errors(form.dateofbirth) }}</td>
+            <td>{{ form_label(form.dateOfBirth) }}</td>
+            <td>{{ form_widget(form.dateOfBirth) }}</td>
+            <td>{{ form_errors(form.dateOfBirth) }}</td>
         </tr>
         <tr>
             <td>{{ form_label(form.gender) }}</td>
@@ -60,19 +60,19 @@
             <td>{{ form_errors(form.phone2) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.bankaccountnumber) }}</td>
-            <td>{{ form_widget(form.bankaccountnumber) }}</td>
-            <td>{{ form_errors(form.bankaccountnumber) }}</td>
+            <td>{{ form_label(form.bankAccountNumber) }}</td>
+            <td>{{ form_widget(form.bankAccountNumber) }}</td>
+            <td>{{ form_errors(form.bankAccountNumber) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.bankaccountholder) }}</td>
-            <td>{{ form_widget(form.bankaccountholder) }}</td>
-            <td>{{ form_errors(form.bankaccountholder) }}</td>
+            <td>{{ form_label(form.bankAccountHolder) }}</td>
+            <td>{{ form_widget(form.bankAccountHolder) }}</td>
+            <td>{{ form_errors(form.bankAccountHolder) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.emailaddress) }}</td>
-            <td>{{ form_widget(form.emailaddress) }}</td>
-            <td>{{ form_errors(form.emailaddress) }}</td>
+            <td>{{ form_label(form.emailAddress) }}</td>
+            <td>{{ form_widget(form.emailAddress) }}</td>
+            <td>{{ form_errors(form.emailAddress) }}</td>
         </tr>
 		    </table>
 		<br>
@@ -103,9 +103,9 @@
             <td>{{ form_errors(form.locations) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.starttime) }}</td>
-            <td>{{ form_widget(form.starttime) }}</td>
-            <td>{{ form_errors(form.starttime) }}</td>
+            <td>{{ form_label(form.startTime) }}</td>
+            <td>{{ form_widget(form.startTime) }}</td>
+            <td>{{ form_errors(form.startTime) }}</td>
         </tr>
         <tr>
             <td>{{ form_label(form.trainer) }}</td>
@@ -117,34 +117,34 @@
 	<h2>Overig</h2>
     <table>
         <tr>
-            <td>{{ form_label(form.havebeensubscribed) }}</td>
-            <td>{{ form_widget(form.havebeensubscribed) }}</td>
-            <td>{{ form_errors(form.havebeensubscribed) }}</td>
+            <td>{{ form_label(form.haveBeenSubscribed) }}</td>
+            <td>{{ form_widget(form.haveBeenSubscribed) }}</td>
+            <td>{{ form_errors(form.haveBeenSubscribed) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.subscribedfrom) }}</td>
-            <td>{{ form_widget(form.subscribedfrom) }}</td>
-            <td>{{ form_errors(form.subscribedfrom) }}</td>
+            <td>{{ form_label(form.subscribedFrom) }}</td>
+            <td>{{ form_widget(form.subscribedFrom) }}</td>
+            <td>{{ form_errors(form.subscribedFrom) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.subscribeduntil) }}</td>
-            <td>{{ form_widget(form.subscribeduntil) }}</td>
-            <td>{{ form_errors(form.subscribeduntil) }}</td>
+            <td>{{ form_label(form.subscribedUntil) }}</td>
+            <td>{{ form_widget(form.subscribedUntil) }}</td>
+            <td>{{ form_errors(form.subscribedUntil) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.otherclub) }}</td>
-            <td>{{ form_widget(form.otherclub) }}</td>
-            <td>{{ form_errors(form.otherclub) }}</td>
+            <td>{{ form_label(form.otherClub) }}</td>
+            <td>{{ form_widget(form.otherClub) }}</td>
+            <td>{{ form_errors(form.otherClub) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.whatotherclub) }}</td>
-            <td>{{ form_widget(form.whatotherclub) }}</td>
-            <td>{{ form_errors(form.whatotherclub) }}</td>
+            <td>{{ form_label(form.whatOtherClub) }}</td>
+            <td>{{ form_widget(form.whatOtherClub) }}</td>
+            <td>{{ form_errors(form.whatOtherClub) }}</td>
         </tr>
         <tr>
-            <td>{{ form_label(form.bondscontributiebetaald) }}</td>
-            <td>{{ form_widget(form.bondscontributiebetaald) }}</td>
-            <td>{{ form_errors(form.bondscontributiebetaald) }}</td>
+            <td>{{ form_label(form.paidBondContribution) }}</td>
+            <td>{{ form_widget(form.paidBondContribution) }}</td>
+            <td>{{ form_errors(form.paidBondContribution) }}</td>
         </tr>
         <tr>
             <td>{{ form_label(form.how) }}</td>
@@ -154,11 +154,11 @@
     </table>
 
     <p>
-        {{ form_errors(form.vrijwilligerstaken) }}<br />
-        {{ form_label(form.vrijwilligerstaken) }}
+        {{ form_errors(form.voluntaryWork) }}<br />
+        {{ form_label(form.voluntaryWork) }}
     </p>
     <p>
-        {{ form_widget(form.vrijwilligerstaken) }}
+        {{ form_widget(form.voluntaryWork) }}
     </p>
 
     <p>{{ form_widget(form.accept) }}{{ form_label(form.accept) }}</p>

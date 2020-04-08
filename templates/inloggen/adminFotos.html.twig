@@ -25,7 +25,7 @@
         {% for item in contentItems %}
             <tr>
                 <td>{{ item.naam }}</td>
-                <td style="font-size: 12px;">https://www.donargym.nl/uploads/fotos/{{ item.locatie }}</td>
+                <td style="font-size: 12px;">/uploads/fotos/{{ item.locatie }}</td>
                 <td><a href="{{ path('removeAdminFotoPage', { 'id': item.id }) }}"><img
                                 src="{{ asset('images/remove.png') }}" width="18px"/></a></td>
             </tr>

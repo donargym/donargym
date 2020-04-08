@@ -15,16 +15,14 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-.idea
+!.idea
+.idea/*
+!.idea/codeStyles
+
 config/packages/parameters.yaml
 .env
 
 .vagrant
-
-/data/uploads
-!/data/.gitkeep
-!/data/uploads/.gitkeep
-!/data/uploads/insuranceCards/.gitkeep
 
 /public/uploads/*
 !/public/uploads/privacy.pdf

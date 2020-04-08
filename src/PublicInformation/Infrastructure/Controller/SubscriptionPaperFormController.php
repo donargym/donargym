@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\PublicInformation\Infrastructure\SymfonyController;
+namespace App\PublicInformation\Infrastructure\Controller;
 
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalSubscriptionPaperFormRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
-final class SymfonySubscriptionPaperFormController
+final class SubscriptionPaperFormController
 {
     private DbalSubscriptionPaperFormRepository $subscriptionPaperFormRepository;
     private Environment $twig;

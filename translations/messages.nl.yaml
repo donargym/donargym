@@ -12,6 +12,109 @@ month:
   November:   "November"
   December:   "December"
 
+weekday:
+  monday: "Maandag"
+  tuesday: "Dinsdag"
+  wednesday: "Woensdag"
+  thursday: "Donderdag"
+  friday: "Vrijdag"
+  saturday: "Zondag"
+  sunday: "Zondag"
+
+trainer:
+  anchella: "Anchella"
+  cindy: "Cindy"
+  demi: "Demi"
+  eric: "Eric"
+  ilse: "Ilse"
+  loes: "Loes"
+  martine: "Martine"
+  merel: "Merel"
+  rachel: "Rachel"
+  renske: "Renske"
+  vera: "Vera"
+  charon: "Charon"
+
 form:
   submit:  "Verstuur"
   confirm: "Bevestig"
+  yes: "Ja"
+  no: "Nee"
+  validation:
+    not_blank: Dit veld is verplicht
+    date_time_type: Dit is geen geldige datum
+    iban: Dit is geen geldige IBAN
+    email: Geen geldig email adres
+    required_to_agree: U dient akkoord te gaan
+
+subscription_form:
+  first_name: "Voornaam*"
+  last_name: "Achternaam*"
+  initials: "Initialen*"
+  date_of_birth: "Geboortedatum*"
+  gender: "Geslacht*"
+  gender_place_holder: "Selecteer een geslacht"
+  gender_male: "Man"
+  gender_female: "Vrouw"
+  street_house_number: "Straat + huisnummer*"
+  zip_code: "Postcode*"
+  city: "Plaats*"
+  phone_1: "Telefoonnummer*"
+  phone_2: "Evt. 2e telefoonnummer"
+  iban: "IBAN nummer*"
+  account_holder: "Naam rekeninghouder*"
+  email: "Email adres*"
+  have_been_subscribed: "Bent u eerder lid geweest bij Donar?*"
+  subscribed_from: "Zo ja, van wanneer?"
+  subscribed_until: "Tot wanneer?"
+  other_club: "Bent u lid van een andere vereniging?*"
+  what_other_club: "Zo ja, welke vereniging?"
+  paid_bond_contribution: "Heeft u dit jaar bondscontributie betaald?*"
+  category: "Categorie*"
+  category_place_holder: "Kies een categorie*"
+  tot: "Peuters t/m 3 jaar"
+  toddlers: "Kleuters 4 t/m 6 jaar"
+  girls_6-9: "Meisjes 6 t/m 9 jaar"
+  girls_10-15: "Meisjes 10 t/m 15 jaar"
+  boys_6-9: "Jongens 6 t/m 9 jaar"
+  boys_10-15: "Jongens 10 t/m 15 jaar"
+  ladies_above_16: "Dames 16 jaar en ouder"
+  gentleman_above_16: "Heren 16 jaar en ouder"
+  aerobics_body_shape: "Aerobics/Bodyshape"
+  badminton_volley_ball: "Badminton/Volleybal"
+  days: "Selecteer lesdag(en)*"
+  location: "Selecteer locatie(s)*"
+  location_1: "Mari Andriessenstraat"
+  location_2: "Zaanstraat"
+  location_3: "Renswoudelaan"
+  location_4: "2e Sweelinckstraat"
+  location_5: "Den Helderstraat"
+  location_6: "Erasmusweg"
+  location_7: "Walenburg"
+  location_8: "Sportcampus Zuiderpark"
+  start_time: "Starttijd les*"
+  trainer: "Leiding*"
+  trainer_place_holder: "Kies een leiding"
+  trainer_not_found: "Mijn leiding staat er niet bij"
+  how: "Hoe bent u bij Donar terecht gekomen?"
+  voluntary_work: "Bij aanmelding gaan wij ervan uit dat u zich als meerderjarige of als ouder van een minderjarige
+    1 à 2 maal per jaar wil inzetten als vrijwilliger zodat wij als vereniging wedstrijden en evenementen
+    kunnen blijven organiseren. U kunt zich aanmelden als vrijwilliger voor: Telcommissie (optellen
+    cijfers tijdens wedstrijden), kassa, catering, bestuur, opbouwen en afbouwen van turntoestellen
+    tijdens wedstrijden, juryleden (cursus wordt vergoed!!), onderhoud gebouwen.
+    Hieronder kunt u aangeven wat uw voorkeur heeft. Meerdere opties zijn mogelijk*"
+  accept_requirements: "Door dit vakje aan te klikken verklaart u op de hoogte te zijn van de voorwaarden die behoren bij het lidmaatschap
+    van DONAR, te vinden onder het kopje formulieren in het lidmaatschap menu. U verklaart deze te zullen aannemen en de plichten, die aan het lidmaatschap verbonden zijn, altijd te zullen nakomen.
+    Ook gaat u akkoord met de doorlopende incasso, ook te vinden onder het kopje formulieren."
+  accept_privacy_policy: "Door dit vakje aan te klikken verklaart u op de hoogte te zijn van het privacy beleid van de vereniging, en hiermee akkoord te gaan. Het privacy beleid is onder aan deze pagina te vinden.*"
+  accept_name_published: "Gaat u ermee akkoord dat de naam van het aankomend lid gepubliceerd wordt op de website, in het krantje of op social media?*"
+  accept_picture_published: "Gaat u ermee akkoord dat beeldmateriaal van het aankomend lid gepubliceerd wordt op de website, in het krantje of op social media?*"
+
+new_member_confirmation_mail:
+  subject: "Uw inschrijving bij Donar"
+
+notify_trainer_about_new_member_mail:
+  subject: "Er is een nieuw lid ingeschreven voor je les"
+
+notify_member_secretariat_about_new_member_mail:
+  subject: "Nieuwe inschrijving"
