@@ -5,7 +5,7 @@ twig:
     'src/Shared/Application/Templates': 'Shared'
     'src/Security/Application/Templates': 'Security'
     'src/Subscription/Application/Templates': 'Subscription'
-#  form_themes: ['bootstrap_4_layout.html.twig']
+  form_themes: ['bootstrap_4_layout.html.twig']
   globals:
     # the value is the service's id
     calendarItems: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCalendarItemRepository'
