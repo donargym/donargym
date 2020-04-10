@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\Controller;
@@ -12,13 +11,12 @@ use Twig\Environment;
 final class ClubMagazineController
 {
     private DbalClubMagazineRepository $clubMagazineRepository;
-    private Environment $twig;
+    private Environment                $twig;
 
     public function __construct(
         DbalClubMagazineRepository $clubMagazineRepository,
         Environment $twig
-    )
-    {
+    ) {
         $this->clubMagazineRepository = $clubMagazineRepository;
         $this->twig                   = $twig;
     }

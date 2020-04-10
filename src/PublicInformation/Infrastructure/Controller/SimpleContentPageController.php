@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\Controller;
@@ -21,10 +20,10 @@ use Twig\Environment;
 final class SimpleContentPageController
 {
     private DbalSimpleContentPageRepository $simpleContentPageRepository;
-    private Environment $twig;
-    private FormFactoryInterface $formFactory;
-    private RouterInterface $router;
-    private SystemClock $clock;
+    private Environment                     $twig;
+    private FormFactoryInterface            $formFactory;
+    private RouterInterface                 $router;
+    private SystemClock                     $clock;
 
     public function __construct(
         DbalSimpleContentPageRepository $simpleContentPageRepository,
@@ -32,8 +31,7 @@ final class SimpleContentPageController
         FormFactoryInterface $formFactory,
         RouterInterface $router,
         SystemClock $clock
-    )
-    {
+    ) {
         $this->simpleContentPageRepository = $simpleContentPageRepository;
         $this->twig                        = $twig;
         $this->formFactory                 = $formFactory;
@@ -69,13 +67,11 @@ final class SimpleContentPageController
         if (!$simpleContentPage) {
             throw new NotFoundHttpException();
         }
-
         $form = $this->formFactory->create(
             SimplePageContentType::class,
             null,
             ['content' => $simpleContentPage->pageContent()]
         );
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $simpleContentPage = SimpleContentPage::createNew($pageName, $form->getData()['pageContent'], $this->clock);

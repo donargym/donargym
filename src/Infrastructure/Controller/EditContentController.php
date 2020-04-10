@@ -29,21 +29,18 @@ use Twig\Environment;
  */
 class EditContentController extends BaseController
 {
-    private DbalSimpleContentPageRepository $simpleContentPageRepository;
     private FormFactoryInterface $formFactory;
     private Environment $twig;
     private SystemClock $clock;
     private RouterInterface $router;
 
     public function __construct(
-        DbalSimpleContentPageRepository $simpleContentPageRepository,
         FormFactoryInterface $formFactory,
         Environment $twig,
         SystemClock $clock,
         RouterInterface $router
     )
     {
-        $this->simpleContentPageRepository = $simpleContentPageRepository;
         $this->formFactory                 = $formFactory;
         $this->twig                        = $twig;
         $this->clock                       = $clock;
@@ -106,7 +103,7 @@ class EditContentController extends BaseController
             }
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -135,7 +132,7 @@ class EditContentController extends BaseController
                 );
             } else {
                 return $this->render(
-                    '@Shared/error/pageNotFound.html.twig',
+                    '@Shared/error/page_not_found.html.twig',
                     array()
                 );
             }
@@ -153,7 +150,7 @@ class EditContentController extends BaseController
             return $this->redirectToRoute('newsPosts');
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -220,7 +217,7 @@ class EditContentController extends BaseController
             }
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -249,7 +246,7 @@ class EditContentController extends BaseController
                 );
             } else {
                 return $this->render(
-                    '@Shared/error/pageNotFound.html.twig',
+                    '@Shared/error/page_not_found.html.twig',
                     array()
                 );
             }
@@ -267,7 +264,7 @@ class EditContentController extends BaseController
             return $this->redirectToRoute('newsPosts');
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -356,7 +353,7 @@ class EditContentController extends BaseController
             }
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -398,7 +395,7 @@ class EditContentController extends BaseController
                 );
             } else {
                 return $this->render(
-                    '@Shared/error/pageNotFound.html.twig',
+                    '@Shared/error/page_not_found.html.twig',
                     array()
                 );
             }
@@ -416,7 +413,7 @@ class EditContentController extends BaseController
             return $this->redirectToRoute('holidays');
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -479,7 +476,7 @@ class EditContentController extends BaseController
                 );
             } else {
                 return $this->render(
-                    '@Shared/error/pageNotFound.html.twig',
+                    '@Shared/error/page_not_found.html.twig',
                     array()
                 );
             }
@@ -497,7 +494,7 @@ class EditContentController extends BaseController
             return $this->redirectToRoute('clubMagazine');
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -554,7 +551,7 @@ class EditContentController extends BaseController
                 );
             } else {
                 return $this->render(
-                    '@Shared/error/pageNotFound.html.twig',
+                    '@Shared/error/page_not_found.html.twig',
                     array()
                 );
             }
@@ -572,7 +569,7 @@ class EditContentController extends BaseController
             return $this->redirectToRoute('subscriptionPaperForms');
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -634,7 +631,7 @@ class EditContentController extends BaseController
             }
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }
@@ -663,7 +660,7 @@ class EditContentController extends BaseController
                 );
             } else {
                 return $this->render(
-                    '@Shared/error/pageNotFound.html.twig',
+                    '@Shared/error/page_not_found.html.twig',
                     array()
                 );
             }
@@ -681,7 +678,7 @@ class EditContentController extends BaseController
             return $this->redirectToRoute('frequentlyAskedQuestions');
         } else {
             return $this->render(
-                '@Shared/error/pageNotFound.html.twig',
+                '@Shared/error/page_not_found.html.twig',
                 array()
             );
         }

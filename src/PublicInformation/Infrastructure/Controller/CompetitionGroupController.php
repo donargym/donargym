@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\Controller;
@@ -15,11 +14,11 @@ use Twig\Environment;
 
 final class CompetitionGroupController
 {
-    private DbalCompetitionGroupRepository $competitionGroupRepository;
+    private DbalCompetitionGroupRepository       $competitionGroupRepository;
     private DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository;
-    private DbalCompetitionResultRepository $competitionResultRepository;
-    private DbalAboutGymnastRepository $aboutGymnastRepository;
-    private Environment $twig;
+    private DbalCompetitionResultRepository      $competitionResultRepository;
+    private DbalAboutGymnastRepository           $aboutGymnastRepository;
+    private Environment                          $twig;
 
     public function __construct(
         DbalCompetitionGroupRepository $competitionGroupRepository,
@@ -27,8 +26,7 @@ final class CompetitionGroupController
         DbalCompetitionResultRepository $competitionResultRepository,
         DbalAboutGymnastRepository $aboutGymnastRepository,
         Environment $twig
-    )
-    {
+    ) {
         $this->competitionGroupRepository       = $competitionGroupRepository;
         $this->competitionGroupMemberRepository = $competitionGroupMemberRepository;
         $this->competitionResultRepository      = $competitionResultRepository;
@@ -48,7 +46,7 @@ final class CompetitionGroupController
 
         return new Response(
             $this->twig->render(
-                '@PublicInformation/wedstrijdturnen/competition_group.html.twig',
+                '@PublicInformation/competitive_gymnastics/competition_group.html.twig',
                 [
                     'group'                   => $competitionGroup,
                     'competitionGroupMembers' => $this->competitionGroupMemberRepository->findAllForGroup($groupId),
@@ -69,7 +67,7 @@ final class CompetitionGroupController
 
         return new Response(
             $this->twig->render(
-                '@PublicInformation/wedstrijdturnen/competition_results.html.twig',
+                '@PublicInformation/competitive_gymnastics/competition_results.html.twig',
                 [
                     'group'              => $competitionGroup,
                     'competitionResults' => $this->competitionResultRepository->findAllForGroup($groupId),
@@ -87,12 +85,10 @@ final class CompetitionGroupController
         if (!$competitionGroup) {
             throw new NotFoundHttpException();
         }
-
         $gymnast = $this->competitionGroupMemberRepository->find($gymnastId);
         if (!$gymnast) {
             throw new NotFoundHttpException();
         }
-
         $aboutGymnast = $this->aboutGymnastRepository->findForGymnast($gymnastId);
         if (!$aboutGymnast) {
             throw new NotFoundHttpException();
@@ -100,7 +96,7 @@ final class CompetitionGroupController
 
         return new Response(
             $this->twig->render(
-                '@PublicInformation/wedstrijdturnen/about_gymnast.html.twig',
+                '@PublicInformation/competitive_gymnastics/about_gymnast.html.twig',
                 [
                     'group'        => $competitionGroup,
                     'aboutGymnast' => $aboutGymnast,

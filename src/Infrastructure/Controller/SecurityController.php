@@ -92,7 +92,7 @@ class SecurityController extends BaseController
                 break;
             default:
                 return $this->render(
-                    '@Shared/error/pageNotFound.html.twig',
+                    '@Shared/error/page_not_found.html.twig',
                     array()
                 );
         }
@@ -169,7 +169,7 @@ class SecurityController extends BaseController
         }
 
         return $this->render(
-            '@Security/security/newPass.html.twig',
+            '@Security/security/request_new_password.html.twig',
             array(
                 'error' => $error,
             )

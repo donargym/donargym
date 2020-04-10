@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\Controller;
@@ -12,13 +11,12 @@ use Twig\Environment;
 final class NewsController
 {
     private DbalNewsPostRepository $newsPostRepository;
-    private Environment $twig;
+    private Environment            $twig;
 
     public function __construct(
         DbalNewsPostRepository $newsPostRepository,
         Environment $twig
-    )
-    {
+    ) {
         $this->newsPostRepository = $newsPostRepository;
         $this->twig               = $twig;
     }

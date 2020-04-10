@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\Controller;
@@ -12,15 +11,14 @@ use Twig\Environment;
 final class HolidayController
 {
     private DbalHolidayRepository $holidayRepository;
-    private Environment $twig;
+    private Environment           $twig;
 
     public function __construct(
         DbalHolidayRepository $holidayRepository,
         Environment $twig
-    )
-    {
+    ) {
         $this->holidayRepository = $holidayRepository;
-        $this->twig = $twig;
+        $this->twig              = $twig;
     }
 
     /**
