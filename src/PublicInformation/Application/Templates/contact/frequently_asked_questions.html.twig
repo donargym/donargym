@@ -15,9 +15,9 @@
                 <a href="{{ path('editVeelgesteldeVragenPage', { 'id': question.id }) }}">
                     <img src="{{ asset('images/edit.png') }}" width="18px" alt="Bewerk vraag/antwoord" />
                 </a>
-                <a href="{{ path('removeVeelgesteldeVragenPage', { 'id': question.id }) }}">
-                    <img src="{{ asset('images/remove.png') }}" width="18px" alt="Verwijder deze vraag" />
-                </a>
+                    <input type="image" class="remove-frequently-asked-question" src="{{ asset('images/remove.png') }}"
+                           data-id="{{ question.id }}" data-question="{{ question.question }}"
+                           alt="{% trans %}remove_frequently_asked_question_modal.title{% endtrans %}"/>
                 {% endapply %}
             {% endif %}
             </h3>
@@ -27,3 +27,10 @@
     {% endfor %}
 {% endblock %}
 
+{% block modals %}
+    {% include '@PublicInformation/contact/remove_frequently_asked_question_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/remove-frequently-asked-question.js') }}"></script>
+{% endblock %}

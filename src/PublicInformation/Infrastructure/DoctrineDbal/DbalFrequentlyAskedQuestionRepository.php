@@ -33,6 +33,15 @@ final class DbalFrequentlyAskedQuestionRepository
         return FrequentlyAskedQuestions::fromArray($frequentlyAskedQuestions);
     }
 
+    public function remove(int $id): void
+    {
+        $this->connection->createQueryBuilder()
+            ->delete('veelgesteldevragen')
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
+    }
+
     private function hydrate(array $row): FrequentlyAskedQuestion
     {
         return FrequentlyAskedQuestion::createFromDataSource(

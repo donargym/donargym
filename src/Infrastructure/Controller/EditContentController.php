@@ -12,7 +12,6 @@ use App\Form\Type\CalendarType;
 use App\Form\Type\NieuwsberichtType;
 use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
-use App\PublicInformation\Infrastructure\DoctrineDbal\DbalSimpleContentPageRepository;
 use App\Shared\Domain\SystemClock;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -381,53 +380,6 @@ class EditContentController extends BaseController
                     )
                 );
             }
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                array()
-            );
-        }
-    }
-
-    /**
-     * @Route("/contact/veelgesteldevragen/remove/{id}/", name="removeVeelgesteldeVragenPage", methods={"GET", "POST"})
-     */
-    public function removeVeelgesteldeVragenPage($id, Request $request)
-    {
-        if ($request->getMethod() == 'GET') {
-            $em    = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT veelgesteldevragen
-                FROM App:VeelgesteldeVragen veelgesteldevragen
-                WHERE veelgesteldevragen.id = :id'
-            )
-                ->setParameter('id', $id);
-            $vraag = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($vraag) {
-                return $this->render(
-                    '@PublicInformation/contact/removeVeelgesteldeVragen.html.twig',
-                    array(
-                        'content' => $vraag->getAll(),
-                    )
-                );
-            } else {
-                return $this->render(
-                    '@Shared/error/page_not_found.html.twig',
-                    array()
-                );
-            }
-        } elseif ($request->getMethod() == 'POST') {
-            $em    = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT veelgesteldevragen
-                FROM App:VeelgesteldeVragen veelgesteldevragen
-                WHERE veelgesteldevragen.id = :id'
-            )
-                ->setParameter('id', $id);
-            $vraag = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($vraag);
-            $em->flush();
-            return $this->redirectToRoute('frequentlyAskedQuestions');
         } else {
             return $this->render(
                 '@Shared/error/page_not_found.html.twig',

@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\PublicInformation\Infrastructure\Controller;
 
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalFrequentlyAskedQuestionRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
@@ -32,5 +35,16 @@ final class FrequentlyAskedQuestionsController
                 ['questions' => $this->frequentlyAskedQuestionRepository->findAll()]
             )
         );
+    }
+
+    /**
+     * @Route("/contact/veelgestelde-vragen/", name="removeFrequentlyAskedQuestion", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removeFrequentlyAskedQuestion(Request $request): Response
+    {
+        $this->frequentlyAskedQuestionRepository->remove((int) $request->request->get('id'));
+
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

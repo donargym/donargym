@@ -134,3 +134,6 @@ remove_news_post_modal:
 
 remove_holiday_modal:
   title: "Vakantie verwijderen"
+
+remove_frequently_asked_question_modal:
+  title: "Veelgestelde vraag verwijderen"
