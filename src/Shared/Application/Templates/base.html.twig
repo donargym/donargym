@@ -168,7 +168,8 @@
                         <img src="{{ asset('images/edit.png') }}" width="18px" alt="Bewerk agenda item"/>
                     </a>
                     <input type="image" class="remove-calendar-item" src="{{ asset('images/remove.png') }}"
-                           data-id="{{ item.id }}" data-name="{{ item.name }}" data-toggle="modal"/>
+                           data-id="{{ item.id }}" data-name="{{ item.name }}"
+                           alt="{% trans %}remove_public_calendar_item_modal.title{% endtrans %}"/>
                 {% endif %}
                 <br/>
                 {{ item.name }}
@@ -181,7 +182,8 @@
     <a href="{{ asset('uploads/privacy.pdf') }}" target="blank">Privacybeleid</a>
 </div>
 {% include '@PublicInformation/default/remove_calendar_item_modal.html.twig' %}
+{% block modals %}{% endblock %}
 {% block javascripts %}{% endblock %}
-<script type="text/javascript" src="{{ asset('js/remove-calendar-item.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/remove-public-calendar-item.js') }}"></script>
 </body>
 </html>

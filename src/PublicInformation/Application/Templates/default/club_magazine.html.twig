@@ -12,22 +12,31 @@
     <p>Hieronder kun je de clubbladen bekijken.</p>
     {% for year in years %}
         <h2>{{ year }}</h2>
-        <table><tr>
-        {% for clubMagazine in clubMagazines.clubMagazinesForYear(year) %}
-            <td style="text-align:center;">
-                <a href="/uploads/clubblad/{{ clubMagazine.fileName }}" target="blank">
-                    <img src="{{ asset('images/donarlogo.jpg') }}" width="85" alt="Bekijk clubblad" /><br>
-                    {% set label = 'month.' ~ clubMagazine.issueDate|date('F') %}
-                    {{ label|trans }} {{ year }}
-                    {% if app.user and is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('removeClubbladPage', { 'id': clubMagazine.id }) }}">
-                            <img src="{{ asset('images/remove.png') }}" width="18px" alt="Verwijder clubblad" />
+        <table>
+            <tr>
+                {% for clubMagazine in clubMagazines.clubMagazinesForYear(year) %}
+                    <td style="text-align:center;">
+                        <a href="/uploads/clubblad/{{ clubMagazine.fileName }}" target="blank">
+                            <img src="{{ asset('images/donarlogo.jpg') }}" width="85" alt="Bekijk clubblad"/><br>
+                            {% set label = 'month.' ~ clubMagazine.issueDate|date('F') %}
+                            {{ label|trans }} {{ year }}
                         </a>
-                    {% endif %}
-                </a>
-            </td>
-        {% endfor %}
+                        {% if app.user and is_granted('ROLE_ADMIN') %}
+                            <input type="image" class="remove-club-magazine" src="{{ asset('images/remove.png') }}"
+                                   data-id="{{ clubMagazine.id }}" data-date="{{ label|trans ~ " " ~ year }}"
+                                   alt="{% trans %}remove_club_magazine_modal.title{% endtrans %}"/>
+                        {% endif %}
+                    </td>
+                {% endfor %}
             </tr>
         </table>
     {% endfor %}
+{% endblock %}
+
+{% block modals %}
+    {% include '@PublicInformation/default/remove_club_magazine_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/remove-club-magazine.js') }}"></script>
 {% endblock %}

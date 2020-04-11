@@ -19,6 +19,23 @@ final class DbalClubMagazineRepository
         $this->connection = $connection;
     }
 
+    public function find(int $id): ?ClubMagazine
+    {
+        $statement = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('clubblad')
+            ->andWhere('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
+
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+
+        return $this->hydrate($row);
+    }
+
     public function findAll(): ClubMagazines
     {
         $statement = $this->connection->createQueryBuilder()
@@ -52,6 +69,15 @@ final class DbalClubMagazineRepository
         }
 
         return $years;
+    }
+
+    public function remove(int $id): void
+    {
+        $this->connection->createQueryBuilder()
+            ->delete('clubblad')
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
     }
 
     private function hydrate(array $row): ClubMagazine

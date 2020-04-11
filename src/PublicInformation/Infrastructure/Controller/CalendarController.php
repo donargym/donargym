@@ -46,7 +46,7 @@ final class CalendarController
      */
     public function removePublicCalendarItem(Request $request): Response
     {
-        $this->publicCalendarItemRepository->remove($request->request->get('id'));
+        $this->publicCalendarItemRepository->remove((int) $request->request->get('id'));
 
         return new RedirectResponse($request->headers->get('referer'));
     }

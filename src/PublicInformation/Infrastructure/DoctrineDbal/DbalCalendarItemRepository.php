@@ -60,7 +60,7 @@ final class DbalCalendarItemRepository
         return CalendarItems::fromArray($compactCalendarItems);
     }
 
-    public function remove($id): void
+    public function remove(int $id): void
     {
         $this->connection->createQueryBuilder()
             ->delete('calendar')

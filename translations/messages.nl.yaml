@@ -120,5 +120,8 @@ notify_trainer_about_new_member_mail:
 notify_member_secretariat_about_new_member_mail:
   subject: "Nieuwe inschrijving"
 
-remove_calendar_item_modal:
+remove_public_calendar_item_modal:
   title: "Agenda item verwijderen"
+
+remove_club_magazine_modal:
+  title: "Clubblad verwijderen"
