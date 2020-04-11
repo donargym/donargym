@@ -110,53 +110,6 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/agenda/remove/{id}/", name="removeAgendaPage", methods={"GET", "POST"})
-     */
-    public function removeAgendaPage($id, Request $request)
-    {
-        if ($request->getMethod() == 'GET') {
-            $em     = $this->getDoctrine()->getManager();
-            $query  = $em->createQuery(
-                'SELECT calendar
-                FROM App:Calendar calendar
-                WHERE calendar.id = :id'
-            )
-                ->setParameter('id', $id);
-            $agenda = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($agenda) {
-                return $this->render(
-                    '@PublicInformation/default/removeCalendar.html.twig',
-                    array(
-                        'content' => $agenda->getAll(),
-                    )
-                );
-            } else {
-                return $this->render(
-                    '@Shared/error/page_not_found.html.twig',
-                    array()
-                );
-            }
-        } elseif ($request->getMethod() == 'POST') {
-            $em     = $this->getDoctrine()->getManager();
-            $query  = $em->createQuery(
-                'SELECT calendar
-                FROM App:Calendar calendar
-                WHERE calendar.id = :id'
-            )
-                ->setParameter('id', $id);
-            $agenda = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($agenda);
-            $em->flush();
-            return $this->redirectToRoute('newsPosts');
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                array()
-            );
-        }
-    }
-
-    /**
      * @Route("/nieuws/index/add/", name="addNieuwsPage", methods={"GET", "POST"})
      */
     public function addNieuwsPage(Request $request)
