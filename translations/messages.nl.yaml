@@ -131,3 +131,6 @@ remove_paper_form_modal:
 
 remove_news_post_modal:
   title: "Nieuwsbericht verwijderen"
+
+remove_holiday_modal:
+  title: "Vakantie verwijderen"

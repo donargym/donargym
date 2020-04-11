@@ -22,13 +22,21 @@
                             <a href="{{ path('editVakantiesPage', { 'id': holiday.id }) }}">
                                 <img src="{{ asset('images/edit.png') }}" width="18px" alt="Bewerk vakantie"/>
                             </a>
-                            <a href="{{ path('removeVakantiesPage', { 'id': holiday.id }) }}">
-                                <img src="{{ asset('images/remove.png') }}" width="18px" alt="Verwijder vakantie"/>
-                            </a>
+                            <input type="image" class="remove-holiday" src="{{ asset('images/remove.png') }}"
+                                   data-id="{{ holiday.id }}" data-name="{{ holiday.name }}"
+                                   alt="{% trans %}remove_holiday_modal.title{% endtrans %}"/>
                         {% endapply %}
                     {% endif %}
                 </td>
             </tr>
         {% endfor %}
     </table>
+{% endblock %}
+
+{% block modals %}
+    {% include '@PublicInformation/default/remove_holiday_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/remove-holiday.js') }}"></script>
 {% endblock %}

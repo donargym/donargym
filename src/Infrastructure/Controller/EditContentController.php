@@ -266,66 +266,6 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/nieuws/vakanties/remove/{id}/", name="removeVakantiesPage", methods={"GET", "POST"})
-     */
-    public function removeVakantiesPage($id, Request $request)
-    {
-        if ($request->getMethod() == 'GET') {
-            $em            = $this->getDoctrine()->getManager();
-            $query         = $em->createQuery(
-                'SELECT vakanties
-            FROM App:Vakanties vakanties
-            WHERE vakanties.tot >= :datum
-            ORDER BY vakanties.van'
-            )
-                ->setParameter('datum', date('Y-m-d', time()));
-            $content       = $query->getResult();
-            $vakantieItems = array();
-            for ($i = 0; $i < count($content); $i++) {
-                $vakantieItems[$i] = $content[$i]->getAll();
-            }
-            $query     = $em->createQuery(
-                'SELECT vakanties
-                FROM App:Vakanties vakanties
-                WHERE vakanties.id = :id'
-            )
-                ->setParameter('id', $id);
-            $vakanties = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($vakanties) {
-                return $this->render(
-                    '@PublicInformation/default/removeVakanties.html.twig',
-                    array(
-                        'content'       => $vakanties->getAll(),
-                        'vakantieItems' => $vakantieItems,
-                    )
-                );
-            } else {
-                return $this->render(
-                    '@Shared/error/page_not_found.html.twig',
-                    array()
-                );
-            }
-        } elseif ($request->getMethod() == 'POST') {
-            $em        = $this->getDoctrine()->getManager();
-            $query     = $em->createQuery(
-                'SELECT vakanties
-                FROM App:Vakanties vakanties
-                WHERE vakanties.id = :id'
-            )
-                ->setParameter('id', $id);
-            $vakanties = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($vakanties);
-            $em->flush();
-            return $this->redirectToRoute('holidays');
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                array()
-            );
-        }
-    }
-
-    /**
      * @Route("/nieuws/clubblad/add/", name="addClubbladPage", methods={"GET", "POST"})
      */
     public function addClubbladPageAction(Request $request)

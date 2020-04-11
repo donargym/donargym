@@ -42,6 +42,15 @@ final class DbalHolidayRepository
         return Holidays::fromArray($holidays);
     }
 
+    public function remove(int $id): void
+    {
+        $this->connection->createQueryBuilder()
+            ->delete('vakanties')
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
+    }
+
     private function hydrate(array $row): Holiday
     {
         return Holiday::createFromDataSource(
