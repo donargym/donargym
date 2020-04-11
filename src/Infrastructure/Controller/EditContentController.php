@@ -407,53 +407,6 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/nieuws/clubblad/remove/{id}/", name="removeClubbladPage", methods={"GET", "POST"})
-     */
-    public function removeClubbladPage($id, Request $request)
-    {
-        if ($request->getMethod() == 'GET') {
-            $em       = $this->getDoctrine()->getManager();
-            $query    = $em->createQuery(
-                'SELECT clubblad
-                FROM App:Clubblad clubblad
-                WHERE clubblad.id = :id'
-            )
-                ->setParameter('id', $id);
-            $clubblad = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($clubblad) {
-                return $this->render(
-                    '@PublicInformation/default/removeClubblad.html.twig',
-                    array(
-                        'content' => $clubblad->getAll(),
-                    )
-                );
-            } else {
-                return $this->render(
-                    '@Shared/error/page_not_found.html.twig',
-                    array()
-                );
-            }
-        } elseif ($request->getMethod() == 'POST') {
-            $em       = $this->getDoctrine()->getManager();
-            $query    = $em->createQuery(
-                'SELECT clubblad
-                FROM App:Clubblad clubblad
-                WHERE clubblad.id = :id'
-            )
-                ->setParameter('id', $id);
-            $clubblad = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($clubblad);
-            $em->flush();
-            return $this->redirectToRoute('clubMagazine');
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                array()
-            );
-        }
-    }
-
-    /**
      * @Route("/subscription/formulieren/add/", name="addFormulierenPage", methods={"GET", "POST"})
      */
     public function addFormulierenPageAction(Request $request)
