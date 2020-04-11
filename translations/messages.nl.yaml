@@ -125,3 +125,6 @@ remove_public_calendar_item_modal:
 
 remove_club_magazine_modal:
   title: "Clubblad verwijderen"
+
+remove_paper_form_modal:
+  title: "Formulier verwijderen"

@@ -435,53 +435,6 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/subscription/formulieren/remove/{id}/", name="removeFormulierenPage", methods={"GET", "POST"})
-     */
-    public function removeFormulierenPage($id, Request $request)
-    {
-        if ($request->getMethod() == 'GET') {
-            $em        = $this->getDoctrine()->getManager();
-            $query     = $em->createQuery(
-                'SELECT formulieren
-                FROM App:Formulieren formulieren
-                WHERE formulieren.id = :id'
-            )
-                ->setParameter('id', $id);
-            $formulier = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($formulier) {
-                return $this->render(
-                    '@PublicInformation/subscription/removeFormulieren.html.twig',
-                    array(
-                        'content' => $formulier->getAll(),
-                    )
-                );
-            } else {
-                return $this->render(
-                    '@Shared/error/page_not_found.html.twig',
-                    array()
-                );
-            }
-        } elseif ($request->getMethod() == 'POST') {
-            $em        = $this->getDoctrine()->getManager();
-            $query     = $em->createQuery(
-                'SELECT formulieren
-                FROM App:Formulieren formulieren
-                WHERE formulieren.id = :id'
-            )
-                ->setParameter('id', $id);
-            $formulier = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($formulier);
-            $em->flush();
-            return $this->redirectToRoute('subscriptionPaperForms');
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                array()
-            );
-        }
-    }
-
-    /**
      * @Route("/contact/veelgesteldevragen/add/", name="addVeelgesteldeVragenPage", methods={"GET", "POST"})
      */
     public function addVeelgesteldeVragenPage(Request $request)

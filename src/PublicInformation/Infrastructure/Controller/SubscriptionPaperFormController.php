@@ -4,6 +4,13 @@ declare(strict_types=1);
 namespace App\PublicInformation\Infrastructure\Controller;
 
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalSubscriptionPaperFormRepository;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
@@ -12,13 +19,21 @@ final class SubscriptionPaperFormController
 {
     private DbalSubscriptionPaperFormRepository $subscriptionPaperFormRepository;
     private Environment                         $twig;
+    private Filesystem                          $filesystem;
+    private LoggerInterface                     $logger;
+    private string                              $uploadLocation;
 
     public function __construct(
         DbalSubscriptionPaperFormRepository $subscriptionPaperFormRepository,
-        Environment $twig
+        Environment $twig,
+        Filesystem $filesystem,
+        LoggerInterface $logger
     ) {
         $this->subscriptionPaperFormRepository = $subscriptionPaperFormRepository;
         $this->twig                            = $twig;
+        $this->filesystem                      = $filesystem;
+        $this->logger                          = $logger;
+        $this->uploadLocation                  = __DIR__ . '/../../../../public/uploads/formulieren/';
     }
 
     /**
@@ -32,5 +47,29 @@ final class SubscriptionPaperFormController
                 ['subscriptionPaperForms' => $this->subscriptionPaperFormRepository->findAll()]
             )
         );
+    }
+
+    /**
+     * @Route("/lidmaatschap/formulieren", name="removePaperForm", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removePaperForm(Request $request): Response
+    {
+        $paperForm      = $this->subscriptionPaperFormRepository->find((int) $request->request->get('id'));
+        $fullPathToFile = $this->uploadLocation . $paperForm->fileName();
+        if ($this->filesystem->exists($fullPathToFile)) {
+            try {
+                $this->filesystem->remove($fullPathToFile);
+                $this->subscriptionPaperFormRepository->remove($paperForm->id());
+            } catch (IOException $exception) {
+                $this->logger->log(
+                    LogLevel::ERROR,
+                    sprintf('something went wrong while removing a paper form'),
+                    ['exception' => $exception]
+                );
+            }
+        }
+
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

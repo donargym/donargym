@@ -18,6 +18,23 @@ final class DbalSubscriptionPaperFormRepository
         $this->connection = $connection;
     }
 
+    public function find(int $id): ?SubscriptionPaperForm
+    {
+        $statement = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('formulieren')
+            ->andWhere('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
+
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+
+        return $this->hydrate($row);
+    }
+
     public function findAll(): SubscriptionPaperForms
     {
         $statement = $this->connection->createQueryBuilder()
@@ -31,6 +48,15 @@ final class DbalSubscriptionPaperFormRepository
         }
 
         return SubscriptionPaperForms::fromArray($subscriptionPaperForms);
+    }
+
+    public function remove(int $id): void
+    {
+        $this->connection->createQueryBuilder()
+            ->delete('formulieren')
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
     }
 
     private function hydrate(array $row): SubscriptionPaperForm

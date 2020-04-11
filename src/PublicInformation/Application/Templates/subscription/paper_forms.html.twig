@@ -13,11 +13,19 @@
             <li>
                 <a href="/uploads/formulieren/{{ form.fileName }}" target="blank">{{ form.name }}</a>
                 {% if app.user and is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('removeFormulierenPage', { 'id': form.id }) }}">
-                        <img src="{{ asset('images/remove.png') }}" width="18px" alt="Formulier verwijderen"/>
-                    </a>
+                    <input type="image" class="remove-paper-form" src="{{ asset('images/remove.png') }}"
+                           data-id="{{ form.id }}" data-label="{{ form.name }}"
+                           alt="{% trans %}remove_paper_form_modal.title{% endtrans %}"/>
                 {% endif %}
             </li>
         {% endfor %}
     </ul>
+{% endblock %}
+
+{% block modals %}
+    {% include '@PublicInformation/subscription/remove_paper_form_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/remove-paper-form.js') }}"></script>
 {% endblock %}
