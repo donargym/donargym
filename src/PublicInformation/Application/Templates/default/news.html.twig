@@ -19,9 +19,9 @@
                         <a href="{{ path('editNieuwsberichtPage', { 'id': newsPost.id }) }}">
                             <img src="{{ asset('images/edit.png') }}" width="18px" alt="Nieuwsbericht bewerken"/>
                         </a>
-                        <a href="{{ path('removeNieuwsberichtPage', { 'id': newsPost.id }) }}">
-                            <img src="{{ asset('images/remove.png') }}" width="18px" alt="Nieuwsbericht verwijderen"/>
-                        </a>
+                        <input type="image" class="remove-news-post" src="{{ asset('images/remove.png') }}"
+                               data-id="{{ newsPost.id }}" data-title="{{ newsPost.title }}"
+                               alt="{% trans %}remove_news_post_modal.title{% endtrans %}"/>
                     {% endapply %}
                 {% endif %}
             </h3>
@@ -29,4 +29,12 @@
             <p>{{ newsPost.content|raw }}</p>
         </div>
     {% endfor %}
+{% endblock %}
+
+{% block modals %}
+    {% include '@PublicInformation/default/remove_news_post_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/remove-news-post.js') }}"></script>
 {% endblock %}

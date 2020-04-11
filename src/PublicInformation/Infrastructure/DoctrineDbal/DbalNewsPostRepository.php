@@ -81,6 +81,15 @@ final class DbalNewsPostRepository
         return $years;
     }
 
+    public function remove(int $id): void
+    {
+        $this->connection->createQueryBuilder()
+            ->delete('nieuwsbericht')
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
+    }
+
     private function hydrate(array $row): NewsPost
     {
         return NewsPost::createFromDataSource(

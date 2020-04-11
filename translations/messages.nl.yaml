@@ -128,3 +128,6 @@ remove_club_magazine_modal:
 
 remove_paper_form_modal:
   title: "Formulier verwijderen"
+
+remove_news_post_modal:
+  title: "Nieuwsbericht verwijderen"

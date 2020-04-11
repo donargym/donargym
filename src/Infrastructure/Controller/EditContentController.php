@@ -177,53 +177,6 @@ class EditContentController extends BaseController
     }
 
     /**
-     * @Route("/nieuws/index/remove/{id}/", name="removeNieuwsberichtPage", methods={"GET", "POST"})
-     */
-    public function removeNieuwsberichtPage($id, Request $request)
-    {
-        if ($request->getMethod() == 'GET') {
-            $em            = $this->getDoctrine()->getManager();
-            $query         = $em->createQuery(
-                'SELECT nieuwsbericht
-                FROM App:Nieuwsbericht nieuwsbericht
-                WHERE nieuwsbericht.id = :id'
-            )
-                ->setParameter('id', $id);
-            $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($nieuwsbericht) {
-                return $this->render(
-                    '@PublicInformation/default/removeNieuwsbericht.html.twig',
-                    array(
-                        'content' => $nieuwsbericht->getAll(),
-                    )
-                );
-            } else {
-                return $this->render(
-                    '@Shared/error/page_not_found.html.twig',
-                    array()
-                );
-            }
-        } elseif ($request->getMethod() == 'POST') {
-            $em            = $this->getDoctrine()->getManager();
-            $query         = $em->createQuery(
-                'SELECT nieuwsbericht
-                FROM App:Nieuwsbericht nieuwsbericht
-                WHERE nieuwsbericht.id = :id'
-            )
-                ->setParameter('id', $id);
-            $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($nieuwsbericht);
-            $em->flush();
-            return $this->redirectToRoute('newsPosts');
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                array()
-            );
-        }
-    }
-
-    /**
      * @Route("/nieuws/vakanties/add/", name="addVakantiesPage", methods={"GET", "POST"})
      */
     public function addVakantiesPage(Request $request)
