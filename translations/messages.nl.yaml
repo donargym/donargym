@@ -38,6 +38,7 @@ trainer:
 form:
   submit:  "Verstuur"
   confirm: "Bevestig"
+  cancel: "Annuleren"
   yes: "Ja"
   no: "Nee"
   validation:
@@ -118,3 +119,6 @@ notify_trainer_about_new_member_mail:
 
 notify_member_secretariat_about_new_member_mail:
   subject: "Nieuwe inschrijving"
+
+remove_calendar_item_modal:
+  title: "Agenda item verwijderen"
