@@ -17,6 +17,22 @@ final class DbalUploadedFileRepository
         $this->connection = $connection;
     }
 
+    public function find(int $id): ?UploadedFile
+    {
+        $statement = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('fileupload')
+            ->andWhere('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+
+        return $this->hydrate($row);
+    }
+
     public function findAllOrderedAlphabetically(): UploadedFiles
     {
         $statement = $this->connection->createQueryBuilder()

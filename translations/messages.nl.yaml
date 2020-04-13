@@ -140,3 +140,6 @@ remove_frequently_asked_question_modal:
 
 remove_picture_modal:
   title: "Afbeelding verwijderen"
+
+remove_uploaded_file_modal:
+  title: "Bestand verwijderen"

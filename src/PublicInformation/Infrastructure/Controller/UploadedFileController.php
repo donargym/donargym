@@ -48,7 +48,7 @@ final class UploadedFileController
     {
         return new Response(
             $this->twig->render(
-                '@PublicInformation/admin/files.html.twig',
+                '@PublicInformation/admin/uploaded_files.html.twig',
                 [
                     'files'               => $this->uploadedFileRepository->findAllOrderedAlphabetically(),
                     'locationFromWebRoot' => $this->locationFromWebRoot,
@@ -58,21 +58,20 @@ final class UploadedFileController
     }
 
     /**
-     * @Route("/clubblad", name="removeClubMagazine", methods={"POST"})
-     * @IsGranted("ROLE_ADMIN")
+     * @Route("/admin/file/", name="removeUploadedFile", methods={"POST"})
      */
-    public function removeClubMagazine(Request $request): Response
+    public function removeUploadedFile(Request $request): Response
     {
-        $clubMagazine   = $this->uploadedFileRepository->find((int) $request->request->get('id'));
-        $fullPathToFile = $this->uploadLocation . $clubMagazine->fileName();
+        $uploadedFile   = $this->uploadedFileRepository->find((int) $request->request->get('id'));
+        $fullPathToFile = $this->uploadLocation . $uploadedFile->fileName();
         if ($this->filesystem->exists($fullPathToFile)) {
             try {
                 $this->filesystem->remove($fullPathToFile);
-                $this->uploadedFileRepository->remove($clubMagazine->id());
+                $this->uploadedFileRepository->remove($uploadedFile->id());
             } catch (IOException $exception) {
                 $this->logger->log(
                     LogLevel::ERROR,
-                    sprintf('something went wrong while removing a club magazine'),
+                    sprintf('something went wrong while removing a file'),
                     ['exception' => $exception]
                 );
             }
