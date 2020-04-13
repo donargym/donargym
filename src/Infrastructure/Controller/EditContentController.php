@@ -4,10 +4,8 @@ namespace App\Infrastructure\Controller;
 
 use App\Entity\Clubblad;
 use App\Entity\Formulieren;
-use App\Entity\Nieuwsbericht;
 use App\Entity\Vakanties;
 use App\Entity\VeelgesteldeVragen;
-use App\Form\Type\NieuwsberichtType;
 use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
 use App\Shared\Domain\SystemClock;
@@ -40,73 +38,6 @@ class EditContentController extends BaseController
         $this->twig        = $twig;
         $this->clock       = $clock;
         $this->router      = $router;
-    }
-
-    /**
-     * @Route("/nieuws/index/add/", name="addNieuwsPage", methods={"GET", "POST"})
-     */
-    public function addNieuwsPage(Request $request)
-    {
-        $nieuwsbericht = new Nieuwsbericht();
-        $form          = $this->createForm(NieuwsberichtType::class, $nieuwsbericht);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $nieuwsbericht->setDatumtijd(date('d-m-Y: H:i', time()));
-            $nieuwsbericht->setJaar(date("Y", time()));
-            $nieuwsbericht->setBericht(str_replace("\n", "<br />", $nieuwsbericht->getBericht()));
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($nieuwsbericht);
-            $em->flush();
-
-            return $this->redirectToRoute('newsPosts');
-        } else {
-            return $this->render(
-                '@PublicInformation/default/addNieuwsbericht.html.twig',
-                [
-                    'form' => $form->createView(),
-                ]
-            );
-        }
-    }
-
-    /**
-     * @Route("/nieuws/index/edit/{id}/", name="editNieuwsberichtPage", methods={"GET", "POST"})
-     */
-    public function editNieuwsberichtPage($id, Request $request)
-    {
-        $em            = $this->getDoctrine()->getManager();
-        $query         = $em->createQuery(
-            'SELECT nieuwsbericht
-                FROM App:Nieuwsbericht nieuwsbericht
-                WHERE nieuwsbericht.id = :id'
-        )
-            ->setParameter('id', $id);
-        $nieuwsbericht = $query->setMaxResults(1)->getOneOrNullResult();
-        $nieuwsbericht->setBericht(str_replace("<br />", "\n", $nieuwsbericht->getBericht()));
-        if ($nieuwsbericht) {
-            $form = $this->createForm(NieuwsberichtType::class, $nieuwsbericht);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $nieuwsbericht->setBericht(str_replace("\n", "<br />", $nieuwsbericht->getBericht()));
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($nieuwsbericht);
-                $em->flush();
-
-                return $this->redirectToRoute('newsPosts');
-            } else {
-                return $this->render(
-                    '@PublicInformation/default/addNieuwsbericht.html.twig',
-                    [
-                        'form' => $form->createView(),
-                    ]
-                );
-            }
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                []
-            );
-        }
     }
 
     /**

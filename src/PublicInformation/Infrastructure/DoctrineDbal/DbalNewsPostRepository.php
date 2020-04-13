@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\DoctrineDbal;
@@ -20,6 +19,22 @@ final class DbalNewsPostRepository
         $this->connection = $connection;
     }
 
+    public function find(int $id): ?NewsPost
+    {
+        $statement = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('nieuwsbericht')
+            ->andWhere('id = :id')
+            ->setParameter('id', $id)
+            ->execute();
+        $row       = $statement->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+
+        return $this->hydrate($row);
+    }
+
     public function findTenMostRecentNewsPosts(): NewsPosts
     {
         $statement = $this->connection->createQueryBuilder()
@@ -28,7 +43,6 @@ final class DbalNewsPostRepository
             ->orderBy('created_at', 'DESC')
             ->setMaxResults(10)
             ->execute();
-
         $newsPosts = [];
         while (($row = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
             $newsPosts[] = $this->hydrate($row);
@@ -41,7 +55,6 @@ final class DbalNewsPostRepository
     {
         $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $year . '-01-01 00:00:00');
         $endDate   = $startDate->modify('+1 year');
-
         $statement = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('nieuwsbericht')
@@ -53,7 +66,6 @@ final class DbalNewsPostRepository
                 ['startDate' => Types::DATETIME_IMMUTABLE, 'endDate' => Types::DATETIME_IMMUTABLE]
             )
             ->execute();
-
         $newsPosts = [];
         while (($row = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
             $newsPosts[] = $this->hydrate($row);
@@ -72,13 +84,55 @@ final class DbalNewsPostRepository
             ->from('nieuwsbericht')
             ->orderBy('created_at', 'DESC')
             ->execute();
-
-        $years = [];
+        $years     = [];
         while (($row = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
             $years[] = (int) $row['year'];
         }
 
         return $years;
+    }
+
+    public function insert(NewsPost $newsPost): void
+    {
+        $this->connection->createQueryBuilder()
+            ->insert('nieuwsbericht')
+            ->values(
+                [
+                    'datumtijd'  => ':dutchDateTime',
+                    'jaar'       => ':year',
+                    'titel'      => ':title',
+                    'bericht'    => ':content',
+                    'created_at' => ':createdAt'
+                ]
+            )
+            ->setParameters(
+                [
+                    'dutchDateTime' => $newsPost->createdAt()->format('d-m-Y: H:i'),
+                    'year'          => $newsPost->createdAt()->format('Y'),
+                    'title'         => $newsPost->title(),
+                    'content'       => $newsPost->content(),
+                    'createdAt'     => $newsPost->createdAt(),
+                ],
+                ['createdAt' => Types::DATETIME_IMMUTABLE]
+            )
+            ->execute();
+    }
+
+    public function update(NewsPost $newsPost): void
+    {
+        $this->connection->createQueryBuilder()
+            ->update('nieuwsbericht')
+            ->set('titel', ':title')
+            ->set('bericht', ':content')
+            ->where('id = :id')
+            ->setParameters(
+                [
+                    'title'   => $newsPost->title(),
+                    'content' => $newsPost->content(),
+                    'id'      => $newsPost->id(),
+                ]
+            )
+            ->execute();
     }
 
     public function remove(int $id): void

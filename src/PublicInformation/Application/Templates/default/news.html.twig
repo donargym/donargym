@@ -2,7 +2,7 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('addNieuwsPage') }}">
+        <a href="{{ path('addNewsPost') }}">
             Nieuw nieuwsbericht plaatsen:
             <img src="{{ asset('images/add.png') }}" width="18px" alt="niewsbericht plaatsen"/>
         </a>
@@ -16,7 +16,7 @@
                 {{ newsPost.title }}
                 {% if app.user and is_granted('ROLE_ADMIN') %}
                     {% apply spaceless %}
-                        <a href="{{ path('editNieuwsberichtPage', { 'id': newsPost.id }) }}">
+                        <a href="{{ path('editNewsPost', { 'id': newsPost.id }) }}">
                             <img src="{{ asset('images/edit.png') }}" width="18px" alt="Nieuwsbericht bewerken"/>
                         </a>
                         <input type="image" class="remove-news-post" src="{{ asset('images/remove.png') }}"

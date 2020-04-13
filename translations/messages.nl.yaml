@@ -170,3 +170,7 @@ calendar_form:
   activity: "Activiteit"
   location: "Locatie"
   time: "Tijden"
+
+news_post_form:
+  title: "Titel"
+  content: "Bericht"
