@@ -2,6 +2,8 @@
 
 namespace App\PublicInformation\Domain\UploadedFile;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
+
 class UploadedFile
 {
     private int    $id;
@@ -17,6 +19,19 @@ class UploadedFile
         $self->id       = $id;
         $self->name     = $name;
         $self->fileName = $fileName;
+
+        return $self;
+    }
+
+    public static function createFromForm(array $formData, string $uploadLocation): self
+    {
+        $self       = new self();
+        $self->name = $formData['name'];
+        /** @var SymfonyUploadedFile $uploadedFile */
+        $uploadedFile   = $formData['file'];
+        $tempLocation   = $uploadedFile->getPathname();
+        $self->fileName = sha1(uniqid(mt_rand(), true)) . '.' . $uploadedFile->getClientOriginalExtension();
+        $uploadedFile->move($uploadLocation, $self->fileName);
 
         return $self;
     }

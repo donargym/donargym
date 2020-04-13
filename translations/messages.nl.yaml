@@ -142,6 +142,13 @@ add_picture_modal:
 remove_uploaded_file_modal:
   title: "Bestand verwijderen"
 
+add_uploaded_file_modal:
+  title: "Bestand toevoegen"
+
 picture_form:
   name: "Naam van de afbeelding"
+  file: "Selecteer een bestand"
+
+uploaded_file_form:
+  name: "Naam van het bestand"
   file: "Selecteer een bestand"

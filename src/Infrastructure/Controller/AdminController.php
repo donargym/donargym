@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Controller;
 
-use App\Entity\FileUpload;
 use App\Entity\Functie;
 use App\Entity\Groepen;
 use App\Entity\Persoon;
@@ -12,7 +11,6 @@ use App\Shared\Domain\EmailAddress;
 use App\Shared\Domain\EmailTemplateType;
 use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -30,34 +28,6 @@ class AdminController extends BaseController
     public function __construct(SymfonyMailer $mailer)
     {
         $this->mailer = $mailer;
-    }
-
-    /**
-     * @Route("/admin/bestanden/add/", name="addAdminBestandenPage", methods={"GET", "POST"})
-     */
-    public function addAdminBestandenPageAction(Request $request)
-    {
-        $file = new FileUpload();
-        $form = $this->createFormBuilder($file)
-            ->add('naam')
-            ->add('file')
-            ->add('uploadBestand', SubmitType::class)
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($file);
-            $em->flush();
-
-            return $this->redirectToRoute('getAdminBestandenPage');
-        } else {
-            return $this->render(
-                'inloggen/addAdminUploads.html.twig',
-                [
-                    'form' => $form->createView(),
-                ]
-            );
-        }
     }
 
     /**
@@ -172,7 +142,7 @@ class AdminController extends BaseController
                 $user    = new \App\Entity\User();
                 $newuser = true;
             }
-            $persoon = new Persoon();
+            $persoon     = new Persoon();
             $k           = 0;
             $postGroepen = [];
             foreach ($groepen as $groep) {

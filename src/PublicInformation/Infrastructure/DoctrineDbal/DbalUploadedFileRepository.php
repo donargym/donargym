@@ -25,7 +25,7 @@ final class DbalUploadedFileRepository
             ->andWhere('id = :id')
             ->setParameter('id', $id)
             ->execute();
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row       = $statement->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
             return null;
         }
@@ -46,6 +46,25 @@ final class DbalUploadedFileRepository
         }
 
         return UploadedFiles::fromArray($pictures);
+    }
+
+    public function insert(UploadedFile $uploadedFile): void
+    {
+        $this->connection->createQueryBuilder()
+            ->insert('fileupload')
+            ->values(
+                [
+                    'naam'    => ':name',
+                    'locatie' => ':fileName',
+                ]
+            )
+            ->setParameters(
+                [
+                    'name'     => $uploadedFile->name(),
+                    'fileName' => $uploadedFile->fileName(),
+                ]
+            )
+            ->execute();
     }
 
     public function remove(int $id): void

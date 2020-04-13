@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\Controller;
 
+use App\PublicInformation\Domain\UploadedFile\UploadedFile;
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalUploadedFileRepository;
+use App\PublicInformation\Infrastructure\SymfonyFormType\UploadedFileType;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,12 +29,14 @@ final class UploadedFileController
     private LoggerInterface                 $logger;
     private string                          $locationFromWebRoot;
     private string                          $uploadLocation;
+    private FormFactoryInterface            $formFactory;
 
     public function __construct(
         DbalUploadedFileRepository $uploadedFileRepository,
         Environment $twig,
         Filesystem $filesystem,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        FormFactoryInterface $formFactory
     ) {
         $this->uploadedFileRepository = $uploadedFileRepository;
         $this->twig                   = $twig;
@@ -39,19 +44,35 @@ final class UploadedFileController
         $this->logger                 = $logger;
         $this->locationFromWebRoot    = '/uploads/files/';
         $this->uploadLocation         = __DIR__ . '/../../../../public' . $this->locationFromWebRoot;
+        $this->formFactory            = $formFactory;
     }
 
     /**
-     * @Route("/admin/file/", name="publicFiles", methods={"GET"})
+     * @Route("/admin/file/", name="publicFiles", methods={"GET", "POST"})
      */
-    public function publicFiles(): Response
+    public function publicFiles(Request $request): Response
     {
+        $showAddUploadedFileModal = false;
+        $form                     = $this->formFactory->create(UploadedFileType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $uploadedFile = UploadedFile::createFromForm($form->getData(), $this->uploadLocation);
+                $this->uploadedFileRepository->insert($uploadedFile);
+
+                return new RedirectResponse($request->headers->get('referer'));
+            }
+            $showAddUploadedFileModal = true;
+        }
+
         return new Response(
             $this->twig->render(
                 '@PublicInformation/admin/uploaded_files.html.twig',
                 [
-                    'files'               => $this->uploadedFileRepository->findAllOrderedAlphabetically(),
-                    'locationFromWebRoot' => $this->locationFromWebRoot,
+                    'files'                    => $this->uploadedFileRepository->findAllOrderedAlphabetically(),
+                    'locationFromWebRoot'      => $this->locationFromWebRoot,
+                    'form'                     => $form->createView(),
+                    'showAddUploadedFileModal' => $showAddUploadedFileModal,
                 ]
             )
         );

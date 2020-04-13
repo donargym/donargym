@@ -8,3 +8,6 @@ general:
 picture_upload:
   incorrect_file_type: "Dit bestandstype is niet toegestaan, geldige bestandstypes zijn: gif, jpg of png"
   max_size: "Dit bestand is te groot, maximale grootte is 5Mb"
+
+file_upload:
+  max_size: "Dit bestand is te groot, maximale grootte is 10Mb"

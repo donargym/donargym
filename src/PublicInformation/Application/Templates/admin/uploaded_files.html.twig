@@ -10,7 +10,9 @@
     </div>
 
     <h1>Uploads bekijken</h1>
-    <a href="{{ path('addAdminFotoPage') }}">Foto Uploaden: <img src="{{ asset('images/add.png') }}" width="18px"/></a>
+    <input type="image" src="{{ asset('images/add.png') }}" width="18px"
+           data-toggle="modal" data-target="#add-uploaded-file-modal"
+           alt="{% trans %}add_uploaded_file_modal.title{% endtrans %}"/>
     <table border="1">
         <tr>
             <td><b>Naam</b></td>
@@ -33,9 +35,16 @@
 
 {% block modals %}
     {% include '@PublicInformation/admin/remove_uploaded_file_modal.html.twig' %}
+    {% include '@PublicInformation/admin/add_uploaded_file_modal.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('js/remove-uploaded-file.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/file-input-fix.js') }}"></script>
+    {% if showAddUploadedFileModal %}
+        <script type="text/javascript">
+            $('#add-uploaded-file-modal').modal('show');
+        </script>
+    {% endif %}
 {% endblock %}
 
