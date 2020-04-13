@@ -23,9 +23,13 @@
 {% endblock %}
 
 {% block modals %}
-    {% include '@PublicInformation/subscription/remove_paper_form_modal.html.twig' %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        {% include '@PublicInformation/subscription/modals/remove_paper_form_modal.html.twig' %}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('js/remove-paper-form.js') }}"></script>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <script type="text/javascript" src="{{ asset('js/remove-paper-form.js') }}"></script>
+    {% endif %}
 {% endblock %}

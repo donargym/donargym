@@ -8,7 +8,7 @@
             <img src="{{ asset('images/add.png') }}" width="18px" alt="Vakantie of feestdag toevoegen"/>
         </a>
     {% endif %}
-    <br />
+    <br/>
     <table>
         {% for holiday in holidays %}
             <tr>
@@ -35,10 +35,12 @@
 
 {% block modals %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        {% include '@PublicInformation/default/remove_holiday_modal.html.twig' %}
+        {% include '@PublicInformation/default/modals/remove_holiday_modal.html.twig' %}
     {% endif %}
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('js/remove-holiday.js') }}"></script>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <script type="text/javascript" src="{{ asset('js/remove-holiday.js') }}"></script>
+    {% endif %}
 {% endblock %}

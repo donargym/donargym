@@ -35,10 +35,12 @@
 
 {% block modals %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        {% include '@PublicInformation/default/remove_club_magazine_modal.html.twig' %}
+        {% include '@PublicInformation/default/modals/remove_club_magazine_modal.html.twig' %}
     {% endif %}
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('js/remove-club-magazine.js') }}"></script>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <script type="text/javascript" src="{{ asset('js/remove-club-magazine.js') }}"></script>
+    {% endif %}
 {% endblock %}

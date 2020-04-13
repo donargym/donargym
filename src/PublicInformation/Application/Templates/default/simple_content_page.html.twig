@@ -10,14 +10,16 @@
 {% endblock %}
 
 {% block modals %}
-    {% include '@PublicInformation/default/edit_simple_content_page_modal.html.twig' %}
+    {% include '@PublicInformation/default/modals/edit_simple_content_page_modal.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
-    {% if showForm %}
-        <script type="text/javascript">
-            $('#edit-simple-content-page-modal').modal('show');
-        </script>
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        {% if showForm %}
+            <script type="text/javascript">
+                $('#edit-simple-content-page-modal').modal('show');
+            </script>
+        {% endif %}
     {% endif %}
 {% endblock %}
 

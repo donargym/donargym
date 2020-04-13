@@ -182,10 +182,12 @@
     <a href="{{ asset('uploads/privacy.pdf') }}" target="blank">Privacybeleid</a>
 </div>
 {% if app.user and is_granted('ROLE_ADMIN') %}
-    {% include '@PublicInformation/default/remove_calendar_item_modal.html.twig' %}
+    {% include '@PublicInformation/default/modals/remove_calendar_item_modal.html.twig' %}
 {% endif %}
 {% block modals %}{% endblock %}
 {% block javascripts %}{% endblock %}
-<script type="text/javascript" src="{{ asset('js/remove-public-calendar-item.js') }}"></script>
+{% if app.user and is_granted('ROLE_ADMIN') %}
+    <script type="text/javascript" src="{{ asset('js/remove-public-calendar-item.js') }}"></script>
+{% endif %}
 </body>
 </html>
