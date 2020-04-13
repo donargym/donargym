@@ -47,30 +47,6 @@ class AdminController extends BaseController
     }
 
     /**
-     * @Route("/admin/foto/", name="getAdminFotoPage", methods={"GET"})
-     */
-    public function getAdminFotoPage()
-    {
-        $em           = $this->getDoctrine()->getManager();
-        $query        = $em->createQuery(
-            'SELECT fotoupload
-                FROM App:FotoUpload fotoupload
-                ORDER BY fotoupload.naam'
-        );
-        $content      = $query->getResult();
-        $contentItems = array();
-        for ($i = 0; $i < count($content); $i++) {
-            $contentItems[$i] = $content[$i]->getAll();
-        }
-        return $this->render(
-            'inloggen/adminFotos.html.twig',
-            array(
-                'contentItems' => $contentItems,
-            )
-        );
-    }
-
-    /**
      * @Route("/admin/foto/add/", name="addAdminFotoPage", methods={"GET", "POST"})
      */
     public function addAdminFotoPageAction(Request $request)
