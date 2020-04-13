@@ -37,6 +37,7 @@ trainer:
 
 form:
   submit:  "Verstuur"
+  save: "Opslaan"
   upload: "Uploaden"
   confirm: "Bevestig"
   cancel: "Annuleren"

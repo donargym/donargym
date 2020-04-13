@@ -21,7 +21,7 @@ class SimplePageContentType extends AbstractType
                  'label' => 'simple_content_page_form.content'
                 ]
             )
-            ->add('submit', SubmitType::class, ['label' => 'form.submit']);
+            ->add('submit', SubmitType::class, ['label' => 'form.save']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
