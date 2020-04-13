@@ -925,3 +925,7 @@ a:hover, a:active {
 *::after {
     box-sizing: content-box; // 1
 }
+
+.form-control {
+    width: 90%;
+}
