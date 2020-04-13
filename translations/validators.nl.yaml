@@ -1,0 +1,10 @@
+general:
+  not_blank: "Dit veld is verplicht"
+  date_time_type: "Dit is geen geldige datum"
+  iban: "Dit is geen geldige IBAN"
+  email: "Geen geldig email adres"
+  required_to_agree: "U dient akkoord te gaan"
+
+picture_upload:
+  incorrect_file_type: "Dit bestandstype is niet toegestaan, geldige bestandstypes zijn: gif, jpg of png"
+  max_size: "Dit bestand is te groot, maximale grootte is 5Mb"

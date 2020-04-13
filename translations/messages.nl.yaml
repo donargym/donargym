@@ -37,16 +37,11 @@ trainer:
 
 form:
   submit:  "Verstuur"
+  upload: "Uploaden"
   confirm: "Bevestig"
   cancel: "Annuleren"
   yes: "Ja"
   no: "Nee"
-  validation:
-    not_blank: Dit veld is verplicht
-    date_time_type: Dit is geen geldige datum
-    iban: Dit is geen geldige IBAN
-    email: Geen geldig email adres
-    required_to_agree: U dient akkoord te gaan
 
 subscription_form:
   first_name: "Voornaam*"
@@ -141,5 +136,12 @@ remove_frequently_asked_question_modal:
 remove_picture_modal:
   title: "Afbeelding verwijderen"
 
+add_picture_modal:
+  title: "Afbeelding toevoegen"
+
 remove_uploaded_file_modal:
   title: "Bestand verwijderen"
+
+picture_form:
+  name: "Naam van de afbeelding"
+  file: "Selecteer een bestand"

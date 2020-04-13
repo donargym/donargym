@@ -9,9 +9,9 @@ class UploadedFile
     private string $fileName;
 
     public static function createFromDataSource(
-        $id,
-        $name,
-        $fileName
+        int $id,
+        string $name,
+        string $fileName
     ): self {
         $self           = new self();
         $self->id       = $id;

@@ -9,14 +9,25 @@ class Picture
     private string $fileName;
 
     public static function createFromDataSource(
-        $id,
-        $name,
-        $fileName
+        int $id,
+        string $name,
+        string $fileName
     ): self {
         $self           = new self();
         $self->id       = $id;
         $self->name     = $name;
         $self->fileName = $fileName;
+
+        return $self;
+    }
+
+    public static function createFromForm(array $formData, string $uploadLocation): self
+    {
+        $self           = new self();
+        $self->name     = $formData['name'];
+        $uploadedFile   = $formData['file'];
+        $self->fileName = sha1(uniqid(mt_rand(), true)) . '.' . $uploadedFile->getClientOriginalExtension();
+        $uploadedFile->move($uploadLocation, $self->fileName);
 
         return $self;
     }

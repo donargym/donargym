@@ -31,7 +31,7 @@ final class SubscribeType extends AbstractType
             TextType::class,
             [
                 'label'       => 'subscription_form.first_name',
-                'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
             ]
         )
             ->add(
@@ -39,7 +39,7 @@ final class SubscribeType extends AbstractType
                 TextType::class,
                 [
                     'label'       => 'subscription_form.last_name',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -47,7 +47,7 @@ final class SubscribeType extends AbstractType
                 TextType::class,
                 [
                     'label'       => 'subscription_form.initials',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -60,8 +60,8 @@ final class SubscribeType extends AbstractType
                     'label'       => 'subscription_form.date_of_birth',
                     'input'       => 'datetime_immutable',
                     'constraints' => [
-                        new NotBlank(['message' => 'validation.not_blank']),
-                        new Type(['type' => DateTimeImmutable::class, 'message' => 'validation.date_time_type'])
+                        new NotBlank(['message' => 'general.not_blank']),
+                        new Type(['type' => DateTimeImmutable::class, 'message' => 'general.date_time_type'])
                     ],
                 ]
             )
@@ -82,7 +82,7 @@ final class SubscribeType extends AbstractType
                 TextType::class,
                 [
                     'label'       => 'subscription_form.street_house_number',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -90,7 +90,7 @@ final class SubscribeType extends AbstractType
                 TextType::class,
                 [
                     'label'       => 'subscription_form.zip_code',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -98,7 +98,7 @@ final class SubscribeType extends AbstractType
                 TextType::class,
                 [
                     'label'       => 'subscription_form.city',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -106,7 +106,7 @@ final class SubscribeType extends AbstractType
                 TextType::class,
                 [
                     'label'       => 'subscription_form.phone_1',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add('phone2', TextType::class, ['required' => false, 'label' => 'subscription_form.phone_2'])
@@ -116,8 +116,8 @@ final class SubscribeType extends AbstractType
                 [
                     'label'       => 'subscription_form.iban',
                     'constraints' => [
-                        new NotBlank(['message' => 'validation.not_blank']),
-                        new Iban(['message' => 'validation.iban'])
+                        new NotBlank(['message' => 'general.not_blank']),
+                        new Iban(['message' => 'general.iban'])
                     ]
                 ]
             )
@@ -126,7 +126,7 @@ final class SubscribeType extends AbstractType
                 TextType::class,
                 [
                     'label'       => 'subscription_form.account_holder',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -135,8 +135,8 @@ final class SubscribeType extends AbstractType
                 [
                     'label'       => 'subscription_form.email',
                     'constraints' => [
-                        new NotBlank(['message' => 'validation.not_blank']),
-                        new Email(['message' => 'validation.email'])
+                        new NotBlank(['message' => 'general.not_blank']),
+                        new Email(['message' => 'general.email'])
                     ]
                 ]
             )
@@ -151,7 +151,7 @@ final class SubscribeType extends AbstractType
                         'form.no'  => 'Nee',
                     ],
                     'expanded'    => true,
-                    'constraints' => [new NotNull(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotNull(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -164,7 +164,7 @@ final class SubscribeType extends AbstractType
                     'years'       => range(1908, date('Y')),
                     'input'       => 'datetime_immutable',
                     'constraints' => new Type(
-                        ['type' => DateTimeImmutable::class, 'message' => 'validation.date_time_type']
+                        ['type' => DateTimeImmutable::class, 'message' => 'general.date_time_type']
                     )
                 ]
             )
@@ -178,7 +178,7 @@ final class SubscribeType extends AbstractType
                     'years'       => range(1908, date('Y')),
                     'input'       => 'datetime_immutable',
                     'constraints' => new Type(
-                        ['type' => DateTimeImmutable::class, 'message' => 'validation.date_time_type']
+                        ['type' => DateTimeImmutable::class, 'message' => 'general.date_time_type']
                     )
                 ]
             )
@@ -193,7 +193,7 @@ final class SubscribeType extends AbstractType
                         'form.no'  => 'Nee',
                     ],
                     'expanded'    => true,
-                    'constraints' => [new NotNull(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotNull(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -212,7 +212,7 @@ final class SubscribeType extends AbstractType
                         'form.no'  => 'Nee',
                     ],
                     'expanded'    => true,
-                    'constraints' => [new NotNull(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotNull(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -233,7 +233,7 @@ final class SubscribeType extends AbstractType
                         'subscription_form.aerobics_body_shape'   => 'Aerobics/Bodyshape',
                         'subscription_form.badminton_volley_ball' => 'Badminton/Volleybal',
                     ],
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -250,7 +250,7 @@ final class SubscribeType extends AbstractType
                         'weekday.thursday'  => 'Donderdag',
                         'weekday.friday'    => 'Vrijdag',
                     ],
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -270,7 +270,7 @@ final class SubscribeType extends AbstractType
                         'subscription_form.location_7' => 'Walenburg',
                         'subscription_form.location_8' => 'Sportcampus Zuiderpark',
                     ],
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -280,7 +280,7 @@ final class SubscribeType extends AbstractType
                     'empty_data'  => '',
                     'label'       => 'subscription_form.start_time',
                     'input'       => 'datetime_immutable',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -290,7 +290,7 @@ final class SubscribeType extends AbstractType
                     'label'       => 'subscription_form.trainer',
                     'placeholder' => 'subscription_form.trainer_place_holder',
                     'choices'     => TrainerOptions::trainerOptionsForForm(),
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -305,7 +305,7 @@ final class SubscribeType extends AbstractType
                     'attr'        => ['rows' => '4', 'cols' => '50'],
                     'required'    => true,
                     'label'       => 'subscription_form.voluntary_work',
-                    'constraints' => [new NotBlank(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotBlank(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -314,7 +314,7 @@ final class SubscribeType extends AbstractType
                 [
                     'required'    => true,
                     'label'       => 'subscription_form.accept_requirements',
-                    'constraints' => [new IsTrue(['message' => 'validation.required_to_agree'])]
+                    'constraints' => [new IsTrue(['message' => 'general.required_to_agree'])]
                 ]
             )
             ->add(
@@ -323,7 +323,7 @@ final class SubscribeType extends AbstractType
                 [
                     'required'    => true,
                     'label'       => 'subscription_form.accept_privacy_policy',
-                    'constraints' => [new IsTrue(['message' => 'validation.required_to_agree'])]
+                    'constraints' => [new IsTrue(['message' => 'general.required_to_agree'])]
                 ]
             )
             ->add(
@@ -337,7 +337,7 @@ final class SubscribeType extends AbstractType
                         'form.no'  => false,
                     ],
                     'expanded'    => true,
-                    'constraints' => [new NotNull(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotNull(['message' => 'general.not_blank'])]
                 ]
             )
             ->add(
@@ -351,7 +351,7 @@ final class SubscribeType extends AbstractType
                         'form.no'  => false,
                     ],
                     'expanded'    => true,
-                    'constraints' => [new NotNull(['message' => 'validation.not_blank'])]
+                    'constraints' => [new NotNull(['message' => 'general.not_blank'])]
                 ]
             )
             ->add('submit', SubmitType::class, ['label' => 'form.submit']);

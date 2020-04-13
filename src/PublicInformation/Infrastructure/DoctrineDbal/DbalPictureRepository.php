@@ -25,7 +25,7 @@ final class DbalPictureRepository
             ->andWhere('id = :id')
             ->setParameter('id', $id)
             ->execute();
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row       = $statement->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
             return null;
         }
@@ -46,6 +46,25 @@ final class DbalPictureRepository
         }
 
         return Pictures::fromArray($pictures);
+    }
+
+    public function insert(Picture $picture): void
+    {
+        $this->connection->createQueryBuilder()
+            ->insert('fotoupload')
+            ->values(
+                [
+                    'naam'    => ':name',
+                    'locatie' => ':fileName',
+                ]
+            )
+            ->setParameters(
+                [
+                    'name'     => $picture->name(),
+                    'fileName' => $picture->fileName(),
+                ]
+            )
+            ->execute();
     }
 
     public function remove(int $id): void
