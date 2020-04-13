@@ -2,13 +2,11 @@
 
 namespace App\Infrastructure\Controller;
 
-use App\Entity\Calendar;
 use App\Entity\Clubblad;
 use App\Entity\Formulieren;
 use App\Entity\Nieuwsbericht;
 use App\Entity\Vakanties;
 use App\Entity\VeelgesteldeVragen;
-use App\Form\Type\CalendarType;
 use App\Form\Type\NieuwsberichtType;
 use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
@@ -22,90 +20,26 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 
-
 /**
  * @IsGranted("ROLE_ADMIN")
  */
 class EditContentController extends BaseController
 {
     private FormFactoryInterface $formFactory;
-    private Environment $twig;
-    private SystemClock $clock;
-    private RouterInterface $router;
+    private Environment          $twig;
+    private SystemClock          $clock;
+    private RouterInterface      $router;
 
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
         SystemClock $clock,
         RouterInterface $router
-    )
-    {
-        $this->formFactory                 = $formFactory;
-        $this->twig                        = $twig;
-        $this->clock                       = $clock;
-        $this->router                      = $router;
-    }
-
-    /**
-     * @Route("/agenda/add/", name="addAgendaPage", methods={"GET", "POST"})
-     */
-    public function addAgendaPage(Request $request)
-    {
-        $agenda = new Calendar();
-        $form   = $this->createForm(CalendarType::class, $agenda);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($agenda);
-            $em->flush();
-            return $this->redirectToRoute('newsPosts');
-        } else {
-            return $this->render(
-                '@PublicInformation/default/addCalendar.html.twig',
-                array(
-                    'form' => $form->createView(),
-                )
-            );
-        }
-    }
-
-    /**
-     * @Route("/agenda/edit/{id}/", name="editAgendaPage", methods={"GET", "POST"})
-     */
-    public function editAgendaPage($id, Request $request)
-    {
-        $em     = $this->getDoctrine()->getManager();
-        $query  = $em->createQuery(
-            'SELECT calendar
-                FROM App:Calendar calendar
-                WHERE calendar.id = :id'
-        )
-            ->setParameter('id', $id);
-        $agenda = $query->setMaxResults(1)->getOneOrNullResult();
-        if ($agenda) {
-            $form = $this->createForm(CalendarType::class, $agenda);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($agenda);
-                $em->flush();
-                return $this->redirectToRoute('newsPosts');
-            } else {
-                return $this->render(
-                    '@PublicInformation/default/addCalendar.html.twig',
-                    array(
-                        'form' => $form->createView(),
-                    )
-                );
-            }
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                array()
-            );
-        }
+    ) {
+        $this->formFactory = $formFactory;
+        $this->twig        = $twig;
+        $this->clock       = $clock;
+        $this->router      = $router;
     }
 
     /**
@@ -116,7 +50,6 @@ class EditContentController extends BaseController
         $nieuwsbericht = new Nieuwsbericht();
         $form          = $this->createForm(NieuwsberichtType::class, $nieuwsbericht);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $nieuwsbericht->setDatumtijd(date('d-m-Y: H:i', time()));
             $nieuwsbericht->setJaar(date("Y", time()));
@@ -124,13 +57,14 @@ class EditContentController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($nieuwsbericht);
             $em->flush();
+
             return $this->redirectToRoute('newsPosts');
         } else {
             return $this->render(
                 '@PublicInformation/default/addNieuwsbericht.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
-                )
+                ]
             );
         }
     }
@@ -152,25 +86,25 @@ class EditContentController extends BaseController
         if ($nieuwsbericht) {
             $form = $this->createForm(NieuwsberichtType::class, $nieuwsbericht);
             $form->handleRequest($request);
-
             if ($form->isSubmitted() && $form->isValid()) {
                 $nieuwsbericht->setBericht(str_replace("\n", "<br />", $nieuwsbericht->getBericht()));
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($nieuwsbericht);
                 $em->flush();
+
                 return $this->redirectToRoute('newsPosts');
             } else {
                 return $this->render(
                     '@PublicInformation/default/addNieuwsbericht.html.twig',
-                    array(
+                    [
                         'form' => $form->createView(),
-                    )
+                    ]
                 );
             }
         } else {
             return $this->render(
                 '@Shared/error/page_not_found.html.twig',
-                array()
+                []
             );
         }
     }
@@ -189,26 +123,26 @@ class EditContentController extends BaseController
         )
             ->setParameter('datum', date('Y-m-d', time()));
         $content       = $query->getResult();
-        $vakantieItems = array();
+        $vakantieItems = [];
         for ($i = 0; $i < count($content); $i++) {
             $vakantieItems[$i] = $content[$i]->getAll();
         }
         $vakanties = new Vakanties();
         $form      = $this->createForm(VakantiesType::class, $vakanties);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($vakanties);
             $em->flush();
+
             return $this->redirectToRoute('holidays');
         } else {
             return $this->render(
                 '@PublicInformation/default/addVakanties.html.twig',
-                array(
+                [
                     'form'          => $form->createView(),
                     'vakantieItems' => $vakantieItems,
-                )
+                ]
             );
         }
     }
@@ -227,7 +161,7 @@ class EditContentController extends BaseController
         )
             ->setParameter('datum', date('Y-m-d', time()));
         $content       = $query->getResult();
-        $vakantieItems = array();
+        $vakantieItems = [];
         for ($i = 0; $i < count($content); $i++) {
             $vakantieItems[$i] = $content[$i]->getAll();
         }
@@ -241,25 +175,25 @@ class EditContentController extends BaseController
         if ($vakanties) {
             $form = $this->createForm(VakantiesType::class, $vakanties);
             $form->handleRequest($request);
-
             if ($form->isSubmitted() && $form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($vakanties);
                 $em->flush();
+
                 return $this->redirectToRoute('holidays');
             } else {
                 return $this->render(
                     '@PublicInformation/default/addVakanties.html.twig',
-                    array(
+                    [
                         'form'          => $form->createView(),
                         'vakantieItems' => $vakantieItems,
-                    )
+                    ]
                 );
             }
         } else {
             return $this->render(
                 '@Shared/error/page_not_found.html.twig',
-                array()
+                []
             );
         }
     }
@@ -274,26 +208,26 @@ class EditContentController extends BaseController
             ->add(
                 'datum',
                 DateType::class,
-                array(
+                [
                     'widget' => 'single_text',
-                )
+                ]
             )
             ->add('file')
             ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($clubblad);
             $em->flush();
+
             return $this->redirectToRoute('holidays');
         } else {
             return $this->render(
                 '@PublicInformation/default/addClubblad.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
-                )
+                ]
             );
         }
     }
@@ -310,18 +244,18 @@ class EditContentController extends BaseController
             ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($formulier);
             $em->flush();
+
             return $this->redirectToRoute('subscriptionPaperForms');
         } else {
             return $this->render(
                 '@PublicInformation/subscription/addFormulieren.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
-                )
+                ]
             );
         }
     }
@@ -334,18 +268,18 @@ class EditContentController extends BaseController
         $vraag = new VeelgesteldeVragen();
         $form  = $this->createForm(VeelgesteldeVragenType::class, $vraag);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($vraag);
             $em->flush();
+
             return $this->redirectToRoute('frequentlyAskedQuestions');
         } else {
             return $this->render(
                 '@PublicInformation/contact/addVeelgesteldeVragen.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
-                )
+                ]
             );
         }
     }
@@ -366,24 +300,24 @@ class EditContentController extends BaseController
         if ($vraag) {
             $form = $this->createForm(VeelgesteldeVragenType::class, $vraag);
             $form->handleRequest($request);
-
             if ($form->isSubmitted() && $form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($vraag);
                 $em->flush();
+
                 return $this->redirectToRoute('frequentlyAskedQuestions');
             } else {
                 return $this->render(
                     '@PublicInformation/contact/addVeelgesteldeVragen.html.twig',
-                    array(
+                    [
                         'form' => $form->createView(),
-                    )
+                    ]
                 );
             }
         } else {
             return $this->render(
                 '@Shared/error/page_not_found.html.twig',
-                array()
+                []
             );
         }
     }

@@ -1,3 +1,7 @@
+Day: "Dag"
+Month: "Maand"
+Year: "Year"
+
 month:
   January:    "Januari"
   February:   "Februari"
@@ -160,3 +164,9 @@ edit_simple_content_page_modal:
 
 simple_content_page_form:
   content: "Bewerk hieronder de pagina in HTML"
+
+calendar_form:
+  date: "Datum"
+  activity: "Activiteit"
+  location: "Locatie"
+  time: "Tijden"

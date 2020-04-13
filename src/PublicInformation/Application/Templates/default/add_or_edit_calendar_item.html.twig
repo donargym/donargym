@@ -1,45 +1,7 @@
 {% extends '@Shared/base.html.twig' %}
 
 {% block body %}
-    {% if app.user and is_granted('ROLE_ADMIN') %}
-        <h1>Nieuwe activiteit plaatsen/Activiteit wijzigen</h1>
-        <a href="{{ path('getNieuwsPage') }}">Annuleer</a>
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-        <table>
-            <tr>
-                <td colspan="2">{{ form_errors(form.datum) }}</td>
-            </tr>
-            <tr>
-                <td>{{ form_label(form.datum) }}</td>
-                <td>{{ form_widget(form.datum) }}</td>
-            </tr>
-
-            <tr>
-                <td colspan="2">{{ form_errors(form.activiteit) }}</td>
-            </tr>
-            <tr>
-                <td>{{ form_label(form.activiteit) }}</td>
-                <td>{{ form_widget(form.activiteit) }}</td>
-            </tr>
-
-            <tr>
-                <td colspan="2">{{ form_errors(form.locatie) }}</td>
-            </tr>
-            <tr>
-                <td>{{ form_label(form.locatie) }}</td>
-                <td>{{ form_widget(form.locatie) }}</td>
-            </tr>
-
-            <tr>
-                <td colspan="2">{{ form_errors(form.tijd) }}</td>
-            </tr>
-            <tr>
-                <td>{{ form_label(form.tijd) }}</td>
-                <td>{{ form_widget(form.tijd) }}</td>
-            </tr>
-        </table>
-        {{ form_widget(form.Verstuur) }}
-        {{ form_end(form) }}
-    {% endif %}
+    <h1>Nieuwe activiteit plaatsen/Activiteit wijzigen</h1>
+    <a href="{{ referer }}">Annuleer</a>
+    {{ form(form) }}
 {% endblock %}

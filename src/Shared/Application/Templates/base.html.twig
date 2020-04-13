@@ -149,7 +149,7 @@
         <div class="agenda">
             <h1>Agenda
                 {% if app.user and is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('addAgendaPage') }}">
+                    <a href="{{ path('addPublicCalendarItem') }}">
                         <img src="{{ asset('images/add.png') }}" width="18px" alt="Agenda item toevoegen"/>
                     </a>
                 {% endif %}
@@ -164,7 +164,7 @@
                         </span>
                 </a>
                 {% if app.user and is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('editAgendaPage', { 'id': item.id }) }}">
+                    <a href="{{ path('editPublicCalendarItem', { 'id': item.id }) }}">
                         <img src="{{ asset('images/edit.png') }}" width="18px" alt="Bewerk agenda item"/>
                     </a>
                     <input type="image" class="remove-calendar-item" src="{{ asset('images/remove.png') }}"
