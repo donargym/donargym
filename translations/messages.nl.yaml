@@ -137,3 +137,6 @@ remove_holiday_modal:
 
 remove_frequently_asked_question_modal:
   title: "Veelgestelde vraag verwijderen"
+
+remove_picture_modal:
+  title: "Afbeelding verwijderen"

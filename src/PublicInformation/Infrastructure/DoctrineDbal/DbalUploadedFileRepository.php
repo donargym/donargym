@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\DoctrineDbal;
 
-use App\PublicInformation\Domain\Picture\Picture;
-use App\PublicInformation\Domain\Picture\Pictures;
+use App\PublicInformation\Domain\UploadedFile\UploadedFile;
+use App\PublicInformation\Domain\UploadedFile\UploadedFiles;
 use Doctrine\DBAL\Connection;
 use PDO;
 
-final class DbalPictureRepository
+final class DbalUploadedFileRepository
 {
     private Connection $connection;
 
@@ -17,27 +17,11 @@ final class DbalPictureRepository
         $this->connection = $connection;
     }
 
-    public function find(int $id): ?Picture
+    public function findAllOrderedAlphabetically(): UploadedFiles
     {
         $statement = $this->connection->createQueryBuilder()
             ->select('*')
-            ->from('fotoupload')
-            ->andWhere('id = :id')
-            ->setParameter('id', $id)
-            ->execute();
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
-        if (!$row) {
-            return null;
-        }
-
-        return $this->hydrate($row);
-    }
-
-    public function findAllOrderedAlphabetically(): Pictures
-    {
-        $statement = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from('fotoupload')
+            ->from('fileupload')
             ->orderBy('naam', 'ASC')
             ->execute();
         $pictures  = [];
@@ -45,21 +29,21 @@ final class DbalPictureRepository
             $pictures[] = $this->hydrate($row);
         }
 
-        return Pictures::fromArray($pictures);
+        return UploadedFiles::fromArray($pictures);
     }
 
     public function remove(int $id): void
     {
         $this->connection->createQueryBuilder()
-            ->delete('fotoupload')
+            ->delete('fileupload')
             ->where('id = :id')
             ->setParameter('id', $id)
             ->execute();
     }
 
-    private function hydrate(array $row): Picture
+    private function hydrate(array $row): UploadedFile
     {
-        return Picture::createFromDataSource(
+        return UploadedFile::createFromDataSource(
             (int) $row['id'],
             $row['naam'],
             (string) $row['locatie']

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\Controller;
 
-use App\PublicInformation\Infrastructure\DoctrineDbal\DbalPictureRepository;
+use App\PublicInformation\Infrastructure\DoctrineDbal\DbalUploadedFileRepository;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -18,39 +18,39 @@ use Twig\Environment;
 /**
  * @IsGranted("ROLE_ADMIN")
  */
-final class PublicPictureController
+final class UploadedFileController
 {
-    private DbalPictureRepository      $pictureRepository;
-    private Environment                $twig;
-    private Filesystem                 $filesystem;
-    private LoggerInterface            $logger;
-    private string                     $locationFromWebRoot;
-    private string                     $uploadLocation;
+    private DbalUploadedFileRepository      $uploadedFileRepository;
+    private Environment                     $twig;
+    private Filesystem                      $filesystem;
+    private LoggerInterface                 $logger;
+    private string                          $locationFromWebRoot;
+    private string                          $uploadLocation;
 
     public function __construct(
-        DbalPictureRepository $pictureRepository,
+        DbalUploadedFileRepository $uploadedFileRepository,
         Environment $twig,
         Filesystem $filesystem,
         LoggerInterface $logger
     ) {
-        $this->pictureRepository   = $pictureRepository;
-        $this->twig                = $twig;
-        $this->filesystem          = $filesystem;
-        $this->logger              = $logger;
-        $this->locationFromWebRoot = '/uploads/fotos/';
-        $this->uploadLocation      = __DIR__ . '/../../../../public' . $this->locationFromWebRoot;
+        $this->uploadedFileRepository = $uploadedFileRepository;
+        $this->twig                   = $twig;
+        $this->filesystem             = $filesystem;
+        $this->logger                 = $logger;
+        $this->locationFromWebRoot    = '/uploads/files/';
+        $this->uploadLocation         = __DIR__ . '/../../../../public' . $this->locationFromWebRoot;
     }
 
     /**
-     * @Route("/admin/foto/", name="publicPictures", methods={"GET"})
+     * @Route("/admin/file/", name="publicFiles", methods={"GET"})
      */
-    public function publicPictures(): Response
+    public function publicFiles(): Response
     {
         return new Response(
             $this->twig->render(
-                '@PublicInformation/admin/pictures.html.twig',
+                '@PublicInformation/admin/files.html.twig',
                 [
-                    'pictures'            => $this->pictureRepository->findAllOrderedAlphabetically(),
+                    'files'               => $this->uploadedFileRepository->findAllOrderedAlphabetically(),
                     'locationFromWebRoot' => $this->locationFromWebRoot,
                 ]
             )
@@ -63,12 +63,12 @@ final class PublicPictureController
      */
     public function removeClubMagazine(Request $request): Response
     {
-        $clubMagazine   = $this->pictureRepository->find((int) $request->request->get('id'));
+        $clubMagazine   = $this->uploadedFileRepository->find((int) $request->request->get('id'));
         $fullPathToFile = $this->uploadLocation . $clubMagazine->fileName();
         if ($this->filesystem->exists($fullPathToFile)) {
             try {
                 $this->filesystem->remove($fullPathToFile);
-                $this->pictureRepository->remove($clubMagazine->id());
+                $this->uploadedFileRepository->remove($clubMagazine->id());
             } catch (IOException $exception) {
                 $this->logger->log(
                     LogLevel::ERROR,

@@ -22,11 +22,20 @@
                 <td>{{ picture.name }}</td>
                 <td style="font-size: 12px;">{{ locationFromWebRoot }}{{ picture.fileName }}</td>
                 <td>
-                    <a href="{{ path('removeAdminFotoPage', { 'id': picture.id }) }}">
-                        <img src="{{ asset('images/remove.png') }}" width="18px"/>
-                    </a>
+                    <input type="image" class="remove-picture" src="{{ asset('images/remove.png') }}"
+                           data-id="{{ picture.id }}" data-name="{{ picture.name }}"
+                           alt="{% trans %}remove_picture_modal.title{% endtrans %}"/>
                 </td>
             </tr>
         {% endfor %}
     </table>
 {% endblock %}
+
+{% block modals %}
+    {% include '@PublicInformation/admin/remove_picture_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/remove-picture.js') }}"></script>
+{% endblock %}
+
