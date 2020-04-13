@@ -6,6 +6,7 @@ namespace App\PublicInformation\Infrastructure\Controller;
 use App\PublicInformation\Domain\Picture\Picture;
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalPictureRepository;
 use App\PublicInformation\Infrastructure\SymfonyFormType\PictureType;
+use App\Shared\Domain\ImageResizer;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -30,13 +31,15 @@ final class PictureController
     private string                     $locationFromWebRoot;
     private string                     $uploadLocation;
     private FormFactoryInterface       $formFactory;
+    private ImageResizer               $imageResizer;
 
     public function __construct(
         DbalPictureRepository $pictureRepository,
         Environment $twig,
         Filesystem $filesystem,
         LoggerInterface $logger,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        ImageResizer $imageResizer
     ) {
         $this->pictureRepository   = $pictureRepository;
         $this->twig                = $twig;
@@ -45,6 +48,7 @@ final class PictureController
         $this->locationFromWebRoot = '/uploads/fotos/';
         $this->uploadLocation      = __DIR__ . '/../../../../public' . $this->locationFromWebRoot;
         $this->formFactory         = $formFactory;
+        $this->imageResizer = $imageResizer;
     }
 
     /**
@@ -57,7 +61,7 @@ final class PictureController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $picture = Picture::createFromForm($form->getData(), $this->uploadLocation);
+                $picture = Picture::createFromForm($form->getData(), $this->uploadLocation, $this->imageResizer);
                 $this->pictureRepository->insert($picture);
 
                 return new RedirectResponse($request->headers->get('referer'));

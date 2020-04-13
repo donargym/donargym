@@ -3,7 +3,6 @@
 namespace App\Infrastructure\Controller;
 
 use App\Entity\FileUpload;
-use App\Entity\FotoUpload;
 use App\Entity\Functie;
 use App\Entity\Groepen;
 use App\Entity\Persoon;
@@ -11,7 +10,6 @@ use App\Entity\Trainingen;
 use App\Security\Domain\PasswordGenerator;
 use App\Shared\Domain\EmailAddress;
 use App\Shared\Domain\EmailTemplateType;
-use App\Shared\Domain\ImageResizer;
 use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -32,41 +30,6 @@ class AdminController extends BaseController
     public function __construct(SymfonyMailer $mailer)
     {
         $this->mailer = $mailer;
-    }
-
-    /**
-     * @Route("/admin/foto/add/", name="addAdminFotoPage", methods={"GET", "POST"})
-     */
-    public function addAdminFotoPageAction(Request $request)
-    {
-        $foto = new FotoUpload();
-        $form = $this->createFormBuilder($foto)
-            ->add('naam')
-            ->add('file')
-            ->add('uploadBestand', SubmitType::class)
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($foto);
-            $em->flush();
-            $imageResizer = new ImageResizer();
-            $imageResizer->resizeImage(
-                $foto->getAbsolutePath(),
-                $foto->getUploadRootDir() . "/",
-                null,
-                $width = 597
-            );
-
-            return $this->redirectToRoute('getAdminFotoPage');
-        } else {
-            return $this->render(
-                'inloggen/addAdminFotos.html.twig',
-                [
-                    'form' => $form->createView(),
-                ]
-            );
-        }
     }
 
     /**
@@ -93,54 +56,6 @@ class AdminController extends BaseController
                 [
                     'form' => $form->createView(),
                 ]
-            );
-        }
-    }
-
-    /**
-     * @Route("/admin/bestanden/remove/{id}/", name="removeAdminBestandenPage", methods={"GET", "POST"})
-     */
-    public function removeAdminBestandenPage($id, Request $request)
-    {
-        if ($request->getMethod() == 'GET') {
-            $em    = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT fileupload
-                FROM App:FileUpload fileupload
-                WHERE fileupload.id = :id'
-            )
-                ->setParameter('id', $id);
-            $file  = $query->setMaxResults(1)->getOneOrNullResult();
-            if ($file) {
-                return $this->render(
-                    'inloggen/removeAdminUploads.html.twig',
-                    [
-                        'content' => $file->getAll(),
-                    ]
-                );
-            } else {
-                return $this->render(
-                    '@Shared/error/page_not_found.html.twig',
-                    []
-                );
-            }
-        } elseif ($request->getMethod() == 'POST') {
-            $em    = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-                'SELECT fileupload
-                FROM App:FileUpload fileupload
-                WHERE fileupload.id = :id'
-            )
-                ->setParameter('id', $id);
-            $file  = $query->setMaxResults(1)->getOneOrNullResult();
-            $em->remove($file);
-            $em->flush();
-
-            return $this->redirectToRoute('getAdminBestandenPage');
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                []
             );
         }
     }

@@ -2,6 +2,9 @@
 
 namespace App\PublicInformation\Domain\Picture;
 
+use App\Shared\Domain\ImageResizer;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class Picture
 {
     private int    $id;
@@ -21,13 +24,14 @@ class Picture
         return $self;
     }
 
-    public static function createFromForm(array $formData, string $uploadLocation): self
+    public static function createFromForm(array $formData, string $uploadLocation, ImageResizer $imageResizer): self
     {
-        $self           = new self();
-        $self->name     = $formData['name'];
+        $self       = new self();
+        $self->name = $formData['name'];
+        /** @var UploadedFile $uploadedFile */
         $uploadedFile   = $formData['file'];
         $self->fileName = sha1(uniqid(mt_rand(), true)) . '.' . $uploadedFile->getClientOriginalExtension();
-        $uploadedFile->move($uploadLocation, $self->fileName);
+        $imageResizer->resizeByChangingWidth($uploadedFile->getPathname(), $uploadLocation . $self->fileName, 600);
 
         return $self;
     }
