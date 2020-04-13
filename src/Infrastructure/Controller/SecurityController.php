@@ -83,7 +83,7 @@ class SecurityController extends BaseController
         $roles = $user->getRoles();
         switch ($roles[0]) {
             case 'ROLE_ADMIN':
-                return $this->redirectToRoute('getAdminIndexPage');
+                return $this->redirectToRoute('publicPictures');
                 break;
             case 'ROLE_TRAINER':
             case 'ROLE_ASSISTENT':

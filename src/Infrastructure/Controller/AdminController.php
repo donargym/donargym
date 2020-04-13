@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-
 /**
  * @IsGranted("ROLE_ADMIN")
  */
@@ -36,17 +35,6 @@ class AdminController extends BaseController
     }
 
     /**
-     * @Route("/admin/", name="getAdminIndexPage", methods={"GET"})
-     */
-    public function getIndexPageAction()
-    {
-        return $this->render(
-            'inloggen/adminIndex.html.twig',
-            array()
-        );
-    }
-
-    /**
      * @Route("/admin/foto/add/", name="addAdminFotoPage", methods={"GET", "POST"})
      */
     public function addAdminFotoPageAction(Request $request)
@@ -58,7 +46,6 @@ class AdminController extends BaseController
             ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($foto);
@@ -70,13 +57,14 @@ class AdminController extends BaseController
                 null,
                 $width = 597
             );
+
             return $this->redirectToRoute('getAdminFotoPage');
         } else {
             return $this->render(
                 'inloggen/addAdminFotos.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
-                )
+                ]
             );
         }
     }
@@ -98,14 +86,14 @@ class AdminController extends BaseController
             if ($foto) {
                 return $this->render(
                     'inloggen/removeAdminFotos.html.twig',
-                    array(
+                    [
                         'content' => $foto->getAll(),
-                    )
+                    ]
                 );
             } else {
                 return $this->render(
                     '@Shared/error/page_not_found.html.twig',
-                    array()
+                    []
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -119,11 +107,12 @@ class AdminController extends BaseController
             $foto  = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($foto);
             $em->flush();
+
             return $this->redirectToRoute('getAdminFotoPage');
         } else {
             return $this->render(
                 '@Shared/error/page_not_found.html.twig',
-                array()
+                []
             );
         }
     }
@@ -140,15 +129,16 @@ class AdminController extends BaseController
                 ORDER BY fileupload.naam'
         );
         $content      = $query->getResult();
-        $contentItems = array();
+        $contentItems = [];
         for ($i = 0; $i < count($content); $i++) {
             $contentItems[$i] = $content[$i]->getAll();
         }
+
         return $this->render(
             'inloggen/adminUploads.html.twig',
-            array(
+            [
                 'contentItems' => $contentItems,
-            )
+            ]
         );
     }
 
@@ -164,18 +154,18 @@ class AdminController extends BaseController
             ->add('uploadBestand', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($file);
             $em->flush();
+
             return $this->redirectToRoute('getAdminBestandenPage');
         } else {
             return $this->render(
                 'inloggen/addAdminUploads.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
-                )
+                ]
             );
         }
     }
@@ -197,14 +187,14 @@ class AdminController extends BaseController
             if ($file) {
                 return $this->render(
                     'inloggen/removeAdminUploads.html.twig',
-                    array(
+                    [
                         'content' => $file->getAll(),
-                    )
+                    ]
                 );
             } else {
                 return $this->render(
                     '@Shared/error/page_not_found.html.twig',
-                    array()
+                    []
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -218,11 +208,12 @@ class AdminController extends BaseController
             $file  = $query->setMaxResults(1)->getOneOrNullResult();
             $em->remove($file);
             $em->flush();
+
             return $this->redirectToRoute('getAdminBestandenPage');
         } else {
             return $this->render(
                 '@Shared/error/page_not_found.html.twig',
-                array()
+                []
             );
         }
     }
@@ -243,8 +234,8 @@ class AdminController extends BaseController
             ->setParameter('functie2', 'Assistent-Trainer');
         /** @var Functie $functies */
         $functies     = $query->getResult();
-        $persoonItems = array();
-        $ids          = array();
+        $persoonItems = [];
+        $ids          = [];
         for ($i = 0; $i < count($functies); $i++) {
             $persoon = $functies[$i]->getPersoon();
             if (!(in_array($persoon->getId(), $ids))) {
@@ -256,11 +247,12 @@ class AdminController extends BaseController
                 $persoonItems[$i]->username   = $persoon->getUser()->getUsername();
             }
         }
+
         return $this->render(
             'inloggen/adminSelectie.html.twig',
-            array(
+            [
                 'personen' => $persoonItems,
-            )
+            ]
         );
     }
 
@@ -275,12 +267,12 @@ class AdminController extends BaseController
                 FROM App:Groepen groepen'
         );
         $groepen      = $query->getResult();
-        $groepenItems = array();
+        $groepenItems = [];
         for ($i = 0; $i < count($groepen); $i++) {
             $groepenItems[$i]             = new \stdClass();
             $groepenItems[$i]->id         = $groepen[$i]->getId();
             $groepenItems[$i]->naam       = $groepen[$i]->getName();
-            $groepenItems[$i]->trainingen = array();
+            $groepenItems[$i]->trainingen = [];
             $query                        = $em->createQuery(
                 'SELECT trainingen
                 FROM App:Trainingen trainingen
@@ -331,8 +323,6 @@ class AdminController extends BaseController
                     ->setParameter('email', $request->request->get('email3'));
                 $user  = $query->setMaxResults(1)->getOneOrNullResult();
             }
-
-
             if ($user) {
                 $role    = $user->getRole();
                 $newuser = false;
@@ -341,9 +331,8 @@ class AdminController extends BaseController
                 $newuser = true;
             }
             $persoon = new Persoon();
-
             $k           = 0;
-            $postGroepen = array();
+            $postGroepen = [];
             foreach ($groepen as $groep) {
                 if ($request->request->get('groep_' . $groep->getId()) == 'Trainer' || $request->request->get(
                         'groep_' . $groep->getId()
@@ -409,9 +398,7 @@ class AdminController extends BaseController
             if ($request->request->get('tel3')) {
                 $user->setTel3($request->request->get('tel3'));
             }
-
             $persoon->setUser($user);
-
             if ($newuser) {
                 $password = PasswordGenerator::generatePassword();
                 $encoder  = $encoderFactory
@@ -424,7 +411,6 @@ class AdminController extends BaseController
             $user->addPersoon($persoon);
             $em->persist($persoon);
             $em->flush();
-
             $subject    = 'Inloggegevens website Donar';
             $template   = 'mails/new_user.txt.twig';
             $parameters = [
@@ -434,7 +420,6 @@ class AdminController extends BaseController
                 'email3'   => $user->getEmail3(),
                 'password' => $password,
             ];
-
             $this->mailer->sendEmail(
                 $subject,
                 EmailAddress::fromString($user->getUsername()),
@@ -442,7 +427,6 @@ class AdminController extends BaseController
                 EmailTemplateType::TEXT(),
                 $parameters
             );
-
             if ($user->getEmail2()) {
                 $this->mailer->sendEmail(
                     $subject,
@@ -461,13 +445,15 @@ class AdminController extends BaseController
                     $parameters
                 );
             }
+
             return $this->redirectToRoute('getAdminSelectiePage');
         }
+
         return $this->render(
             'inloggen/adminAddTrainer.html.twig',
-            array(
+            [
                 'groepen' => $groepenItems,
-            )
+            ]
         );
     }
 
@@ -500,7 +486,7 @@ class AdminController extends BaseController
         $persoonEdit->tel2          = $user->getTel2();
         $persoonEdit->tel3          = $user->getTel3();
         $functies                   = $result->getFunctie();
-        $persoonEdit->functie       = array();
+        $persoonEdit->functie       = [];
         for ($i = 0; $i < count($functies); $i++) {
             $persoonEdit->functie[$i]             = new \stdClass();
             $persoonEdit->functie[$i]->functie    = $functies[$i]->getFunctie();
@@ -508,7 +494,7 @@ class AdminController extends BaseController
             $persoonEdit->functie[$i]->groepNaam  = $groep->getName();
             $persoonEdit->functie[$i]->groepId    = $groep->getId();
             $trainingen                           = $groep->getTrainingen();
-            $persoonEdit->functie[$i]->trainingen = array();
+            $persoonEdit->functie[$i]->trainingen = [];
             for ($j = 0; $j < count($trainingen); $j++) {
                 $persoonTrainingen = $result->getTrainingen();
                 for ($k = 0; $k < count($persoonTrainingen); $k++) {
@@ -519,19 +505,18 @@ class AdminController extends BaseController
                 }
             }
         }
-
         $query = $em->createQuery(
             'SELECT groepen
                 FROM App:Groepen groepen'
         );
         /** @var Groepen $groepen */
         $groepen      = $query->getResult();
-        $groepenItems = array();
+        $groepenItems = [];
         for ($i = 0; $i < count($groepen); $i++) {
             $groepenItems[$i]             = new \stdClass();
             $groepenItems[$i]->id         = $groepen[$i]->getId();
             $groepenItems[$i]->naam       = $groepen[$i]->getName();
-            $groepenItems[$i]->trainingen = array();
+            $groepenItems[$i]->trainingen = [];
             $query                        = $em->createQuery(
                 'SELECT trainingen
                 FROM App:Trainingen trainingen
@@ -554,13 +539,11 @@ class AdminController extends BaseController
                 WHERE persoon.id = :id'
             )
                 ->setParameter('id', $id);
-
             /** @var Persoon $persoon */
             $persoon = $query->setMaxResults(1)->getOneOrNullResult();
             $persoon->setVoornaam($request->request->get('voornaam'));
             $persoon->setAchternaam($request->request->get('achternaam'));
             $persoon->setGeboortedatum($request->request->get('geboortedatum'));
-
             /** @var Functie $functie */
             $functies = $persoon->getFunctie();
             foreach ($functies as $functie) {
@@ -576,7 +559,6 @@ class AdminController extends BaseController
                     WHERE trainingen.groep = :id'
                     )
                         ->setParameter('id', $groep->getId());
-
                     /** @var Trainingen $removeTrainingen */
                     /** @var Trainingen $removeTraining */
                     $removeTrainingen = $query->getResult();
@@ -585,7 +567,6 @@ class AdminController extends BaseController
                     }
                 }
             }
-
             /** @var Trainingen $trainingen */
             $trainingen = $persoon->getTrainingen();
             foreach ($trainingen as $training) {
@@ -593,7 +574,6 @@ class AdminController extends BaseController
                     $persoon->removeTrainingen($training);
                 }
             }
-
             /** @var \App\Entity\User $user */
             $user = $persoon->getUser();
             $user->setUsername($request->request->get('username'));
@@ -605,7 +585,6 @@ class AdminController extends BaseController
             $user->setTel1($request->request->get('tel1'));
             $user->setTel2($request->request->get('tel2'));
             $user->setTel3($request->request->get('tel3'));
-
             foreach ($groepen as $groep) {
                 $check = false;
                 if ($request->request->get('groep_' . $groep->getId()) == 'Trainer' ||
@@ -625,14 +604,12 @@ class AdminController extends BaseController
                         $newFunctie->setPersoon($persoon);
                         $persoon->addFunctie($newFunctie);
                     }
-
                     $query = $em->createQuery(
                         'SELECT trainingen
                     FROM App:Trainingen trainingen
                     WHERE trainingen.groep = :id'
                     )
                         ->setParameter('id', $groep->getId());
-
                     /** @var Trainingen $dbTrainingen */
                     /** @var Trainingen $dbTraining */
                     $dbTrainingen = $query->getResult();
@@ -666,19 +643,19 @@ class AdminController extends BaseController
                 }
             }
             $user->setRole($role);
-
             $em->persist($persoon);
             $em->persist($user);
             $em->flush();
 
             return $this->redirectToRoute('getAdminSelectiePage');
         }
+
         return $this->render(
             'inloggen/adminEditTrainer.html.twig',
-            array(
+            [
                 'groepen'     => $groepenItems,
                 'persoonEdit' => $persoonEdit,
-            )
+            ]
         );
     }
 
@@ -699,16 +676,16 @@ class AdminController extends BaseController
             if ($persoon) {
                 return $this->render(
                     'inloggen/adminRemoveTrainer.html.twig',
-                    array(
+                    [
                         'voornaam'   => $persoon->getVoornaam(),
                         'achternaam' => $persoon->getAchternaam(),
                         'id'         => $persoon->getId(),
-                    )
+                    ]
                 );
             } else {
                 return $this->render(
                     '@Shared/error/page_not_found.html.twig',
-                    array()
+                    []
                 );
             }
         } elseif ($request->getMethod() == 'POST') {
@@ -742,11 +719,12 @@ class AdminController extends BaseController
                 $user->setRole($role);
                 $em->flush();
             }
+
             return $this->redirectToRoute('getAdminSelectiePage');
         } else {
             return $this->render(
                 '@Shared/error/page_not_found.html.twig',
-                array()
+                []
             );
         }
     }
