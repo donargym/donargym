@@ -16,7 +16,10 @@ class SimplePageContentType extends AbstractType
             ->add(
                 'pageContent',
                 TextareaType::class,
-                ['data' => $options['content'], 'attr' => ['cols' => '80', 'rows' => '40']]
+                ['data'  => $options['content'],
+                 'attr'  => ['cols' => '80', 'rows' => '40'],
+                 'label' => 'simple_content_page_form.content'
+                ]
             )
             ->add('submit', SubmitType::class, ['label' => 'form.submit']);
     }

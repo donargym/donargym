@@ -2,9 +2,22 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('editSimpleContentPage', { 'pageName': app.request.get('pageName') }) }}">
-            <img src="{{ asset('images/edit.png') }}" alt="edit content of this page"/>
-        </a>
+        <input type="image" src="{{ asset('images/edit.png') }}" width="18px"
+               data-toggle="modal" data-target="#edit-simple-content-page-modal"
+               alt="{% trans %}edit_simple_content_page_modal.title{% endtrans %}"/>
     {% endif %}
     {{ content|raw }}
 {% endblock %}
+
+{% block modals %}
+    {% include '@PublicInformation/default/edit_simple_content_page_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {% if showForm %}
+        <script type="text/javascript">
+            $('#edit-simple-content-page-modal').modal('show');
+        </script>
+    {% endif %}
+{% endblock %}
+

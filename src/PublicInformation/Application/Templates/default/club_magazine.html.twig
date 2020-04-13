@@ -34,7 +34,9 @@
 {% endblock %}
 
 {% block modals %}
-    {% include '@PublicInformation/default/remove_club_magazine_modal.html.twig' %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        {% include '@PublicInformation/default/remove_club_magazine_modal.html.twig' %}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

@@ -181,7 +181,9 @@
 <div id="footer">
     <a href="{{ asset('uploads/privacy.pdf') }}" target="blank">Privacybeleid</a>
 </div>
-{% include '@PublicInformation/default/remove_calendar_item_modal.html.twig' %}
+{% if app.user and is_granted('ROLE_ADMIN') %}
+    {% include '@PublicInformation/default/remove_calendar_item_modal.html.twig' %}
+{% endif %}
 {% block modals %}{% endblock %}
 {% block javascripts %}{% endblock %}
 <script type="text/javascript" src="{{ asset('js/remove-public-calendar-item.js') }}"></script>

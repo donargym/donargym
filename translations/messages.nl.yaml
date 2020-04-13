@@ -152,3 +152,10 @@ picture_form:
 uploaded_file_form:
   name: "Naam van het bestand"
   file: "Selecteer een bestand"
+
+edit_simple_content_page_modal:
+  title: "Pagina bewerken"
+
+
+simple_content_page_form:
+  content: "Bewerk hieronder de pagina in HTML"

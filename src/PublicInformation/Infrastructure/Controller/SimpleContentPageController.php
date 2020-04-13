@@ -40,50 +40,39 @@ final class SimpleContentPageController
     }
 
     /**
-     * @Route("/page/{pageName}/", name="simpleContentPage", methods={"GET"})
+     * @Route("/page/{pageName}/", name="simpleContentPage", methods={"GET", "POST"})
      */
-    public function simpleContentPage(string $pageName): Response
+    public function simpleContentPage(Request $request, string $pageName): Response
     {
         $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
         if (!$simpleContentPage) {
             throw new NotFoundHttpException();
         }
-
-        return new Response(
-            $this->twig->render(
-                '@PublicInformation/default/simple_content_page.html.twig',
-                ['content' => $simpleContentPage->pageContent()]
-            )
-        );
-    }
-
-    /**
-     * @Route("/editPage/{pageName}/", name="editSimpleContentPage", methods={"GET", "POST"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function editSimpleContentPage(Request $request, string $pageName): Response
-    {
-        $simpleContentPage = $this->simpleContentPageRepository->getMostRecentContentForPage($pageName);
-        if (!$simpleContentPage) {
-            throw new NotFoundHttpException();
-        }
+        $showForm = false;
         $form = $this->formFactory->create(
             SimplePageContentType::class,
             null,
             ['content' => $simpleContentPage->pageContent()]
         );
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $simpleContentPage = SimpleContentPage::createNew($pageName, $form->getData()['pageContent'], $this->clock);
-            $this->simpleContentPageRepository->insert($simpleContentPage);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $simpleContentPage = SimpleContentPage::createNew($pageName, $form->getData()['pageContent'], $this->clock);
+                $this->simpleContentPageRepository->insert($simpleContentPage);
 
-            return new RedirectResponse($this->router->generate('simpleContentPage', ['pageName' => $pageName]));
+                return new RedirectResponse($request->headers->get('referer'));
+            }
+            $showForm = true;
         }
 
         return new Response(
             $this->twig->render(
-                '@PublicInformation/default/edit_simple_content_page.html.twig',
-                ['content' => $simpleContentPage->pageContent(), 'form' => $form->createView()]
+                '@PublicInformation/default/simple_content_page.html.twig',
+                [
+                    'content'  => $simpleContentPage->pageContent(),
+                    'form'     => $form->createView(),
+                    'showForm' => $showForm,
+                ]
             )
         );
     }

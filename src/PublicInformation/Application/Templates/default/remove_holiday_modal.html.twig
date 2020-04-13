@@ -1,28 +1,26 @@
-{% if app.user and is_granted('ROLE_ADMIN') %}
-    <div id="remove-holiday-modal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <form method="post" action="{{ path('removeHoliday') }}">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{% trans %}remove_holiday_modal.title{% endtrans %}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                            Weet je zeker dat je de vakantie "<span id="item-name"></span>" wilt verwijderen?
-                        </p>
-                        <input type="hidden" name="id" id="id"/>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">{% trans %}form.confirm{% endtrans %}</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            {% trans %}form.cancel{% endtrans %}
-                        </button>
-                    </div>
-                </form>
-            </div>
+<div id="remove-holiday-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <form method="post" action="{{ path('removeHoliday') }}">
+                <div class="modal-header">
+                    <h5 class="modal-title">{% trans %}remove_holiday_modal.title{% endtrans %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Weet je zeker dat je de vakantie "<span id="item-name"></span>" wilt verwijderen?
+                    </p>
+                    <input type="hidden" name="id" id="id"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">{% trans %}form.confirm{% endtrans %}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        {% trans %}form.cancel{% endtrans %}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-{% endif %}
+</div>
