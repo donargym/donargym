@@ -58,7 +58,7 @@ final class PictureController
     }
 
     /**
-     * @Route("/admin/foto/", name="removePicture", methods={"POST"})
+     * @Route("/admin/remove-picture/", name="removePicture", methods={"POST"})
      */
     public function removePicture(Request $request): Response
     {

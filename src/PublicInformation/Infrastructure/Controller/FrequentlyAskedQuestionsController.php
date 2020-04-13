@@ -38,7 +38,7 @@ final class FrequentlyAskedQuestionsController
     }
 
     /**
-     * @Route("/contact/veelgestelde-vragen/", name="removeFrequentlyAskedQuestion", methods={"POST"})
+     * @Route("/contact/remove-veelgestelde-vraag/", name="removeFrequentlyAskedQuestion", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function removeFrequentlyAskedQuestion(Request $request): Response

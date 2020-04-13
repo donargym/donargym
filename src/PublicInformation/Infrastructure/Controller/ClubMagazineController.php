@@ -53,7 +53,7 @@ final class ClubMagazineController
     }
 
     /**
-     * @Route("/clubblad", name="removeClubMagazine", methods={"POST"})
+     * @Route("/clubblad/remove-club-magazine", name="removeClubMagazine", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function removeClubMagazine(Request $request): Response

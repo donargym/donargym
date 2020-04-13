@@ -64,7 +64,7 @@ final class NewsController
     }
 
     /**
-     * @Route("/news/", name="removeNewsPost", methods={"POST"})
+     * @Route("/news/remove-news-post", name="removeNewsPost", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function removeNewsPost(Request $request): Response

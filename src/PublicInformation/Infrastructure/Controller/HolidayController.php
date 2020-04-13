@@ -38,7 +38,7 @@ final class HolidayController
     }
 
     /**
-     * @Route("/vakanties", name="removeHoliday", methods={"POST"})
+     * @Route("/remove-holiday", name="removeHoliday", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function removeHoliday(Request $request): Response

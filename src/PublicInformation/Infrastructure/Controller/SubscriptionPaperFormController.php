@@ -50,7 +50,7 @@ final class SubscriptionPaperFormController
     }
 
     /**
-     * @Route("/lidmaatschap/formulieren", name="removePaperForm", methods={"POST"})
+     * @Route("/lidmaatschap/remove-paper-form", name="removePaperForm", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function removePaperForm(Request $request): Response

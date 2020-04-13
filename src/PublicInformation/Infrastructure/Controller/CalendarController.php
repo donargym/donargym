@@ -41,7 +41,7 @@ final class CalendarController
     }
 
     /**
-     * @Route("/agenda/", name="removePublicCalendarItem", methods={"POST"})
+     * @Route("/agenda/remove-item", name="removePublicCalendarItem", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function removePublicCalendarItem(Request $request): Response

@@ -58,7 +58,7 @@ final class UploadedFileController
     }
 
     /**
-     * @Route("/admin/file/", name="removeUploadedFile", methods={"POST"})
+     * @Route("/admin/remove-file/", name="removeUploadedFile", methods={"POST"})
      */
     public function removeUploadedFile(Request $request): Response
     {
