@@ -1,0 +1,9 @@
+{% extends '@Shared/base.html.twig' %}
+
+{% block body %}
+    {% if app.user and is_granted('ROLE_ADMIN') %}
+        <h1>{% trans %}add_frequently_asked_question_modal.title{% endtrans %}</h1>
+        <a href="{{ referer }}">Annuleer</a>
+        {{ form(form) }}
+    {% endif %}
+{% endblock %}

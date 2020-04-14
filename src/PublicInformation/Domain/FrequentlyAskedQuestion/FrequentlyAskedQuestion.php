@@ -1,12 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Domain\FrequentlyAskedQuestion;
 
 final class FrequentlyAskedQuestion
 {
-    private int $id;
+    private int    $id;
     private string $question;
     private string $answer;
 
@@ -14,14 +13,28 @@ final class FrequentlyAskedQuestion
         int $id,
         string $question,
         string $answer
-    ): self
-    {
-        $self = new self();
-        $self->id = $id;
+    ): self {
+        $self           = new self();
+        $self->id       = $id;
         $self->question = $question;
-        $self->answer = $answer;
+        $self->answer   = $answer;
 
         return $self;
+    }
+
+    public static function createFromForm(array $formData): self
+    {
+        $self           = new self();
+        $self->question = $formData['question'];
+        $self->answer   = $formData['answer'];
+
+        return $self;
+    }
+
+    public function updateFromForm(array $formData): void
+    {
+        $this->question = $formData['question'];
+        $this->answer   = $formData['answer'];
     }
 
     public function id(): int

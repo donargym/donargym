@@ -185,3 +185,10 @@ holiday_form:
   name: "Naam"
   start_date: "Startdatum"
   end_date: "Einddatum"
+
+add_frequently_asked_question_modal:
+  title: "Veelgestelde vraag toevoegen"
+
+frequently_asked_question_form:
+  question: "Vraag"
+  answer: "Antwoord"

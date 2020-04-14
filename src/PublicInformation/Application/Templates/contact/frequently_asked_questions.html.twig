@@ -3,16 +3,16 @@
 {% block body %}
     <h1>Veelgestelde vragen</h1>
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('addVeelgesteldeVragenPage') }}">
-            Nieuwe vraag toevoegen:
-            <img src="{{ asset('images/add.png') }}" width="18px" alt="Nieuwe vraag toevoegen"/>
-        </a>
+        {% trans %}add_frequently_asked_question_modal.title{% endtrans %}:
+        <input type="image" src="{{ asset('images/add.png') }}"
+               data-toggle="modal" data-target="#add-frequently-aksed-question-modal"
+               alt="{% trans %}add_frequently_asked_question_modal.title{% endtrans %}" width="18px"/>
     {% endif %}
     {% for question in questions %}
         <h3>{{ question.question }}
             {% if app.user and is_granted('ROLE_ADMIN') %}
                 {% apply spaceless %}
-                    <a href="{{ path('editVeelgesteldeVragenPage', { 'id': question.id }) }}">
+                    <a href="{{ path('editFrequentlyAskedQuestion', { 'id': question.id }) }}">
                         <img src="{{ asset('images/edit.png') }}" width="18px" alt="Bewerk vraag/antwoord"/>
                     </a>
                     <input type="image" class="remove-frequently-asked-question" src="{{ asset('images/remove.png') }}"
@@ -30,11 +30,17 @@
 {% block modals %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         {% include '@PublicInformation/contact/modals/remove_frequently_asked_question_modal.html.twig' %}
+        {% include '@PublicInformation/contact/modals/add_frequently_asked_question_modal.html.twig' %}
     {% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         <script type="text/javascript" src="{{ asset('js/remove-frequently-asked-question.js') }}"></script>
+        {% if showModal %}
+            <script type="text/javascript">
+                $('#add-frequently-aksed-question-modal').modal('show');
+            </script>
+        {% endif %}
     {% endif %}
 {% endblock %}
