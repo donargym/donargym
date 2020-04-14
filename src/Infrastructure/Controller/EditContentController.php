@@ -8,38 +8,17 @@ use App\Entity\Vakanties;
 use App\Entity\VeelgesteldeVragen;
 use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
-use App\Shared\Domain\SystemClock;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\RouterInterface;
-use Twig\Environment;
 
 /**
  * @IsGranted("ROLE_ADMIN")
  */
 class EditContentController extends BaseController
 {
-    private FormFactoryInterface $formFactory;
-    private Environment          $twig;
-    private SystemClock          $clock;
-    private RouterInterface      $router;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        Environment $twig,
-        SystemClock $clock,
-        RouterInterface $router
-    ) {
-        $this->formFactory = $formFactory;
-        $this->twig        = $twig;
-        $this->clock       = $clock;
-        $this->router      = $router;
-    }
-
     /**
      * @Route("/nieuws/vakanties/add/", name="addVakantiesPage", methods={"GET", "POST"})
      */
