@@ -15,39 +15,58 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 final class NewsController
 {
-    private DbalNewsPostRepository $newsPostRepository;
-    private Environment            $twig;
-    private FormFactoryInterface   $formFactory;
-    private RouterInterface        $router;
-    private SystemClock            $clock;
+    private DbalNewsPostRepository        $newsPostRepository;
+    private Environment                   $twig;
+    private FormFactoryInterface          $formFactory;
+    private RouterInterface               $router;
+    private SystemClock                   $clock;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
     public function __construct(
         DbalNewsPostRepository $newsPostRepository,
         Environment $twig,
         FormFactoryInterface $formFactory,
         RouterInterface $router,
-        SystemClock $clock
+        SystemClock $clock,
+        AuthorizationCheckerInterface $authorizationChecker
     ) {
-        $this->newsPostRepository = $newsPostRepository;
-        $this->twig               = $twig;
-        $this->formFactory        = $formFactory;
-        $this->router             = $router;
-        $this->clock              = $clock;
+        $this->newsPostRepository   = $newsPostRepository;
+        $this->twig                 = $twig;
+        $this->formFactory          = $formFactory;
+        $this->router               = $router;
+        $this->clock                = $clock;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
-     * @Route("/", name="newsPosts", methods={"GET"})
+     * @Route("/", name="newsPosts", methods={"GET", "POST"})
      */
-    public function newsPosts(): Response
+    public function newsPosts(Request $request): Response
     {
+        $form = null;
+        if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+            $form = $this->formFactory->create(NewsPostType::class);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $newsPost = NewsPost::createFromForm($form->getData(), $this->clock);
+                $this->newsPostRepository->insert($newsPost);
+
+                return new RedirectResponse($this->router->generate('newsPosts'));
+            }
+        }
+
         return new Response(
             $this->twig->render(
                 '@PublicInformation/default/news.html.twig',
-                ['newPosts' => $this->newsPostRepository->findTenMostRecentNewsPosts()]
+                [
+                    'newPosts' => $this->newsPostRepository->findTenMostRecentNewsPosts(),
+                    'form'     => $form ? $form->createView() : null,
+                ]
             )
         );
     }
@@ -87,29 +106,6 @@ final class NewsController
         $this->newsPostRepository->remove((int) $request->request->get('id'));
 
         return new RedirectResponse($request->headers->get('referer'));
-    }
-
-    /**
-     * @Route("/news/add-news-post", name="addNewsPost", methods={"GET", "POST"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function addNewsPost(Request $request): Response
-    {
-        $form = $this->formFactory->create(NewsPostType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $newsPost = NewsPost::createFromForm($form->getData(), $this->clock);
-            $this->newsPostRepository->insert($newsPost);
-
-            return new RedirectResponse($this->router->generate('newsPosts'));
-        }
-
-        return new Response(
-            $this->twig->render(
-                '@PublicInformation/default/add_or_edit_calendar_item.html.twig',
-                ['form' => $form->createView(), 'referer' => $request->headers->get('referer')]
-            )
-        );
     }
 
     /**

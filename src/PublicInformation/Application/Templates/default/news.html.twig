@@ -2,13 +2,14 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('addNewsPost') }}">
-            Nieuw nieuwsbericht plaatsen:
-            <img src="{{ asset('images/add.png') }}" width="18px" alt="niewsbericht plaatsen"/>
-        </a>
+        {% trans %}add_news_post_modal.title{% endtrans %}:
+        <input type="image" class="add-news-post" src="{{ asset('images/add.png') }}"
+               data-toggle="modal" data-target="#add-news-post-modal"
+               alt="{% trans %}add_news_post_modal.title{% endtrans %}" width="18px"/>
     {% endif %}
 
     {% for newsPost in newPosts %}
+
         <div id="article">
             <div class="date">{{ newsPost.createdAt|date('d-m-Y: H:i') }}</div>
             <hr>
@@ -34,6 +35,7 @@
 {% block modals %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         {% include '@PublicInformation/default/modals/remove_news_post_modal.html.twig' %}
+        {% include '@PublicInformation/default/modals/add_news_post_modal.html.twig' %}
     {% endif %}
 {% endblock %}
 

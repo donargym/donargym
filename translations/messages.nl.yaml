@@ -174,3 +174,6 @@ calendar_form:
 news_post_form:
   title: "Titel"
   content: "Bericht"
+
+add_news_post_modal:
+  title: "Nieuwsbericht toevoegen"
