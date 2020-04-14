@@ -3,7 +3,7 @@
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         {% trans %}add_news_post_modal.title{% endtrans %}:
-        <input type="image" class="add-news-post" src="{{ asset('images/add.png') }}"
+        <input type="image" src="{{ asset('images/add.png') }}"
                data-toggle="modal" data-target="#add-news-post-modal"
                alt="{% trans %}add_news_post_modal.title{% endtrans %}" width="18px"/>
     {% endif %}
