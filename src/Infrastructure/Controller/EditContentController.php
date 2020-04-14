@@ -4,9 +4,7 @@ namespace App\Infrastructure\Controller;
 
 use App\Entity\Clubblad;
 use App\Entity\Formulieren;
-use App\Entity\Vakanties;
 use App\Entity\VeelgesteldeVragen;
-use App\Form\Type\VakantiesType;
 use App\Form\Type\VeelgesteldeVragenType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
