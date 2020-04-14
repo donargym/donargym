@@ -4,8 +4,6 @@ namespace App\Infrastructure\Controller;
 
 use App\Entity\Clubblad;
 use App\Entity\Formulieren;
-use App\Entity\VeelgesteldeVragen;
-use App\Form\Type\VeelgesteldeVragenType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,68 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EditContentController extends BaseController
 {
-    /**
-     * @Route("/contact/veelgesteldevragen/add/", name="addVeelgesteldeVragenPage", methods={"GET", "POST"})
-     */
-    public function addVeelgesteldeVragenPage(Request $request)
-    {
-        $vraag = new VeelgesteldeVragen();
-        $form  = $this->createForm(VeelgesteldeVragenType::class, $vraag);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($vraag);
-            $em->flush();
-
-            return $this->redirectToRoute('frequentlyAskedQuestions');
-        } else {
-            return $this->render(
-                '@PublicInformation/contact/addVeelgesteldeVragen.html.twig',
-                [
-                    'form' => $form->createView(),
-                ]
-            );
-        }
-    }
-
-    /**
-     * @Route("/contact/veelgesteldevragen/edit/{id}/", name="editVeelgesteldeVragenPage", methods={"GET", "POST"})
-     */
-    public function editVeelgesteldeVragenPage($id, Request $request)
-    {
-        $em    = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-            'SELECT veelgesteldevragen
-                FROM App:VeelgesteldeVragen veelgesteldevragen
-                WHERE veelgesteldevragen.id = :id'
-        )
-            ->setParameter('id', $id);
-        $vraag = $query->setMaxResults(1)->getOneOrNullResult();
-        if ($vraag) {
-            $form = $this->createForm(VeelgesteldeVragenType::class, $vraag);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($vraag);
-                $em->flush();
-
-                return $this->redirectToRoute('frequentlyAskedQuestions');
-            } else {
-                return $this->render(
-                    '@PublicInformation/contact/addVeelgesteldeVragen.html.twig',
-                    [
-                        'form' => $form->createView(),
-                    ]
-                );
-            }
-        } else {
-            return $this->render(
-                '@Shared/error/page_not_found.html.twig',
-                []
-            );
-        }
-    }
-
     /**
      * @Route("/nieuws/clubblad/add/", name="addClubbladPage", methods={"GET", "POST"})
      */
