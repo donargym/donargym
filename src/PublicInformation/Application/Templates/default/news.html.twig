@@ -42,5 +42,10 @@
 {% block javascripts %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         <script type="text/javascript" src="{{ asset('js/remove-news-post.js') }}"></script>
+        {% if showModal %}
+            <script type="text/javascript">
+                $('#add-news-post-modal').modal('show');
+            </script>
+        {% endif %}
     {% endif %}
 {% endblock %}

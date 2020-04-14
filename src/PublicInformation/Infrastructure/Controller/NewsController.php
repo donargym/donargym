@@ -48,15 +48,19 @@ final class NewsController
      */
     public function newsPosts(Request $request): Response
     {
-        $form = null;
+        $form      = null;
+        $showModal = false;
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             $form = $this->formFactory->create(NewsPostType::class);
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $newsPost = NewsPost::createFromForm($form->getData(), $this->clock);
-                $this->newsPostRepository->insert($newsPost);
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    $newsPost = NewsPost::createFromForm($form->getData(), $this->clock);
+                    $this->newsPostRepository->insert($newsPost);
 
-                return new RedirectResponse($this->router->generate('newsPosts'));
+                    return new RedirectResponse($this->router->generate('newsPosts'));
+                }
+                $showModal = true;
             }
         }
 
@@ -64,8 +68,9 @@ final class NewsController
             $this->twig->render(
                 '@PublicInformation/default/news.html.twig',
                 [
-                    'newPosts' => $this->newsPostRepository->findTenMostRecentNewsPosts(),
-                    'form'     => $form ? $form->createView() : null,
+                    'newPosts'  => $this->newsPostRepository->findTenMostRecentNewsPosts(),
+                    'form'      => $form ? $form->createView() : null,
+                    'showModal' => $showModal,
                 ]
             )
         );
@@ -109,7 +114,7 @@ final class NewsController
     }
 
     /**
-     * @Route("/agenda/edit-news-post/{id}", name="editNewsPost", methods={"GET", "POST"})
+     * @Route("/news/edit-news-post/{id}", name="editNewsPost", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function editNewsPost(Request $request, int $id): Response
