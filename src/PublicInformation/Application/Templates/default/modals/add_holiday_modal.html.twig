@@ -1,0 +1,24 @@
+<div id="add-holiday-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        {{ form_start(form) }}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% trans %}add_holiday_modal.title{% endtrans %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form_row(form.name) }}
+                {{ form_row(form.startDate) }}
+                {{ form_row(form.endDate) }}
+            </div>
+            <div class="modal-footer">
+                {{ form_end(form) }}
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    {% trans %}form.cancel{% endtrans %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

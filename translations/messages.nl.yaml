@@ -177,3 +177,11 @@ news_post_form:
 
 add_news_post_modal:
   title: "Nieuwsbericht toevoegen"
+
+add_holiday_modal:
+  title: "Vakantie of feestdag toevoegen"
+
+holiday_form:
+  name: "Naam"
+  start_date: "Startdatum"
+  end_date: "Einddatum"
