@@ -7,6 +7,7 @@ use App\Shared\Domain\EmailAddress;
 use App\Shared\Domain\EmailTemplateType;
 use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
 
-class SecurityController extends BaseController
+class SecurityController extends AbstractController
 {
     private AuthenticationUtils $authenticationUtils;
     private Environment $twig;

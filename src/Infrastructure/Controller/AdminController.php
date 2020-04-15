@@ -11,6 +11,7 @@ use App\Shared\Domain\EmailAddress;
 use App\Shared\Domain\EmailTemplateType;
 use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 /**
  * @IsGranted("ROLE_ADMIN")
  */
-class AdminController extends BaseController
+class AdminController extends AbstractController
 {
     /**
      * @var SymfonyMailer

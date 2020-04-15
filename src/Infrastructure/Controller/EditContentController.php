@@ -5,6 +5,7 @@ namespace App\Infrastructure\Controller;
 use App\Entity\Clubblad;
 use App\Entity\Formulieren;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @IsGranted("ROLE_ADMIN")
  */
-class EditContentController extends BaseController
+class EditContentController extends AbstractController
 {
     /**
      * @Route("/nieuws/clubblad/add/", name="addClubbladPage", methods={"GET", "POST"})

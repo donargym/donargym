@@ -23,6 +23,7 @@ use App\Shared\Domain\EmailTemplateType;
 use App\Shared\Domain\ImageResizer;
 use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\User;
 
 
-class SelectieController extends BaseController
+class SelectieController extends AbstractController
 {
     /**
      * @var SymfonyMailer
@@ -1461,7 +1462,9 @@ class SelectieController extends BaseController
         $aanwezigheid = $this->getDoctrine()->getManager()->find('App:Aanwezigheid', $aanwezigheidId);
         $datum        = $aanwezigheid->getTrainingsdata()->getLesdatum()->format('d-m-Y');
         if ($aanwezigheid->getPersoon()->getUser() == $userObject) {
-            $this->removeFromDB($aanwezigheid);
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($aanwezigheid);
+            $em->flush();
         }
 
         $persoonItems = $this->getOnePersoon($userObject, $id, true);
