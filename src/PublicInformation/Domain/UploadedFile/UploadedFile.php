@@ -29,8 +29,7 @@ class UploadedFile
         $self->name = $formData['name'];
         /** @var SymfonyUploadedFile $uploadedFile */
         $uploadedFile   = $formData['file'];
-        $tempLocation   = $uploadedFile->getPathname();
-        $self->fileName = sha1(uniqid(mt_rand(), true)) . '.' . $uploadedFile->getClientOriginalExtension();
+        $self->fileName = sha1(uniqid((string) mt_rand(), true)) . '.' . $uploadedFile->getClientOriginalExtension();
         $uploadedFile->move($uploadLocation, $self->fileName);
 
         return $self;

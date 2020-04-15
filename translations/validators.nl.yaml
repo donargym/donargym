@@ -11,3 +11,6 @@ picture_upload:
 
 file_upload:
   max_size: "Dit bestand is te groot, maximale grootte is 10Mb"
+
+club_magazine_upload:
+  max_size: "Dit bestand is te groot, maximale grootte is 10Mb"

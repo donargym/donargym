@@ -2,11 +2,9 @@
 
 namespace App\Infrastructure\Controller;
 
-use App\Entity\Clubblad;
 use App\Entity\Formulieren;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,40 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EditContentController extends AbstractController
 {
-    /**
-     * @Route("/nieuws/clubblad/add/", name="addClubbladPage", methods={"GET", "POST"})
-     */
-    public function addClubbladPageAction(Request $request)
-    {
-        $clubblad = new Clubblad();
-        $form     = $this->createFormBuilder($clubblad)
-            ->add(
-                'datum',
-                DateType::class,
-                [
-                    'widget' => 'single_text',
-                ]
-            )
-            ->add('file')
-            ->add('uploadBestand', SubmitType::class)
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($clubblad);
-            $em->flush();
-
-            return $this->redirectToRoute('holidays');
-        } else {
-            return $this->render(
-                '@PublicInformation/default/addClubblad.html.twig',
-                [
-                    'form' => $form->createView(),
-                ]
-            );
-        }
-    }
-
     /**
      * @Route("/subscription/formulieren/add/", name="addFormulierenPage", methods={"GET", "POST"})
      */

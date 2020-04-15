@@ -30,7 +30,7 @@ class Picture
         $self->name = $formData['name'];
         /** @var UploadedFile $uploadedFile */
         $uploadedFile   = $formData['file'];
-        $self->fileName = sha1(uniqid(mt_rand(), true)) . '.' . $uploadedFile->getClientOriginalExtension();
+        $self->fileName = sha1(uniqid((string) mt_rand(), true)) . '.' . $uploadedFile->getClientOriginalExtension();
         $imageResizer->resizeByChangingWidth($uploadedFile->getPathname(), $uploadLocation . $self->fileName, 600);
 
         return $self;

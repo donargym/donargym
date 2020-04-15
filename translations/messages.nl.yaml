@@ -192,3 +192,10 @@ add_frequently_asked_question_modal:
 frequently_asked_question_form:
   question: "Vraag"
   answer: "Antwoord"
+
+club_magazine_form:
+  issueDate: "Datum van uitgave"
+  file: "Selecteer een bestand"
+
+add_club_magazine_modal:
+  title: "Clubblad uploaden"

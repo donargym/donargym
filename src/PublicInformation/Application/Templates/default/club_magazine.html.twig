@@ -2,10 +2,9 @@
 
 {% block body %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('addClubbladPage') }}">
-            Clubblad uploaden:
-            <img src="{{ asset('images/add.png') }}" width="18px" alt="Clubblad uploaden"/>
-        </a>
+        <input type="image" src="{{ asset('images/add.png') }}" width="18px"
+               data-toggle="modal" data-target="#add-club-magazine-modal"
+               alt="{% trans %}add_club_magazine_modal.title{% endtrans %}"/>
     {% endif %}
 
     <h1>Clubblad</h1>
@@ -16,7 +15,7 @@
             <tr>
                 {% for clubMagazine in clubMagazines.clubMagazinesForYear(year) %}
                     <td style="text-align:center;">
-                        <a href="/uploads/clubblad/{{ clubMagazine.fileName }}" target="blank">
+                        <a href="{{ locationFromWebRoot }}{{ clubMagazine.fileName }}" target="blank">
                             <img src="{{ asset('images/donarlogo.jpg') }}" width="85" alt="Bekijk clubblad"/><br>
                             {% set label = 'month.' ~ clubMagazine.issueDate|date('F') %}
                             {{ label|trans }} {{ year }}
@@ -36,11 +35,18 @@
 {% block modals %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         {% include '@PublicInformation/default/modals/remove_club_magazine_modal.html.twig' %}
+        {% include '@PublicInformation/default/modals/add_club_magazine_modal.html.twig' %}
     {% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
         <script type="text/javascript" src="{{ asset('js/remove-club-magazine.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/file-input-fix.js') }}"></script>
+        {% if showModal %}
+            <script type="text/javascript">
+                $('#add-club-magazine-modal').modal('show');
+            </script>
+        {% endif %}
     {% endif %}
 {% endblock %}
