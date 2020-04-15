@@ -199,3 +199,10 @@ club_magazine_form:
 
 add_club_magazine_modal:
   title: "Clubblad uploaden"
+
+subscription_paper_form_form:
+  name: "Naam van het formulier"
+  file: "Selecteer een formulier"
+
+add_paper_form_modal:
+  title: "Formulier toevoegen"

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\DoctrineDbal;
@@ -26,8 +25,7 @@ final class DbalSubscriptionPaperFormRepository
             ->andWhere('id = :id')
             ->setParameter('id', $id)
             ->execute();
-
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row       = $statement->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
             return null;
         }
@@ -37,17 +35,35 @@ final class DbalSubscriptionPaperFormRepository
 
     public function findAll(): SubscriptionPaperForms
     {
-        $statement = $this->connection->createQueryBuilder()
+        $statement              = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('formulieren')
             ->execute();
-
         $subscriptionPaperForms = [];
         while (($row = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
             $subscriptionPaperForms[] = $this->hydrate($row);
         }
 
         return SubscriptionPaperForms::fromArray($subscriptionPaperForms);
+    }
+
+    public function insert(SubscriptionPaperForm $subscriptionPaperForm): void
+    {
+        $this->connection->createQueryBuilder()
+            ->insert('formulieren')
+            ->values(
+                [
+                    'naam'    => ':name',
+                    'locatie' => ':fileName',
+                ]
+            )
+            ->setParameters(
+                [
+                    'name'     => $subscriptionPaperForm->name(),
+                    'fileName' => $subscriptionPaperForm->fileName(),
+                ]
+            )
+            ->execute();
     }
 
     public function remove(int $id): void

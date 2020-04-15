@@ -14,3 +14,6 @@ file_upload:
 
 club_magazine_upload:
   max_size: "Dit bestand is te groot, maximale grootte is 10Mb"
+
+subscription_paper_form_upload:
+  max_size: "Dit bestand is te groot, maximale grootte is 10Mb"
