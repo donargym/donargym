@@ -28,12 +28,22 @@ final class FixUserDataCommand extends Command
             ->execute()
             ->fetchAll();
         foreach ($users as $user) {
-            $this->insertUser($user['username'], $user['password'], $user['id']);
-            if ($user['email2']) {
-                $this->insertUser($user['email2'], $user['password'], $user['id']);
-            }
-            if ($user['email3']) {
-                $this->insertUser($user['email3'], $user['password'], $user['id']);
+            switch ($user['role']) {
+                case 'ROLE_TRAINER':
+                case 'ROLE_ASSISTENT':
+                case 'ROLE_TURNSTER':
+                case 'ROLE_COMPETITION_GROUP':
+                case 'ROLE_ADMIN':
+                $this->insertUser($user['username'], $user['password'], $user['id']);
+                if ($user['email2']) {
+                    $this->insertUser($user['email2'], $user['password'], $user['id']);
+                }
+                if ($user['email3']) {
+                    $this->insertUser($user['email3'], $user['password'], $user['id']);
+                }
+                    break;
+                default:
+                    continue;
             }
         }
 
@@ -44,6 +54,9 @@ final class FixUserDataCommand extends Command
     {
         if (strtolower($username) === 'admin') {
             $username = 'admin@donargym.nl';
+        }
+        if (strtolower($username) === 'webmaster@donargym.nl') {
+            return;
         }
         try {
             $this->connection->createQueryBuilder()

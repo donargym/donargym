@@ -2,6 +2,7 @@ twig:
   paths:
     'templates': ~
     'src/PublicInformation/Application/Templates': 'PublicInformation'
+    'src/CompetitionGroup/Application/Templates': 'CompetitionGroup'
     'src/Shared/Application/Templates': 'Shared'
     'src/Subscription/Application/Templates': 'Subscription'
   form_themes: ['bootstrap_4_layout.html.twig']

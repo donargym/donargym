@@ -29,9 +29,9 @@ final class FixUserRolesCommand extends Command
             ->fetchAll();
         foreach ($users as $user) {
             switch ($user['role']) {
-                case 'ROLE_COMPETITION_GROUP':
-                case 'ROLE_COMPETITION_GROUP':
-                case 'ROLE_COMPETITION_GROUP':
+                case 'ROLE_TRAINER':
+                case 'ROLE_ASSISTENT':
+                case 'ROLE_TURNSTER':
                     $this->updateUserWithRole(Role::ROLE_COMPETITION_GROUP, $user['id']);
                     break;
                 default:
