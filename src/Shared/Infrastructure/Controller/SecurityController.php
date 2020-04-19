@@ -87,23 +87,6 @@ final class SecurityController
     }
 
     /**
-     * @Route("/login-check", name="loginCheck")
-     */
-    public function loginCheck()
-    {
-    }
-
-    /**
-     * @Route("/pre-logout", name="preLogout")
-     */
-    public function preLogout(): Response
-    {
-        unset($_SESSION['username']);
-
-        return new RedirectResponse($this->router->generate('logout'));
-    }
-
-    /**
      * @Route("/inloggen/", name="redirectToCorrectLoginPage", methods={"GET"})
      *
      * @IsGranted("ROLE_USER")
