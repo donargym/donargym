@@ -1,0 +1,27 @@
+{% extends '@Shared/base.html.twig' %}
+
+{% block body %}
+    <h1>Inloggen</h1>
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form method="post">
+        <label class="sr-only" for="inputEmail">{% trans %}login_form.email_address{% endtrans %}</label>
+        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="{% trans %}login_form.email_address{% endtrans %}" required autofocus>
+        <label class="sr-only" for="inputPassword">{% trans %}login_form.password{% endtrans %}</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="{% trans %}login_form.password{% endtrans %}" required>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="_remember_me"> {% trans %}login_form.remember_me{% endtrans %}
+            </label>
+        </div>
+
+        <p><a href="{{ path('getNewCredentials') }}"><span style="font-size: small;">Wachtwoord vergeten?</span></a></p>
+        <button class="btn btn-primary" type="submit">
+            {% trans %}login_form.login_button{% endtrans %}
+        </button>
+    </form>
+{% endblock %}

@@ -1,53 +1,57 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Infrastructure\Controller;
+namespace App\Shared\Infrastructure\Controller;
 
 use App\Security\Domain\PasswordGenerator;
 use App\Shared\Domain\EmailAddress;
 use App\Shared\Domain\EmailTemplateType;
+use App\Shared\Domain\Security\UserStorage;
 use App\Shared\Infrastructure\SymfonyMailer\SymfonyMailer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
 
-class SecurityController extends AbstractController
+final class SecurityController
 {
-    private AuthenticationUtils $authenticationUtils;
-    private Environment $twig;
-    private RouterInterface $router;
-    private SymfonyMailer $mailer;
+    private AuthenticationUtils   $authenticationUtils;
+    private Environment           $twig;
+    private RouterInterface       $router;
+    private SymfonyMailer         $mailer;
+    private UserStorage           $userStorage;
 
     public function __construct(
         AuthenticationUtils $authenticationUtils,
         Environment $twig,
         RouterInterface $router,
-        SymfonyMailer $mailer
-    )
-    {
+        SymfonyMailer $mailer,
+        UserStorage $userStorage
+    ) {
         $this->authenticationUtils = $authenticationUtils;
         $this->twig                = $twig;
         $this->router              = $router;
         $this->mailer              = $mailer;
+        $this->userStorage         = $userStorage;
     }
 
     /**
      * @Route("/login", name="loginRoute")
      */
-    public function login()
+    public function login(): Response
     {
         $error        = $this->authenticationUtils->getLastAuthenticationError();
         $lastUsername = $this->authenticationUtils->getLastUsername();
 
         return new Response(
             $this->twig->render(
-                '@Security/security/login.html.twig',
+                '@Shared/security/login.html.twig',
                 [
                     'last_username' => $lastUsername,
                     'error'         => $error,
@@ -66,7 +70,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/pre-logout", name="preLogout")
      */
-    public function preLogout()
+    public function preLogout(): Response
     {
         unset($_SESSION['username']);
 
@@ -74,38 +78,35 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/inloggen/", name="getInloggenPage", methods={"GET"})
+     * @Route("/inloggen/", name="redirectToCorrectLoginPage", methods={"GET"})
      *
      * @IsGranted("ROLE_INGELOGD")
      */
-    public function getInloggenPageAction()
+    public function redirectToCorrectLoginPage(): Response
     {
-        $user  = $this->getUser();
+        $user  = $this->userStorage->getUser();
         $roles = $user->getRoles();
         switch ($roles[0]) {
             case 'ROLE_ADMIN':
-                return $this->redirectToRoute('publicPictures');
+                return new RedirectResponse($this->router->generate('publicPictures'));
                 break;
             case 'ROLE_TRAINER':
             case 'ROLE_ASSISTENT':
             case 'ROLE_TURNSTER':
-                return $this->redirectToRoute('getSelectieIndexPage');
+                return new RedirectResponse($this->router->generate('getSelectieIndexPage'));
                 break;
             default:
-                return $this->render(
-                    '@Shared/error/page_not_found.html.twig',
-                    array()
-                );
+                throw new NotFoundHttpException();
         }
     }
 
     /**
-     * @Route("/inloggen/new_pass/", name="getNewPassPage", methods={"GET", "POST"})
+     * @Route("/inloggen/new_pass/", name="getNewCredentials", methods={"GET", "POST"})
      */
-    public function getNewPassPageAction(Request $request, EncoderFactoryInterface $encoderFactory)
+    public function getNewCredentials(Request $request, EncoderFactoryInterface $encoderFactory)
     {
+        return new RedirectResponse($this->router->generate('loginRoute'));
         $error = "";
-
         if ($request->getMethod() == 'POST') {
             $email = $request->request->get('email');
             $em    = $this->getDoctrine()->getManager();
@@ -127,7 +128,6 @@ class SecurityController extends AbstractController
                     ->getEncoder($user);
                 $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
                 $em->flush();
-
                 $subject          = 'Inloggegevens website Donar';
                 $templateLocation = 'mails/new_password.txt.twig';
                 $parameters       = [
@@ -136,7 +136,6 @@ class SecurityController extends AbstractController
                     'email3'   => $user->getEmail3(),
                     'password' => $password,
                 ];
-
                 $this->mailer->sendEmail(
                     $subject,
                     EmailAddress::fromString($user->getUsername()),
@@ -144,7 +143,6 @@ class SecurityController extends AbstractController
                     EmailTemplateType::TEXT(),
                     $parameters
                 );
-
                 if ($user->getEmail2()) {
                     $this->mailer->sendEmail(
                         $subject,
@@ -154,7 +152,6 @@ class SecurityController extends AbstractController
                         $parameters
                     );
                 }
-
                 if ($user->getEmail3()) {
                     $this->mailer->sendEmail(
                         $subject,
@@ -164,16 +161,15 @@ class SecurityController extends AbstractController
                         $parameters
                     );
                 }
-
                 $error = 'Een nieuw wachtwoord is gemaild';
             }
         }
 
         return $this->render(
-            '@Security/security/request_new_password.html.twig',
-            array(
+            '@Shared/security/request_new_password.html.twig',
+            [
                 'error' => $error,
-            )
+            ]
         );
     }
 }

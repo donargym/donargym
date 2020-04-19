@@ -1,4 +1,4 @@
-{% extends 'inloggen/adminIndex.html.twig' %}
+{% extends '@Shared/base.html.twig' %}
 
 {% block inlogNavigation %}
     <div id="inlog_nav">
@@ -21,7 +21,7 @@
         <a href="{{ path('editAdminTrainerPage', { 'id': persoon.id }) }}"><img src="{{ asset('images/edit.png') }}" width="18px" /></a>
         <a href="{{ path('removeAdminTrainerPage', { 'id': persoon.id }) }}"><img src="{{ asset('images/remove.png') }}" width="18px" /></a>
 		{% if not is_granted('ROLE_PREVIOUS_ADMIN') %}
-            <a href="{{ path('getInloggenPage', {'_switch_user': persoon.username}) }}">
+            <a href="{{ path('redirectToCorrectLoginPage', {'_switch_user': persoon.username}) }}">
                 <img src="{{ asset('images/login_as.png') }}" width="18px"/>
             </a>
         {% endif %}

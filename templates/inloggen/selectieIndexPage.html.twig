@@ -28,7 +28,7 @@
                     </a></li>
             {% endfor %}
             {% if is_granted('ROLE_PREVIOUS_ADMIN') or is_granted('ROLE_PREVIOUS_TRAINER') %}
-            	<li><a href="{{ path('getInloggenPage', {'_switch_user': '_exit'}) }}">
+            	<li><a href="{{ path('redirectToCorrectLoginPage', {'_switch_user': '_exit'}) }}">
                     Uitloggen
 				</a></li>
             {% else %}

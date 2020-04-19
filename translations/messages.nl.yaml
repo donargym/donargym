@@ -206,3 +206,9 @@ subscription_paper_form_form:
 
 add_paper_form_modal:
   title: "Formulier toevoegen"
+
+login_form:
+  remember_me: "Ingelogd blijven"
+  email_address: "Emailadres"
+  password: "Wachtwoord"
+  login_button: "Inloggen"

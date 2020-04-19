@@ -1,12 +1,10 @@
 security:
     encoders:
-        App\Entity\User:
+        App\Shared\Domain\Security\User:
             algorithm: auto
     providers:
-        db_provider:
-            entity:
-                class: App:User
-                property: 'username'
+        dbal_provider:
+            id: App\Shared\Infrastructure\DoctrineDbal\DbalUserRepository
 
     role_hierarchy:
         ROLE_INGELOGD:    [ROLE_USER]
@@ -22,14 +20,11 @@ security:
 
         main:
             pattern: ^/
-            http_basic: ~
-            provider: db_provider
+            provider: dbal_provider
             anonymous:  true
-            form_login:
-                login_path: /login
-                check_path: /login-check
-                csrf_token_generator: security.csrf.token_manager
-                default_target_path: /inloggen
+            guard:
+                authenticators:
+                    - App\Shared\Domain\Security\LoginFormAuthenticator
             switch_user: true
             logout:
                 path: logout

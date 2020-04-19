@@ -27,6 +27,10 @@ services:
         resource: '../src/PublicInformation/Infrastructure/Controller'
         tags: ['controller.service_arguments']
 
+    App\Shared\Infrastructure\Controller\:
+        resource: '../src/Shared/Infrastructure/Controller'
+        tags: ['controller.service_arguments']
+
     App\Subscription\Infrastructure\Controller\:
         resource: '../src/Subscription/Infrastructure/Controller'
         tags: ['controller.service_arguments']
@@ -37,6 +41,5 @@ services:
 imports:
     - { resource: ../src/PublicInformation/services.yaml }
     - { resource: ../src/Shared/services.yaml }
-    - { resource: ../src/Security/services.yaml }
     - { resource: ../src/Temporary/services.yaml }
     - { resource: ../src/Subscription/services.yaml }

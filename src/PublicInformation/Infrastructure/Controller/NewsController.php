@@ -141,7 +141,7 @@ final class NewsController
 
         return new Response(
             $this->twig->render(
-                '@PublicInformation/default/add_or_edit_news_post.html.twig',
+                '@PublicInformation/default/edit_news_post.html.twig',
                 ['form' => $form->createView(), 'referer' => $request->headers->get('referer')]
             )
         );
