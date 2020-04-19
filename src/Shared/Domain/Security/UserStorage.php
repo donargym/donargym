@@ -14,14 +14,14 @@ final class UserStorage
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserCredentials
     {
         $token = $this->tokenStorage->getToken();
         if (!$token) {
             return null;
         }
         $user = $token->getUser();
-        if (!$user instanceof User) {
+        if (!$user instanceof UserCredentials) {
             return null;
         }
 

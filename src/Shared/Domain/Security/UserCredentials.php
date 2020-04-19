@@ -8,15 +8,32 @@ use DateTimeImmutable;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-final class User implements UserInterface
+final class UserCredentials implements UserInterface
 {
+    private int                             $userId;
     private string                          $role;
     private ?string                         $encryptedPassword;
     private string                          $username;
     private ?PasswordToken                  $passwordToken;
     private ?DateTimeImmutable              $tokenExpiresAt;
 
+    public static function createNew(
+        int $userId,
+        string $role,
+        string $username,
+        SystemClock $clock
+    ): self {
+        $self           = new self();
+        $self->userId   = $userId;
+        $self->role     = $role;
+        $self->username = $username;
+        $self->generateSetPasswordToken($clock);
+
+        return $self;
+    }
+
     public static function createFromDataSource(
+        int $userId,
         string $role,
         ?string $encryptedPassword,
         string $username,
@@ -24,6 +41,7 @@ final class User implements UserInterface
         ?DateTimeImmutable $tokenExpiresAt
     ): self {
         $self                    = new self();
+        $self->userId            = $userId;
         $self->role              = $role;
         $self->encryptedPassword = $encryptedPassword;
         $self->username          = $username;
@@ -31,6 +49,11 @@ final class User implements UserInterface
         $self->tokenExpiresAt    = $tokenExpiresAt;
 
         return $self;
+    }
+
+    public function userId(): int
+    {
+        return $this->userId;
     }
 
     public function getRoles(): array

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\SymfonyMailer;
 
-use App\Shared\Domain\Security\User;
+use App\Shared\Domain\Security\UserCredentials;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -25,7 +25,7 @@ class SymfonyPasswordConfirmationMailer
         $this->router     = $router;
     }
 
-    public function notify(User $user): void
+    public function notify(UserCredentials $user): void
     {
         $message = new TemplatedEmail();
         $message->subject($this->translator->trans('password_confirmation_mail.subject'))

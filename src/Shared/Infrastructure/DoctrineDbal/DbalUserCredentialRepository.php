@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Shared\Infrastructure\DoctrineDbal;
 
 use App\Shared\Domain\Security\PasswordToken;
-use App\Shared\Domain\Security\User;
+use App\Shared\Domain\Security\UserCredentials;
 use App\Shared\Domain\SystemClock;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
@@ -23,7 +23,7 @@ final class DbalUserCredentialRepository implements UserProviderInterface
         $this->connection = $connection;
     }
 
-    public function loadUserByUsername(string $username): User
+    public function loadUserByUsername(string $username): UserCredentials
     {
         $statement = $this->connection->createQueryBuilder()
             ->select(
@@ -43,12 +43,11 @@ final class DbalUserCredentialRepository implements UserProviderInterface
         return $this->hydrate($row);
     }
 
-    public function findByPasswordToken(PasswordToken $passwordToken, SystemClock $clock): ?User
+    public function findByPasswordToken(PasswordToken $passwordToken, SystemClock $clock): ?UserCredentials
     {
         $statement = $this->connection->createQueryBuilder()
             ->select(
                 'uc.*',
-                'u.id',
                 'u.role'
             )->from('user_credentials', 'uc')
             ->join('uc', 'user', 'u', 'u.id = uc.user_id')
@@ -70,7 +69,7 @@ final class DbalUserCredentialRepository implements UserProviderInterface
         return $this->hydrate($row);
     }
 
-    public function refreshUser(UserInterface $user): User
+    public function refreshUser(UserInterface $user): UserCredentials
     {
         if (!$this->supportsClass(get_class($user))) {
             throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));
@@ -79,7 +78,33 @@ final class DbalUserCredentialRepository implements UserProviderInterface
         return $this->loadUserByUsername($user->getUsername());
     }
 
-    public function update(User $user): void
+    public function insert(UserCredentials $user): void
+    {
+        $this->connection->createQueryBuilder()
+            ->insert('user_credentials')
+            ->values(
+                [
+                    'username'         => ':username',
+                    'user_id'          => ':userId',
+                    'password_token'   => ':passwordToken',
+                    'token_expires_at' => ':tokenExpiresAt'
+                ]
+            )
+            ->set('password_token', ':passwordToken')
+            ->set('token_expires_at', ':tokenExpiresAt')
+            ->where('username = :username')
+            ->setParameters(
+                [
+                    'username'       => $user->getUsername(),
+                    'userId'         => $user->userId(),
+                    'passwordToken'  => $user->passwordToken()->toString(),
+                    'tokenExpiresAt' => $user->tokenExpiresAt(),
+                ],
+                ['tokenExpiresAt' => Types::DATETIME_IMMUTABLE]
+            )->execute();
+    }
+
+    public function update(UserCredentials $user): void
     {
         $this->connection->createQueryBuilder()
             ->update('user_credentials')
@@ -99,12 +124,13 @@ final class DbalUserCredentialRepository implements UserProviderInterface
 
     public function supportsClass(string $class): bool
     {
-        return User::class === $class;
+        return UserCredentials::class === $class;
     }
 
-    private function hydrate(array $row): User
+    private function hydrate(array $row): UserCredentials
     {
-        return User::createFromDataSource(
+        return UserCredentials::createFromDataSource(
+            (int) $row['user_id'],
             $row['role'],
             $row['encrypted_password'],
             $row['username'],
