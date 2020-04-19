@@ -102,7 +102,7 @@ class AdminController extends AbstractController
             }
         }
         if ($request->getMethod() == 'POST') {
-            $role  = 'ROLE_ASSISTENT';
+            $role  = 'ROLE_COMPETITION_GROUP';
             $query = $em->createQuery(
                 'SELECT user
                 FROM App:User user
@@ -151,11 +151,11 @@ class AdminController extends AbstractController
                         'groep_' . $groep->getId()
                     ) == 'Assistent-Trainer') {
                     if ($request->request->get('groep_' . $groep->getId()) == 'Trainer') {
-                        $role = 'ROLE_TRAINER';
+                        $role = 'ROLE_COMPETITION_GROUP';
                     } elseif ($request->request->get(
                             'groep_' . $groep->getId()
-                        ) == 'Assistent-Trainer' && $role != 'ROLE_TRAINER') {
-                        $role = 'ROLE_ASSISTENT';
+                        ) == 'Assistent-Trainer' && $role != 'ROLE_COMPETITION_GROUP') {
+                        $role = 'ROLE_COMPETITION_GROUP';
                     }
                     $query           = $em->createQuery(
                         'SELECT groepen
@@ -441,16 +441,16 @@ class AdminController extends AbstractController
                     }
                 }
             }
-            $role     = 'ROLE_TURNSTER';
+            $role     = 'ROLE_COMPETITION_GROUP';
             $personen = $user->getPersoon();
             foreach ($personen as $persoonItem) {
                 $functie = $persoonItem->getFunctie();
                 if ($functie) {
                     foreach ($functie as $functieItem) {
                         if ($functieItem->getFunctie() == 'Trainer') {
-                            $role = 'ROLE_TRAINER';
-                        } elseif ($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
-                            $role = 'ROLE_ASSISTENT';
+                            $role = 'ROLE_COMPETITION_GROUP';
+                        } elseif ($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_COMPETITION_GROUP') {
+                            $role = 'ROLE_COMPETITION_GROUP';
                         }
                     }
                 }
@@ -514,7 +514,7 @@ class AdminController extends AbstractController
             $personen = $user->getPersoon();
             $em->remove($persoon);
             $em->flush();
-            $role = 'ROLE_TURNSTER';
+            $role = 'ROLE_COMPETITION_GROUP';
             if (count($personen) == 0) {
                 $em->remove($user);
                 $em->flush();
@@ -523,9 +523,9 @@ class AdminController extends AbstractController
                     $functie = $persoonItem->getFunctie();
                     foreach ($functie as $functieItem) {
                         if ($functieItem->getFunctie() == 'Trainer') {
-                            $role = 'ROLE_TRAINER';
-                        } elseif ($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
-                            $role = 'ROLE_ASSISTENT';
+                            $role = 'ROLE_COMPETITION_GROUP';
+                        } elseif ($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_COMPETITION_GROUP') {
+                            $role = 'ROLE_COMPETITION_GROUP';
                         }
                     }
                 }

@@ -4,14 +4,11 @@ security:
             algorithm: auto
     providers:
         dbal_provider:
-            id: App\Shared\Infrastructure\DoctrineDbal\DbalUserRepository
+            id: App\Shared\Infrastructure\DoctrineDbal\DbalUserCredentialRepository
 
     role_hierarchy:
-        ROLE_INGELOGD:    [ROLE_USER]
-        ROLE_TURNSTER:    [ROLE_INGELOGD]
-        ROLE_ASSISTENT:   [ROLE_TURNSTER]
-        ROLE_TRAINER:     [ROLE_ASSISTENT, ROLE_ALLOWED_TO_SWITCH]
-        ROLE_ADMIN:       [ROLE_INGELOGD, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_COMPETITION_GROUP: [ROLE_USER, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ADMIN:             [ROLE_USER, ROLE_ALLOWED_TO_SWITCH]
 
     firewalls:
         dev:

@@ -78,7 +78,7 @@ class SelectieController extends AbstractController
 
     /**
      * @Route("/inloggen/selectie/", name="getSelectieIndexPage", methods={"GET"})
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      */
     public function getSelectieIndexPage()
     {
@@ -153,7 +153,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/editContactgegevens/", name="editContactgegevens", methods={"GET", "POST"})
      */
     public function editContactgegevens(Request $request)
@@ -267,7 +267,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/editEmail/", name="editEmail", methods={"GET", "POST"})
      */
     public function editEmail(Request $request)
@@ -303,7 +303,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/editEmail2/", name="editEmail2", methods={"GET", "POST"})
      */
     public function editEmail2(Request $request)
@@ -338,7 +338,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/editEmail3/", name="editEmail3", methods={"GET", "POST"})
      */
     public function editEmail3(Request $request)
@@ -372,7 +372,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/editPassword/", name="editPassword", methods={"GET", "POST"})
      */
     public function editPassword(Request $request, EncoderFactoryInterface $encoderFactory)
@@ -921,7 +921,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/addKalenderItem/{persoonId}/{groepId}/", name="addKalenderItem", methods={"GET", "POST"})
      */
     public function addWedstrijdkalenderItems($persoonId, $groepId, Request $request)
@@ -1023,7 +1023,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/editKalenderItem/{persoonId}/{groepId}/{kalenderItemId}", name="editKalenderItem", methods={"GET", "POST"})
      */
     public function editWedstrijdkalenderItems($persoonId, $groepId, $kalenderItemId, Request $request)
@@ -1148,7 +1148,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/removeKalenderItem/{persoonId}/{groepId}/{kalenderItemId}/", name="removeKalenderItem", methods={"GET"})
      */
     public function removeWedstrijdkalenderItems($persoonId, $groepId, $kalenderItemId, Request $request)
@@ -1409,7 +1409,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/", name="showPersoon", methods={"GET"})
      */
     public
@@ -1452,7 +1452,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/afmelden_annuleren/{groepId}/{aanwezigheidId}", name="afmelding_annuleren", methods={"GET"})
      */
     public function Afmelding_annuleren($id, $groepId, $aanwezigheidId)
@@ -1532,7 +1532,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/afmelden/{groepId}/", name="Afmelding", methods={"GET", "POST"})
      */
     public
@@ -1918,7 +1918,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ASSISTENT")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/viewAfmeldingen/{groepId}/", name="viewAfmeldingen", methods={"GET"})
      */
     public
@@ -1943,7 +1943,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ASSISTENT")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/viewAanwezigheid/{groepId}/", name="viewAanwezigheid", methods={"GET"})
      */
     public
@@ -2025,7 +2025,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/kruisjeslijst/{groepId}/", name="kruisjeslijst", methods={"GET"})
      */
     public
@@ -2079,7 +2079,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/kruisjeslijst/{groepId}/removeTraining/{trainingsdatumId}/", name="removeTrainingsdatum", methods={"GET", "POST"})
      */
     public
@@ -2164,7 +2164,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/kruisjeslijst/{groepId}/invullen/{trainingsdatumId}/", name="kruisjeslijstInvullen", methods={"GET", "POST"})
      */
     public
@@ -2258,7 +2258,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/adreslijst/{groepId}/", name="viewAdreslijst", methods={"GET", "POST"})
      */
     public
@@ -2282,7 +2282,7 @@ class SelectieController extends AbstractController
 
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/stukje/", name="addSelectieStukjePage", methods={"GET", "POST"})
      */
     public function addStukje($id, Request $request)
@@ -2324,7 +2324,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{id}/add/{groepsId}", name="addSelectieTurnsterPage", methods={"GET", "POST"})
      */
     public
@@ -2364,7 +2364,7 @@ class SelectieController extends AbstractController
             }
         }
         if ($request->getMethod() == 'POST') {
-            $role  = 'ROLE_TURNSTER';
+            $role  = 'ROLE_COMPETITION_GROUP';
             $query = $em->createQuery(
                 'SELECT user
                 FROM App:User user
@@ -2415,11 +2415,11 @@ class SelectieController extends AbstractController
             foreach ($groepen as $groep) {
                 if ($request->request->get('groep_' . $groep->getId()) == 'Turnster') {
                     if ($request->request->get('groep_' . $groep->getId()) == 'Trainer') {
-                        $role = 'ROLE_TRAINER';
+                        $role = 'ROLE_COMPETITION_GROUP';
                     } elseif ($request->request->get(
                             'groep_' . $groep->getId()
-                        ) == 'Assistent-Trainer' && $role != 'ROLE_TRAINER') {
-                        $role = 'ROLE_ASSISTENT';
+                        ) == 'Assistent-Trainer' && $role != 'ROLE_COMPETITION_GROUP') {
+                        $role = 'ROLE_COMPETITION_GROUP';
                     }
                     $query           = $em->createQuery(
                         'SELECT groepen
@@ -2554,7 +2554,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{trainerId}/remove/{turnsterId}/{groepId}", name="removeSelectieTurnsterPage", methods={"GET", "POST"})
      */
     public
@@ -2615,7 +2615,7 @@ class SelectieController extends AbstractController
                     }
                 }
             }
-            $role = 'ROLE_TURNSTER';
+            $role = 'ROLE_COMPETITION_GROUP';
             if (count($personen) == 0) {
                 $em->remove($user);
                 $em->flush();
@@ -2624,9 +2624,9 @@ class SelectieController extends AbstractController
                     $functie = $persoonItem->getFunctie();
                     foreach ($functie as $functieItem) {
                         if ($functieItem->getFunctie() == 'Trainer') {
-                            $role = 'ROLE_TRAINER';
-                        } elseif ($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_TURNSTER') {
-                            $role = 'ROLE_ASSISTENT';
+                            $role = 'ROLE_COMPETITION_GROUP';
+                        } elseif ($functieItem->getFunctie() == 'Assistent-Trainer' && $role == 'ROLE_COMPETITION_GROUP') {
+                            $role = 'ROLE_COMPETITION_GROUP';
                         }
                     }
                 }
@@ -2648,7 +2648,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{persoonId}/addFoto/", name="addSelectieFotoPage", methods={"GET", "POST"})
      */
     public
@@ -2732,7 +2732,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ASSISTENT")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{persoonId}/wedstrijduitslagen/{groepId}/", name="viewWedstrijduitslagen", methods={"GET"})
      */
     public
@@ -2773,7 +2773,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{persoonId}/addWedstrijduitslagen/{groepId}/", name="addWedstrijduitslagen", methods={"GET", "POST"})
      */
     public
@@ -2836,7 +2836,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{persoonId}/removeWedstrijduitslagen/{groepId}/{wedstrijduitslagId}/", name="removeWedstrijduitslagen", methods={"GET", "POST"})
      */
     public function removeSelectieWedstrijduitslagen(Request $request, $persoonId, $groepId, $wedstrijduitslagId)
@@ -2887,7 +2887,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TRAINER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{persoonId}/editTurnster/{groepId}/{turnsterId}/", name="editSelectieTurnster", methods={"GET", "POST"})
      */
     public function editSelectieTurnsterAction(Request $request, $persoonId, $turnsterId, $groepId)
@@ -3272,7 +3272,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ASSISTENT")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{persoonId}/viewTurnster/{turnsterId}/{groepId}/", name="viewSelectieTurnster", methods={"GET"})
      */
     public
@@ -3330,7 +3330,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{persoonId}/viewvloermuziek/{groepId}/", name="viewVloermuziek", methods={"GET"})
      */
     public function viewVloermuziek($persoonId, $groepId)
@@ -3360,7 +3360,7 @@ class SelectieController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_TURNSTER")
+     * @IsGranted("ROLE_COMPETITION_GROUP")
      * @Route("/inloggen/selectie/{persoonId}/addVloermuziek/{groepId}/{turnsterId}/", name="addSelectieVloermuziekPage", methods={"GET", "POST"})
      */
     public

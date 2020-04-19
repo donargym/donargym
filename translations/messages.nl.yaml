@@ -212,3 +212,10 @@ login_form:
   email_address: "Emailadres"
   password: "Wachtwoord"
   login_button: "Inloggen"
+  password_again: "Nogmaals uw wachtwoord"
+
+reset_password_mail:
+  subject: "Nieuw wachtwoord instellen"
+
+password_confirmation_mail:
+  subject: "Wachtwoord ingesteld"

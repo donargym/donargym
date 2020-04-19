@@ -65,6 +65,9 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implem
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
+        if (!$credentials['password']) {
+            throw new CustomUserMessageAuthenticationException('Password should not not be empty.');
+        }
         $user = $userProvider->loadUserByUsername($credentials['email']);
         if (!$user) {
             throw new CustomUserMessageAuthenticationException('Email could not be found.');

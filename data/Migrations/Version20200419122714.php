@@ -19,10 +19,10 @@ final class Version20200419122714 extends AbstractMigration
     {
         $table = $schema->createTable('user_credentials');
         $table->addColumn('username', Types::STRING, ['length' => 150]);
-        $table->addColumn('encrypted_password', Types::STRING);
+        $table->addColumn('encrypted_password', Types::STRING, ['notnull' => false]);
         $table->addColumn('user_id', Types::INTEGER);
-        $table->addColumn('password_reset_token', Types::STRING, ['notnull' => false]);
-        $table->addColumn('password_reset_requested_at', Types::DATETIME_IMMUTABLE, ['notnull' => false]);
+        $table->addColumn('set_password_token', Types::STRING, ['notnull' => false]);
+        $table->addColumn('token_expires_at', Types::DATETIME_IMMUTABLE, ['notnull' => false]);
         $table->setPrimaryKey(['username']);
     }
 
