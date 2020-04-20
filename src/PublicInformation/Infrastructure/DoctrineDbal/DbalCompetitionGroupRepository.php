@@ -1,11 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\DoctrineDbal;
 
 use App\PublicInformation\Domain\Competition\CompetitionGroup;
 use App\PublicInformation\Domain\Competition\CompetitionGroups;
+use App\Shared\Domain\CompetitionGroupId;
 use Doctrine\DBAL\Connection;
 use PDO;
 
@@ -18,16 +18,15 @@ final class DbalCompetitionGroupRepository
         $this->connection = $connection;
     }
 
-    public function find(int $groupId): ?CompetitionGroup
+    public function find(CompetitionGroupId $groupId): ?CompetitionGroup
     {
         $statement = $this->connection->createQueryBuilder()
-            ->select('id', 'name')
-            ->from('groepen')
+            ->select('*')
+            ->from('competition_group')
             ->andWhere('id = :id')
-            ->setParameter('id', $groupId)
+            ->setParameter('id', $groupId->toString())
             ->execute();
-
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row       = $statement->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
             return null;
         }
@@ -37,12 +36,11 @@ final class DbalCompetitionGroupRepository
 
     public function allGroups(): CompetitionGroups
     {
-        $statement = $this->connection->createQueryBuilder()
-            ->select('id', 'name')
-            ->from('groepen')
-            ->orderBy('id', 'ASC')
+        $statement         = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('competition_group')
+            ->orderBy('sort_order', 'ASC')
             ->execute();
-
         $competitionGroups = [];
         while (($row = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
             $competitionGroups[] = $this->hydrate($row);
@@ -54,7 +52,7 @@ final class DbalCompetitionGroupRepository
     private function hydrate(array $row): CompetitionGroup
     {
         return CompetitionGroup::fromDataSource(
-            (int) $row['id'],
+            CompetitionGroupId::fromString($row['id']),
             $row['name']
         );
     }

@@ -6,7 +6,7 @@ namespace App\PublicInformation\Domain\Competition;
 
 use DateTimeImmutable;
 
-final class CompetitionResult
+final class CompetitionGroupCompetitionResult
 {
     private string $label;
 

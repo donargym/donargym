@@ -1,18 +1,16 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Domain\Competition;
 
 use Assert\Assertion;
 
-final class CompetitionGroupFunction
+final class CompetitionGroupRole
 {
     const COACH           = 'Trainer';
     const ASSISTANT_COACH = 'Assistent-Trainer';
     const GYMNAST         = 'Turnster';
-
-    private string $competitionGroupFunction;
+    private string $competitionGroupRole;
 
     public static function COACH(): self
     {
@@ -41,24 +39,23 @@ final class CompetitionGroupFunction
         ];
     }
 
-    public static function fromString(string $competitionGroupFunction): self
+    public static function fromString(string $competitionGroupRole): self
     {
-        Assertion::inArray($competitionGroupFunction, self::allAsString());
-
-        $self = new self();
-        $self->competitionGroupFunction = $competitionGroupFunction;
+        Assertion::inArray($competitionGroupRole, self::allAsString());
+        $self                       = new self();
+        $self->competitionGroupRole = $competitionGroupRole;
 
         return $self;
     }
 
-    public function equals(CompetitionGroupFunction $other): bool
+    public function equals(CompetitionGroupRole $other): bool
     {
         return $this->toString() === $other->toString();
     }
 
     public function toString(): string
     {
-        return $this->competitionGroupFunction;
+        return $this->competitionGroupRole;
     }
 
     public function __toString()

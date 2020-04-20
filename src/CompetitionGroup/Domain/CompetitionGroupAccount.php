@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Shared\Domain\CompetitionGroup;
+namespace App\CompetitionGroup\Domain;
 
 use App\Shared\Domain\Address;
 use App\Shared\Domain\EmailAddresses;
@@ -9,13 +9,13 @@ use App\Shared\Domain\PhoneNumbers;
 use App\Shared\Domain\SystemClock;
 use DateTimeImmutable;
 
-final class Account
+final class CompetitionGroupAccount
 {
-    private AccountId         $accountId;
-    private Address           $address;
-    private PhoneNumbers      $phoneNumbers;
-    private EmailAddresses    $emailAddresses;
-    private DateTimeImmutable $createdAt;
+    private CompetitionGroupAccountId         $accountId;
+    private Address                           $address;
+    private PhoneNumbers                      $phoneNumbers;
+    private EmailAddresses                    $emailAddresses;
+    private DateTimeImmutable                 $createdAt;
 
     public static function createNew(
         Address $address,
@@ -24,7 +24,7 @@ final class Account
         SystemClock $clock
     ): self {
         $self                 = new self();
-        $self->accountId      = AccountId::generate();
+        $self->accountId      = CompetitionGroupAccountId::generate();
         $self->address        = $address;
         $self->phoneNumbers   = $phoneNumbers;
         $self->emailAddresses = $emailAddresses;
@@ -34,7 +34,7 @@ final class Account
     }
 
     public static function createFromDataSource(
-        AccountId $accountId,
+        CompetitionGroupAccountId $accountId,
         Address $address,
         PhoneNumbers $phoneNumbers,
         EmailAddresses $emailAddresses,
@@ -50,7 +50,7 @@ final class Account
         return $self;
     }
 
-    public function accountId(): AccountId
+    public function accountId(): CompetitionGroupAccountId
     {
         return $this->accountId;
     }

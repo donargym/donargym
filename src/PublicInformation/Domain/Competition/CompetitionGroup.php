@@ -1,20 +1,19 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Domain\Competition;
 
+use App\Shared\Domain\CompetitionGroupId;
+
 final class CompetitionGroup
 {
-    private int $id;
-
+    private CompetitionGroupId $id;
     private string $name;
 
     public static function fromDataSource(
-        int $id,
+        CompetitionGroupId $id,
         string $name
-    ): self
-    {
+    ): self {
         $self       = new self();
         $self->id   = $id;
         $self->name = $name;
@@ -22,7 +21,7 @@ final class CompetitionGroup
         return $self;
     }
 
-    public function id(): int
+    public function id(): CompetitionGroupId
     {
         return $this->id;
     }

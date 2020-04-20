@@ -8,21 +8,21 @@ use ArrayIterator;
 use Assert\Assertion;
 use IteratorAggregate;
 
-final class CompetitionResults implements IteratorAggregate
+final class CompetitionGroupCompetitionResults implements IteratorAggregate
 {
     /**
-     * @var CompetitionResult[]
+     * @var CompetitionGroupCompetitionResult[]
      */
     private array $competitionResults;
 
     /**
-     * @param CompetitionResult[] $competitionResults
+     * @param CompetitionGroupCompetitionResult[] $competitionResults
      *
      * @return static
      */
     public static function fromArray(array $competitionResults): self
     {
-        Assertion::allIsInstanceOf($competitionResults, CompetitionResult::class);
+        Assertion::allIsInstanceOf($competitionResults, CompetitionGroupCompetitionResult::class);
 
         $self                     = new self();
         $self->competitionResults = $competitionResults;

@@ -1,23 +1,16 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Domain\Competition;
 
-final class AboutGymnast
+final class AboutCompetitionGroupMember
 {
     private string $mostFunApparatus;
-
     private string $explanationAboutMostFunApparatus;
-
     private string $mostFunCompetition;
-
     private string $mostFunOrHardestSkill;
-
     private string $wouldLikeToLearn;
-
     private string $exampleGymnast;
-
     private string $anythingElse;
 
     public static function createFromDataSource(
@@ -28,8 +21,7 @@ final class AboutGymnast
         string $wouldLikeToLearn,
         string $exampleGymnast,
         string $anythingElse
-    ): self
-    {
+    ): self {
         $self                                   = new self();
         $self->mostFunApparatus                 = $mostFunApparatus;
         $self->explanationAboutMostFunApparatus = $explanationAboutMostFunApparatus;

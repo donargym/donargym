@@ -39,7 +39,7 @@ final class CompetitionGroupMembers implements IteratorAggregate
     {
         $competitionGroupMembers = [];
         foreach ($this->competitionGroupMembers as $competitionGroupMember) {
-            if ($competitionGroupMember->competitionGroupFunction()->equals(CompetitionGroupFunction::COACH())) {
+            if ($competitionGroupMember->competitionGroupRole()->equals(CompetitionGroupRole::COACH())) {
                 $competitionGroupMembers[] = $competitionGroupMember;
             }
         }
@@ -51,8 +51,8 @@ final class CompetitionGroupMembers implements IteratorAggregate
     {
         $competitionGroupMembers = [];
         foreach ($this->competitionGroupMembers as $competitionGroupMember) {
-            if ($competitionGroupMember->competitionGroupFunction()
-                ->equals(CompetitionGroupFunction::ASSISTANT_COACH())) {
+            if ($competitionGroupMember->competitionGroupRole()
+                ->equals(CompetitionGroupRole::ASSISTANT_COACH())) {
                 $competitionGroupMembers[] = $competitionGroupMember;
             }
         }
@@ -64,7 +64,7 @@ final class CompetitionGroupMembers implements IteratorAggregate
     {
         $competitionGroupMembers = [];
         foreach ($this->competitionGroupMembers as $competitionGroupMember) {
-            if ($competitionGroupMember->competitionGroupFunction()->equals(CompetitionGroupFunction::GYMNAST())) {
+            if ($competitionGroupMember->competitionGroupRole()->equals(CompetitionGroupRole::GYMNAST())) {
                 $competitionGroupMembers[] = $competitionGroupMember;
             }
         }

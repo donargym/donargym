@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\PublicInformation\Infrastructure\Controller;
 
-use App\PublicInformation\Infrastructure\DoctrineDbal\DbalAboutGymnastRepository;
+use App\PublicInformation\Infrastructure\DoctrineDbal\DbalAboutCompetitionGroupMemberRepository;
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionGroupMemberRepository;
 use App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository;
-use App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionResultRepository;
+use App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionGroupCompetitionResultRepository;
+use App\Shared\Domain\CompetitionGroupId;
+use App\Shared\Domain\CompetitionGroupMemberId;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,17 +16,17 @@ use Twig\Environment;
 
 final class CompetitionGroupController
 {
-    private DbalCompetitionGroupRepository       $competitionGroupRepository;
-    private DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository;
-    private DbalCompetitionResultRepository      $competitionResultRepository;
-    private DbalAboutGymnastRepository           $aboutGymnastRepository;
-    private Environment                          $twig;
+    private DbalCompetitionGroupRepository                      $competitionGroupRepository;
+    private DbalCompetitionGroupMemberRepository                $competitionGroupMemberRepository;
+    private DbalCompetitionGroupCompetitionResultRepository                     $competitionResultRepository;
+    private DbalAboutCompetitionGroupMemberRepository           $aboutGymnastRepository;
+    private Environment                                         $twig;
 
     public function __construct(
         DbalCompetitionGroupRepository $competitionGroupRepository,
         DbalCompetitionGroupMemberRepository $competitionGroupMemberRepository,
-        DbalCompetitionResultRepository $competitionResultRepository,
-        DbalAboutGymnastRepository $aboutGymnastRepository,
+        DbalCompetitionGroupCompetitionResultRepository $competitionResultRepository,
+        DbalAboutCompetitionGroupMemberRepository $aboutGymnastRepository,
         Environment $twig
     ) {
         $this->competitionGroupRepository       = $competitionGroupRepository;
@@ -37,9 +39,9 @@ final class CompetitionGroupController
     /**
      * @Route("/wedstrijdturnen/{groupId}", name="showCompetitionGroup", methods={"GET"})
      */
-    public function showCompetitionGroup(int $groupId): Response
+    public function showCompetitionGroup(string $groupId): Response
     {
-        $competitionGroup = $this->competitionGroupRepository->find($groupId);
+        $competitionGroup = $this->competitionGroupRepository->find(CompetitionGroupId::fromString($groupId));
         if (!$competitionGroup) {
             throw new NotFoundHttpException();
         }
@@ -49,7 +51,9 @@ final class CompetitionGroupController
                 '@PublicInformation/competitive_gymnastics/competition_group.html.twig',
                 [
                     'group'                   => $competitionGroup,
-                    'competitionGroupMembers' => $this->competitionGroupMemberRepository->findAllForGroup($groupId),
+                    'competitionGroupMembers' => $this->competitionGroupMemberRepository->findAllForGroup(
+                        CompetitionGroupId::fromString($groupId)
+                    ),
                 ]
             )
         );
@@ -58,9 +62,9 @@ final class CompetitionGroupController
     /**
      * @Route("/wedstrijdturnen/{groupId}/wedstrijduitslagen", name="competitionResults", methods={"GET"})
      */
-    public function competitionResults(int $groupId): Response
+    public function competitionResults(string $groupId): Response
     {
-        $competitionGroup = $this->competitionGroupRepository->find($groupId);
+        $competitionGroup = $this->competitionGroupRepository->find(CompetitionGroupId::fromString($groupId));
         if (!$competitionGroup) {
             throw new NotFoundHttpException();
         }
@@ -69,38 +73,41 @@ final class CompetitionGroupController
             $this->twig->render(
                 '@PublicInformation/competitive_gymnastics/competition_results.html.twig',
                 [
-                    'group'              => $competitionGroup,
-                    'competitionResults' => $this->competitionResultRepository->findAllForGroup($groupId),
+                    'group' => $competitionGroup,
+                    'competitionResults' => $this->competitionResultRepository->findAllForGroup(
+                        CompetitionGroupId::fromString($groupId)
+                    ),
                 ]
             )
         );
     }
 
     /**
-     * @Route("/wedstrijdturnen/{groupId}/turnster/{gymnastId}", name="aboutGymnastPage", methods={"GET"})
+     * @Route("/wedstrijdturnen/{groupId}/turnster/{competitionGroupMemberId}", name="aboutCompetitionGroupMemberPage", methods={"GET"})
      */
-    public function aboutGymnastPage(int $groupId, int $gymnastId): Response
+    public function aboutCompetitionGroupMemberPage(string $groupId, string $competitionGroupMemberId): Response
     {
-        $competitionGroup = $this->competitionGroupRepository->find($groupId);
+        $competitionGroup = $this->competitionGroupRepository->find(CompetitionGroupId::fromString($groupId));
         if (!$competitionGroup) {
             throw new NotFoundHttpException();
         }
-        $gymnast = $this->competitionGroupMemberRepository->find($gymnastId);
+        $gymnast = $this->competitionGroupMemberRepository->find(
+            CompetitionGroupMemberId::fromString($competitionGroupMemberId)
+        );
         if (!$gymnast) {
             throw new NotFoundHttpException();
         }
-        $aboutGymnast = $this->aboutGymnastRepository->findForGymnast($gymnastId);
-        if (!$aboutGymnast) {
-            throw new NotFoundHttpException();
-        }
+        $aboutCompetitionGroupMember = $this->aboutGymnastRepository->findForCompetitionGroupMember(
+            CompetitionGroupMemberId::fromString($competitionGroupMemberId)
+        );
 
         return new Response(
             $this->twig->render(
-                '@PublicInformation/competitive_gymnastics/about_gymnast.html.twig',
+                '@PublicInformation/competitive_gymnastics/about_competition_group_member.html.twig',
                 [
-                    'group'        => $competitionGroup,
-                    'aboutGymnast' => $aboutGymnast,
-                    'gymnast'      => $gymnast,
+                    'group'                       => $competitionGroup,
+                    'aboutCompetitionGroupMember' => $aboutCompetitionGroupMember,
+                    'gymnast'                     => $gymnast,
                 ]
             )
         );

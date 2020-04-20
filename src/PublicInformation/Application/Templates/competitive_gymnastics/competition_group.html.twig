@@ -53,7 +53,7 @@
         <tr>
             {% endif %}
             <td>
-                <a href="{{ path('aboutGymnastPage', { 'groupId': group.id, 'gymnastId': member.id }) }}" style="text-decoration: none;">
+                <a href="{{ path('aboutCompetitionGroupMemberPage', { 'groupId': group.id, 'competitionGroupMemberId': member.id }) }}" style="text-decoration: none;">
                     <img src="{{ asset('/uploads/selectiefotos/'~member.pictureFileName) }}" width="135"
                          alt="Meer info"/>
                     <p>{{ member.firstName }}<br>Turnster</p>

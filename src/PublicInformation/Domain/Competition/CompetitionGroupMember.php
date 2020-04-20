@@ -1,57 +1,49 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\PublicInformation\Domain\Competition;
 
 use App\Shared\Domain\Category;
+use App\Shared\Domain\CompetitionGroupMemberId;
 use App\Shared\Domain\SystemClock;
 use DateTimeImmutable;
 
 final class CompetitionGroupMember
 {
-    private int $id;
-
-    private string $firstName;
-
-    private string $lastName;
-
-    private DateTimeImmutable $dateOfBirth;
-
-    private Category $category;
-
-    private string $pictureFileName;
-
-    private CompetitionGroupFunction $competitionGroupFunction;
+    private CompetitionGroupMemberId $id;
+    private string                   $firstName;
+    private string                   $lastName;
+    private DateTimeImmutable        $dateOfBirth;
+    private Category                 $category;
+    private string                   $pictureFileName;
+    private CompetitionGroupRole     $competitionGroupRole;
 
     public static function createFromDataSource(
-        int $id,
+        CompetitionGroupMemberId $id,
         string $firstName,
         string $lastName,
         DateTimeImmutable $dateOfBirth,
         string $pictureFileName,
-        CompetitionGroupFunction $competitionGroupFunction,
+        CompetitionGroupRole $competitionGroupRole,
         SystemClock $clock
-    )
-    {
-        $category = Category::createFromDateOfBirthForSeason(
+    ) {
+        $category                   = Category::createFromDateOfBirthForSeason(
             $dateOfBirth,
             CompetitionSeason::getCompetitionSeasonForDate($clock->now())
         );
-
-        $self                           = new self();
-        $self->id                       = $id;
-        $self->firstName                = $firstName;
-        $self->lastName                 = $lastName;
-        $self->dateOfBirth              = $dateOfBirth;
-        $self->category                 = $category;
-        $self->pictureFileName          = $pictureFileName;
-        $self->competitionGroupFunction = $competitionGroupFunction;
+        $self                       = new self();
+        $self->id                   = $id;
+        $self->firstName            = $firstName;
+        $self->lastName             = $lastName;
+        $self->dateOfBirth          = $dateOfBirth;
+        $self->category             = $category;
+        $self->pictureFileName      = $pictureFileName;
+        $self->competitionGroupRole = $competitionGroupRole;
 
         return $self;
     }
 
-    public function id(): int
+    public function id(): CompetitionGroupMemberId
     {
         return $this->id;
     }
@@ -81,9 +73,9 @@ final class CompetitionGroupMember
         return $this->pictureFileName;
     }
 
-    public function competitionGroupFunction(): CompetitionGroupFunction
+    public function competitionGroupRole(): CompetitionGroupRole
     {
-        return $this->competitionGroupFunction;
+        return $this->competitionGroupRole;
     }
 
     private function __construct()

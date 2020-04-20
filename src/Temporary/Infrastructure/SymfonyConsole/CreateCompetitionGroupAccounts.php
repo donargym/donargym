@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Temporary\Infrastructure\SymfonyConsole;
 
-use App\Shared\Domain\CompetitionGroup\AccountId;
+use App\CompetitionGroup\Domain\CompetitionGroupAccountId;
 use App\Shared\Domain\PhoneNumberId;
 use App\Shared\Domain\SystemClock;
 use Doctrine\DBAL\Connection;
@@ -47,7 +47,7 @@ final class CreateCompetitionGroupAccounts extends Command
 
     private function createNewAccount(array $user): void
     {
-        $accountId = AccountId::generate()->toString();
+        $accountId = CompetitionGroupAccountId::generate()->toString();
         $this->connection->createQueryBuilder()
             ->insert('competition_group_account')
             ->values(
