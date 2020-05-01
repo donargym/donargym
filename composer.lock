@@ -2948,7 +2948,7 @@
         },
         {
             "name": "symfony/notifier",
-            "version": "v5.0.7",
+            "version": "v5.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/notifier.git",
