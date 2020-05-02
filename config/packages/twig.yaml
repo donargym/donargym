@@ -9,4 +9,4 @@ twig:
   globals:
     # the value is the service's id
     calendarItems: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCalendarItemRepository'
-    competitionGroups: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository'
+    competitionGroupMenuItems: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository'

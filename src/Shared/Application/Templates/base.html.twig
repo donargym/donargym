@@ -75,7 +75,7 @@
                 <ul>
                     <li><a href="{{ path('simpleContentPage', { 'pageName': 'wedstrijdturnen' }) }}">Algemeen</a>
                     </li>
-                    {% for competitionGroup in competitionGroups.allGroups %}
+                    {% for competitionGroup in competitionGroupMenuItems.allGroups %}
                         <li>
                             <a href="{{ path('showCompetitionGroup', { 'groupId': competitionGroup.id }) }}">{{ competitionGroup.name }}</a>
                         </li>

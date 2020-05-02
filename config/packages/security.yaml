@@ -1,6 +1,6 @@
 security:
     encoders:
-        App\Shared\Domain\Security\User:
+        App\Shared\Domain\Security\UserCredentials:
             algorithm: auto
     providers:
         dbal_provider:
