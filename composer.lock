@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb826b1b6b8aa9aeed5480e3890f948a",
+    "content-hash": "9002b756f247ed36d1f282a6b57f6540",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -3025,20 +3025,21 @@
         },
         {
             "name": "symfony/notifier",
-            "version": "v5.0.8",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/notifier.git",
-                "reference": "0de60e9cd04eeb60ed73153518887d20402a6b5a"
+                "reference": "ca756a1627c02b7b1b0c643f0b1c1d6cb5d792fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/notifier/zipball/0de60e9cd04eeb60ed73153518887d20402a6b5a",
-                "reference": "0de60e9cd04eeb60ed73153518887d20402a6b5a",
+                "url": "https://api.github.com/repos/symfony/notifier/zipball/ca756a1627c02b7b1b0c643f0b1c1d6cb5d792fb",
+                "reference": "ca756a1627c02b7b1b0c643f0b1c1d6cb5d792fb",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2.5"
+                "php": ">=7.2.5",
+                "symfony/polyfill-php80": "^1.15"
             },
             "conflict": {
                 "symfony/http-kernel": "<4.4"
@@ -3046,7 +3047,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "5.1-dev"
                 }
             },
             "autoload": {
@@ -3077,7 +3078,7 @@
                 "notification",
                 "notifier"
             ],
-            "time": "2020-03-27T16:56:45+00:00"
+            "time": "2020-05-24T08:59:54+00:00"
         },
         {
             "name": "symfony/options-resolver",
