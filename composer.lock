@@ -1796,7 +1796,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v5.1.0",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -2126,16 +2126,16 @@
         },
         {
             "name": "symfony/form",
-            "version": "v5.1.0",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/form.git",
-                "reference": "4d492698887bcf88569ae978362b6ca2c9a7df4a"
+                "reference": "7f0fae286e498aa19ce0c4f737c5bd16cb1ebfba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/form/zipball/4d492698887bcf88569ae978362b6ca2c9a7df4a",
-                "reference": "4d492698887bcf88569ae978362b6ca2c9a7df4a",
+                "url": "https://api.github.com/repos/symfony/form/zipball/7f0fae286e498aa19ce0c4f737c5bd16cb1ebfba",
+                "reference": "7f0fae286e498aa19ce0c4f737c5bd16cb1ebfba",
                 "shasum": ""
             },
             "require": {
@@ -2168,6 +2168,7 @@
                 "symfony/config": "^4.4|^5.0",
                 "symfony/console": "^4.4|^5.0",
                 "symfony/dependency-injection": "^4.4|^5.0",
+                "symfony/expression-language": "^4.4|^5.0",
                 "symfony/http-foundation": "^4.4|^5.0",
                 "symfony/http-kernel": "^4.4|^5.0",
                 "symfony/security-csrf": "^4.4|^5.0",
@@ -2210,7 +2211,7 @@
             ],
             "description": "Symfony Form Component",
             "homepage": "https://symfony.com",
-            "time": "2020-05-30T20:35:19+00:00"
+            "time": "2020-06-14T15:52:41+00:00"
         },
         {
             "name": "symfony/framework-bundle",
@@ -2636,26 +2637,27 @@
         },
         {
             "name": "symfony/inflector",
-            "version": "v5.0.9",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/inflector.git",
-                "reference": "7eff2643934179cd0e5a6609a583fc22fc495fc4"
+                "reference": "fddb4262dd136b34db993a2a3488713df91e4856"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/inflector/zipball/7eff2643934179cd0e5a6609a583fc22fc495fc4",
-                "reference": "7eff2643934179cd0e5a6609a583fc22fc495fc4",
+                "url": "https://api.github.com/repos/symfony/inflector/zipball/fddb4262dd136b34db993a2a3488713df91e4856",
+                "reference": "fddb4262dd136b34db993a2a3488713df91e4856",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.5",
-                "symfony/polyfill-ctype": "~1.8"
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/string": "^5.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "5.1-dev"
                 }
             },
             "autoload": {
@@ -2690,7 +2692,7 @@
                 "symfony",
                 "words"
             ],
-            "time": "2020-05-20T17:38:26+00:00"
+            "time": "2020-05-20T17:43:50+00:00"
         },
         {
             "name": "symfony/intl",
@@ -3088,7 +3090,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v5.1.0",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
@@ -3616,7 +3618,7 @@
         },
         {
             "name": "symfony/property-access",
-            "version": "v5.0.9",
+            "version": "v5.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-access.git",
