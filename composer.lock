@@ -247,16 +247,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "2.1.17",
+            "version": "2.1.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "ade6887fd9bd74177769645ab5c474824f8a418a"
+                "reference": "cfa3d44471c7f5bfb684ac2b0da7114283d78441"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/ade6887fd9bd74177769645ab5c474824f8a418a",
-                "reference": "ade6887fd9bd74177769645ab5c474824f8a418a",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/cfa3d44471c7f5bfb684ac2b0da7114283d78441",
+                "reference": "cfa3d44471c7f5bfb684ac2b0da7114283d78441",
                 "shasum": ""
             },
             "require": {
@@ -280,7 +280,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Egulias\\EmailValidator\\": "EmailValidator"
+                    "Egulias\\EmailValidator\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -301,7 +301,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2020-02-13T22:36:52+00:00"
+            "time": "2020-06-16T20:11:17+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -1796,7 +1796,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v5.1.0",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -2770,16 +2770,16 @@
         },
         {
             "name": "symfony/mailer",
-            "version": "v5.1.0",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mailer.git",
-                "reference": "7308b053e16a4f43e2aaf32dc11f72174f59247e"
+                "reference": "203f236f1c2f4d8980f3c4120c8032c8cfe1e893"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mailer/zipball/7308b053e16a4f43e2aaf32dc11f72174f59247e",
-                "reference": "7308b053e16a4f43e2aaf32dc11f72174f59247e",
+                "url": "https://api.github.com/repos/symfony/mailer/zipball/203f236f1c2f4d8980f3c4120c8032c8cfe1e893",
+                "reference": "203f236f1c2f4d8980f3c4120c8032c8cfe1e893",
                 "shasum": ""
             },
             "require": {
@@ -2834,20 +2834,20 @@
             ],
             "description": "Symfony Mailer Component",
             "homepage": "https://symfony.com",
-            "time": "2020-05-30T20:35:19+00:00"
+            "time": "2020-06-11T21:20:02+00:00"
         },
         {
             "name": "symfony/mime",
-            "version": "v5.1.0",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "56261f89385f9d13cf843a5101ac72131190bc91"
+                "reference": "c0c418f05e727606e85b482a8591519c4712cf45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/56261f89385f9d13cf843a5101ac72131190bc91",
-                "reference": "56261f89385f9d13cf843a5101ac72131190bc91",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/c0c418f05e727606e85b482a8591519c4712cf45",
+                "reference": "c0c418f05e727606e85b482a8591519c4712cf45",
                 "shasum": ""
             },
             "require": {
@@ -2897,7 +2897,7 @@
                 "mime",
                 "mime-type"
             ],
-            "time": "2020-05-25T12:33:44+00:00"
+            "time": "2020-06-09T15:07:35+00:00"
         },
         {
             "name": "symfony/monolog-bridge",
