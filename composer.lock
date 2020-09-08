@@ -2386,16 +2386,16 @@
         },
         {
             "name": "symfony/form",
-            "version": "v5.1.3",
+            "version": "v5.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/form.git",
-                "reference": "bd264b81ab801abea3c44f43aeb6eacf68beaca7"
+                "reference": "236d88a28671f9b13860789eabe28e8c4c8bba86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/form/zipball/bd264b81ab801abea3c44f43aeb6eacf68beaca7",
-                "reference": "bd264b81ab801abea3c44f43aeb6eacf68beaca7",
+                "url": "https://api.github.com/repos/symfony/form/zipball/236d88a28671f9b13860789eabe28e8c4c8bba86",
+                "reference": "236d88a28671f9b13860789eabe28e8c4c8bba86",
                 "shasum": ""
             },
             "require": {
@@ -2485,7 +2485,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-12T12:58:00+00:00"
+            "time": "2020-09-01T12:25:21+00:00"
         },
         {
             "name": "symfony/framework-bundle",
@@ -3522,7 +3522,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v5.1.3",
+            "version": "v5.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
