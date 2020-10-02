@@ -1,0 +1,39 @@
+<h3>Presentie</h3>
+{#            <p>#}
+            {#{% for training in persoonItems.trainingen %}#}
+{#    {% if training.groepId == functie.groepId %}#}
+{#        <h4>{{ training.dag }}: {{ training.tijdVan }} - {{ training.tijdTot }}</h4>#}
+{#        <table border="0" id="presentie">#}
+{#            <tr>#}
+{#                {% for trainingsdatum in training.trainingsdata %}#}
+{#                    <th style="font-size: 13px;">{{ trainingsdatum.lesdatum }}</th>#}
+{#                {% endfor %}#}
+{#                <th style="font-size: 13px;"><b>% Aanwezig</b></th>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                {% for trainingsdatum in training.trainingsdata %}#}
+{#                    <td style="text-align: center; font-size:1.5em">#}
+{#                        {% if trainingsdatum.aanwezigheid == 'A' %}#}
+{#                            ☹️#}
+{#                        {% elseif trainingsdatum.aanwezigheid == '-' %}#}
+{#                            ☹️❓#}
+{#                        {% elseif trainingsdatum.aanwezigheid == 'X' %}#}
+{#                            🤸‍♀️#}
+{#                        {% endif %}#}
+{#                    </td>#}
+{#                {% endfor %}#}
+{#                <td style="text-align:center; font-weight: bold; background-color: #{{ training.percentageKleur }}; color: rgba(0,0,0,0.6);">#}
+{#                    {{ training.percentageAanwezig |round }}%#}
+{#                </td>#}
+{#            </tr>#}
+{#        </table>#}
+{#    {% endif %}#}
+{#{% endfor %}#}
+{#</p>#}
+
+<p class="button1 presence_{{ totalPresence.totalPresencePercentage }}">
+    Totaal {{ totalPresence.numberOfTrainingsPresent }} van {{ totalPresence.totalNumberOfTrainings }} trainingen aanwezig:
+    <span style="font-weight: bold; color: #FFF;">
+        {{ totalPresence.totalPresencePercentage }}%
+    </span>
+</p>

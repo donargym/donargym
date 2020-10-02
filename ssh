@@ -1,2 +1,2 @@
 #!/bin/bash
-ssh vagrant@donar.markmeijerman.loc -i ~/.vagrant.d/insecure_private_key -t "cd /vagrant/donargym; bash --login"
+ssh vagrant@donar.markmeijerman.loc -i ~/.vagrant.d/insecure_private_key -t "cd /vagrant; bash --login"

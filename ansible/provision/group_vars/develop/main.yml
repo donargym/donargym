@@ -26,6 +26,14 @@ ufw_rules_to_create:
     rule: allow
   - to_port: 80 # Nginx
     rule: allow
+  - to_port: 1025
+    rule: allow
+  - to_port: 1080
+    rule: allow
+  - to_port: 2222
+    rule: allow
+  - to_port: 2223
+    rule: allow
   - to_port: 8025 # MailHog web interface
     rule: allow
   - to_port: 3306 # Database connection

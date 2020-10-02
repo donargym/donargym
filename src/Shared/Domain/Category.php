@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain;
 
-use App\PublicInformation\Domain\Competition\CompetitionSeason;
 use Assert\Assertion;
 use DateTimeImmutable;
 

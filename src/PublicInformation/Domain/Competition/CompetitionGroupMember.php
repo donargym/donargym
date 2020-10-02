@@ -5,6 +5,8 @@ namespace App\PublicInformation\Domain\Competition;
 
 use App\Shared\Domain\Category;
 use App\Shared\Domain\CompetitionGroupMemberId;
+use App\Shared\Domain\CompetitionGroupRole;
+use App\Shared\Domain\CompetitionSeason;
 use App\Shared\Domain\SystemClock;
 use DateTimeImmutable;
 

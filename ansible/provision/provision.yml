@@ -16,6 +16,7 @@
     - f500.php7
     - f500.php_composer
     - f500.vim
+    - sshd_config
 
 - name: Install mailhog for develop
   hosts: "develop"
@@ -44,13 +45,13 @@
       become: yes
 
     - name: Copy the parameters distfile
-      command: cp /vagrant/donargym/config/packages/parameters.yaml.dist /vagrant/donargym/config/packages/parameters.yaml creates=/vagrant/donargym/config/packages/parameters.yaml
+      command: cp /vagrant/config/packages/parameters.yaml.dist /vagrant/config/packages/parameters.yaml creates=/vagrant/config/packages/parameters.yaml
 
     - name: Copy the env distfile
-      command: cp /vagrant/donargym/.env.dist /vagrant/donargym/.env creates=/vagrant/donargym/.env
+      command: cp /vagrant/.env.dist /vagrant/.env creates=/vagrant/.env
 
     - name: Composer install
-      command: composer install --no-interaction --prefer-source --no-scripts --working-dir=/vagrant/donargym
+      command: composer install --no-interaction --prefer-source --no-scripts --working-dir=/vagrant
 
 - name: Production roles
   hosts: "production"

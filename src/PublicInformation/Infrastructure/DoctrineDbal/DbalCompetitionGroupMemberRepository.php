@@ -5,7 +5,7 @@ namespace App\PublicInformation\Infrastructure\DoctrineDbal;
 
 use App\PublicInformation\Domain\Competition\CompetitionGroupMember;
 use App\PublicInformation\Domain\Competition\CompetitionGroupMembers;
-use App\PublicInformation\Domain\Competition\CompetitionGroupRole;
+use App\Shared\Domain\CompetitionGroupRole;
 use App\Shared\Domain\CompetitionGroupId;
 use App\Shared\Domain\CompetitionGroupMemberId;
 use App\Shared\Domain\SystemClock;

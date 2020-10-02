@@ -42,7 +42,6 @@ final class CreateCompetitionGroupsAndMembers extends Command
         foreach ($groepen as $groep) {
             $idMapping = $this->insertCompetitionGroupRecord($groep);
         }
-
         $personen = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('persoon')
@@ -122,6 +121,7 @@ final class CreateCompetitionGroupsAndMembers extends Command
                         'training_day'         => ':trainingDay',
                         'training_start_time'  => ':trainingStartTime',
                         'training_end_time'    => ':trainingEndTime',
+                        'sort_order'           => ':sortOrder',
                     ]
                 )->setParameters(
                     [
@@ -130,6 +130,7 @@ final class CreateCompetitionGroupsAndMembers extends Command
                         'trainingDay'        => $this->dayToEnglish($training['dag']),
                         'trainingStartTime'  => \DateTimeImmutable::createFromFormat('H.i', $training['tijdvan']),
                         'trainingEndTime'    => \DateTimeImmutable::createFromFormat('H.i', $training['tijdtot']),
+                        'sortOrder'          => 0,
                     ],
                     [
                         'trainingStartTime' => Types::DATETIME_IMMUTABLE,

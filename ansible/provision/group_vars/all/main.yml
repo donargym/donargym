@@ -44,7 +44,6 @@ mariadb_slow_query_log_enabled: false
 mariadb_long_query_time: 2
 
 # NGINX
-nginx_www_dir: "/var/www"
 nginx_dhparam_bits: 256
 nginx_http_headers:
   Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"

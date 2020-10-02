@@ -1,0 +1,215 @@
+{% extends '@Shared/base.html.twig' %}
+
+{% block body %}
+    {% include '@CompetitionGroup/competition_group_login/partials/login_menu.html.twig' %}
+
+    <div id="inlog_nav">
+        <div id="text">
+            <i>{{ member.firstName }} {{ member.lastName }}</i>
+        </div>
+    </div>
+
+    <div style="height: 200px;">
+        <img src="{{ asset(profilePictureLocationFromWebRoot ~ member.pictureFileName) }}"
+             width="150" style="float:right;margin-right:2px;margin-top:5px;" alt=""/>
+        <br>
+
+        <h1>{{ member.firstName }} {{ member.lastName }}</h1>
+
+        <p><font style="color: #FFFF00;">Geboortedatum:</font> {{ member.dateOfBirth | date('d-m-Y') }}<br>
+            <font style="color: #FFFF00;">Categorie:</font> {{ member.category }}</p>
+        <div class="button">
+            {% if member.floorMusicFileName %}
+                <a href="{{ floorMusicLocationFromWebRoot ~ member.floorMusicFileName }}" target="blank">
+                    Vloermuziek downloaden
+                </a><br>
+            {% endif %}
+            <a href="">Stukje schrijven</a>
+        </div>
+    </div>
+
+    {#    {% for functie in persoonItems.functies %}#}
+    {#        <div style="margin-bottom: 75px;"><h2>{{ functie.groepNaam }} ({{ functie.functie }})</h2>#}
+    {#            <hr>#}
+    {#            {% if functie.functie == 'Trainer' or functie.functie == 'Assistent-Trainer' %}#}
+    {#                <center>#}
+    {#                    <div id="button4">#}
+    {#                        <a href="{{ path('viewWedstrijduitslagen', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">#}
+    {#                            Uitslagen#}
+    {#                        </a>#}
+    {#                        <a href="{{ path('viewVloermuziek', { 'persoonId': persoonItems.id, 'groepId': functie.groepId }) }}">Vloermuziek</a>#}
+    {#                        <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>#}
+    {#                        <br/>#}
+    {#                        <a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden</a>#}
+    {#                        {% if functie.functie == "Trainer" %}#}
+    {#                            <a href="{{ path('kruisjeslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Emojilijst</a>#}
+    {#                        {% endif %}#}
+    {#                        <a href="{{ path('viewAfmeldingen', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmeldingen</a>#}
+    {#                        <a href="{{ path('viewAanwezigheid', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Aanwezigheid</a>#}
+    {#                        {% if functie.groepId == 5 %}#}
+    {#                        {% endif %}#}
+    {##}
+    {#                    </div>#}
+    {#                </center>#}
+    {#            {% else %}#}
+    {#                <div id="button3">#}
+    {#                    <a href="{{ path('Afmelding', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Afmelden</a>#}
+    {#                    {% if persoonItems.categorie == 'Jeugd 2' or persoonItems.categorie == 'Junior' or persoonItems.categorie == 'Senior' %}#}
+    {#                        <a href="{{ path('addSelectieVloermuziekPage', { 'persoonId': persoonItems.id, 'groepId': functie.groepId, 'turnsterId': persoonItems.id }) }}">#}
+    {#                            Vloermuziek uploaden</a>#}
+    {#                    {% endif %}#}
+    {#                    {% if functie.functie == "Trainer" %}#}
+    {#                        <a href="{{ path('viewAdreslijst', { 'id': persoonItems.id, 'groepId': functie.groepId }) }}">Adreslijst</a>#}
+    {#                    {% endif %}#}
+    {#                </div>#}
+    {#            {% endif %}#}
+    {#            {% if (functie.functie == 'Trainer') or (functie.functie == 'Assistent-Trainer') %}#}
+    {#                <p><h3>(Assistent-)Trainers</h3>#}
+    {#                <table border="0" id="nolink">#}
+    {#                    <tr style="color:#FFFF00;">#}
+    {#                        <th>Naam</th>#}
+    {#                        <th>Geboortedatum</th>#}
+    {#                        <th>% aanwezig</th>#}
+    {#                        {% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}#}
+    {#                            <th></th>#}
+    {#                        {% endif %}#}
+    {##}
+    {#                    </tr>#}
+    {##}
+    {#                    {% if functie.trainer is defined %}#}
+    {#                        {% for turnster in functie.trainer %}#}
+    {#                            <tr>#}
+    {#                                <td>#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">#}
+    {#                                        {{ turnster.voornaam }} {{ turnster.achternaam }}#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                <td>#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">#}
+    {#                                        {{ turnster.geboortedatum }}#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"#}
+    {#                                       style="text-decoration: none">#}
+    {#                                    <span style="color: rgba(0,0,0,0.6);">#}
+    {#                                        {{ turnster.percentageAanwezig | round }}%#}
+    {#                                    </span>#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}#}
+    {#                                    <td>#}
+    {#                                        <a href="{{ path('redirectToCorrectLoginPage', {'_switch_user': turnster.username}) }}">#}
+    {#                                            <img src="{{ asset('images/login_as.png') }}" width="18px"/>#}
+    {#                                        </a>#}
+    {#                                    </td>#}
+    {#                                {% endif %}#}
+    {#                            </tr>#}
+    {#                        {% endfor %}#}
+    {#                    {% endif %}#}
+    {##}
+    {#                    {% if functie.assistent is defined %}#}
+    {#                        {% for turnster in functie.assistent %}#}
+    {#                            <tr>#}
+    {#                                <td>#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">#}
+    {#                                        {{ turnster.voornaam }} {{ turnster.achternaam }}#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                <td>#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">#}
+    {#                                        {{ turnster.geboortedatum }}#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"#}
+    {#                                       style="text-decoration: none">#}
+    {#                                        <span style="color: rgba(0,0,0,0.6);">#}
+    {#                                            {{ turnster.percentageAanwezig | round }}%#}
+    {#                                        </span>#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}#}
+    {#                                    <td>#}
+    {#                                        <a href="{{ path('redirectToCorrectLoginPage', {'_switch_user': turnster.username}) }}">#}
+    {#                                            <img src="{{ asset('images/login_as.png') }}" width="18px"/>#}
+    {#                                        </a>#}
+    {#                                    </td>#}
+    {#                                {% endif %}#}
+    {#                            </tr>#}
+    {#                        {% endfor %}#}
+    {#                    {% endif %}#}
+    {#                </table>#}
+    {#                </p>#}
+    {##}
+    {#                <p>#}
+    {#                <h3>Turnsters#}
+    {#                    {% if functie.functie == 'Trainer' %}#}
+    {#                        <a href="{{ path('addSelectieTurnsterPage', { 'id': persoonItems.id, 'groepsId': functie.groepId }) }}"><img#}
+    {#                                    src="{{ asset('images/add.png') }}" width="18px"/></a>#}
+    {#                    {% endif %}#}
+    {#                </h3>#}
+    {#                <table border="0" id="nolink">#}
+    {#                    <tr style="color: #FFFF00;">#}
+    {#                        <th>Naam</th>#}
+    {#                        <th>Geboortedatum</th>#}
+    {#                        <th>% aanwezig</th>#}
+    {#                        {% if functie.functie == 'Trainer' %}#}
+    {#                            <th></th>#}
+    {#                            <th></th>#}
+    {#                        {% endif %}#}
+    {#                        {% if is_granted('ROLE_ALLOWED_TO_SWITCH') %}#}
+    {#                            <th></th>#}
+    {#                        {% endif %}#}
+    {#                    </tr>#}
+    {##}
+    {#                    {% if functie.turnster is defined %}#}
+    {#                        {% for turnster in functie.turnster %}#}
+    {#                            <tr>#}
+    {#                                <td>#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">#}
+    {#                                        {{ turnster.voornaam }} {{ turnster.achternaam }}#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                <td>#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">#}
+    {#                                        {{ turnster.geboortedatum }}#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                <td style="text-align:center; font-weight: bold; background-color: #{{ turnster.percentageKleur }};">#}
+    {#                                    <a href="{{ path('viewSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}"#}
+    {#                                       style="text-decoration: none">#}
+    {#                                        <span style="color: rgba(0,0,0,0.6);">#}
+    {#                                            {{ turnster.percentageAanwezig | round }}%#}
+    {#                                        </span>#}
+    {#                                    </a>#}
+    {#                                </td>#}
+    {#                                {% if functie.functie == 'Trainer' %}#}
+    {#                                    <td>#}
+    {#                                        <a href="{{ path('editSelectieTurnster', { 'persoonId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">#}
+    {#                                            <img src="{{ asset('images/edit.png') }}" width="18px"/>#}
+    {#                                        </a>#}
+    {#                                    </td>#}
+    {#                                    <td>#}
+    {#                                        <a href="{{ path('removeSelectieTurnsterPage', { 'trainerId': persoonItems.id, 'turnsterId': turnster.id, 'groepId': functie.groepId }) }}">#}
+    {#                                            <img src="{{ asset('images/remove.png') }}" width="18px"/>#}
+    {#                                        </a>#}
+    {#                                    </td>#}
+    {#                                {% endif %}#}
+    {#                                {% if not is_granted('ROLE_PREVIOUS_ADMIN') and not is_granted('ROLE_PREVIOUS_TRAINER') and is_granted('ROLE_ALLOWED_TO_SWITCH') %}#}
+    {#                                    <td>#}
+    {#                                        <a href="{{ path('redirectToCorrectLoginPage', {'_switch_user': turnster.username}) }}">#}
+    {#                                            <img src="{{ asset('images/login_as.png') }}" width="18px"/>#}
+    {#                                        </a>#}
+    {#                                    </td>#}
+    {#                                {% endif %}#}
+    {#                            </tr>#}
+    {#                        {% endfor %}#}
+    {#                    {% endif %}#}
+    {#                </table></p>#}
+    {#            {% endif %}#}
+    {##}
+    {#    {% endfor %}#}
+
+    {% include '@CompetitionGroup/competition_group_login/partials/training_presence.html.twig' %}
+{% endblock %}

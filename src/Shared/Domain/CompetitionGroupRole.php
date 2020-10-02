@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\PublicInformation\Domain\Competition;
+namespace App\Shared\Domain;
 
 use Assert\Assertion;
 

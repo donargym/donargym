@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\PublicInformation\Domain\Competition;
 
+use App\Shared\Domain\CompetitionSeason;
+use App\Shared\Domain\CompetitionSeasons;
 use ArrayIterator;
 use Assert\Assertion;
 use IteratorAggregate;

@@ -10,3 +10,4 @@ twig:
     # the value is the service's id
     calendarItems: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCalendarItemRepository'
     competitionGroupMenuItems: '@App\PublicInformation\Infrastructure\DoctrineDbal\DbalCompetitionGroupRepository'
+    competitionGroupMembers: '@App\CompetitionGroup\Infrastructure\DoctrineDbal\DbalCompetitionGroupMemberRepository'

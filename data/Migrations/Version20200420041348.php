@@ -67,6 +67,7 @@ final class Version20200420041348 extends AbstractMigration
         $table->addColumn('training_day', Types::STRING);
         $table->addColumn('training_start_time', Types::TIME_IMMUTABLE);
         $table->addColumn('training_end_time', Types::TIME_IMMUTABLE);
+        $table->addColumn('sort_order', Types::INTEGER);
         $table->setPrimaryKey(['id']);
         $table = $schema->createTable('competition_group_training');
         $table->addColumn('id', Types::GUID);

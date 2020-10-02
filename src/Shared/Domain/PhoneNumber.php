@@ -6,13 +6,13 @@ namespace App\Shared\Domain;
 final class PhoneNumber
 {
     private PhoneNumberId $id;
-    private string        $phoneNumber;
+    private string        $number;
 
-    public static function createNew(PhoneNumberId $id, string $phoneNumber): self
+    public static function createFromDataSource(PhoneNumberId $id, string $number): self
     {
         $self              = new self();
         $self->id          = $id;
-        $self->phoneNumber = $phoneNumber;
+        $self->number = $number;
 
         return $self;
     }
@@ -22,9 +22,9 @@ final class PhoneNumber
         return $this->id;
     }
 
-    public function phoneNumber(): string
+    public function number(): string
     {
-        return $this->phoneNumber;
+        return $this->number;
     }
 
     private function __construct()

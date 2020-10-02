@@ -100,7 +100,7 @@ final class SecurityController
                 return new RedirectResponse($this->router->generate('publicPictures'));
                 break;
             case 'ROLE_COMPETITION_GROUP':
-                return new RedirectResponse($this->router->generate('getSelectieIndexPage'));
+                return new RedirectResponse($this->router->generate('competitionGroupLoginIndex'));
                 break;
             default:
                 throw new NotFoundHttpException();
@@ -129,7 +129,7 @@ final class SecurityController
             $user->generateSetPasswordToken($this->clock);
             $this->userCredentialRepository->update($user);
             $this->resetPasswordMailer->notify($user);
-            $this->session->getFlashBag()->add('success', 'Een nieuw wachtwoord is gemaild');
+            $this->session->getFlashBag()->add('success', 'Een mail om je wachtwoord opnieuw in te stellen is verstuurd');
 
             return new RedirectResponse($this->router->generate('loginRoute'));
         }

@@ -8,7 +8,7 @@ use App\CompetitionGroup\Domain\Management\CompetitionGroupMember;
 use App\CompetitionGroup\Domain\Management\CompetitionGroupMembers;
 use App\CompetitionGroup\Domain\Management\CompetitionGroupsWithCoaches;
 use App\CompetitionGroup\Domain\Management\CompetitionGroupWithCoaches;
-use App\PublicInformation\Domain\Competition\CompetitionGroupRole;
+use App\Shared\Domain\CompetitionGroupRole;
 use App\Shared\Domain\CompetitionGroupId;
 use App\Shared\Domain\CompetitionGroupMemberId;
 use Doctrine\DBAL\Connection;

@@ -479,7 +479,6 @@ a:hover, a:active {
 }
 
 #content .button1 {
-    background: rgba(140,255,0,0.4);
     padding: 5px 10px;
     border-radius: 5px;
     display: inline-block;
@@ -928,4 +927,128 @@ a:hover, a:active {
 
 .form-control {
     width: 90%;
+}
+
+.presence_100 {
+    background-color: #00FF00;
+}
+
+.presence_99 {
+    background-color: #11FF00;
+}
+
+.presence_98, .presence_97 {
+    background-color: #22FF00;
+}
+
+.presence_96 {
+    background-color: #33FF00;
+}
+
+.presence_95, .presence_94 {
+    background-color: #44FF00;
+}
+
+.presence_93 {
+    background-color: #55FF00;
+}
+
+.presence_92, .presence_91 {
+    background-color: #66FF00;
+}
+
+.presence_90 {
+    background-color: #77FF00;
+}
+
+.presence_89, .presence_88 {
+    background-color: #88FF00;
+}
+
+.presence_87 {
+    background-color: #99FF00;
+}
+
+.presence_86, .presence_85 {
+    background-color: #AAFF00;
+}
+
+.presence_84 {
+    background-color: #BBFF00;
+}
+
+.presence_83, .presence_82 {
+    background-color: #CCFF00;
+}
+
+.presence_81 {
+    background-color: #DDFF00;
+}
+
+.presence_80, .presence_79 {
+    background-color: #EEFF00;
+}
+
+.presence_78, .presence_77 {
+    background-color: #FFFF00;
+}
+
+.presence_76, .presence_75 {
+    background-color: #FFEE00;
+}
+
+.presence_74, .presence_73, .presence_72, .presence_71, .presence_70 {
+    background-color: #FFDD00;
+}
+
+.presence_69, .presence_68, .presence_67, .presence_66, .presence_65 {
+    background-color: #FFCC00;
+}
+
+.presence_64, .presence_63, .presence_62, .presence_61, .presence_60 {
+    background-color: #FFBB00;
+}
+
+.presence_59, .presence_58, .presence_57, .presence_56, .presence_55 {
+    background-color: #FFAA00;
+}
+
+.presence_54, .presence_53, .presence_52, .presence_51, .presence_50 {
+    background-color: #FF9900;
+}
+
+.presence_49, .presence_48, .presence_47, .presence_46, .presence_45 {
+    background-color: #FF8800;
+}
+
+.presence_44, .presence_43, .presence_42, .presence_41, .presence_40 {
+    background-color: #FF7700;
+}
+
+.presence_39, .presence_38, .presence_37, .presence_36, .presence_35 {
+    background-color: #FF6600;
+}
+
+.presence_34, .presence_33, .presence_32, .presence_31, .presence_30 {
+    background-color: #FF5500;
+}
+
+.presence_29, .presence_28, .presence_27, .presence_26, .presence_25 {
+    background-color: #FF4400;
+}
+
+.presence_24, .presence_23, .presence_22, .presence_21, .presence_20 {
+    background-color: #FF3300;
+}
+
+.presence_19, .presence_18, .presence_17, .presence_16, .presence_15 {
+    background-color: #FF2200;
+}
+
+.presence_14, .presence_13, .presence_12, .presence_11, .presence_10 {
+    background-color: #FF1100;
+}
+
+.presence_9, .presence_8, .presence_7, .presence_6, .presence_5, .presence_4, .presence_3, .presence_2, .presence_1, .presence_0 {
+    background-color: #FF0000;
 }
