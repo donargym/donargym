@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8bc9776ba61cb63e4a5dcc932662f0ad",
+    "content-hash": "e42e839cbfa2a0a5e2dc06b422e77e50",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1262,7 +1262,7 @@
         },
         {
             "name": "symfony/asset",
-            "version": "v5.1.8",
+            "version": "v5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/asset.git",
