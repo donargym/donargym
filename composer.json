@@ -33,7 +33,7 @@
         "symfony/twig-pack": "*",
         "symfony/validator": "5.2.*",
         "symfony/web-link": "5.2.*",
-        "symfony/yaml": "5.1.*"
+        "symfony/yaml": "5.2.*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
