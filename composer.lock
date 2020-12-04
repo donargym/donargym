@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "29be4891445071738b54a6de51038358",
+    "content-hash": "6d50157a9e0a7c8451506920cb683659",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1577,16 +1577,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v5.1.8",
+            "version": "v5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "e0b2c29c0fa6a69089209bbe8fcff4df2a313d0e"
+                "reference": "3e0564fb08d44a98bd5f1960204c958e57bd586b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/e0b2c29c0fa6a69089209bbe8fcff4df2a313d0e",
-                "reference": "e0b2c29c0fa6a69089209bbe8fcff4df2a313d0e",
+                "url": "https://api.github.com/repos/symfony/console/zipball/3e0564fb08d44a98bd5f1960204c958e57bd586b",
+                "reference": "3e0564fb08d44a98bd5f1960204c958e57bd586b",
                 "shasum": ""
             },
             "require": {
@@ -1647,6 +1647,12 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
+            "keywords": [
+                "cli",
+                "command line",
+                "console",
+                "terminal"
+            ],
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1661,7 +1667,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T12:01:57+00:00"
+            "time": "2020-11-28T11:24:18+00:00"
         },
         {
             "name": "symfony/dependency-injection",
