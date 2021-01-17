@@ -37,3 +37,5 @@ config/packages/parameters.yaml
 
 /public/adminuploads/*
 !/public/adminuploads/.gitkeep
+
+*__pycache__*
