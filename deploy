@@ -5,13 +5,13 @@
 latestTag="$(git describe --abbrev=0 --tags)";
 
 function askEnvironment {
-    echo "Deploy environment: (test/production/all)"
+    echo "Deploy environment: (staging/production/all)"
 
     ok=0;
     while [ "$ok" = "0" ] ; do
         read userinput
 
-        if [ "$userinput" = "test" ] || [ "$userinput" = "production" ] || [ "$userinput" = "all" ]
+        if [ "$userinput" = "staging" ] || [ "$userinput" = "production" ] || [ "$userinput" = "all" ]
         then
           ok=1;
         else

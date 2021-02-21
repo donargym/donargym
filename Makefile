@@ -15,7 +15,6 @@ make provision:
 ## release:	Checkout master, get most recent version, create new (minor) tag, push master and tags
 .PHONY: release
 release:
-	bin/check-uncommitted-changes.sh
 	git checkout master
 	git pull
 	bin/bump-tag.sh

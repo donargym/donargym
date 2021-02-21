@@ -1,0 +1,68 @@
+---
+
+github_repo: git@github.com:mjmeijerman/donargym.git
+deploy_user: deploy
+nginx_user: www-data
+
+# APP
+
+application_root: ~
+php_socket: "{{ php7_fpm_pool_listen }}"
+
+project_shared_children:
+  - path: "/var/sessions"
+    src: "sessions"
+
+web_writable_folders:
+  - { name: "{{ deploy_helper.new_release_path }}/var/cache", recursive: false }
+  - { name: "{{ deploy_helper.new_release_path }}/var/log", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/sessions", recursive: false }
+
+project_root: "{{ application_root }}"
+project_git_repo: "{{ github_repo }}"
+project_deploy_strategy: git
+
+project_templates:
+  - name: Copy env file
+    src: "{{ playbook_dir }}/templates/.env.j2"
+    dest: ".env"
+  - name: Copy parameters file
+    src:  "templates/parameters.yaml.j2"
+    dest: "config/packages/parameters.yaml"
+
+project_deploy_hook_on_finalize: "{{ playbook_dir }}/hooks/perform-build.yml"
+
+project_unwanted_items:
+  - .git
+  - .phpspec
+  - ansible
+  - config/packages/dev
+  - config/packages/test
+  - config/routes/dev
+  - config/routes/test
+  - docker
+  - docs
+  - spec
+  - tests
+  - .env.dist
+  - .gitignore
+  - .travis.yml.dist
+  - composer.outdated
+  - docker-compose.yml
+  - docker-compose-test.yml
+  - phpcs.xml
+  - phpspec.yml.dist
+  - phpstan.neon
+  - phpunit.xml.dist
+  - Vagrantfile
+
+project_composer_binary: composer
+project_has_npm: no
+project_copy_previous_npm_modules: no
+
+default_email_sender: 'noreply@donargym.nl'
+
+project_clean: true
+project_keep_releases: 2
+
+php_application_command: '/usr/bin/php -q {{ project_root }}/current'

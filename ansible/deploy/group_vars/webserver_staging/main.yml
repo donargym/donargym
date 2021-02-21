@@ -1,0 +1,9 @@
+---
+
+# APP
+
+application_root: "/home/deploy/staging.donargym.nl"
+application_env: "staging"
+
+project_environment:
+  SYMFONY_ENV: "staging"

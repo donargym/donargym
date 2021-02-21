@@ -19,7 +19,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class CreateCompetitionGroupsAndMembers extends Command
+final class ECreateCompetitionGroupsAndMembers extends Command
 {
     private Connection      $connection;
     private SystemClock     $clock;

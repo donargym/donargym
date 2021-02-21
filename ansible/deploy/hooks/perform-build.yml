@@ -1,0 +1,21 @@
+---
+
+- name: make sure that all web writable folders exist
+  file: path="{{ item.name }}" state=directory recurse=yes
+  with_items: "{{ web_writable_folders }}"
+
+- name: Set deploy_user ACL privileges on directories
+  acl: name={{ item.name }} entity={{ deploy_user }} etype=user permissions=rwX state=present recursive={{ item.recursive }}
+  with_items: "{{ web_writable_folders }}"
+
+- name: Set deploy_user default ACL privileges on directories
+  acl: name={{ item.name }} entity={{ deploy_user }} etype=user permissions=rwX default=yes state=present recursive={{ item.recursive }}
+  with_items: "{{ web_writable_folders }}"
+
+- name: Set web_user ACL privileges on directories
+  acl: name={{ item.name }} entity={{ nginx_user }} etype=user permissions=rwX state=present recursive={{ item.recursive }}
+  with_items: "{{ web_writable_folders }}"
+
+- name: Set web_user default ACL privileges on directories
+  acl: name={{ item.name }} entity={{ nginx_user }} etype=user permissions=rwX default=yes state=present recursive={{ item.recursive }}
+  with_items: "{{ web_writable_folders }}"

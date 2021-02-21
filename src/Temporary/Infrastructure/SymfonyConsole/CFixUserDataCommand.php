@@ -9,7 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class FixUserDataCommand extends Command
+final class CFixUserDataCommand extends Command
 {
     private Connection      $connection;
     protected static $defaultName = 'app:fix-user-data';
