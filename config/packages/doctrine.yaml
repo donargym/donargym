@@ -1,7 +1,7 @@
 doctrine:
     dbal:
         driver: 'pdo_mysql'
-        server_version: '10.3'
+        server_version: 'mariadb-10.3.25'
         charset: utf8mb4
         default_table_options:
             charset: utf8mb4
