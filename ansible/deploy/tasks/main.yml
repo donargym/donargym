@@ -1,18 +1,5 @@
 ---
 
-- name: Check if environment exist in supervisor
-  command: supervisorctl status {{ client }}-{{ application_env }}:*
-  failed_when: False
-  register: programStatusResult
-
-- debug:
-    var: programStatusResult
-    verbosity: 2
-
-- name: Stop supervisor programs
-  supervisorctl: "name={{ client }}-{{ application_env }}: state=stopped"
-  when: "programStatusResult.stdout != '{{ client }}-{{ application_env }}: ERROR (no such group)'"
-
 - name: Do composer install
   command: "{{ project_command_for_composer_install }} chdir={{ deploy_helper.new_release_path }}"
 
@@ -25,14 +12,5 @@
     chdir: "{{ deploy_helper.new_release_path }}"
   environment: "{{ project_environment }}"
 
-- name: Assures supervisor config dir exists
-  file: path="{{ deploy_helper.shared_path }}/supervisor" state=directory
-
-- name: Add supervisor config
-  template: src=supervisor.conf.j2 dest="{{ deploy_helper.shared_path }}/supervisor/programs.conf"
-
 - name: Restart php-fpm
   shell: sudo /usr/sbin/service php7.4-fpm restart
-
-- name: Start supervisor programs
-  command: "supervisorctl start {{ client }}-{{ application_env }}:*"
