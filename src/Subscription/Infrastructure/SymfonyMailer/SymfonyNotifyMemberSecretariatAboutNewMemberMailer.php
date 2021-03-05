@@ -28,7 +28,7 @@ class SymfonyNotifyMemberSecretariatAboutNewMemberMailer
             ->from($this->sender)
             ->to('ledensecretariaat@donargym.nl')
             ->context($this->emailParameters($subscription))
-            ->textTemplate('@Subscription/mails/subscription_notification_to_member_secretariat.txt.twig');
+            ->htmlTemplate('@Subscription/mails/subscription_notification_to_member_secretariat.html.twig');
         $this->mailer->send($message);
     }
 

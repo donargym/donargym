@@ -1,0 +1,39 @@
+<p>Hoi {{ trainer }},</p>
+<p>
+    Een nieuw lid heeft zich ingeschreven voor je les. De gegevens van het lid vind je hieronder.<br/>
+    Deze mail is ook naar het ledensecretariaat gestuurd, dus puur ter info.
+</p>
+<p>
+    Inschrijftijd: {{ subscribedAt }}<br/>
+    Voornaam: {{ firstName }}<br/>
+    Achternaam: {{ lastName }}<br/>
+    Initialen: {{ initials }}<br/>
+    Geboortedatum: {{ dateOfBirth }}<br/>
+    Geslacht: {{ gender }}<br/>
+    Adres: {{ address }}<br/>
+    Postcode: {{ zipCode }}<br/>
+    Plaats: {{ city }}<br/>
+    Telefoonnummer 1: {{ phone1 }}<br/>
+    Telefoonnummer 2: {{ phone2 }}<br/>
+    Rekeningnummer: {{ bankAccountNumber }}<br/>
+    Rekening houder: {{ bankAccountHolder }}<br/>
+    Email adres: {{ emailAddress }}<br/>
+    Eerder Lid geweest van
+    donar: {% if haveBeenSubscribed %}Ja van {{ subscribedFrom }} tot {{ subscribedUntil }}{% else %} Nee {% endif %}
+    <br/>
+    Is momenteel lid van een andere vereniging: {% if otherClub %}Ja van {{ whatOtherClub }}{% else %}Nee{% endif %}
+    <br/>
+    Bondscontributie betaald dit jaar: {% if paidBondContribution %}Ja{% else %}Nee{% endif %}<br/>
+    Categorie: {{ category }}<br/>
+    Lesdag(en): {{ days }}<br/>
+    Locatie(s): {{ locations }}<br/>
+    Starttijd les: {{ startTime }}<br/>
+    Leiding: {{ trainer }}<br/>
+    Hoe bekend geworden met donar: {{ how }}<br/>
+    Vrijwilligerstaken: {{ voluntaryWork }}<br/>
+    Akkoord met voorwaarden: {% if accept %}Ja{% else %}Nee{% endif %}<br/>
+    Akkoord met privacy beleid: {% if acceptPrivacy %}Ja{% else %}Nee{% endif %}<br/>
+    Akkoord met publiceren naam: {% if acceptNamePublished %}Ja{% else %}Nee{% endif %}<br/>
+    Akkoord met publiceren beeldmateriaal: {% if acceptPicturesPublished %}Ja{% else %}Nee{% endif %}
+</p>
+<p>Dit is een automatische email en kan niet op geantwoord worden.</p>

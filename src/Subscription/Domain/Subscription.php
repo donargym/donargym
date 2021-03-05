@@ -56,12 +56,12 @@ final class Subscription
         $self->bankAccountNumber       = $formData['bankAccountNumber'];
         $self->bankAccountHolder       = $formData['bankAccountHolder'];
         $self->emailAddress            = $formData['emailAddress'];
-        $self->haveBeenSubscribed      = (bool) $formData['haveBeenSubscribed'];
+        $self->haveBeenSubscribed      = $formData['haveBeenSubscribed'] === 'Ja';
         $self->subscribedFrom          = $formData['subscribedFrom'];
         $self->subscribedUntil         = $formData['subscribedUntil'];
-        $self->otherClub               = (bool) $formData['otherClub'];
+        $self->otherClub               = $formData['otherClub'] === 'Ja';
         $self->whatOtherClub           = $formData['whatOtherClub'];
-        $self->paidBondContribution    = (bool) $formData['paidBondContribution'];
+        $self->paidBondContribution    = $formData['paidBondContribution'] === 'Ja';
         $self->category                = $formData['category'];
         $self->days                    = $formData['days'];
         $self->locations               = $formData['locations'];

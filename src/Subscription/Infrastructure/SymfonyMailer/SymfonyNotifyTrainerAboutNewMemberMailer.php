@@ -32,7 +32,7 @@ class SymfonyNotifyTrainerAboutNewMemberMailer
             ->from($this->sender)
             ->to($to->toString())
             ->context($this->emailParameters($subscription))
-            ->textTemplate('@Subscription/mails/subscription_notification_to_trainer.txt.twig');
+            ->htmlTemplate('@Subscription/mails/subscription_notification_to_trainer.html.twig');
         $this->mailer->send($message);
     }
 
