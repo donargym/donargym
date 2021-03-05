@@ -42,12 +42,12 @@ final class TrainerOptions
         ];
     }
 
-    public static function findEmailAddressForTrainer(string $trainerName): EmailAddress
+    public static function findEmailAddressForTrainer(string $trainerName): ?EmailAddress
     {
         if (isset(self::$trainerEmailAddresses[$trainerName])) {
             return EmailAddress::fromString(self::$trainerEmailAddresses[$trainerName]);
         }
 
-        return EmailAddress::fromString('webmaster@donargym.nl');
+        return null;
     }
 }

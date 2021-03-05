@@ -23,10 +23,14 @@ class SymfonyNotifyTrainerAboutNewMemberMailer
 
     public function notify(Subscription $subscription): void
     {
+        $to = TrainerOptions::findEmailAddressForTrainer($subscription->trainer());
+        if (!$to) {
+            return;
+        }
         $message = new TemplatedEmail();
         $message->subject($this->translator->trans('notify_trainer_about_new_member_mail.subject'))
             ->from($this->sender)
-            ->to(TrainerOptions::findEmailAddressForTrainer($subscription->trainer())->toString())
+            ->to($to->toString())
             ->context($this->emailParameters($subscription))
             ->textTemplate('@Subscription/mails/subscription_notification_to_trainer.txt.twig');
         $this->mailer->send($message);
