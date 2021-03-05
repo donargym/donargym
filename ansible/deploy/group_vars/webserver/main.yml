@@ -12,11 +12,21 @@ php_socket: "{{ php7_fpm_pool_listen }}"
 project_shared_children:
   - path: "/var/sessions"
     src: "sessions"
+  - path: "/public/uploads"
+    src: "uploads"
 
 web_writable_folders:
   - { name: "{{ deploy_helper.new_release_path }}/var/cache", recursive: false }
   - { name: "{{ deploy_helper.new_release_path }}/var/log", recursive: false }
   - { name: "{{ deploy_helper.shared_path }}/sessions", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/uploads", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/uploads/clubblad", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/uploads/files", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/uploads/formulieren", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/uploads/fotos", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/uploads/selectiefotos", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/uploads/vloermuziek", recursive: false }
+  - { name: "{{ deploy_helper.shared_path }}/uploads/wedstrijduitslagen", recursive: false }
 
 project_root: "{{ application_root }}"
 project_git_repo: "{{ github_repo }}"

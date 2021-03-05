@@ -56,12 +56,12 @@ final class Subscription
         $self->bankAccountNumber       = $formData['bankAccountNumber'];
         $self->bankAccountHolder       = $formData['bankAccountHolder'];
         $self->emailAddress            = $formData['emailAddress'];
-        $self->haveBeenSubscribed      = $formData['haveBeenSubscribed'];
+        $self->haveBeenSubscribed      = (bool) $formData['haveBeenSubscribed'];
         $self->subscribedFrom          = $formData['subscribedFrom'];
         $self->subscribedUntil         = $formData['subscribedUntil'];
-        $self->otherClub               = $formData['otherClub'];
+        $self->otherClub               = (bool) $formData['otherClub'];
         $self->whatOtherClub           = $formData['whatOtherClub'];
-        $self->paidBondContribution    = $formData['paidBondContribution'];
+        $self->paidBondContribution    = (bool) $formData['paidBondContribution'];
         $self->category                = $formData['category'];
         $self->days                    = $formData['days'];
         $self->locations               = $formData['locations'];
@@ -69,10 +69,10 @@ final class Subscription
         $self->trainer                 = $formData['trainer'];
         $self->how                     = $formData['how'];
         $self->voluntaryWork           = $formData['voluntaryWork'];
-        $self->accept                  = $formData['accept'];
-        $self->acceptPrivacyPolicy     = $formData['acceptPrivacyPolicy'];
-        $self->acceptNamePublished     = $formData['acceptNamePublished'];
-        $self->acceptPicturesPublished = $formData['acceptPicturesPublished'];
+        $self->accept                  = (bool) $formData['accept'];
+        $self->acceptPrivacyPolicy     = (bool) $formData['acceptPrivacyPolicy'];
+        $self->acceptNamePublished     = (bool) $formData['acceptNamePublished'];
+        $self->acceptPicturesPublished = (bool) $formData['acceptPicturesPublished'];
         $self->subscribedAt            = $clock->now();
 
         return $self;
