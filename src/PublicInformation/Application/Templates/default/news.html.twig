@@ -15,7 +15,7 @@
             <hr>
             <h3>
                 {{ newsPost.title }}
-                {% if app.user and is_granted('ROLE_ADMIN') %}
+                {% if app.user and is_granted('ROLE_ADMIN') and not isArchief %}
                     {% apply spaceless %}
                         <a href="{{ path('editNewsPost', { 'id': newsPost.id }) }}">
                             <img src="{{ asset('images/edit.png') }}" width="18px" alt="Nieuwsbericht bewerken"/>
@@ -34,18 +34,22 @@
 
 {% block modals %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        {% include '@PublicInformation/default/modals/remove_news_post_modal.html.twig' %}
-        {% include '@PublicInformation/default/modals/add_news_post_modal.html.twig' %}
+        {% if not isArchief %}
+            {% include '@PublicInformation/default/modals/remove_news_post_modal.html.twig' %}
+            {% include '@PublicInformation/default/modals/add_news_post_modal.html.twig' %}
+        {% endif %}
     {% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {% if app.user and is_granted('ROLE_ADMIN') %}
-        <script type="text/javascript" src="{{ asset('js/remove-news-post.js') }}"></script>
-        {% if showModal %}
-            <script type="text/javascript">
-                $('#add-news-post-modal').modal('show');
-            </script>
+        {% if not isArchief %}
+            <script type="text/javascript" src="{{ asset('js/remove-news-post.js') }}"></script>
+            {% if showModal %}
+                <script type="text/javascript">
+                    $('#add-news-post-modal').modal('show');
+                </script>
+            {% endif %}
         {% endif %}
     {% endif %}
 {% endblock %}

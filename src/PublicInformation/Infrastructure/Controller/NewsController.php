@@ -71,6 +71,7 @@ final class NewsController
                     'newPosts'  => $this->newsPostRepository->findTenMostRecentNewsPosts(),
                     'form'      => $form ? $form->createView() : null,
                     'showModal' => $showModal,
+                    'isArchief' => true
                 ]
             )
         );
@@ -97,7 +98,7 @@ final class NewsController
         return new Response(
             $this->twig->render(
                 '@PublicInformation/default/news.html.twig',
-                ['newPosts' => $this->newsPostRepository->findNewsPostsForYear($year)]
+                ['newPosts' => $this->newsPostRepository->findNewsPostsForYear($year), 'isArchief' => true]
             )
         );
     }
