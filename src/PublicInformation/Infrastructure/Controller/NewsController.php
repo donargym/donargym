@@ -71,7 +71,7 @@ final class NewsController
                     'newPosts'  => $this->newsPostRepository->findTenMostRecentNewsPosts(),
                     'form'      => $form ? $form->createView() : null,
                     'showModal' => $showModal,
-                    'isArchief' => true
+                    'isArchief' => false
                 ]
             )
         );
