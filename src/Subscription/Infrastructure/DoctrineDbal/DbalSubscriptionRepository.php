@@ -53,6 +53,7 @@ final class DbalSubscriptionRepository
                     'accept_name_published'     => ':acceptNamePublished',
                     'accept_pictures_published' => ':acceptPicturesPublished',
                     'subscribed_at'             => ':subscribedAt',
+                    'ooievaarspas'              => ':ooievaarspas',
                 ]
             )
             ->setParameters(
@@ -90,6 +91,7 @@ final class DbalSubscriptionRepository
                     'acceptNamePublished'     => (int) $subscription->acceptNamePublished(),
                     'acceptPicturesPublished' => (int) $subscription->acceptPicturesPublished(),
                     'subscribedAt'            => $subscription->subscribedAt(),
+                    'ooievaarspas'            => (int) $subscription->ooievaarspas(),
                 ],
                 [
                     'subscribedAt'    => Types::DATETIME_IMMUTABLE,

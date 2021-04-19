@@ -68,6 +68,7 @@ class SymfonyNotifyMemberSecretariatAboutNewMemberMailer
             'acceptPrivacy'           => $subscription->acceptPrivacyPolicy(),
             'acceptNamePublished'     => $subscription->acceptNamePublished(),
             'acceptPicturesPublished' => $subscription->acceptPicturesPublished(),
+            'ooievaarspas' => $subscription->ooievaarspas(),
         ];
     }
 }

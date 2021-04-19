@@ -39,6 +39,7 @@ final class Subscription
     private bool               $acceptNamePublished;
     private bool               $acceptPicturesPublished;
     private DateTimeImmutable  $subscribedAt;
+    private bool  $ooievaarspas;
 
     public static function createFromForm(array $formData, SystemClock $clock): self
     {
@@ -74,6 +75,7 @@ final class Subscription
         $self->acceptNamePublished     = (bool) $formData['acceptNamePublished'];
         $self->acceptPicturesPublished = (bool) $formData['acceptPicturesPublished'];
         $self->subscribedAt            = $clock->now();
+        $self->ooievaarspas            = (bool) $formData['ooievaarspas'];
 
         return $self;
     }
@@ -231,6 +233,11 @@ final class Subscription
     public function subscribedAt(): DateTimeImmutable
     {
         return $this->subscribedAt;
+    }
+
+    public function ooievaarspas(): bool
+    {
+        return $this->ooievaarspas;
     }
 
     private function __construct()

@@ -65,6 +65,7 @@ subscription_form:
   iban: "IBAN nummer*"
   account_holder: "Naam rekeninghouder*"
   email: "Email adres*"
+  ooievaarspas: "Bent u in het bezit van een ooievaarspas?*"
   have_been_subscribed: "Bent u eerder lid geweest bij Donar?*"
   subscribed_from: "Zo ja, van wanneer?"
   subscribed_until: "Tot wanneer?"

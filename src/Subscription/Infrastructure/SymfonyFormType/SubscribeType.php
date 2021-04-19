@@ -141,6 +141,20 @@ final class SubscribeType extends AbstractType
                 ]
             )
             ->add(
+                'ooievaarspas',
+                ChoiceType::class,
+                [
+                    'required'    => true,
+                    'label'       => 'subscription_form.ooievaarspas',
+                    'choices'     => [
+                        'form.yes' => 'Ja',
+                        'form.no'  => 'Nee',
+                    ],
+                    'expanded'    => true,
+                    'constraints' => [new NotNull(['message' => 'general.not_blank'])]
+                ]
+            )
+            ->add(
                 'haveBeenSubscribed',
                 ChoiceType::class,
                 [
