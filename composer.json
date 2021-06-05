@@ -24,7 +24,7 @@
         "symfony/framework-bundle": "5.1.*",
         "symfony/http-client": "5.3.*",
         "symfony/intl": "5.3.*",
-        "symfony/mailer": "5.2.*",
+        "symfony/mailer": "5.3.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/notifier": "5.3.*",
         "symfony/process": "5.3.*",
