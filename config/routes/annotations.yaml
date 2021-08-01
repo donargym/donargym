@@ -1,17 +1,5 @@
-legacy_controllers:
-    resource: ../../src/Infrastructure/Controller/
-    type: annotation
-
 public_information_controllers:
     resource: ../../src/PublicInformation/Infrastructure/Controller/
-    type: annotation
-
-competition_group_controllers:
-    resource: ../../src/CompetitionGroup/Infrastructure/Controller/
-    type: annotation
-
-subscription_controllers:
-    resource: ../../src/Subscription/Infrastructure/Controller/
     type: annotation
 
 shared_controllers:

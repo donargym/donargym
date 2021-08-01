@@ -98,10 +98,6 @@ final class SecurityController
         switch ($roles[0]) {
             case 'ROLE_ADMIN':
                 return new RedirectResponse($this->router->generate('publicPictures'));
-                break;
-            case 'ROLE_COMPETITION_GROUP':
-                return new RedirectResponse($this->router->generate('competitionGroupLoginIndex'));
-                break;
             default:
                 throw new NotFoundHttpException();
         }

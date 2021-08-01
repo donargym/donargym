@@ -8,7 +8,6 @@ use Assert\Assertion;
 final class Role
 {
     const ROLE_USER              = 'ROLE_USER';
-    const ROLE_COMPETITION_GROUP = 'ROLE_COMPETITION_GROUP';
     const ROLE_ADMIN             = 'ROLE_ADMIN';
 
     private string $role;
@@ -16,11 +15,6 @@ final class Role
     public static function ROLE_USER(): self
     {
         return self::fromString(self::ROLE_USER);
-    }
-
-    public static function ROLE_COMPETITION_GROUP(): self
-    {
-        return self::fromString(self::ROLE_COMPETITION_GROUP);
     }
 
     public static function ROLE_ADMIN(): self
@@ -32,7 +26,6 @@ final class Role
     {
         return [
             self::ROLE_USER,
-            self::ROLE_COMPETITION_GROUP,
             self::ROLE_ADMIN,
         ];
     }

@@ -4,24 +4,6 @@
 # get latest tag
 latestTag="$(git describe --abbrev=0 --tags)";
 
-function askEnvironment {
-    echo "Deploy environment: (staging/production/all)"
-
-    ok=0;
-    while [ "$ok" = "0" ] ; do
-        read userinput
-
-        if [ "$userinput" = "staging" ] || [ "$userinput" = "production" ] || [ "$userinput" = "all" ]
-        then
-          ok=1;
-        else
-          echo "Invalid environment"
-        fi
-    done
-
-    environment="$userinput"
-}
-
 function askTag {
     echo "Deploy tag: [$latestTag]"
 
@@ -47,17 +29,12 @@ function askTag {
 }
 
 # gathering information
-askEnvironment
 askTag
 
-printf -v limit "webserver_%s" "$environment"
-
-if [ "$environment" = "all" ]; then
-    limit="webserver"
-fi
+printf -v limit "webserver_production"
 
 echo -e "Limit: $limit"
 
 #complete
-echo -e "Deploy to webserver(s) with \e[32m\e[1m\e[4m$environment\e[0m environment(s) with tag \e[32m\e[1m\e[4m$tag\e[0m:"
+echo -e "Deploy to webserver(s) with \e[32m\e[1m\e[4mproduction\e[0m environment(s) with tag \e[32m\e[1m\e[4m$tag\e[0m:"
 ansible-playbook ansible/deploy/deploy.yml --extra-vars "project_version=$tag" --limit=$limit --ask-vault-pass

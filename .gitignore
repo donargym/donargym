@@ -39,3 +39,8 @@ config/packages/parameters.yaml
 !/public/adminuploads/.gitkeep
 
 *__pycache__*
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

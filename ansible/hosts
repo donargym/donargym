@@ -1,12 +1,5 @@
 [webserver:children]
 webserver_production
-webserver_staging
 
 [webserver_production]
 donargym.nl
-
-[webserver_staging]
-staging.donargym.nl
-
-[develop]
-192.168.30.105

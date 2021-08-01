@@ -24,9 +24,6 @@ web_writable_folders:
   - { name: "{{ deploy_helper.shared_path }}/uploads/files", recursive: false }
   - { name: "{{ deploy_helper.shared_path }}/uploads/formulieren", recursive: false }
   - { name: "{{ deploy_helper.shared_path }}/uploads/fotos", recursive: false }
-  - { name: "{{ deploy_helper.shared_path }}/uploads/selectiefotos", recursive: false }
-  - { name: "{{ deploy_helper.shared_path }}/uploads/vloermuziek", recursive: false }
-  - { name: "{{ deploy_helper.shared_path }}/uploads/wedstrijduitslagen", recursive: false }
 
 project_root: "{{ application_root }}"
 project_git_repo: "{{ github_repo }}"

@@ -19,24 +19,12 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Infrastructure\Controller\:
-        resource: '../src/Infrastructure/Controller'
-        tags: ['controller.service_arguments']
-
     App\PublicInformation\Infrastructure\Controller\:
         resource: '../src/PublicInformation/Infrastructure/Controller'
         tags: ['controller.service_arguments']
 
-    App\CompetitionGroup\Infrastructure\Controller\:
-        resource: '../src/CompetitionGroup/Infrastructure/Controller'
-        tags: ['controller.service_arguments']
-
     App\Shared\Infrastructure\Controller\:
         resource: '../src/Shared/Infrastructure/Controller'
-        tags: ['controller.service_arguments']
-
-    App\Subscription\Infrastructure\Controller\:
-        resource: '../src/Subscription/Infrastructure/Controller'
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
@@ -44,6 +32,4 @@ services:
 
 imports:
     - { resource: ../src/PublicInformation/services.yaml }
-    - { resource: ../src/CompetitionGroup/services.yaml }
     - { resource: ../src/Shared/services.yaml }
-    - { resource: ../src/Subscription/services.yaml }
