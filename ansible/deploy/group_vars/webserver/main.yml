@@ -70,6 +70,6 @@ project_copy_previous_npm_modules: no
 default_email_sender: 'noreply@donargym.nl'
 
 project_clean: true
-project_keep_releases: 2
+project_keep_releases: 0
 
 php_application_command: '/usr/bin/php -q {{ project_root }}/current'
